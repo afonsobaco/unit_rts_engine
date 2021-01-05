@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 
 public class SelectableObject : MonoBehaviour
@@ -11,12 +12,15 @@ public class SelectableObject : MonoBehaviour
     private bool _selected = false;
     public Transform selectionCircle;
 
-    public bool Selected
+    //TODO should be an Enum?
+    public string typeStr;
+
+    public bool IsSelected
     {
         get { return _selected; }
         set
         {
-            var sr= selectionCircle.GetComponent<SpriteRenderer>();
+            var sr = selectionCircle.GetComponent<SpriteRenderer>();
             sr.enabled = value;
             sr.color = selectedColor;
             // outline.enabled = value;

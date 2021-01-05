@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionCircle: {fileID: 8145909998962381864}
+  typeStr: Tipo_0
   selectedColor: {r: 0, g: 0.87058824, b: 0, a: 1}
 --- !u!1 &6930621689131922005
 GameObject:

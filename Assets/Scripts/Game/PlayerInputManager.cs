@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class PlayerInputManager : MonoBehaviour
 {
+    public KeyCode selectionKeyCode = KeyCode.LeftControl;
+    public KeyCode groupKeyCode = KeyCode.LeftControl;
 
     [SerializeField]
     private Camera mainCamera;
     [SerializeField]
     private RectTransform selectionBox;
     private SelectionArgObject selectionArgObject;
+    private Vector2 initialMousePosition;
     private Dictionary<KeyCode, int> groupKeys = new Dictionary<KeyCode, int>()
     {
         {KeyCode.Alpha1, 1},
@@ -30,8 +33,7 @@ public class PlayerInputManager : MonoBehaviour
     {
         selectionArgObject = new SelectionArgObject();
         selectionArgObject.MainCamera = mainCamera;
-        selectionArgObject.SelectionBox = selectionBox;
-        selectionArgObject.SelectionBox.gameObject.SetActive(false);
+        selectionBox.gameObject.SetActive(false);
 
     }
 
@@ -47,7 +49,7 @@ public class PlayerInputManager : MonoBehaviour
         int keyPressed = getAnyGroupKeyPressed();
         if (keyPressed > 0)
         {
-            if (Input.GetKey(KeyCode.LeftControl))
+            if (Input.GetKey(groupKeyCode))
             {
                 SelectionManager.Instance.SetGroup(keyPressed);
             }
@@ -74,31 +76,36 @@ public class PlayerInputManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            selectionArgObject.InitialMousePosition = Input.mousePosition;
-            selectionArgObject.SelectionBox.gameObject.SetActive(true);
+            selectionArgObject.SizeDelta = Vector2.zero;
+            selectionBox.gameObject.SetActive(true);
+            initialMousePosition = Input.mousePosition;
         }
 
         if (Input.GetMouseButton(0))
         {
-            selectionArgObject.FinalMousePosition = Input.mousePosition;
             SelectionManager.Instance.DoSelectionPreview(selectionArgObject);
             DrawSelectionBox();
         }
 
         if (Input.GetMouseButtonUp(0))
         {
+            selectionArgObject.MultipleSelection = Input.GetKey(selectionKeyCode);
             SelectionManager.Instance.DoSelection(selectionArgObject);
-            selectionArgObject.SelectionBox.gameObject.SetActive(false);
+            selectionBox.gameObject.SetActive(false);
         }
 
     }
 
     private void DrawSelectionBox()
     {
-        var size = new Vector2(Mathf.Abs(selectionArgObject.InitialMousePosition.x - selectionArgObject.FinalMousePosition.x), Mathf.Abs(selectionArgObject.InitialMousePosition.y - selectionArgObject.FinalMousePosition.y));
-        var center = new Vector2(Mathf.Abs(selectionArgObject.InitialMousePosition.x + selectionArgObject.FinalMousePosition.x) / 2, Mathf.Abs(selectionArgObject.InitialMousePosition.y + selectionArgObject.FinalMousePosition.y) / 2);
-        selectionArgObject.SelectionBox.position = center;
-        selectionArgObject.SelectionBox.sizeDelta = size;
+        Vector3 finalMousePosition = Input.mousePosition;
+        var size = new Vector2(Mathf.Abs(initialMousePosition.x - finalMousePosition.x), Mathf.Abs(initialMousePosition.y - finalMousePosition.y));
+        var center = new Vector2(Mathf.Abs(initialMousePosition.x + finalMousePosition.x) / 2, Mathf.Abs(initialMousePosition.y + finalMousePosition.y) / 2);
+        selectionBox.position = center;
+        selectionBox.sizeDelta = size;
+        selectionArgObject.Position = selectionBox.position;
+        selectionArgObject.SizeDelta = selectionBox.sizeDelta;
+
     }
 
 }

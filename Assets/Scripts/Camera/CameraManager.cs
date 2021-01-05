@@ -12,6 +12,12 @@ public class CameraManager : MonoBehaviour
     public float maxZoom;
     public float axisPressure = 0.3f;
 
+    private Camera mainCamera;
+
+    void Start(){
+        mainCamera = Camera.main;
+    }
+
     void LateUpdate()
     {
         //If space is pressed, ignore camera controls
@@ -98,34 +104,34 @@ public class CameraManager : MonoBehaviour
 
     private void MoveCameraVertical(float value)
     {
-        this.transform.position += new Vector3(0, 0, value * cameraSpeed * Time.deltaTime);
+        mainCamera.transform.position += new Vector3(0, 0, value * cameraSpeed * Time.deltaTime);
 
     }
 
     private void MoveCameraHorizontal(float value)
     {
-        this.transform.position += new Vector3(value * cameraSpeed * Time.deltaTime, 0, 0);
+        mainCamera.transform.position += new Vector3(value * cameraSpeed * Time.deltaTime, 0, 0);
 
     }
 
     private void ZoomCamera(float y)
     {
-        Vector3 vZoom = this.transform.position + transform.forward * (zoomScale * Time.deltaTime * y);
+        Vector3 vZoom = mainCamera.transform.position + transform.forward * (zoomScale * Time.deltaTime * y);
         if (vZoom.y < minZoom)
         {
-            vZoom = new Vector3(this.transform.position.x, minZoom, this.transform.position.z);
+            vZoom = new Vector3(mainCamera.transform.position.x, minZoom, mainCamera.transform.position.z);
         }
         else if (vZoom.y > maxZoom)
         {
-            vZoom = new Vector3(this.transform.position.x, maxZoom, this.transform.position.z);
+            vZoom = new Vector3(mainCamera.transform.position.x, maxZoom, mainCamera.transform.position.z);
         }
-        this.transform.position = vZoom;
+        mainCamera.transform.position = vZoom;
     }
 
     private void CenterCameraToPosition()
     {
         Vector3 pos = SelectionManager.Instance.GetSelectionMainPoint();
         if (pos != Vector3.zero)
-            this.transform.position = pos;
+            mainCamera.transform.position = pos;
     }
 }
