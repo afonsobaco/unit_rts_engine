@@ -17,6 +17,8 @@ public partial class SelectionManager : MonoBehaviour
     [SerializeField]
     private List<SelectableObject> selectionPreview = new List<SelectableObject>();
 
+    private Dictionary<int, List<SelectableObject>> groupSelection = new Dictionary<int, List<SelectableObject>>();
+
     void Awake()
     {
         if (Instance == null)
@@ -49,6 +51,29 @@ public partial class SelectionManager : MonoBehaviour
             return new Vector3(midPoint.x, transform.position.y, (float)z);
         }
         return Vector3.zero;
+    }
+
+    public void SetGroup(int keyPressed)
+    {
+        if (selection.Count > 0)
+        {
+            groupSelection[keyPressed] = selection;
+        }
+        else
+        {
+            groupSelection.Remove(keyPressed);
+        }
+    }
+
+    public void GetGroup(int keyPressed)
+    {
+        UpdateSelectionStatus(selection, false);
+        if (!groupSelection.TryGetValue(keyPressed, out selection))
+        {
+            selection = new List<SelectableObject>();
+        }
+        UpdateSelectionStatus(selection, true);
+
     }
 
     public void DoSelectionPreview(SelectionArgObject args)

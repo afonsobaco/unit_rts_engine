@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,20 @@ public class PlayerInputManager : MonoBehaviour
     [SerializeField]
     private RectTransform selectionBox;
     private SelectionArgObject selectionArgObject;
+    private Dictionary<KeyCode, int> groupKeys = new Dictionary<KeyCode, int>()
+    {
+        {KeyCode.Alpha1, 1},
+        {KeyCode.Alpha2, 2},
+        {KeyCode.Alpha3, 3},
+        {KeyCode.Alpha4, 4},
+        {KeyCode.Alpha5, 5},
+        {KeyCode.Alpha6, 6},
+        {KeyCode.Alpha7, 7},
+        {KeyCode.Alpha8, 8},
+        {KeyCode.Alpha9, 9},
+        {KeyCode.Alpha0, 10}
+    };
+
 
     void Start()
     {
@@ -20,11 +35,40 @@ public class PlayerInputManager : MonoBehaviour
 
     }
 
-    void LateUpdate()
+    void Update()
     {
         DoSelection();
+
+        DoGroupSelection();
     }
 
+    private void DoGroupSelection()
+    {
+        int keyPressed = getAnyGroupKeyPressed();
+        if (keyPressed > 0)
+        {
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                SelectionManager.Instance.SetGroup(keyPressed);
+            }
+            else
+            {
+                SelectionManager.Instance.GetGroup(keyPressed);
+            }
+        }
+    }
+
+    private int getAnyGroupKeyPressed()
+    {
+        foreach (KeyValuePair<KeyCode, int> entry in groupKeys)
+        {
+            if (Input.GetKeyDown(entry.Key))
+            {
+                return entry.Value;
+            }
+        }
+        return 0;
+    }
 
     private void DoSelection()
     {
