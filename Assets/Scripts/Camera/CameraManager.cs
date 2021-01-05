@@ -14,7 +14,8 @@ public class CameraManager : MonoBehaviour
 
     private Camera mainCamera;
 
-    void Start(){
+    void Start()
+    {
         mainCamera = Camera.main;
     }
 
@@ -130,7 +131,9 @@ public class CameraManager : MonoBehaviour
 
     private void CenterCameraToPosition()
     {
-        Vector3 pos = SelectionManager.Instance.GetSelectionMainPoint();
+        Vector3 midPoint = SelectionManager.Instance.GetSelectionMainPoint();
+        float z = midPoint.z - (mainCamera.transform.position.y * Mathf.Tan((90 - mainCamera.transform.rotation.eulerAngles.x) * Mathf.Deg2Rad));
+        var pos = new Vector3(midPoint.x, mainCamera.transform.position.y, (float)z);
         if (pos != Vector3.zero)
             mainCamera.transform.position = pos;
     }

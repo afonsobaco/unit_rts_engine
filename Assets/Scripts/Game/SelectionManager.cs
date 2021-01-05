@@ -50,9 +50,7 @@ public partial class SelectionManager : MonoBehaviour
     {
         if (selection.Count > 0)
         {
-            Vector3 midPoint = GetSelectedMidPoint();
-            float z = midPoint.z - (transform.position.y * Mathf.Tan((90 - this.transform.rotation.eulerAngles.x) * Mathf.Deg2Rad));
-            return new Vector3(midPoint.x, transform.position.y, (float)z);
+            return GetSelectedMidPoint();
         }
         return Vector3.zero;
     }
