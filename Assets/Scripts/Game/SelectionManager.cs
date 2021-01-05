@@ -9,7 +9,8 @@ public partial class SelectionManager : MonoBehaviour
     public static SelectionManager Instance { get; private set; }
 
     [SerializeField]
-    private List<SelectableObject> allSelectable = new List<SelectableObject>();
+    private List<SelectableObject> mainList = new List<SelectableObject>();
+
     [SerializeField]
     private List<SelectableObject> selection = new List<SelectableObject>();
 
@@ -31,12 +32,12 @@ public partial class SelectionManager : MonoBehaviour
 
     public void RemoveFromMainList(SelectableObject selectableObject)
     {
-        this.allSelectable.Remove(selectableObject);
+        this.mainList.Remove(selectableObject);
     }
 
     public void AddToMainList(SelectableObject selectableObject)
     {
-        this.allSelectable.Add(selectableObject);
+        this.mainList.Add(selectableObject);
     }
 
     public Vector3 GetSelectionMainPoint()
@@ -114,7 +115,7 @@ public partial class SelectionManager : MonoBehaviour
         var min = new Vector2(args.SelectionBox.position.x - (args.SelectionBox.sizeDelta.x / 2), args.SelectionBox.position.y - (args.SelectionBox.sizeDelta.y / 2));
         var max = new Vector2(args.SelectionBox.position.x + (args.SelectionBox.sizeDelta.x / 2), args.SelectionBox.position.y + (args.SelectionBox.sizeDelta.y / 2));
         List<SelectableObject> list = new List<SelectableObject>();
-        foreach (var obj in allSelectable)
+        foreach (var obj in mainList)
         {
             var screenPointPosition = args.MainCamera.WorldToScreenPoint(obj.transform.position);
             if (screenPointPosition.x > min.x && screenPointPosition.x < max.x && screenPointPosition.y > min.y && screenPointPosition.y < max.y)

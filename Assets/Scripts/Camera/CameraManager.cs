@@ -5,26 +5,12 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-
-
     public int cameraSpeed;
-
     public float boundriesOffset;
     public float zoomScale;
     public float minZoom;
     public float maxZoom;
     public float axisPressure = 0.3f;
-
-    public RectTransform selectionBox;
-    public Vector3 InitialMousePosition { get; private set; }
-
-
-    private Camera mainCamera;
-
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
 
     void LateUpdate()
     {
@@ -40,47 +26,6 @@ public class CameraManager : MonoBehaviour
 
         DoCameraZoom();
 
-        DoSelection();
-    }
-
-    private void DoSelection()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            InitialMousePosition = Input.mousePosition;
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            DrawSelectionBox();
-            SelectionManager.Instance.DoSelectionPreview(getSelectionArgs());
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            SelectionManager.Instance.DoSelection(getSelectionArgs());
-            selectionBox.sizeDelta = new Vector2(0, 0);
-        }
-
-    }
-
-    private SelectionArgObject getSelectionArgs()
-    {
-        var args = new SelectionArgObject();
-        args.MainCamera = mainCamera;
-        args.InitialMousePosition = InitialMousePosition;
-        args.FinalMousePosition = Input.mousePosition;
-        args.SelectionBox = selectionBox;
-        return args;
-    }
-
-    private void DrawSelectionBox()
-    {
-        Vector3 finalMousePosition = Input.mousePosition;
-        var size = new Vector2(Mathf.Abs(InitialMousePosition.x - finalMousePosition.x), Mathf.Abs(InitialMousePosition.y - finalMousePosition.y));
-        var center = new Vector2(Mathf.Abs(InitialMousePosition.x + finalMousePosition.x) / 2, Mathf.Abs(InitialMousePosition.y + finalMousePosition.y) / 2);
-        selectionBox.position = center;
-        selectionBox.sizeDelta = size;
     }
 
     private void DoCameraZoom()
@@ -114,7 +59,7 @@ public class CameraManager : MonoBehaviour
 
     private void DoMouseCameraMovement()
     {
-        var mousePos = mainCamera.ScreenToViewportPoint(Input.mousePosition);
+        var mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
         if (mousePos.x >= 0 && mousePos.x <= 1 && mousePos.y >= 0 && mousePos.y <= 1)
         {
             DoMouseCameraMovementBy(mousePos);
@@ -183,6 +128,4 @@ public class CameraManager : MonoBehaviour
         if (pos != Vector3.zero)
             this.transform.position = pos;
     }
-
-
 }
