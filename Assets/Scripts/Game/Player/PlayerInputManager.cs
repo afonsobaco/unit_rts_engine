@@ -8,8 +8,7 @@ public class PlayerInputManager : MonoBehaviour
     public KeyCode selectionKeyCode = KeyCode.LeftControl;
     public KeyCode groupKeyCode = KeyCode.LeftControl;
 
-    [SerializeField]
-    private Camera mainCamera;
+    public Camera mainCamera;
     [SerializeField]
     private RectTransform selectionBox;
     private SelectionArgObject selectionArgObject;

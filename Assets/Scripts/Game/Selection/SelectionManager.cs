@@ -4,8 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+
 public partial class SelectionManager : MonoBehaviour
 {
+
+
+
     public static SelectionManager Instance { get; private set; }
 
     [SerializeField]
@@ -22,6 +26,26 @@ public partial class SelectionManager : MonoBehaviour
 
     private Dictionary<int, List<SelectableObject>> groupSelection = new Dictionary<int, List<SelectableObject>>();
     private LastClickedReference lastSelectedObject;
+
+    private List<SelectableObject.SelectableTypeEnum> canGroup = new List<SelectableObject.SelectableTypeEnum>(){
+        SelectableObject.SelectableTypeEnum.UNIT,
+        SelectableObject.SelectableTypeEnum.BUILDING
+    };
+
+    private List<SelectableObject.SelectableTypeEnum> canSelectMultipleOnDrag = new List<SelectableObject.SelectableTypeEnum>(){
+        SelectableObject.SelectableTypeEnum.UNIT
+    };
+    private List<SelectableObject.SelectableTypeEnum> canSelectMultiple = new List<SelectableObject.SelectableTypeEnum>(){
+        SelectableObject.SelectableTypeEnum.UNIT,
+        SelectableObject.SelectableTypeEnum.BUILDING
+    };
+
+    private Dictionary<SelectableObject.SelectableTypeEnum, int> precedenceSelectionOrder = new Dictionary<SelectableObject.SelectableTypeEnum, int>(){
+        {SelectableObject.SelectableTypeEnum.UNIT, 1},
+        {SelectableObject.SelectableTypeEnum.BUILDING, 2},
+        {SelectableObject.SelectableTypeEnum.CONSUMABLE, 3},
+        {SelectableObject.SelectableTypeEnum.ENVIRONMENT, 4}
+    };
 
     void Awake()
     {
@@ -59,7 +83,8 @@ public partial class SelectionManager : MonoBehaviour
     {
         if (selection.Count > 0)
         {
-            groupSelection[keyPressed] = selection;
+            var selectionGroup = selection.FindAll((a) => { return canGroup.Contains(a.type); });
+            groupSelection[keyPressed] = selectionGroup;
         }
         else
         {
@@ -85,7 +110,8 @@ public partial class SelectionManager : MonoBehaviour
         selectionPreview = new List<SelectableObject>();
         if (SingleSelection(args) == null)
         {
-            selectionPreview.AddRange(FindSelectableObjectsInArea(args, selection));
+            List<SelectableObject> found = FindSelectableObjectsInArea(args);
+            selectionPreview.AddRange(found.FindAll(a => !selection.Contains(a)));
         }
         UpdateSelectionStatus(previousSelection, false);
         UpdateSelectionStatus(selectionPreview, true);
@@ -118,6 +144,7 @@ public partial class SelectionManager : MonoBehaviour
         else
         {
             SingleSelection(selected);
+            selection = AdjustMultipleSelection(selected, selection, selected.type);
             lastSelectionTime = Time.time;
         }
     }
@@ -161,7 +188,9 @@ public partial class SelectionManager : MonoBehaviour
         {
             selection = new List<SelectableObject>();
         }
-        selection.AddRange(FindSelectableObjectsInArea(args, selection));
+
+        List<SelectableObject> found = FindSelectableObjectsInArea(args);
+        selection.AddRange(found.FindAll(a => !selection.Contains(a)));
     }
 
     private void DoSelectionInRangeFromSameType(SelectionArgObject args, SelectableObject selected)
@@ -172,7 +201,7 @@ public partial class SelectionManager : MonoBehaviour
         }
         if (lastSelectedObject.IsSelected)
         {
-            List<SelectableObject> selectableObjects = FindSelectableObjectsInArea(args, new List<SelectableObject>(), selected);
+            List<SelectableObject> selectableObjects = FindSelectableObjectsInArea(args, selected);
             selectableObjects.ForEach(o => selection.Remove(o));
             if (selection.Count == 0)
             {
@@ -181,28 +210,68 @@ public partial class SelectionManager : MonoBehaviour
         }
         else
         {
-            selection.AddRange(FindSelectableObjectsInArea(args, selection, selected));
+            List<SelectableObject> found = FindSelectableObjectsInArea(args, selected);
+            selection.AddRange(found.FindAll(a => !selection.Contains(a)));
         }
 
     }
 
-    private List<SelectableObject> FindSelectableObjectsInArea(SelectionArgObject args, List<SelectableObject> exceptionList)
+    private List<SelectableObject> FindSelectableObjectsInArea(SelectionArgObject args)
     {
-        return FindSelectableObjectsInArea(args, exceptionList, null);
+        return FindSelectableObjectsInArea(args, null);
     }
 
-    private List<SelectableObject> FindSelectableObjectsInArea(SelectionArgObject args, List<SelectableObject> exceptionList, SelectableObject selected)
+    private List<SelectableObject> FindSelectableObjectsInArea(SelectionArgObject args, SelectableObject selected)
     {
-        
+
         List<SelectableObject> list = new List<SelectableObject>();
+
         foreach (var obj in mainList)
         {
             var screenPointPosition = args.MainCamera.WorldToScreenPoint(obj.transform.position);
-            if (screenPointPosition.x > args.Min.x && screenPointPosition.x < args.Max.x && screenPointPosition.y > args.Min.y && screenPointPosition.y < args.Max.y)
+            bool isObjectInsideArea = screenPointPosition.x > args.Min.x && screenPointPosition.x < args.Max.x && screenPointPosition.y > args.Min.y && screenPointPosition.y < args.Max.y;
+            if (isObjectInsideArea)
             {
-                if (!exceptionList.Contains(obj) && (selected == null || selected.typeStr.Equals(obj.typeStr)))
+                bool mustAddSelectable = selected == null || selected.typeStr.Equals(obj.typeStr);
+                if (mustAddSelectable)
+                {
                     list.Add(obj);
+                }
             }
+        }
+
+        return NormalizeList(selected, list);
+    }
+
+    private List<SelectableObject> NormalizeList(SelectableObject selected, List<SelectableObject> list)
+    {
+        SelectableObject.SelectableTypeEnum type = GetMinPrecedenceOrder(list);
+        List<SelectableObject> filteredListByType = list.FindAll(s => s.type == type);
+        filteredListByType = AdjustMultipleSelection(selected, filteredListByType, type);
+        return filteredListByType;
+    }
+
+    private SelectableObject.SelectableTypeEnum GetMinPrecedenceOrder(List<SelectableObject> list)
+    {
+        var minPrecedence = 999;
+        SelectableObject.SelectableTypeEnum type = SelectableObject.SelectableTypeEnum.NONE;
+        list.ForEach(s =>
+        {
+            int objPrecedence;
+            if (precedenceSelectionOrder.TryGetValue(s.type, out objPrecedence) && minPrecedence > objPrecedence)
+            {
+                minPrecedence = objPrecedence;
+                type = s.type;
+            }
+        });
+        return type;
+    }
+
+    private List<SelectableObject> AdjustMultipleSelection(SelectableObject selected, List<SelectableObject> list, SelectableObject.SelectableTypeEnum type)
+    {
+        if (!canSelectMultiple.Contains(type) && list.Count > 0)
+        {
+            return new List<SelectableObject>() { selected };
         }
         return list;
     }

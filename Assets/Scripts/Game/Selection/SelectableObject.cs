@@ -9,7 +9,16 @@ using UnityEngine.EventSystems;
 public class SelectableObject : MonoBehaviour
 {
 
+    public enum SelectableTypeEnum
+    {
+        UNIT, //Any unit
+        BUILDING, //Any building
+        CONSUMABLE, // Items, Resources, etc... 
+        ENVIRONMENT,  //Any Environment
+        NONE //Can't be selected
+    }
     private bool _selected = false;
+    public SelectableTypeEnum type;
     public SelectionMark selectionMark;
 
     //TODO should be an Enum?
@@ -34,6 +43,6 @@ public class SelectableObject : MonoBehaviour
     {
         SelectionManager.Instance.RemoveFromMainList(this);
     }
-   
+
 
 }

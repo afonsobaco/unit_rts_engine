@@ -12,12 +12,8 @@ public class CameraManager : MonoBehaviour
     public float maxZoom;
     public float axisPressure = 0.3f;
 
+    [SerializeField]
     private Camera mainCamera;
-
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
 
     void LateUpdate()
     {
@@ -117,7 +113,7 @@ public class CameraManager : MonoBehaviour
 
     private void ZoomCamera(float y)
     {
-        Vector3 vZoom = mainCamera.transform.position + transform.forward * (zoomScale * Time.deltaTime * y);
+        Vector3 vZoom = mainCamera.transform.position + mainCamera.transform.forward * (zoomScale * Time.deltaTime * y);
         if (vZoom.y < minZoom)
         {
             vZoom = new Vector3(mainCamera.transform.position.x, minZoom, mainCamera.transform.position.z);
