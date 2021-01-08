@@ -735,9 +735,10 @@ GameObject:
   m_Component:
   - component: {fileID: 686975893}
   - component: {fileID: 686975897}
-  - component: {fileID: 686975896}
-  - component: {fileID: 686975895}
   - component: {fileID: 686975894}
+  - component: {fileID: 686975895}
+  - component: {fileID: 686975896}
+  - component: {fileID: 686975898}
   m_Layer: 0
   m_Name: SelectionMods
   m_TagString: Untagged
@@ -768,13 +769,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 686975892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c187f7a5b8aa4154aaea8cb5300c938e, type: 3}
+  m_Script: {fileID: 11500000, guid: 97b0b74f149e2644081054cc7f3f8c2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   active: 1
-  initialGameScreenPos: {x: 0, y: 0}
-  finalGameScreenPos: {x: 1, y: 1}
-  canSelectSameType: 000000000100000002000000
 --- !u!114 &686975895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -784,12 +782,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 686975892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c2ba08aff707f548b46365191de6bc5, type: 3}
+  m_Script: {fileID: 11500000, guid: 3090a0df00e9a254b95843090d6acf34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 0
-  primaryTypes: 00000000
-  secondaryOrderedTypes: 0100000002000000
+  active: 1
+  initialGameScreenPos: {x: 0, y: 0}
+  finalGameScreenPos: {x: 1, y: 1}
+  canSelectSameType: 000000000100000002000000
 --- !u!114 &686975896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -799,10 +798,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 686975892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e59f28aaddf065546bddbd23433ed4ce, type: 3}
+  m_Script: {fileID: 11500000, guid: b3577d99f316d53428b1750337eec0f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
+  primaryTypes: 00000000
+  secondaryOrderedTypes: 0100000002000000
 --- !u!114 &686975897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -815,7 +816,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3071ad9e41045e4a88ba99fe2780d16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
+--- !u!114 &686975898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686975892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cbb898c111abb146a57ea950c9c043b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  canGroupTypes: 000000000100000002000000
 --- !u!1001 &718922038
 PrefabInstance:
   m_ObjectHideFlags: 0
