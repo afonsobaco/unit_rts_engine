@@ -143,6 +143,11 @@ namespace RTSEngine.Manager
         {
             if (args.NewList.Count != 0 || args.IsAditive || args.IsSameType)
             {
+                if (args.IsAditive)
+                {
+                    args.NewList = args.OldList.Union(args.NewList).ToList();
+                }
+       
                 foreach (var mod in mods.GetComponents<AbstractSelectionMod>())
                 {
                     args.NewList = mod.ApplyMod(args);

@@ -14,6 +14,10 @@ namespace RTSEngine.Selection.Mod
         {
             if (active)
             {
+                if (args.MainList == null || args.MainList.Count == 0)
+                {
+                    return new List<SelectableObject>();
+                }
                 args = NormalizeArgs(args);
                 return Apply(args);
             }
@@ -21,18 +25,7 @@ namespace RTSEngine.Selection.Mod
         }
         private SelectionArgs NormalizeArgs(SelectionArgs args)
         {
-            if(args.IsAditive){
-                args.NewList = args.OldList.Union(args.NewList).ToList();
-            }
-            if(args.MainList == null){
-                args.MainList = new List<SelectableObject>();
-            }
-            if(args.NewList == null){
-                args.NewList = new List<SelectableObject>();
-            }
-            if(args.OldList == null){
-                args.OldList = new List<SelectableObject>();
-            }
+            
             return args;
         }
 
