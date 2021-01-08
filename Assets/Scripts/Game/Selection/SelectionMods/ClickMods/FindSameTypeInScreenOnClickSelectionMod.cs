@@ -7,7 +7,7 @@ using System;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class FindSameTypeInScreenOnClickSelectionMod : AbstracClickSelectionMod
+    public class FindSameTypeInScreenOnClickSelectionMod : AbstractClickSelectionMod
     {
 
         [SerializeField] private Vector2 initialGameScreenPos = new Vector2(0, 0);
@@ -15,7 +15,7 @@ namespace RTSEngine.Selection.Mod
         [SerializeField] protected List<SelectableTypeEnum> canSelectSameType = new List<SelectableTypeEnum>();
         protected override List<SelectableObject> Execute(SelectionArgs args)
         {
-            if (canSelectSameType.Contains(args.Clicked.type))
+            if (args.IsSameType && canSelectSameType.Contains(args.Clicked.type))
             {
                 List<SelectableObject> list = FindAllFromSameTypeOnScreen(args);
                 if (args.OldList.Contains(args.Clicked))

@@ -147,12 +147,12 @@ namespace RTSEngine.Manager
                 {
                     args.NewList = args.OldList.Union(args.NewList).ToList();
                 }
-       
+
                 foreach (var mod in mods.GetComponents<AbstractSelectionMod>())
                 {
                     args.NewList = mod.ApplyMod(args);
-                    if (!args.IsPreSelection && mod.active)
-                        Debug.Log(mod.GetType().Name + ": " + args.NewList.Count);
+                    // if (!args.IsPreSelection && mod.active)
+                    //     Debug.Log(mod.GetType().Name + ": " + args.NewList.Count);
                 };
             }
             return args.NewList;
@@ -198,8 +198,15 @@ namespace RTSEngine.Manager
             SelectionArgs args = new SelectionArgs();
             args.MainList = mainList;
             args.NewList = newSelection;
-            args.OldList = oldSelection;
             args.IsAditive = IsAditiveSelection;
+            if (IsAditiveSelection)
+            {
+                args.OldList = oldSelection;
+            }
+            else
+            {
+                args.OldList = new List<SelectableObject>();
+            }
             args.IsSameType = IsSameTypeSelection;
             args.Camera = mainCamera;
             args.InitialPos = initialClickPosition;
