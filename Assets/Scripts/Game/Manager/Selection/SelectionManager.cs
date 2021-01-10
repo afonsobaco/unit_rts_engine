@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using RTSEngine.Core;
-using RTSEngine.Manager.Selection;
+using RTSEngine.Selection;
 using RTSEngine.Selection.Mod;
 using RTSEngine.Selection.Util;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
 using RTSEngine.Manager;
-using RTSEngine.Manager.Selection;
+using RTSEngine.Selection;
 using System.Linq;
 
 namespace RTSEngine.Selection.Mod
