@@ -74,5 +74,14 @@ namespace RTSEngine.Selection.Util
         {
             return (initialScreenPosition + finalScreenPosition) / 2;
         }
+
+        public static List<SelectableObject> FindAllOnScreen(SelectionArgs args, Vector2 initialGameScreenPos, Vector2 finalGameScreenPos)
+        {
+            var initialPos = args.Camera.ViewportToScreenPoint(initialGameScreenPos);
+            var finalPos = args.Camera.ViewportToScreenPoint(finalGameScreenPos);
+            var list = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(args.MainList, initialPos, finalPos, args.Camera);
+            return list;
+        }
+
     }
 }

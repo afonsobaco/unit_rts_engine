@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using RTSEngine.Core;
 using RTSEngine.Selection.Util;
-using RTSEngine.Manager;
 using UnityEngine;
 using System;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class FindSameTypeInScreenOnClickSelectionMod : AbstractClickSelectionMod
+    public class DoubleClickSelectionOnClickMod : AbstractClickSelectionMod
     {
         protected override List<SelectableObject> Execute(SelectionArgs args)
         {
-            if (args.IsSameType && GetSelectionSettings().CanSelectSameType.Contains(args.Clicked.type))
+            if (args.IsDoubleClick && GetSelectionSettings().CanSelectSameType.Contains(args.Clicked.type))
             {
                 List<SelectableObject> list = SameTypeUtil.GetFromSameTypeInSelection(args, GetSelectionSettings().InitialGameScreenPos, GetSelectionSettings().FinalGameScreenPos);
-                if (args.OldList.Contains(args.Clicked))
+                if (!args.OldList.Contains(args.Clicked))
                 {
                     args.NewList.RemoveAll(a => list.Contains(a));
                 }
@@ -31,7 +30,5 @@ namespace RTSEngine.Selection.Mod
             }
             return args.NewList;
         }
-
-
     }
 }

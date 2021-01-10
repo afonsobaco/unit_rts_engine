@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
+using RTSEngine.Manager;
+using RTSEngine.Manager.Selection;
 using System.Linq;
 
 namespace RTSEngine.Selection.Mod
@@ -25,8 +27,11 @@ namespace RTSEngine.Selection.Mod
         }
         private SelectionArgs NormalizeArgs(SelectionArgs args)
         {
-            
             return args;
+        }
+
+        protected SelectionSettingsSO GetSelectionSettings(){
+            return SelectionManager.Instance.SelectionSettings;
         }
 
         protected abstract List<SelectableObject> Apply(SelectionArgs args);

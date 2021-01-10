@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,23 +8,24 @@ namespace RTSEngine.Manager
 {
     public class PlayerInputManager : MonoBehaviour
     {
-        public KeyCode AditiveSelectionKeyCode = KeyCode.LeftControl;
-        public KeyCode SameTypeSelectionKeyCode = KeyCode.LeftShift;
-        public KeyCode groupKeyCode = KeyCode.LeftControl;
-        private Vector2 initialMousePosition;
+        public KeyCode AditiveSelectionKeyCode = KeyCode.LeftShift;
+        public KeyCode SameTypeSelectionKeyCode = KeyCode.LeftControl;
+        public KeyCode groupKeyCode = KeyCode.Z;
+        public float doubleClickTime = 0.3f;
         private Dictionary<KeyCode, int> groupKeys = new Dictionary<KeyCode, int>()
-    {
-        {KeyCode.Alpha1, 1},
-        {KeyCode.Alpha2, 2},
-        {KeyCode.Alpha3, 3},
-        {KeyCode.Alpha4, 4},
-        {KeyCode.Alpha5, 5},
-        {KeyCode.Alpha6, 6},
-        {KeyCode.Alpha7, 7},
-        {KeyCode.Alpha8, 8},
-        {KeyCode.Alpha9, 9},
-        {KeyCode.Alpha0, 10}
-    };
+        {
+            {KeyCode.Alpha1, 1},
+            {KeyCode.Alpha2, 2},
+            {KeyCode.Alpha3, 3},
+            {KeyCode.Alpha4, 4},
+            {KeyCode.Alpha5, 5},
+            {KeyCode.Alpha6, 6},
+            {KeyCode.Alpha7, 7},
+            {KeyCode.Alpha8, 8},
+            {KeyCode.Alpha9, 9},
+            {KeyCode.Alpha0, 10}
+        };
+        private float lastTimeClicked;
 
         void Update()
         {
@@ -83,10 +85,25 @@ namespace RTSEngine.Manager
 
             if (Input.GetMouseButtonUp(0))
             {
+                VerifyDoubleClick();
                 SelectionManager.Instance.EndOfSelection(Input.mousePosition);
             }
+
+
         }
 
+        private void VerifyDoubleClick()
+        {
+            if (Time.time - lastTimeClicked <= doubleClickTime)
+            {
+                SelectionManager.Instance.IsDoubleClick = true;
+            }
+            else
+            {
+                lastTimeClicked = Time.time;
+            }
+
+        }
     }
 
 }

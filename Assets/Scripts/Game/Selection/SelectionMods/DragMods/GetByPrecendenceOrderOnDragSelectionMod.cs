@@ -9,13 +9,11 @@ namespace RTSEngine.Selection.Mod
 
     public class GetByPrecendenceOrderOnDragSelectionMod : AbstractDragSelectionMod
     {
-        [SerializeField] protected List<SelectableTypeEnum> primaryTypes = new List<SelectableTypeEnum>();
-        [SerializeField] protected List<SelectableTypeEnum> secondaryOrderedTypes = new List<SelectableTypeEnum>();
 
         protected override List<SelectableObject> Execute(SelectionArgs args)
         {
 
-            List<SelectableObject> filteredList = args.NewList.FindAll(a => primaryTypes.Contains(a.type));
+            List<SelectableObject> filteredList = args.NewList.FindAll(a => GetSelectionSettings().PrimaryTypes.Contains(a.type));
             if (filteredList.Count == 0)
             {
                 if (args.IsPreSelection)
@@ -33,7 +31,7 @@ namespace RTSEngine.Selection.Mod
 
         private List<SelectableObject> GetSecondarySelection(SelectionArgs args)
         {
-            foreach (var secondaryType in secondaryOrderedTypes)
+            foreach (var secondaryType in GetSelectionSettings().SecondaryOrderedTypes)
             {
                 List<SelectableObject> list = args.NewList.FindAll(a => a.type == secondaryType);
                 if (list.Count > 0)

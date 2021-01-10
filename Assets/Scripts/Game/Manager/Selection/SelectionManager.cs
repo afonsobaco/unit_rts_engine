@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using RTSEngine.Core;
+using RTSEngine.Manager.Selection;
 using RTSEngine.Selection.Mod;
 using RTSEngine.Selection.Util;
 
@@ -11,6 +12,7 @@ namespace RTSEngine.Manager
     {
 
         [SerializeField] private Camera mainCamera;
+        [SerializeField] private SelectionSettingsSO selectionSettings;
         [SerializeField] private RectTransform selectionBox;
         [SerializeField] private List<SelectableObject> mainList = new List<SelectableObject>();
         [SerializeField] private List<SelectableObject> selection = new List<SelectableObject>();
@@ -25,6 +27,7 @@ namespace RTSEngine.Manager
         public static SelectionManager Instance { get; private set; }
         public bool IsAditiveSelection { get; set; }
         public bool IsSameTypeSelection { get; set; }
+        public bool IsDoubleClick { get; set; }
         public bool IsSelecting
         {
             get { return isSelecting; }
@@ -36,6 +39,8 @@ namespace RTSEngine.Manager
         }
 
         public SelectableObject ObjectClicked { get; private set; }
+        public SelectionSettingsSO SelectionSettings { get => selectionSettings; }
+
         void Awake()
         {
             if (Instance == null)
@@ -86,6 +91,7 @@ namespace RTSEngine.Manager
             preSelection.ForEach(a => a.IsPreSelected = false);
             preSelection = new List<SelectableObject>();
             Instance.IsSelecting = false;
+            Instance.IsDoubleClick = false;
         }
 
         public void DoSelection()
@@ -147,12 +153,9 @@ namespace RTSEngine.Manager
                 {
                     args.NewList = args.OldList.Union(args.NewList).ToList();
                 }
-
                 foreach (var mod in mods.GetComponents<AbstractSelectionMod>())
                 {
                     args.NewList = mod.ApplyMod(args);
-                    // if (!args.IsPreSelection && mod.active)
-                    //     Debug.Log(mod.GetType().Name + ": " + args.NewList.Count);
                 };
             }
             return args.NewList;
@@ -207,6 +210,7 @@ namespace RTSEngine.Manager
             {
                 args.OldList = new List<SelectableObject>();
             }
+            args.IsDoubleClick = IsDoubleClick;
             args.IsSameType = IsSameTypeSelection;
             args.Camera = mainCamera;
             args.InitialPos = initialClickPosition;

@@ -6,10 +6,9 @@ namespace RTSEngine.Selection.Mod
 {
     public class CanGroupSelectionMod : AbstractSelectionMod
     {
-        [SerializeField] protected List<SelectableTypeEnum> canGroupTypes = new List<SelectableTypeEnum>();
         protected override List<SelectableObject> Apply(SelectionArgs args)
         {
-            var allNewObjectsThatCanGroup = args.NewList.FindAll(a => canGroupTypes.Contains(a.type));
+            var allNewObjectsThatCanGroup = args.NewList.FindAll(a => GetSelectionSettings().CanGroupTypes.Contains(a.type));
             if (allNewObjectsThatCanGroup.Count > 0)
             {
                 return allNewObjectsThatCanGroup;
