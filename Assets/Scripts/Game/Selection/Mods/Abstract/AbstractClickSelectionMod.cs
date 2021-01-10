@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RTSEngine.Core;
+using UnityEngine;
 
 namespace RTSEngine.Selection.Mod
 {
@@ -8,7 +9,7 @@ namespace RTSEngine.Selection.Mod
 
         protected override List<SelectableObject> Apply(SelectionArgs args)
         {
-            if (!args.Clicked)
+            if (!args.Clicked || args.IsPreSelection)
             {
                 return args.NewList;
             }

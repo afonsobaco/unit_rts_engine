@@ -7,7 +7,7 @@ using System;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class DoubleClickSelectionOnClickMod : AbstractClickSelectionMod
+    public class FindSameTypeInScreenOnDoubleClickSelectionMod : AbstractClickSelectionMod
     {
         protected override List<SelectableObject> Execute(SelectionArgs args)
         {

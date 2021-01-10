@@ -47,10 +47,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraSpeed: 20
+  panSpeed: 50
   boundriesOffset: 0.03
   zoomScale: 50
   minZoom: 3
   maxZoom: 20
+  rotateCameraWhenZooming: 0
   axisPressure: 0.1
   mainCamera: {fileID: 0}
 --- !u!114 &5065022365606823280
@@ -103,6 +105,7 @@ GameObject:
   - component: {fileID: 5065022366458217073}
   - component: {fileID: 5065022366458217075}
   - component: {fileID: 1951159691}
+  - component: {fileID: 3805065016450238034}
   - component: {fileID: 2324182845797858846}
   - component: {fileID: 1951159692}
   m_Layer: 0
@@ -201,6 +204,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 733db861bcc72134d87be6f66274cfd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+--- !u!114 &3805065016450238034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5065022366458217085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3762fad88ec97d47b5be3a334829a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   active: 1
