@@ -7,52 +7,66 @@ namespace RTSEngine.Manager
 {
     public class CameraManager : MonoBehaviour
     {
-        public int cameraSpeed;
-        public float boundriesOffset;
-        public float zoomScale;
-        public float minZoom;
-        public float maxZoom;
-        public float axisPressure = 0.3f;
+        [SerializeField] private int cameraSpeed = 20;
+        [SerializeField] private int panSpeed = 50;
+        [SerializeField] private float boundriesOffset = 0.03f;
+        [SerializeField] private float zoomScale = 100;
+        [SerializeField] private float minZoom = 3;
+        [SerializeField] private float maxZoom = 20;
+        [SerializeField] private bool rotateCameraWhenZooming = false;
+        [SerializeField] private float axisPressure = 0.3f;
 
-        [SerializeField]
-        private Camera mainCamera;
+        [SerializeField] private Camera mainCamera;
 
-        void LateUpdate()
+        private Vector3 origin;
+        private bool isPanning;
+
+
+        public static CameraManager Instance { get; private set; }
+        public Vector3 Origin { get => origin; set => origin = value; }
+        public bool IsPanning { get => isPanning; set => isPanning = value; }
+
+        void Awake()
         {
-            //If space is pressed, ignore camera controls
-            if (Input.GetKey(KeyCode.Space))
+            if (Instance == null)
             {
-                CenterCameraToPosition();
+                Instance = this;
+                DontDestroyOnLoad(this);
             }
             else
             {
-                DoCameraMovement();
-            }
-
-            DoCameraZoom();
-
-        }
-
-        private void DoCameraZoom()
-        {
-            if (Input.mouseScrollDelta.y != 0)
-            {
-                ZoomCamera(Input.mouseScrollDelta.y);
+                Destroy(gameObject);
             }
         }
 
-        private void DoCameraMovement()
+        public void DoCameraPanning(Vector2 mouseAxis)
         {
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
-
-            if (Mathf.Abs(horizontal) > axisPressure || Mathf.Abs(vertical) > axisPressure)
+            if (!isPanning)
             {
-                DoAxisCameraMovement(horizontal, vertical);
+                return;
             }
-            else
+
+            Vector3 desiredMove = new Vector3(-mouseAxis.x, 0, -mouseAxis.y);
+
+            desiredMove *= (panSpeed * mainCamera.transform.position.y);
+            desiredMove *= Time.deltaTime;
+            desiredMove = Quaternion.Euler(new Vector3(0f, transform.eulerAngles.y, 0f)) * desiredMove;
+            desiredMove = mainCamera.transform.InverseTransformDirection(desiredMove);
+            mainCamera.transform.Translate(desiredMove, Space.Self);
+        }
+
+        public void DoCameraMovement(float horizontal, float vertical, Vector3 mousePosition)
+        {
+            if (!isPanning)
             {
-                DoMouseCameraMovement();
+                if ((Mathf.Abs(horizontal) > axisPressure || Mathf.Abs(vertical) > axisPressure))
+                {
+                    DoAxisCameraMovement(horizontal, vertical);
+                }
+                else
+                {
+                    DoMouseCameraMovement(mousePosition);
+                }
             }
         }
 
@@ -62,9 +76,9 @@ namespace RTSEngine.Manager
             MoveCameraVertical(vertical);
         }
 
-        private void DoMouseCameraMovement()
+        private void DoMouseCameraMovement(Vector3 mousePosition)
         {
-            var mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+            var mousePos = Camera.main.ScreenToViewportPoint(mousePosition);
             if (mousePos.x >= 0 && mousePos.x <= 1 && mousePos.y >= 0 && mousePos.y <= 1)
             {
                 DoMouseCameraMovementBy(mousePos);
@@ -113,7 +127,7 @@ namespace RTSEngine.Manager
 
         }
 
-        private void ZoomCamera(float y)
+        public void ZoomCamera(float y)
         {
             Vector3 vZoom = mainCamera.transform.position + mainCamera.transform.forward * (zoomScale * Time.deltaTime * y);
             if (vZoom.y < minZoom)
@@ -127,7 +141,7 @@ namespace RTSEngine.Manager
             mainCamera.transform.position = vZoom;
         }
 
-        private void CenterCameraToPosition()
+        public void CenterCameraToPosition()
         {
             Vector3 midPoint = SelectionManager.Instance.GetSelectionMainPoint();
             float z = midPoint.z - (mainCamera.transform.position.y * Mathf.Tan((90 - mainCamera.transform.rotation.eulerAngles.x) * Mathf.Deg2Rad));

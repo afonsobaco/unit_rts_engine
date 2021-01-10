@@ -34,6 +34,47 @@ namespace RTSEngine.Manager
             // DoGroupSelection();
 
             SetSelectionKeys();
+
+
+        }
+
+        void LateUpdate()
+        {
+            SetCameraControls();
+            SetDragCameraControls();
+        }
+
+        private void SetCameraControls()
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                CameraManager.Instance.CenterCameraToPosition();
+            }
+            if (Input.mouseScrollDelta.y != 0)
+            {
+                CameraManager.Instance.ZoomCamera(Input.mouseScrollDelta.y);
+            }
+
+            CameraManager.Instance.DoCameraMovement(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.mousePosition);
+
+        }
+
+        private static void SetDragCameraControls()
+        {
+            if (Input.GetMouseButtonDown(2))
+            {
+                CameraManager.Instance.IsPanning = true;
+                CameraManager.Instance.Origin = Input.mousePosition;
+            }
+
+            if (Input.GetMouseButton(2))
+            {
+                CameraManager.Instance.DoCameraPanning(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")));
+            }
+            if (Input.GetMouseButtonUp(2))
+            {
+                CameraManager.Instance.IsPanning = false;
+            }
         }
 
         private void SetSelectionKeys()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
 using RTSEngine.Selection.Mod;
@@ -7,6 +6,8 @@ namespace RTSEngine.Selection.Util
 {
     public class SelectionUtil
     {
+
+        private static System.Random rng = new System.Random();
 
         public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> mainList, Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera) where T : MonoBehaviour
         {
@@ -82,6 +83,22 @@ namespace RTSEngine.Selection.Util
             var list = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(args.MainList, initialPos, finalPos, args.Camera);
             return list;
         }
+
+
+        public static List<T> Shuffle<T>(List<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+            return list;
+        }
+
 
     }
 }
