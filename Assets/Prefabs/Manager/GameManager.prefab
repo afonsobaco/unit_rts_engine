@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraSpeed: 20
   boundriesOffset: 0.03
-  zoomScale: 20
+  zoomScale: 50
   minZoom: 3
   maxZoom: 20
   axisPressure: 0.1
@@ -68,6 +68,7 @@ MonoBehaviour:
   AditiveSelectionKeyCode: 304
   SameTypeSelectionKeyCode: 306
   groupKeyCode: 122
+  doubleClickTime: 0.3
 --- !u!114 &5065022365606823281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,6 +82,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
+  selectionSettings: {fileID: 11400000, guid: 847b65964f4fff54ca2aabed19a30b13, type: 2}
   selectionBox: {fileID: 0}
   mainList: []
   selection: []
@@ -100,6 +102,9 @@ GameObject:
   - component: {fileID: 5065022366458217086}
   - component: {fileID: 5065022366458217073}
   - component: {fileID: 5065022366458217075}
+  - component: {fileID: 1951159691}
+  - component: {fileID: 2324182845797858846}
+  - component: {fileID: 1951159692}
   m_Layer: 0
   m_Name: SelectionMods
   m_TagString: Untagged
@@ -160,9 +165,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 1
-  initialGameScreenPos: {x: 0, y: 0}
-  finalGameScreenPos: {x: 1, y: 1}
-  canSelectSameType: 000000000100000002000000
 --- !u!114 &5065022366458217073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,8 +178,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 1
-  primaryTypes: 00000000
-  secondaryOrderedTypes: 0100000002000000
 --- !u!114 &5065022366458217075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,4 +191,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 1
-  canGroupTypes: 000000000100000002000000
+--- !u!114 &1951159691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5065022366458217085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733db861bcc72134d87be6f66274cfd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+--- !u!114 &2324182845797858846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5065022366458217085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a88a73928417f643bfe02efab87ff9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+--- !u!114 &1951159692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5065022366458217085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c66bf3a21beec1645bb725a915d082cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
