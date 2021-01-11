@@ -12,11 +12,12 @@ namespace RTSEngine.Selection.Mod
         {
             if (args.OldList.Count >= GetSelectionSettings().SelectionLimit)
             {
-                return args.OldList;
+                if(args.OldList.FindAll(a => !args.NewList.Contains(a)).Count == 0 ){
+                    return args.OldList;
+                }
             }
             return args.NewList;
         }
-
 
     }
 
