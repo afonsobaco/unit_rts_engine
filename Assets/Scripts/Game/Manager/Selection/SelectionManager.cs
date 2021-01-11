@@ -5,6 +5,7 @@ using RTSEngine.Core;
 using RTSEngine.Selection;
 using RTSEngine.Selection.Mod;
 using RTSEngine.Selection.Util;
+using System;
 
 namespace RTSEngine.Manager
 {
@@ -38,8 +39,17 @@ namespace RTSEngine.Manager
             }
         }
 
+        internal void PrintDebug()
+        {
+            Debug.Log("Selection Debug:");
+            selection.ForEach(a => Debug.Log(a.transform.parent.name));
+            Debug.Log("\nPreSelection Debug:");
+            preSelection.ForEach(a => Debug.Log(a.transform.parent.name));
+        }
+
         public SelectableObject ObjectClicked { get; private set; }
         public SelectionSettingsSO SelectionSettings { get => selectionSettings; }
+        public bool DoDebug { get; internal set; }
 
         void Awake()
         {
@@ -104,6 +114,10 @@ namespace RTSEngine.Manager
         }
         public void DoPreSelection(Vector3 finalPos)
         {
+            if(DoDebug){
+                PrintDebug();
+                DoDebug = false;
+            }
             finalClickPosition = finalPos;
             List<SelectableObject> newSelection = GetPrimaryPreSelection();
             newSelection = ApplyModsToPreSelection(preSelection, newSelection);
@@ -202,6 +216,7 @@ namespace RTSEngine.Manager
             args.MainList = mainList;
             args.NewList = newSelection;
             args.IsAditive = IsAditiveSelection;
+            args.PreSelectionList = preSelection;
             if (IsAditiveSelection)
             {
                 args.OldList = oldSelection;

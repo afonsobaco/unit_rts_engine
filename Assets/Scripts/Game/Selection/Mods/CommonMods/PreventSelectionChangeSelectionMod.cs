@@ -6,7 +6,7 @@ using System;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class PreSelectionLimitSelectionMod : AbstractSelectionMod
+    public class PreventSelectionChangeSelectionMod : AbstractSelectionMod
     {
         protected override List<SelectableObject> Apply(SelectionArgs args)
         {

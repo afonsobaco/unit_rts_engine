@@ -35,7 +35,15 @@ namespace RTSEngine.Manager
 
             SetSelectionKeys();
 
+            SetDebugCommands();
 
+        }
+
+        private void SetDebugCommands()
+        {
+           if(Input.GetKeyUp(KeyCode.G)){
+               SelectionManager.Instance.DoDebug = true;
+           }
         }
 
         void LateUpdate()
