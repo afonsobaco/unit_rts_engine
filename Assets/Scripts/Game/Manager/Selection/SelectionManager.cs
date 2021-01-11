@@ -39,17 +39,9 @@ namespace RTSEngine.Manager
             }
         }
 
-        internal void PrintDebug()
-        {
-            Debug.Log("Selection Debug:");
-            selection.ForEach(a => Debug.Log(a.transform.parent.name));
-            Debug.Log("\nPreSelection Debug:");
-            preSelection.ForEach(a => Debug.Log(a.transform.parent.name));
-        }
-
         public SelectableObject ObjectClicked { get; private set; }
         public SelectionSettingsSO SelectionSettings { get => selectionSettings; }
-        public bool DoDebug { get; internal set; }
+        public List<SelectableObject> Selection { get => selection;}
 
         void Awake()
         {
@@ -108,16 +100,12 @@ namespace RTSEngine.Manager
         {
             SelectableObject clicked = GetSelectableObjectClicked();
             List<SelectableObject> newSelection = GetPrimarySelection(clicked);
-            newSelection = ApplyModsToSelection(selection, newSelection, clicked);
-            SwitchSelectionStatusFromOldToNewList(selection, newSelection);
+            newSelection = ApplyModsToSelection(Selection, newSelection, clicked);
+            SwitchSelectionStatusFromOldToNewList(Selection, newSelection);
             selection = newSelection;
         }
         public void DoPreSelection(Vector3 finalPos)
         {
-            if(DoDebug){
-                PrintDebug();
-                DoDebug = false;
-            }
             finalClickPosition = finalPos;
             List<SelectableObject> newSelection = GetPrimaryPreSelection();
             newSelection = ApplyModsToPreSelection(preSelection, newSelection);
@@ -235,7 +223,10 @@ namespace RTSEngine.Manager
 
         public Vector3 GetSelectionMainPoint()
         {
-            return Vector3.zero;
+            if(selection.Count == 0){
+                return Vector3.zero;
+            }
+            return selection[0].transform.position;
         }
 
 

@@ -35,17 +35,7 @@ namespace RTSEngine.Manager
 
             SetSelectionKeys();
 
-            SetDebugCommands();
-
         }
-
-        private void SetDebugCommands()
-        {
-           if(Input.GetKeyUp(KeyCode.G)){
-               SelectionManager.Instance.DoDebug = true;
-           }
-        }
-
         void LateUpdate()
         {
             SetCameraControls();
@@ -54,9 +44,13 @@ namespace RTSEngine.Manager
 
         private void SetCameraControls()
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                CameraManager.Instance.CenterCameraToPosition();
+                CameraManager.Instance.IsCentering = true;
+            }
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                CameraManager.Instance.IsCentering = false;
             }
             if (Input.mouseScrollDelta.y != 0)
             {

@@ -30,13 +30,13 @@ namespace RTSEngine.Manager
 
         private Vector3 origin;
         private bool isPanning;
-
         private float magicNumber = 7.08f;
-
+        private bool isCentering;
 
         public static CameraManager Instance { get; private set; }
         public Vector3 Origin { get => origin; set => origin = value; }
         public bool IsPanning { get => isPanning; set => isPanning = value; }
+        public bool IsCentering { get => isCentering; set => isCentering = value; }
 
         void Awake()
         {
@@ -53,7 +53,7 @@ namespace RTSEngine.Manager
 
         public void DoCameraPanning(Vector2 mouseAxis)
         {
-            if (!isPanning)
+            if (!isPanning || IsCentering)
             {
                 return;
             }
@@ -69,21 +69,29 @@ namespace RTSEngine.Manager
 
         public void DoCameraMovement(float horizontal, float vertical, Vector3 mousePosition)
         {
-            if (!isPanning)
+            if (isCentering)
             {
-                if ((Mathf.Abs(horizontal) > axisPressure || Mathf.Abs(vertical) > axisPressure))
-                {
-                    DoAxisCameraMovement(horizontal, vertical);
-                }
-                else
-                {
-                    DoMouseCameraMovement(mousePosition);
-                }
+                CenterCameraToSelection();
+                return;
             }
+            if (isPanning)
+            {
+                return;
+            }
+            if ((Mathf.Abs(horizontal) > axisPressure || Mathf.Abs(vertical) > axisPressure))
+            {
+                DoAxisCameraMovement(horizontal, vertical);
+            }
+            else
+            {
+                DoMouseCameraMovement(mousePosition);
+            }
+
         }
 
         private void DoAxisCameraMovement(float horizontal, float vertical)
         {
+
             MoveCameraHorizontal(horizontal);
             MoveCameraVertical(vertical);
 
@@ -161,8 +169,12 @@ namespace RTSEngine.Manager
             mainCamera.transform.position = vZoom;
         }
 
-        public void CenterCameraToPosition()
+        public void CenterCameraToSelection()
         {
+            if (SelectionManager.Instance.Selection.Count == 0)
+            {
+                return;
+            }
             Vector3 midPoint = SelectionManager.Instance.GetSelectionMainPoint();
             float z = midPoint.z - GetCameraZDistance();
             var pos = new Vector3(midPoint.x, mainCamera.transform.position.y, (float)z);
