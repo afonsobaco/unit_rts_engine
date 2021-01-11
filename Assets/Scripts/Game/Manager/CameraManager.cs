@@ -7,19 +7,31 @@ namespace RTSEngine.Manager
 {
     public class CameraManager : MonoBehaviour
     {
-        [SerializeField] private int cameraSpeed = 20;
-        [SerializeField] private int panSpeed = 50;
+
+        [SerializeField] private Camera mainCamera;
+        [Space]
+        [Header("Camera movement")]
+        [SerializeField] private float cameraSpeed = 1.5f;
+        [SerializeField] private float panSpeed = 5;
         [SerializeField] private float boundriesOffset = 0.03f;
+
+        [Space]
+        [Header("Zoom")]
         [SerializeField] private float zoomScale = 100;
         [SerializeField] private float minZoom = 3;
         [SerializeField] private float maxZoom = 20;
         [SerializeField] private bool rotateCameraWhenZooming = false;
-        [SerializeField] private float axisPressure = 0.3f;
+        [SerializeField] private float axisPressure = 0.1f;
 
-        [SerializeField] private Camera mainCamera;
+        [Space]
+        [Header("Map Configs(REMOVE)")]
+
+        [SerializeField] private float sizeFromMidPoint = 10;
 
         private Vector3 origin;
         private bool isPanning;
+
+        private float magicNumber = 7.08f;
 
 
         public static CameraManager Instance { get; private set; }
@@ -74,6 +86,12 @@ namespace RTSEngine.Manager
         {
             MoveCameraHorizontal(horizontal);
             MoveCameraVertical(vertical);
+
+            mainCamera.transform.position = new Vector3(
+                Mathf.Clamp(mainCamera.transform.position.x, -sizeFromMidPoint + GetCameraZDistance(), sizeFromMidPoint - GetCameraZDistance()),
+                mainCamera.transform.position.y,
+                Mathf.Clamp(mainCamera.transform.position.z, -sizeFromMidPoint - (GetCameraZDistance() / 2), sizeFromMidPoint - GetCameraZDistance())
+                );
         }
 
         private void DoMouseCameraMovement(Vector3 mousePosition)
@@ -117,13 +135,15 @@ namespace RTSEngine.Manager
 
         private void MoveCameraVertical(float value)
         {
-            mainCamera.transform.position += new Vector3(0, 0, value * cameraSpeed * Time.deltaTime);
+            var speed = (mainCamera.transform.position.y * cameraSpeed) + magicNumber; //magic number!
+            mainCamera.transform.position += new Vector3(0, 0, value * speed * Time.deltaTime);
 
         }
 
         private void MoveCameraHorizontal(float value)
         {
-            mainCamera.transform.position += new Vector3(value * cameraSpeed * Time.deltaTime, 0, 0);
+            var speed = (mainCamera.transform.position.y * cameraSpeed) + magicNumber; //magic number!
+            mainCamera.transform.position += new Vector3(value * speed * Time.deltaTime, 0, 0);
 
         }
 
@@ -144,10 +164,15 @@ namespace RTSEngine.Manager
         public void CenterCameraToPosition()
         {
             Vector3 midPoint = SelectionManager.Instance.GetSelectionMainPoint();
-            float z = midPoint.z - (mainCamera.transform.position.y * Mathf.Tan((90 - mainCamera.transform.rotation.eulerAngles.x) * Mathf.Deg2Rad));
+            float z = midPoint.z - GetCameraZDistance();
             var pos = new Vector3(midPoint.x, mainCamera.transform.position.y, (float)z);
             if (pos != Vector3.zero)
                 mainCamera.transform.position = pos;
+        }
+
+        private float GetCameraZDistance()
+        {
+            return (mainCamera.transform.position.y * Mathf.Tan((90 - mainCamera.transform.rotation.eulerAngles.x) * Mathf.Deg2Rad));
         }
     }
 

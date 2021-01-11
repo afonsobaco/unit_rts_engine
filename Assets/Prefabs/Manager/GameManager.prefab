@@ -95,7 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f3d7dd19bb7ea43925b0e05e865c8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraSpeed: 40
+  mainCamera: {fileID: 0}
+  cameraSpeed: 1.64
   panSpeed: 5
   boundriesOffset: 0.03
   zoomScale: 100
@@ -103,7 +104,7 @@ MonoBehaviour:
   maxZoom: 20
   rotateCameraWhenZooming: 0
   axisPressure: 0.1
-  mainCamera: {fileID: 0}
+  sizeFromMidPoint: 50
 --- !u!114 &5065022365606823280
 MonoBehaviour:
   m_ObjectHideFlags: 0
