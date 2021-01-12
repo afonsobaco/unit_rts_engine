@@ -31,7 +31,7 @@ namespace RTSEngine.Manager
         {
             SetMouseClick();
 
-            // DoGroupSelection();
+            DoGroupSelection();
 
             SetSelectionKeys();
 
@@ -93,11 +93,11 @@ namespace RTSEngine.Manager
             {
                 if (Input.GetKey(groupKeyCode))
                 {
-                    // SelectionManager.Instance.SetGroup(keyPressed);
+                    SelectionManager.Instance.SetGroup(keyPressed);
                 }
                 else
                 {
-                    // SelectionManager.Instance.GetGroup(keyPressed);
+                    SelectionManager.Instance.GetGroup(keyPressed);
                 }
             }
         }

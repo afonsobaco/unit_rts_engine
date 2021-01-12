@@ -7,16 +7,16 @@ namespace RTSEngine.Selection.Mod
     public abstract class AbstractClickSelectionMod : AbstractSelectionMod
     {
 
-        protected override List<SelectableObject> Apply(SelectionArgs args)
-        {
-            if (!args.Clicked || args.IsPreSelection)
-            {
-                return args.NewList;
-            }
-            return Execute(args);
-        }
+        // protected override List<SelectableObject> Apply(SelectionArgs args)
+        // {
+        //     if (!args.Clicked || args.IsPreSelection)
+        //     {
+        //         return args.NewList;
+        //     }
+        //     return Execute(args);
+        // }
 
-        protected abstract List<SelectableObject> Execute(SelectionArgs args);
+        // protected abstract List<SelectableObject> Execute(SelectionArgs args);
 
     }
 }

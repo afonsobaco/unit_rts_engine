@@ -9,26 +9,31 @@ namespace RTSEngine.Selection.Mod
 {
     public class FindSameTypeInScreenOnDoubleClickSelectionMod : AbstractClickSelectionMod
     {
-        protected override List<SelectableObject> Execute(SelectionArgs args)
+        protected override List<SelectableObject> Apply(SelectionArgsXP args)
         {
-            if (args.IsDoubleClick && GetSelectionSettings().CanSelectSameType.Contains(args.Clicked.type))
-            {
-                List<SelectableObject> list = SameTypeUtil.GetFromSameTypeInSelection(args, GetSelectionSettings().InitialGameScreenPos, GetSelectionSettings().FinalGameScreenPos);
-                if (!args.OldList.Contains(args.Clicked))
-                {
-                    args.NewList.RemoveAll(a => list.Contains(a));
-                }
-                else
-                {
-                    args.NewList = args.NewList.Union(list).ToList();
-                }
-
-                if (args.NewList.Count == 0)
-                {
-                    args.NewList.AddRange(list);
-                }
-            }
-            return args.NewList;
+            throw new NotImplementedException();
         }
+
+        // protected override List<SelectableObject> Execute(SelectionArgs args)
+        // {
+        //     if (args.IsDoubleClick && args.Settings.CanSelectSameType.Contains(args.Clicked.type))
+        //     {
+        //         List<SelectableObject> list = SameTypeUtil.GetFromSameTypeInSelection(args, args.Settings.InitialGameScreenPos, args.Settings.FinalGameScreenPos);
+        //         if (!args.OldList.Contains(args.Clicked))
+        //         {
+        //             args.NewList.RemoveAll(a => list.Contains(a));
+        //         }
+        //         else
+        //         {
+        //             args.NewList = args.NewList.Union(list).ToList();
+        //         }
+
+        //         if (args.NewList.Count == 0)
+        //         {
+        //             args.NewList.AddRange(list);
+        //         }
+        //     }
+        //     return args.NewList;
+        // }
     }
 }

@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace RTSEngine.Selection
+namespace RTSEngine.Core
 {
     public class SelectionOutline : MonoBehaviour
     {
@@ -11,6 +9,10 @@ namespace RTSEngine.Selection
         void Awake()
         {
             outline = this.GetComponent<Outline>();
+            if(!outline){
+                this.enabled = false;
+                return;
+            }
             outline.enabled = false;
         }
 

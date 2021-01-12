@@ -17,17 +17,15 @@ namespace RTSEngine.Selection
         [SerializeField] private List<SelectableTypeEnum> primaryTypes = new List<SelectableTypeEnum>();
         [SerializeField] private List<SelectableTypeEnum> secondaryOrderedTypes = new List<SelectableTypeEnum>();
         [SerializeField] private List<SelectableTypeEnum> canGroupTypes = new List<SelectableTypeEnum>();
-        [SerializeField] private List<SelectionModsSO> mods = new List<SelectionModsSO>();
 
         public Vector2 InitialGameScreenPos { get => initialGameScreenPos; set => initialGameScreenPos = value; }
         public Vector2 FinalGameScreenPos { get => finalGameScreenPos; set => finalGameScreenPos = value; }
 
-              public int SelectionLimit { get => selectionLimit; set => selectionLimit = value; }
+        public int SelectionLimit { get => selectionLimit; set => selectionLimit = value; }
         public List<SelectableTypeEnum> CanSelectSameType { get => canSelectSameType; set => canSelectSameType = value; }
         public List<SelectableTypeEnum> PrimaryTypes { get => primaryTypes; set => primaryTypes = value; }
         public List<SelectableTypeEnum> SecondaryOrderedTypes { get => secondaryOrderedTypes; set => secondaryOrderedTypes = value; }
         public List<SelectableTypeEnum> CanGroupTypes { get => canGroupTypes; set => canGroupTypes = value; }
-        public List<SelectionModsSO> Mods { get => mods; set => mods = value; }
     }
 
 }

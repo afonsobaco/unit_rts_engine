@@ -19,5 +19,3 @@ MonoBehaviour:
   primaryTypes: 00000000
   secondaryOrderedTypes: 0100000002000000
   canGroupTypes: 000000000100000002000000
-  mods:
-  - {fileID: 0}

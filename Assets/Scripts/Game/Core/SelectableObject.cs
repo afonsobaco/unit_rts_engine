@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using RTSEngine.Manager;
 
 namespace RTSEngine.Core
 {
-
     public class SelectableObject : MonoBehaviour
     {
         private bool _selected = false;
@@ -37,15 +35,13 @@ namespace RTSEngine.Core
 
         void OnEnable()
         {
-            SelectionManager.Instance.AddToMainList(this);
+            SelectableObjectMainList.Instance.AddToMainList(this);
         }
 
         void OnDisable()
         {
-            SelectionManager.Instance.RemoveFromMainList(this);
+            SelectableObjectMainList.Instance.RemoveFromMainList(this);
         }
 
-
     }
-
 }

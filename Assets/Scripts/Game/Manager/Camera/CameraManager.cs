@@ -20,7 +20,6 @@ namespace RTSEngine.Manager
         [SerializeField] private float zoomScale = 100;
         [SerializeField] private float minZoom = 3;
         [SerializeField] private float maxZoom = 20;
-        [SerializeField] private bool rotateCameraWhenZooming = false;
         [SerializeField] private float axisPressure = 0.1f;
 
         [Space]
@@ -171,7 +170,7 @@ namespace RTSEngine.Manager
 
         public void CenterCameraToSelection()
         {
-            if (SelectionManager.Instance.Selection.Count == 0)
+            if (SelectionManager.Instance.GetSelection().Count == 0)
             {
                 return;
             }

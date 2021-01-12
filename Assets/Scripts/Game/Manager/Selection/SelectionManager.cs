@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using RTSEngine.Core;
@@ -15,12 +15,11 @@ namespace RTSEngine.Manager
         [SerializeField] private Camera mainCamera;
         [SerializeField] private SelectionSettingsSO selectionSettings;
         [SerializeField] private RectTransform selectionBox;
-        [SerializeField] private List<SelectableObject> mainList = new List<SelectableObject>();
-        [SerializeField] private List<SelectableObject> selection = new List<SelectableObject>();
-        [SerializeField] private List<SelectableObject> preSelection = new List<SelectableObject>();
-
         [SerializeField] private Transform mods;
 
+        private List<SelectableObject> selection = new List<SelectableObject>();
+        private List<SelectableObject> preSelection = new List<SelectableObject>();
+        private Dictionary<int, List<SelectableObject>> groups = new Dictionary<int, List<SelectableObject>>();
         private bool isSelecting;
         private Vector3 initialClickPosition;
         private Vector3 finalClickPosition;
@@ -41,7 +40,7 @@ namespace RTSEngine.Manager
 
         public SelectableObject ObjectClicked { get; private set; }
         public SelectionSettingsSO SelectionSettings { get => selectionSettings; }
-        public List<SelectableObject> Selection { get => selection;}
+
 
         void Awake()
         {
@@ -56,15 +55,7 @@ namespace RTSEngine.Manager
             }
         }
 
-        public void RemoveFromMainList(SelectableObject selectableObject)
-        {
-            this.mainList.Remove(selectableObject);
-        }
-
-        public void AddToMainList(SelectableObject selectableObject)
-        {
-            this.mainList.Add(selectableObject);
-        }
+    
 
         void Update()
         {
@@ -96,14 +87,22 @@ namespace RTSEngine.Manager
             Instance.IsDoubleClick = false;
         }
 
+
         public void DoSelection()
         {
             SelectableObject clicked = GetSelectableObjectClicked();
             List<SelectableObject> newSelection = GetPrimarySelection(clicked);
-            newSelection = ApplyModsToSelection(Selection, newSelection, clicked);
-            SwitchSelectionStatusFromOldToNewList(Selection, newSelection);
-            selection = newSelection;
+            newSelection = PerformSelection(newSelection, clicked);
         }
+
+        private List<SelectableObject> PerformSelection(List<SelectableObject> newSelection, SelectableObject clicked)
+        {
+            newSelection = ApplyModsToSelection(selection, newSelection, clicked);
+            SwitchSelectionStatusFromOldToNewList(selection, newSelection);
+            selection = newSelection;
+            return newSelection;
+        }
+
         public void DoPreSelection(Vector3 finalPos)
         {
             finalClickPosition = finalPos;
@@ -122,13 +121,13 @@ namespace RTSEngine.Manager
             }
             else
             {
-                newSelection = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(mainList, initialClickPosition, finalClickPosition, mainCamera);
+                newSelection = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableObjectMainList.Instance.MainList, initialClickPosition, finalClickPosition, mainCamera);
             }
             return newSelection;
         }
         private List<SelectableObject> GetPrimaryPreSelection()
         {
-            return SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(mainList, initialClickPosition, finalClickPosition, mainCamera);
+            return SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableObjectMainList.Instance.MainList, initialClickPosition, finalClickPosition, mainCamera);
         }
 
         private List<SelectableObject> ApplyModsToSelection(List<SelectableObject> oldSelection, List<SelectableObject> newSelection, SelectableObject clicked)
@@ -157,7 +156,7 @@ namespace RTSEngine.Manager
                 }
                 foreach (var mod in mods.GetComponents<AbstractSelectionMod>())
                 {
-                    args.NewList = mod.ApplyMod(args);
+                    // args.NewList = mod.ApplyMod(args);
                 };
             }
             return args.NewList;
@@ -201,7 +200,7 @@ namespace RTSEngine.Manager
         private SelectionArgs GetSelectionArgs(List<SelectableObject> oldSelection, List<SelectableObject> newSelection)
         {
             SelectionArgs args = new SelectionArgs();
-            args.MainList = mainList;
+            args.MainList =SelectableObjectMainList.Instance.MainList;
             args.NewList = newSelection;
             args.IsAditive = IsAditiveSelection;
             args.PreSelectionList = preSelection;
@@ -216,20 +215,38 @@ namespace RTSEngine.Manager
             args.IsDoubleClick = IsDoubleClick;
             args.IsSameType = IsSameTypeSelection;
             args.Camera = mainCamera;
-            args.InitialPos = initialClickPosition;
-            args.FinalPos = finalClickPosition;
             return args;
         }
 
         public Vector3 GetSelectionMainPoint()
         {
-            if(selection.Count == 0){
+            if (selection.Count == 0)
+            {
                 return Vector3.zero;
             }
             return selection[0].transform.position;
         }
 
+        public void SetGroup(int keyPressed)
+        {
+            groups[keyPressed] = selection;
+        }
 
+        public void GetGroup(int keyPressed)
+        {
+            List<SelectableObject> list;
+            groups.TryGetValue(keyPressed, out list);
+            if (list == null)
+            {
+                list = new List<SelectableObject>();
+            }
+            PerformSelection(list, null);
+        }
+
+        public List<SelectableObject> GetSelection()
+        {
+            return selection;
+        }
     }
 
 
