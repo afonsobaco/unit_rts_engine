@@ -6,22 +6,8 @@ using UnityEngine;
 
 namespace RTSEngine.Selection
 {
-    public interface ISelectionSettingsSO<T, E>
-    {
-        MainList<T> MainList { get; set; }
-        Vector2 InitialGameScreenPos { get; set; }
-        Vector2 FinalGameScreenPos { get; set; }
-        int SelectionLimit { get; set; }
-
-        List<E> CanSelectSameType { get; set; }
-        List<E> PrimaryTypes { get; set; }
-        List<E> SecondaryOrderedTypes { get; set; }
-        List<E> CanGroupTypes { get; set; }
-        List<IAbstractSelectionMod<T, E>> Mods { get; set; }
-    }
-
     [CreateAssetMenu(fileName = "SelectionSettings", menuName = "ScriptableObjects/Selection Settings", order = 1)]
-    public class SelectionSettings<T, E> : ScriptableObject, ISelectionSettingsSO<T, E>
+    public class SelectionSettings<T, E> : ScriptableObject, ISelectionSettings<T, E>
     {
         [SerializeField] private MainList<T> mainList;
         [SerializeField] private Vector2 initialGameScreenPos = new Vector2(0, 0);

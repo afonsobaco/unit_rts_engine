@@ -10,14 +10,14 @@ namespace RTSEngine.Selection.Mod
         private List<T> toBeAdded = new List<T>();
         private List<T> toBeRemoved = new List<T>();
         private E selectionType;
-        private ISelectionSettingsSO<T, E> settings;
+        private ISelectionSettings<T, E> settings;
 
         public List<T> OldSelection { get => oldSelection; set => oldSelection = value; }
         public List<T> NewSelection { get => newSelection; set => newSelection = value; }
         public List<T> ToBeAdded { get => toBeAdded; set => toBeAdded = value; }
         public List<T> ToBeRemoved { get => toBeRemoved; set => toBeRemoved = value; }
         public E SelectionType { get => selectionType; set => selectionType = value; }
-        public ISelectionSettingsSO<T, E> Settings { get => settings; set => settings = value; }
+        public ISelectionSettings<T, E> Settings { get => settings; set => settings = value; }
     }
 
 }

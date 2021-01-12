@@ -13,7 +13,7 @@ namespace RTSEngine.Manager
     {
 
         [SerializeField] private Camera mainCamera;
-        [SerializeField] private ISelectionSettingsSO<SelectableObject, SelectableTypeEnum> selectionSettings;
+        [SerializeField] private ISelectionSettings<SelectableObject, SelectableTypeEnum> selectionSettings;
         [SerializeField] private RectTransform selectionBox;
         [SerializeField] private Transform mods;
 
@@ -39,7 +39,7 @@ namespace RTSEngine.Manager
         }
 
         public SelectableObject ObjectClicked { get; private set; }
-        public ISelectionSettingsSO<SelectableObject, SelectableTypeEnum> SelectionSettings { get => selectionSettings; }
+        public ISelectionSettings<SelectableObject, SelectableTypeEnum> SelectionSettings { get => selectionSettings; }
 
 
         void Awake()

@@ -106,7 +106,7 @@ namespace Tests
             mods[0].Type = SelectionTypeEnum.CLICK;
 
             var args = GetDefaultArgs<SelectableObject, SelectionTypeEnum>();
-            args.Settings = Substitute.For<ISelectionSettingsSO<SelectableObject, SelectionTypeEnum>>();
+            args.Settings = Substitute.For<ISelectionSettings<SelectableObject, SelectionTypeEnum>>();
             args.Settings.Mods = mods;
             args.SelectionType = SelectionTypeEnum.DRAG;
 
@@ -219,7 +219,7 @@ namespace Tests
             var mod = Substitute.For<IAbstractSelectionMod<T, E>>();
             if (args.Settings == null)
             {
-                args.Settings = Substitute.For<ISelectionSettingsSO<T, E>>();
+                args.Settings = Substitute.For<ISelectionSettings<T, E>>();
             }
             if (args.Settings.Mods == null)
             {
@@ -231,7 +231,7 @@ namespace Tests
         private SelectionArgsXP<T, E> GetDefaultArgs<T, E>()
         {
             SelectionArgsXP<T, E> args = new SelectionArgsXP<T, E>();
-            args.Settings = Substitute.For<ISelectionSettingsSO<T, E>>();
+            args.Settings = Substitute.For<ISelectionSettings<T, E>>();
             return args;
         }
 

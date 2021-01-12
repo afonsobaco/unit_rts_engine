@@ -4,14 +4,7 @@ using UnityEngine;
 
 namespace RTSEngine.Core
 {
-    public interface IMainList<T>
-    {
-        List<T> List { get; }
-        void AddToMainList(T t);
-        void RemoveFromMainList(T t);
-    }
-
-    public abstract class MainList<T> : MonoBehaviour, IMainList<T>
+   public abstract class MainList<T> : MonoBehaviour, IMainList<T>
     {
         private List<T> list = new List<T>();
         public List<T> List { get => list; }
