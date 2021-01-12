@@ -2,12 +2,43 @@
 using UnityEngine;
 using RTSEngine.Core;
 using RTSEngine.Selection.Mod;
+using System;
+
 namespace RTSEngine.Selection.Util
 {
     public class SelectionUtil
     {
 
         private static System.Random rng = new System.Random();
+
+        public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : MonoBehaviour
+        {
+            List<T> list = new List<T>();
+            if(allObjects == null){
+                return list;
+            }
+            for (int i = 0; i < allObjects.Count; i++)
+            {
+                T obj = (T)allObjects[i];
+                var screenPos = Camera.main.WorldToScreenPoint(obj.transform.position);
+                if (IsPositionInsideArea(screenPos, initialScreenPosition, finalScreenPosition))
+                {
+                    list.Add(obj);
+                }
+            }
+            return list;
+        }
+
+        public static T GetObjectClicked<T>( Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : MonoBehaviour
+        {
+            var initialObject = GetObjectInScreenPoint<T>(initialScreenPosition, Camera.main);
+            var finalObject = GetObjectInScreenPoint<T>(finalScreenPosition, Camera.main);
+            if (initialObject != null && initialObject.Equals(finalObject))
+            {
+                return initialObject;
+            }
+            return null;
+        }
 
         public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> mainList, Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera) where T : MonoBehaviour
         {
@@ -43,6 +74,7 @@ namespace RTSEngine.Selection.Util
             Vector3 center = GetAreaCenter(initialScreenPosition, finalScreenPosition);
             return new Vector2(center.x - (size.x / 2), center.y - (size.y / 2));
         }
+
 
         public static T GetObjectClicked<T>(Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera) where T : MonoBehaviour
         {

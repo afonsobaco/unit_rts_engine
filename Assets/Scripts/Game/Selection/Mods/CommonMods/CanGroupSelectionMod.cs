@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class CanGroupSelectionMod : AbstractSelectionMod
+    public class CanGroupSelectionMod<T, E> : AbstractSelectionMod<T, E>
     {
     //     protected override List<SelectableObject> Apply(SelectionArgs args)
     //     {
@@ -28,7 +28,7 @@ namespace RTSEngine.Selection.Mod
     //         }
     //     }
 
-        protected override List<SelectableObject> Apply(SelectionArgsXP args)
+        public override SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args)
         {
             throw new System.NotImplementedException();
         }

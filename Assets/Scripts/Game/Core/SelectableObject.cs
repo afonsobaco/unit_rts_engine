@@ -2,7 +2,7 @@
 
 namespace RTSEngine.Core
 {
-    public class SelectableObject : MonoBehaviour
+    public class SelectableObject : MonoBehaviour, ISelectableObject
     {
         private bool _selected = false;
         public SelectableTypeEnum type;
@@ -17,7 +17,8 @@ namespace RTSEngine.Core
             get { return _selected; }
             set
             {
-                selectionMark.transform.gameObject.SetActive(value);
+                if (selectionMark)
+                    selectionMark.transform.gameObject.SetActive(value);
                 _selected = value;
             }
         }
@@ -28,7 +29,8 @@ namespace RTSEngine.Core
             get { return _preSelected; }
             set
             {
-                preSelectionMark.transform.gameObject.SetActive(value);
+                if (preSelectionMark)
+                    preSelectionMark.transform.gameObject.SetActive(value);
                 _preSelected = value;
             }
         }
@@ -44,4 +46,5 @@ namespace RTSEngine.Core
         }
 
     }
+
 }

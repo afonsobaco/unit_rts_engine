@@ -3,7 +3,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Selection.Mod
 {
-    public abstract class AbstractDragSelectionMod : AbstractSelectionMod
+    public abstract class AbstractDragSelectionMod<T, E> : AbstractSelectionMod<T, E>
     {
 
         // protected override List<SelectableObject> Apply(SelectionArgs args)

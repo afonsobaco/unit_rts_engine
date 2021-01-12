@@ -4,22 +4,29 @@ using UnityEngine;
 using RTSEngine.Core;
 using RTSEngine.Selection;
 using System.Linq;
+using System;
 
 namespace RTSEngine.Selection.Mod
 {
-    public abstract class AbstractSelectionMod : MonoBehaviour
+    public interface IAbstractSelectionMod<T, E>
+    {
+        bool Active { get; set; }
+        E Type { get; set; }
+
+        SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args);
+    }
+
+    public abstract class AbstractSelectionMod<T, E> : MonoBehaviour, IAbstractSelectionMod<T, E>
     {
 
         [SerializeField] private bool active = true;
-        private SelectionTypeEnum type;
+        private E type;
 
         public bool Active { get => active; set => active = value; }
-        public SelectionTypeEnum Type { get => type; set => type = value; }
+        public E Type { get => type; set => type = value; }
 
-        public List<SelectableObject> ApplyMod(SelectionArgsXP args)
-        {
-            return Apply(args);
-        }
-        protected abstract List<SelectableObject> Apply(SelectionArgsXP args);
+        public abstract SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args);
+
+
     }
 }

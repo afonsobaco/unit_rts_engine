@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class LimitedSelectionOnClickSelectionMod : AbstractClickSelectionMod
+    public class LimitedSelectionOnClickSelectionMod<T, E> : AbstractClickSelectionMod<T, E>
     {
         // protected override List<SelectableObject> Execute(SelectionArgs args)
         // {
@@ -22,7 +22,7 @@ namespace RTSEngine.Selection.Mod
         //     list.AddRange(args.NewList.Take(args.Settings.SelectionLimit - list.Count).ToList());
         //     return list;
         // }
-        protected override List<SelectableObject> Apply(SelectionArgsXP args)
+        public override SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args)
         {
             throw new System.NotImplementedException();
         }

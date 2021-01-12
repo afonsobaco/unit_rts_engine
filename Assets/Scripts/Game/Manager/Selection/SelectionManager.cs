@@ -13,7 +13,7 @@ namespace RTSEngine.Manager
     {
 
         [SerializeField] private Camera mainCamera;
-        [SerializeField] private SelectionSettingsSO selectionSettings;
+        [SerializeField] private ISelectionSettingsSO<SelectableObject, SelectableTypeEnum> selectionSettings;
         [SerializeField] private RectTransform selectionBox;
         [SerializeField] private Transform mods;
 
@@ -39,7 +39,7 @@ namespace RTSEngine.Manager
         }
 
         public SelectableObject ObjectClicked { get; private set; }
-        public SelectionSettingsSO SelectionSettings { get => selectionSettings; }
+        public ISelectionSettingsSO<SelectableObject, SelectableTypeEnum> SelectionSettings { get => selectionSettings; }
 
 
         void Awake()
@@ -121,13 +121,13 @@ namespace RTSEngine.Manager
             }
             else
             {
-                newSelection = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableObjectMainList.Instance.MainList, initialClickPosition, finalClickPosition, mainCamera);
+                newSelection = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableObjectMainList.Instance.List, initialClickPosition, finalClickPosition, mainCamera);
             }
             return newSelection;
         }
         private List<SelectableObject> GetPrimaryPreSelection()
         {
-            return SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableObjectMainList.Instance.MainList, initialClickPosition, finalClickPosition, mainCamera);
+            return SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableObjectMainList.Instance.List, initialClickPosition, finalClickPosition, mainCamera);
         }
 
         private List<SelectableObject> ApplyModsToSelection(List<SelectableObject> oldSelection, List<SelectableObject> newSelection, SelectableObject clicked)
@@ -154,7 +154,7 @@ namespace RTSEngine.Manager
                 {
                     args.NewList = args.OldList.Union(args.NewList).ToList();
                 }
-                foreach (var mod in mods.GetComponents<AbstractSelectionMod>())
+                foreach (var mod in mods.GetComponents<IAbstractSelectionMod<SelectableObject, SelectableTypeEnum>>())
                 {
                     // args.NewList = mod.ApplyMod(args);
                 };
@@ -200,7 +200,7 @@ namespace RTSEngine.Manager
         private SelectionArgs GetSelectionArgs(List<SelectableObject> oldSelection, List<SelectableObject> newSelection)
         {
             SelectionArgs args = new SelectionArgs();
-            args.MainList =SelectableObjectMainList.Instance.MainList;
+            args.MainList =SelectableObjectMainList.Instance.List;
             args.NewList = newSelection;
             args.IsAditive = IsAditiveSelection;
             args.PreSelectionList = preSelection;

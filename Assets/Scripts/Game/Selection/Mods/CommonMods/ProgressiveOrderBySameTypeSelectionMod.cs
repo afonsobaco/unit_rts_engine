@@ -5,7 +5,7 @@ using RTSEngine.Selection.Util;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class ProgressiveOrderBySameTypeSelectionMod : AbstractSelectionMod
+    public class ProgressiveOrderBySameTypeSelectionMod<T, E> : AbstractSelectionMod<T, E>
     {
         // protected override List<SelectableObject> Apply(SelectionArgs args)
         // {
@@ -19,7 +19,7 @@ namespace RTSEngine.Selection.Mod
         //     }
         //     return result;
         // }
-        protected override List<SelectableObject> Apply(SelectionArgsXP args)
+        public override SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args)
         {
             throw new System.NotImplementedException();
         }

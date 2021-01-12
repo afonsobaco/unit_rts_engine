@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace RTSEngine.Core
 {
-    public class SelectableObjectMainList : MonoBehaviour
+    public class SelectableObjectMainList : MainList<SelectableObject>
     {
-        private List<SelectableObject> mainList = new List<SelectableObject>();
         public static SelectableObjectMainList Instance { get; private set; }
-        public List<SelectableObject> MainList { get => mainList;}
 
         void Awake()
         {
@@ -23,14 +22,5 @@ namespace RTSEngine.Core
             }
         }
 
-        public void RemoveFromMainList(SelectableObject selectableObject)
-        {
-            this.MainList.Remove(selectableObject);
-        }
-
-        public void AddToMainList(SelectableObject selectableObject)
-        {
-            this.MainList.Add(selectableObject);
-        }
     }
 }

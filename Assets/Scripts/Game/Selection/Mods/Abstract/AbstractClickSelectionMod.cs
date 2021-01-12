@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RTSEngine.Selection.Mod
 {
-    public abstract class AbstractClickSelectionMod : AbstractSelectionMod
+    public abstract class AbstractClickSelectionMod<T, E> : AbstractSelectionMod<T, E>
     {
 
         // protected override List<SelectableObject> Apply(SelectionArgs args)

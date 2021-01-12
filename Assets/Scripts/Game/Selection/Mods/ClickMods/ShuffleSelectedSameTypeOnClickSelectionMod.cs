@@ -7,7 +7,7 @@ using System;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class ShuffleSelectedSameTypeOnClickSelectionMod : AbstractClickSelectionMod
+    public class ShuffleSelectedSameTypeOnClickSelectionMod<T,E> : AbstractClickSelectionMod<T,E>
     {
         // protected override List<SelectableObject> Execute(SelectionArgs args)
         // {
@@ -27,7 +27,7 @@ namespace RTSEngine.Selection.Mod
 
         //     return listWhitout.Union(listOfSameType).ToList();
         // }
-        protected override List<SelectableObject> Apply(SelectionArgsXP args)
+        public override SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args)
         {
             throw new NotImplementedException();
         }

@@ -6,7 +6,7 @@ using System;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class PreventSelectionChangeSelectionMod : AbstractSelectionMod
+    public class PreventSelectionChangeSelectionMod<T, E> : AbstractSelectionMod<T, E>
     {
         // protected override List<SelectableObject> Apply(SelectionArgs args)
         // {
@@ -18,7 +18,7 @@ namespace RTSEngine.Selection.Mod
         //     }
         //     return args.NewList;
         // }
-        protected override List<SelectableObject> Apply(SelectionArgsXP args)
+        public override SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args)
         {
             throw new NotImplementedException();
         }

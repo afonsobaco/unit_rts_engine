@@ -17,8 +17,7 @@ namespace RTSEngine.Selection.Mod
         private bool isPreSelection;
         private bool isDoubleClick;
         private List<SelectableObject> preSelectionList;
-        private SelectionSettingsSO settings;
-
+        private ISelectionSettingsSO<SelectableObject, SelectableTypeEnum> settings;
         public List<SelectableObject> MainList { get => mainList; set => mainList = value; }
         public List<SelectableObject> NewList { get => newList; set => newList = value; }
         public List<SelectableObject> OldList { get => oldList; set => oldList = value; }
@@ -29,7 +28,7 @@ namespace RTSEngine.Selection.Mod
         public bool IsPreSelection { get => isPreSelection; set => isPreSelection = value; }
         public bool IsDoubleClick { get => isDoubleClick; set => isDoubleClick = value; }
         public List<SelectableObject> PreSelectionList { get => preSelectionList; set => preSelectionList = value; }
-        public SelectionSettingsSO Settings { get => settings; set => settings = value; }
+        public ISelectionSettingsSO<SelectableObject, SelectableTypeEnum> Settings { get => settings; set => settings = value; }
     }
 
 }

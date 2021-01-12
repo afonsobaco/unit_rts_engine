@@ -6,8 +6,8 @@ namespace RTSEngine.Selection
 {
     public enum SelectionTypeEnum
     {
-        CLICK,
         DRAG,
+        CLICK,
         KEY
     }
 }

@@ -7,9 +7,9 @@ using System;
 
 namespace RTSEngine.Selection.Mod
 {
-    public class FindSameTypeInScreenOnDoubleClickSelectionMod : AbstractClickSelectionMod
+    public class FindSameTypeInScreenOnDoubleClickSelectionMod<T, E> : AbstractClickSelectionMod<T, E>
     {
-        protected override List<SelectableObject> Apply(SelectionArgsXP args)
+        public override SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args)
         {
             throw new NotImplementedException();
         }
