@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace RTSEngine.Selection
 {
-    [CreateAssetMenu(fileName = "SelectionSettings", menuName = "ScriptableObjects/Selection Settings", order = 1)]
     public class SelectionSettings<T, E> : ScriptableObject, ISelectionSettings<T, E>
     {
         [SerializeField] private MainList<T> mainList;

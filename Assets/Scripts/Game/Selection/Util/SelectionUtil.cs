@@ -14,7 +14,8 @@ namespace RTSEngine.Selection.Util
         public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : MonoBehaviour
         {
             List<T> list = new List<T>();
-            if(allObjects == null){
+            if (allObjects == null)
+            {
                 return list;
             }
             for (int i = 0; i < allObjects.Count; i++)
@@ -29,7 +30,7 @@ namespace RTSEngine.Selection.Util
             return list;
         }
 
-        public static T GetObjectClicked<T>( Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : MonoBehaviour
+        public static T GetObjectClicked<T>(Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : MonoBehaviour
         {
             var initialObject = GetObjectInScreenPoint<T>(initialScreenPosition, Camera.main);
             var finalObject = GetObjectInScreenPoint<T>(finalScreenPosition, Camera.main);

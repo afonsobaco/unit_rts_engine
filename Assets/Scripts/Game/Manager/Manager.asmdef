@@ -2,7 +2,8 @@
     "name": "Manager",
     "references": [
         "GUID:85e21ed01ae1b674fb03499feed34dec",
-        "GUID:c7f66547a37301548b58cced6e5256d6"
+        "GUID:c7f66547a37301548b58cced6e5256d6",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -4,6 +4,7 @@ namespace RTSEngine.Core
 {
     public class SelectableObject : MonoBehaviour, ISelectableObject
     {
+        [SerializeField] private GameRuntimeSet selectableList;
         private bool _selected = false;
         public SelectableTypeEnum type;
         public SelectionMark selectionMark;
@@ -37,12 +38,12 @@ namespace RTSEngine.Core
 
         void OnEnable()
         {
-            SelectableObjectMainList.Instance.AddToMainList(this);
+            selectableList.AddToList(this);
         }
 
         void OnDisable()
         {
-            SelectableObjectMainList.Instance.RemoveFromMainList(this);
+           selectableList.RemoveFromList(this);
         }
 
     }

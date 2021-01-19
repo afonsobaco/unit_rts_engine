@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d918e38092629b4bbf72129377843f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f10f5d6efab18340afaf1a1e1c31eb3, type: 3}
   m_Name: SelectionSettings
   m_EditorClassIdentifier: 
   initialGameScreenPos: {x: 0, y: 0}
   finalGameScreenPos: {x: 1, y: 1}
-  selectionLimit: 10
-  canSelectSameType: 000000000100000002000000
-  primaryTypes: 00000000
-  secondaryOrderedTypes: 0100000002000000
-  canGroupTypes: 000000000100000002000000
+  selectionLimit: 20
+  canSelectSameType: 
+  primaryTypes: 
+  secondaryOrderedTypes: 
+  canGroupTypes: 
