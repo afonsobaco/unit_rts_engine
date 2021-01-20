@@ -17,7 +17,8 @@ namespace RTSEngine.Selection
         [SerializeField] private List<E> primaryTypes = new List<E>();
         [SerializeField] private List<E> secondaryOrderedTypes = new List<E>();
         [SerializeField] private List<E> canGroupTypes = new List<E>();
-        [SerializeField] private List<IAbstractSelectionMod<T, E>> mods = new List<IAbstractSelectionMod<T, E>>();
+        
+        private List<IAbstractSelectionMod<T, E>> mods = new List<IAbstractSelectionMod<T, E>>();
 
         public Vector2 InitialGameScreenPos { get => initialGameScreenPos; set => initialGameScreenPos = value; }
         public Vector2 FinalGameScreenPos { get => finalGameScreenPos; set => finalGameScreenPos = value; }

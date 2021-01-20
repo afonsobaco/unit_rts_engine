@@ -11,7 +11,7 @@ namespace RTSEngine.Selection.Util
 
         private static System.Random rng = new System.Random();
 
-        public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : MonoBehaviour
+        public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : SelectableObject
         {
             List<T> list = new List<T>();
             if (allObjects == null)
@@ -30,7 +30,7 @@ namespace RTSEngine.Selection.Util
             return list;
         }
 
-        public static T GetObjectClicked<T>(Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : MonoBehaviour
+        public static T GetObjectClicked<T>(Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : SelectableObject
         {
             var initialObject = GetObjectInScreenPoint<T>(initialScreenPosition, Camera.main);
             var finalObject = GetObjectInScreenPoint<T>(finalScreenPosition, Camera.main);
@@ -41,7 +41,7 @@ namespace RTSEngine.Selection.Util
             return null;
         }
 
-        public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> mainList, Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera) where T : MonoBehaviour
+        public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> mainList, Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera) where T : SelectableObject
         {
             List<T> list = new List<T>();
             foreach (var obj in mainList)
@@ -77,7 +77,7 @@ namespace RTSEngine.Selection.Util
         }
 
 
-        public static T GetObjectClicked<T>(Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera) where T : MonoBehaviour
+        public static T GetObjectClicked<T>(Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera) where T : SelectableObject
         {
             var initialObject = GetObjectInScreenPoint<T>(initialScreenPosition, camera);
             var finalObject = GetObjectInScreenPoint<T>(finalScreenPosition, camera);
@@ -88,7 +88,7 @@ namespace RTSEngine.Selection.Util
             return null;
         }
 
-        public static T GetObjectInScreenPoint<T>(Vector3 mousePosition, Camera camera) where T : MonoBehaviour
+        public static T GetObjectInScreenPoint<T>(Vector3 mousePosition, Camera camera) where T : SelectableObject
         {
             Ray ray = camera.ScreenPointToRay(mousePosition);
             RaycastHit hit;

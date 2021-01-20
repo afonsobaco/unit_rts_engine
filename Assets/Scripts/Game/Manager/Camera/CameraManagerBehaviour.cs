@@ -32,14 +32,13 @@ namespace RTSEngine.Manager
         void DoCameraMovement(float horizontal, float vertical, Vector3 mousePosition);
         void DoCameraPanning(Vector2 mouseAxis);
         void ZoomCamera(float y);
-        void DebugClass();
     }
 
     public class CameraManager : ICameraManager
     {
 
         private Camera mainCamera;
-        private ISelectionManager selectionManager;
+        private ISelectionManager<SelectableObject> selectionManager;
 
         [Space]
         [Header("Camera movement")]
@@ -68,8 +67,7 @@ namespace RTSEngine.Manager
         public bool IsPanning { get => isPanning; set => isPanning = value; }
         public bool IsCentering { get => isCentering; set => isCentering = value; }
 
-
-        public CameraManager(ISelectionManager selectionManager)
+        public CameraManager(ISelectionManager<SelectableObject> selectionManager)
         {
             mainCamera = Camera.main;
             this.selectionManager = selectionManager;
@@ -211,10 +209,6 @@ namespace RTSEngine.Manager
             return (mainCamera.transform.position.y * Mathf.Tan((90 - mainCamera.transform.rotation.eulerAngles.x) * Mathf.Deg2Rad));
         }
 
-        public void DebugClass()
-        {
-            Debug.Log("Camera Manager Class");
-        }
     }
 
 

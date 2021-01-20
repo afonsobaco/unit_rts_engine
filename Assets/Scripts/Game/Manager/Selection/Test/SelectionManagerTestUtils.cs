@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using RTSEngine.Selection.Mod;
 using UnityEngine;
 using RTSEngine.Core;
+using NSubstitute;
 
 namespace RTSEngine.Selection.Tests
 {
@@ -24,7 +26,7 @@ namespace RTSEngine.Selection.Tests
         }
 
 
-        public static T CreateATestableObject<T>(int i) where T : MonoBehaviour
+        public static T CreateATestableObject<T>(int i) where T : SelectableObject
         {
             GameObject go = new GameObject();
             var t = go.AddComponent<T>();
@@ -33,7 +35,7 @@ namespace RTSEngine.Selection.Tests
             return t;
         }
 
-        public static List<T> GetDefaultTestMainList<T>() where T : MonoBehaviour
+        public static List<T> GetDefaultTestMainList<T>() where T : SelectableObject
         {
             List<T> mainList = new List<T>();
 
@@ -43,6 +45,34 @@ namespace RTSEngine.Selection.Tests
                 mainList.Add(t);
             }
             return mainList;
+        }
+
+        public static IAbstractSelectionMod<T, E> AddNewMod<T, E>(SelectionArgsXP<T, E> args)
+        {
+            var mod = Substitute.For<IAbstractSelectionMod<T, E>>();
+            if (args.Settings == null)
+            {
+                args.Settings = Substitute.For<ISelectionSettings<T, E>>();
+            }
+            if (args.Settings.Mods == null)
+            {
+                args.Settings.Mods = new List<IAbstractSelectionMod<T, E>>();
+            }
+            args.Settings.Mods.Add(mod);
+            return mod;
+        }
+
+        public static SelectionArgsXP<T, E> GetDefaultArgs<T, E>()
+        {
+            SelectionArgsXP<T, E> args = new SelectionArgsXP<T, E>();
+            args.Settings = Substitute.For<ISelectionSettings<T, E>>();
+            args.NewSelection = new List<T>();
+            args.OldSelection = new List<T>();
+            args.ToBeAdded = new List<T>();
+            args.ToBeRemoved = new List<T>();
+            args.Settings = Substitute.For<ISelectionSettings<T, E>>();
+            args.Settings.Mods = new List<IAbstractSelectionMod<T, E>>();
+            return args;
         }
     }
 }

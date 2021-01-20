@@ -1,62 +1,86 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using RTSEngine.Manager;
 using RTSEngine.Selection.Mod;
 using RTSEngine.Core;
+using RTSEngine.Selection;
 using NSubstitute;
 
-namespace RTSEngine.Selection.Tests
+namespace RTSEngine.Manager.Selection.Tests
 {
 
+    [TestFixture]
     public class SelectionManagerTest
     {
+        private SelectionManager manager;
+
+        [SetUp]
+        public void SetUp()
+        {
+            manager = GetSelectionManager();
+        }
 
         [Test]
         public void ShouldReturnDragSelectionType()
         {
-            var manager = GetSelectionManager();
+            PrepareForDrag();
             var type = manager.GetSelectionType();
             Assert.AreEqual(SelectionTypeEnum.DRAG, type);
-            Assert.AreEqual(-1, manager.KeyPressed);
-            Assert.Null(manager.Cliked);
         }
-
 
         [Test]
         public void ShouldReturnClickSelectionType()
         {
-            var manager = GetSelectionManager();
-            var obj = SelectionManagerTestUtils.CreateATestableObject<SelectableObject>(0);
-            manager.InitialScreenPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
-            manager.FinalScreenPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
-
+            PrepareForClick();
             var type = manager.GetSelectionType();
-
             Assert.AreEqual(SelectionTypeEnum.CLICK, type);
-            Assert.AreEqual(-1, manager.KeyPressed);
         }
 
         [Test]
         public void ShouldReturnKeySelectionType()
         {
-            var manager = GetSelectionManager();
-            manager.KeyPressed = 2;
+            PrepareForKey(1);
             var type = manager.GetSelectionType();
-
             Assert.AreEqual(SelectionTypeEnum.KEY, type);
-            Assert.Null(manager.Cliked);
+        }
+
+        [Test]
+        public void ShouldReturnTrueWhenKeyPressedIsGreaterThanZero()
+        {
+            manager.KeyPressed = 1;
+            var value = manager.IsKey();
+            Assert.True(value);
+        }
+
+        [Test]
+        public void ShouldReturnFalseWhenKeyPressedIsLessOrEqualsZero()
+        {
+            manager.KeyPressed = 0;
+            var value = manager.IsKey();
+            Assert.False(value);
+        }
+
+        [Test]
+        public void ShouldReturnFalseWhenNoObjectClicked()
+        {
+            manager.GetObjectClicked().Returns(x => null);
+            var value = manager.IsClick();
+            Assert.False(value);
+        }
+
+        [Test]
+        public void ShouldReturnTrueWhenObjectClicked()
+        {
+            PrepareForClick();
+            var value = manager.IsClick();
+            Assert.True(value);
         }
 
 
         [Test]
         public void ShouldReturnNewSelectionOnClick()
         {
-            var manager = GetSelectionManager();
-            var expected = SelectionManagerTestUtils.CreateATestableObject<SelectableObject>(0);
-            manager.InitialScreenPosition = Camera.main.WorldToScreenPoint(expected.transform.position);
-            manager.FinalScreenPosition = Camera.main.WorldToScreenPoint(expected.transform.position);
+            var expected = PrepareForClick();
 
             var selection = manager.GetNewSelection();
 
@@ -64,166 +88,474 @@ namespace RTSEngine.Selection.Tests
             Assert.AreEqual(1, selection.Count);
         }
 
+
+
         [Test]
-        public void ShouldReturnEmptySelectionWhenDragEmptySpace()
+        public void ShouldAddToSpecificGroup()
         {
-            var manager = GetSelectionManager();
-            manager.InitialScreenPosition = Camera.main.ViewportToScreenPoint(Vector3.zero);
-            manager.FinalScreenPosition = Camera.main.ViewportToScreenPoint(Vector3.one);
-            var selection = manager.GetNewSelection();
-            CollectionAssert.IsEmpty(selection);
-            foreach (var item in manager.SelectableList.GetList())
-            {
-                Assert.False(item.IsSelected);
-            }
+            int groupId = 1;
+            manager.CurrentSelection = new List<SelectableObject>();
+            manager.CurrentSelection.Add(CreateSelectableObject());
+            manager.SetGroup(groupId);
+            List<SelectableObject> collection = manager.Groups[groupId];
+            CollectionAssert.IsNotEmpty(collection);
+            CollectionAssert.AreEquivalent(manager.CurrentSelection, collection);
         }
 
         [Test]
-        public void ShouldReturnAllObjectsWhenDragOnFullScreenSpace()
+        public void ShouldClearSpecificGroup()
         {
-            var manager = GetSelectionManager();
-            manager.InitialScreenPosition = Camera.main.ViewportToScreenPoint(Vector3.zero);
-            manager.FinalScreenPosition = Camera.main.ViewportToScreenPoint(Vector3.one);
-            List<SelectableObject> expected = GetDefaultExpected(manager);
-
-            var selection = manager.GetNewSelection();
-
-            CollectionAssert.IsNotEmpty(selection);
-            foreach (var item in selection)
-            {
-                Assert.True(item.IsSelected);
-            }
+            int groupId = 1;
+            manager.CurrentSelection = new List<SelectableObject>();
+            manager.SetGroup(groupId);
+            List<SelectableObject> collection = manager.Groups[groupId];
+            CollectionAssert.IsEmpty(collection);
+            CollectionAssert.AreEquivalent(manager.CurrentSelection, collection);
         }
 
         [Test]
-        public void ShouldReturnNewSelectionOnKey()
+        public void ShouldGetSpecificGroup()
         {
-            var manager = GetSelectionManager();
-            List<SelectableObject> expected = GetDefaultExpected(manager);
-            manager.CurrentSelection = expected;
-            manager.SetGroup(1);
-            manager.KeyPressed = 1;
-            manager.CurrentSelection = null;
+            int groupId = 1;
+            var expected = new List<SelectableObject>();
+            expected.Add(CreateSelectableObject());
+            manager.Groups[1] = expected;
+
+            var collection = manager.GetGroup(groupId);
+
+            CollectionAssert.IsNotEmpty(collection);
+            CollectionAssert.AreEquivalent(expected, collection);
+        }
+
+        [Test]
+        public void ShouldReturnEmptyWhenGroupKeyNotFound()
+        {
+            int groupId = 1;
+
+            var collection = manager.GetGroup(groupId);
+
+            CollectionAssert.IsEmpty(collection);
+        }
+
+        [Test]
+        public void ShouldReturnSelectionWhenDragOnScreenSpace()
+        {
+            PrepareForDrag();
+
+            List<SelectableObject> expected = new List<SelectableObject>();
+            expected.Add(CreateSelectableObject());
+            manager.GetSelectionOnScreen().Returns(expected);
 
             var selection = manager.GetNewSelection();
 
             CollectionAssert.AreEquivalent(expected, selection);
-            foreach (var item in expected)
-            {
-                Assert.True(item.IsSelected);
-            }
         }
+
+        [Test]
+        public void ShouldReturnEmptySelectionWhenDragEmptySpace()
+        {
+            PrepareForDrag();
+            manager.GetSelectionOnScreen().Returns(new List<SelectableObject>());
+            var selection = manager.GetNewSelection();
+            CollectionAssert.IsEmpty(selection);
+        }
+
+        [Test]
+        public void ShouldReturnSelectionOnKey()
+        {
+            int groupId = 1;
+            PrepareForKey(groupId);
+
+            var expected = new List<SelectableObject>();
+            expected.Add(CreateSelectableObject());
+            expected.Add(CreateSelectableObject());
+            manager.Groups[1] = expected;
+
+            var selection = manager.GetNewSelection();
+
+            CollectionAssert.AreEquivalent(expected, selection);
+
+        }
+
 
         [Test]
         public void ShouldReturnEmptySelectionOnKeyNotFound()
         {
-            var manager = GetSelectionManager();
-            List<SelectableObject> expected = GetDefaultExpected(manager);
-
-            manager.CurrentSelection = expected;
-            manager.SetGroup(1);
-            manager.CurrentSelection = null;
-            manager.KeyPressed = 2;
+            int groupId = 1;
+            PrepareForKey(groupId);
+            var expected = new List<SelectableObject>();
 
             var selection = manager.GetNewSelection();
 
-            CollectionAssert.IsEmpty(selection);
-            foreach (var item in manager.SelectableList.GetList())
+            CollectionAssert.AreEquivalent(expected, selection);
+        }
+
+        [Test]
+        public void ShouldUpdateSelectionStatusToTrue()
+        {
+
+            List<SelectableObject> original = new List<SelectableObject>();
+            original.Add(CreateSelectableObject());
+            original.Add(CreateSelectableObject());
+            original.Add(CreateSelectableObject());
+            var list = manager.UpdateSelectionStatus(original, true);
+            CollectionAssert.AreEquivalent(original, list);
+            foreach (var item in list)
+            {
+                Assert.True(item.IsSelected);
+            }
+        }
+
+
+        [Test]
+        public void ShouldUpdateSelectionStatusToFalse()
+        {
+
+            List<SelectableObject> original = new List<SelectableObject>();
+            original.Add(CreateSelectableObject());
+            original.Add(CreateSelectableObject());
+            original.Add(CreateSelectableObject());
+            var list = manager.UpdateSelectionStatus(original, false);
+            CollectionAssert.AreEquivalent(original, list);
+            foreach (var item in list)
             {
                 Assert.False(item.IsSelected);
             }
         }
 
         [Test]
-        public void ShouldUpdateCurrentToFullSelection()
+        public void ShouldUpdatePreSelectionStatusToTrue()
         {
-            //when
-            var manager = GetSelectionManager();
-            List<SelectableObject> expected = GetDefaultExpected(manager);
 
-            //act
-            manager.UpdateCurrentSelection(expected);
+            List<SelectableObject> original = new List<SelectableObject>();
+            original.Add(CreateSelectableObject());
+            original.Add(CreateSelectableObject());
+            original.Add(CreateSelectableObject());
+            var list = manager.UpdatePreSelectionStatus(original, true);
+            CollectionAssert.AreEquivalent(original, list);
+            foreach (var item in list)
+            {
+                Assert.True(item.IsPreSelected);
+            }
+        }
 
-            //then
-            CollectionAssert.IsNotEmpty(manager.CurrentSelection);
-            CollectionAssert.AreEquivalent(expected, manager.CurrentSelection);
-            foreach (var item in manager.SelectableList.GetList())
+
+        [Test]
+        public void ShouldUpdatePreSelectionStatusToFalse()
+        {
+
+            List<SelectableObject> original = new List<SelectableObject>();
+            original.Add(CreateSelectableObject());
+            original.Add(CreateSelectableObject());
+            original.Add(CreateSelectableObject());
+            var list = manager.UpdatePreSelectionStatus(original, false);
+            CollectionAssert.AreEquivalent(original, list);
+            foreach (var item in list)
+            {
+                Assert.False(item.IsPreSelected);
+            }
+        }
+
+        [Test]
+        public void ShouldUpdateCurrentToTotallyNewSelection()
+        {
+            //CurrentSelection
+            var currentSelection = new List<SelectableObject>();
+            currentSelection.Add(CreateSelectableObject());
+            currentSelection.Add(CreateSelectableObject());
+            currentSelection.Add(CreateSelectableObject());
+            foreach (var item in currentSelection)
+            {
+                item.IsSelected = true;
+            }
+            //NewSelection
+            var newSelection = new List<SelectableObject>();
+            newSelection.Add(CreateSelectableObject());
+            newSelection.Add(CreateSelectableObject());
+
+            manager.CurrentSelection = currentSelection;
+
+            var result = manager.UpdateCurrentSelection(newSelection);
+
+            foreach (var item in currentSelection)
+            {
+                Assert.False(item.IsSelected);
+            }
+
+            foreach (var item in newSelection)
             {
                 Assert.True(item.IsSelected);
             }
         }
 
         [Test]
-        public void ShouldUpdateCurrentSelectionToNone()
+        public void ShouldUpdateCurrentToEmptyNewSelection()
         {
-            //when
-            var manager = GetSelectionManager();
-            List<SelectableObject> expected = GetDefaultExpected(manager);
+            //CurrentSelection
+            var currentSelection = new List<SelectableObject>();
+            currentSelection.Add(CreateSelectableObject());
+            currentSelection.Add(CreateSelectableObject());
+            currentSelection.Add(CreateSelectableObject());
+            foreach (var item in currentSelection)
+            {
+                item.IsSelected = true;
+            }
+            //NewSelection
+            var newSelection = new List<SelectableObject>();
 
-            //act
-            manager.UpdateCurrentSelection(new List<SelectableObject>());
+            manager.CurrentSelection = currentSelection;
 
-            //then
-            CollectionAssert.IsEmpty(manager.CurrentSelection);
-            Assert.AreEqual(0, manager.CurrentSelection.Count);
-            foreach (var item in manager.SelectableList.GetList())
+            var result = manager.UpdateCurrentSelection(newSelection);
+
+            foreach (var item in currentSelection)
             {
                 Assert.False(item.IsSelected);
+            }
+            CollectionAssert.IsEmpty(result);
+        }
+
+        [Test]
+        public void ShouldUpdateCurrentToMixedNewSelection()
+        {
+            //CurrentSelection
+            var currentSelection = new List<SelectableObject>();
+            currentSelection.Add(CreateSelectableObject());
+            currentSelection.Add(CreateSelectableObject());
+            SelectableObject mixedItem = CreateSelectableObject();
+            currentSelection.Add(mixedItem);
+            foreach (var item in currentSelection)
+            {
+                item.IsSelected = true;
+            }
+            //NewSelection
+            var newSelection = new List<SelectableObject>();
+            newSelection.Add(CreateSelectableObject());
+            newSelection.Add(mixedItem);
+
+            manager.CurrentSelection = currentSelection;
+
+            var result = manager.UpdateCurrentSelection(newSelection);
+
+            foreach (var item in currentSelection)
+            {
+                if (!newSelection.Contains(item))
+                    Assert.False(item.IsSelected);
+            }
+
+            foreach (var item in newSelection)
+            {
+                Assert.True(item.IsSelected);
             }
         }
 
         [Test]
-        public void ShouldUpdateCurrentSelectionToTheFirstObjectOnList()
+        public void ShouldUpdatePreToTotallyNewSelection()
         {
-            //when
-            var manager = GetSelectionManager();
-            List<SelectableObject> expected = GetDefaultExpected(manager);
-
-            //act
-            List<SelectableObject> oneObjectList = new List<SelectableObject>() { expected[0] };
-            manager.UpdateCurrentSelection(oneObjectList);
-
-            //then
-            CollectionAssert.IsNotEmpty(manager.CurrentSelection);
-            Assert.AreEqual(1, manager.CurrentSelection.Count);
-            foreach (var item in manager.SelectableList.GetList())
+            //PreSelection
+            var preSelection = new List<SelectableObject>();
+            preSelection.Add(CreateSelectableObject());
+            preSelection.Add(CreateSelectableObject());
+            preSelection.Add(CreateSelectableObject());
+            foreach (var item in preSelection)
             {
-                if (oneObjectList.Contains(item))
-                {
-                    Assert.True(item.IsSelected);
-                }
-                else
-                {
-                    Assert.False(item.IsSelected);
-                }
+                item.IsPreSelected = true;
+            }
+            //NewSelection
+            var newSelection = new List<SelectableObject>();
+            newSelection.Add(CreateSelectableObject());
+            newSelection.Add(CreateSelectableObject());
+
+            manager.PreSelection = preSelection;
+
+            var result = manager.UpdatePreSelection(newSelection);
+
+            foreach (var item in preSelection)
+            {
+                Assert.False(item.IsPreSelected);
+            }
+
+            foreach (var item in newSelection)
+            {
+                Assert.True(item.IsPreSelected);
             }
         }
 
-        private static List<SelectableObject> GetDefaultExpected(SelectionManager manager)
+        [Test]
+        public void ShouldUpdatePreToEmptyNewSelection()
         {
-            List<SelectableObject> expected = new List<SelectableObject>(){
-                SelectionManagerTestUtils.CreateATestableObject<SelectableObject>(0),
-                SelectionManagerTestUtils.CreateATestableObject<SelectableObject>(1),
-                SelectionManagerTestUtils.CreateATestableObject<SelectableObject>(2),
-                SelectionManagerTestUtils.CreateATestableObject<SelectableObject>(3),
-                SelectionManagerTestUtils.CreateATestableObject<SelectableObject>(4),
-            };
-            foreach (var item in expected)
+            //PreSelection
+            var PreSelection = new List<SelectableObject>();
+            PreSelection.Add(CreateSelectableObject());
+            PreSelection.Add(CreateSelectableObject());
+            PreSelection.Add(CreateSelectableObject());
+            foreach (var item in PreSelection)
             {
-                manager.SelectableList.AddToList(item);
+                item.IsPreSelected = true;
+            }
+            //NewSelection
+            var newSelection = new List<SelectableObject>();
+
+            manager.PreSelection = PreSelection;
+
+            var result = manager.UpdatePreSelection(newSelection);
+
+            foreach (var item in PreSelection)
+            {
+                Assert.False(item.IsPreSelected);
+            }
+            CollectionAssert.IsEmpty(result);
+        }
+
+        [Test]
+        public void ShouldUpdatePreToMixedNewSelection()
+        {
+            //PreSelection
+            var PreSelection = new List<SelectableObject>();
+            PreSelection.Add(CreateSelectableObject());
+            PreSelection.Add(CreateSelectableObject());
+            SelectableObject mixedItem = CreateSelectableObject();
+            PreSelection.Add(mixedItem);
+            foreach (var item in PreSelection)
+            {
+                item.IsPreSelected = true;
+            }
+            //NewSelection
+            var newSelection = new List<SelectableObject>();
+            newSelection.Add(CreateSelectableObject());
+            newSelection.Add(mixedItem);
+
+            manager.PreSelection = PreSelection;
+
+            var result = manager.UpdatePreSelection(newSelection);
+
+            foreach (var item in PreSelection)
+            {
+                if (!newSelection.Contains(item))
+                    Assert.False(item.IsPreSelected);
             }
 
-            return expected;
+            foreach (var item in newSelection)
+            {
+                Assert.True(item.IsPreSelected);
+            }
+        }
+
+
+        [Test]
+        public void ShouldStartSelection()
+        {
+            //when
+            var manager = Substitute.For<SelectionManager>();
+            Vector3 initialPos = new Vector3(0.5f, 0.5f, 0f);
+            manager.StartOfSelection(initialPos);
+
+            Assert.AreEqual(initialPos, manager.InitialScreenPosition);
+        }
+
+        [Test]
+        public void ShouldEndSelection()
+        {
+
+            //CurrentSelection
+            PrepareForDrag();
+            var expected = new List<SelectableObject>();
+            expected.Add(CreateSelectableObject());
+            expected.Add(CreateSelectableObject());
+            expected.Add(CreateSelectableObject());
+
+            manager.GetSelectionOnScreen().Returns(expected);
+            manager.PerformSelection(Arg.Any<List<SelectableObject>>(), Arg.Any<List<SelectableObject>>(), Arg.Is(SelectionTypeEnum.DRAG)).Returns(expected);
+
+            Vector3 finalPos = new Vector3(0.5f, 0.5f, 0f);
+            manager.EndOfSelection(finalPos);
+
+            Assert.AreEqual(finalPos, manager.FinalScreenPosition);
+            CollectionAssert.AreEquivalent(expected, manager.CurrentSelection);
+            foreach (var item in manager.CurrentSelection)
+            {
+                Assert.True(item.IsSelected);
+            }
+
+        }
+
+
+
+        [Test]
+        public void ShouldDoPreSelection()
+        {
+            //PreSelection
+            PrepareForDrag();
+            var expected = new List<SelectableObject>();
+            expected.Add(CreateSelectableObject());
+            expected.Add(CreateSelectableObject());
+            expected.Add(CreateSelectableObject());
+
+            manager.GetSelectionOnScreen().Returns(expected);
+            manager.PerformSelection(Arg.Any<List<SelectableObject>>(), Arg.Any<List<SelectableObject>>(), Arg.Is(SelectionTypeEnum.DRAG)).Returns(expected);
+
+            Vector3 finalPos = new Vector3(0.5f, 0.5f, 0f);
+            manager.DoPreSelection(finalPos);
+
+            Assert.AreEqual(finalPos, manager.FinalScreenPosition);
+            CollectionAssert.AreEquivalent(expected, manager.PreSelection);
+            foreach (var item in manager.PreSelection)
+            {
+                Assert.True(item.IsPreSelected);
+            }
+        }
+
+        [Test]
+        public void ShouldGetSelectionMainPoint()
+        {
+            var mainPoint = manager.GetSelectionMainPoint();
+            Assert.AreEqual(mainPoint, Vector3.zero);
         }
 
         #region methods
         private static SelectionManager GetSelectionManager()
         {
 
-            var manager = new SelectionManager();
-            var so = ScriptableObject.CreateInstance<GameRuntimeSet>();
+            var manager = Substitute.For<SelectionManager>();
+            var so = Substitute.For<IRuntimeSet<SelectableObject>>();
             manager.SelectableList = so;
+
             return manager;
+        }
+
+        private static SelectionArgsXP<T, E> GetDefaultArgs<T, E>()
+        {
+            var settings = Substitute.ForPartsOf<ISelectionSettings<T, E>>();
+            SelectionArgsXP<T, E> args = new SelectionArgsXP<T, E>();
+            args.Settings = settings;
+            args.Settings.Mods = new List<IAbstractSelectionMod<T, E>>();
+            return args;
+        }
+
+        private void PrepareForDrag()
+        {
+            manager.GetObjectClicked().Returns(x => null);
+            manager.KeyPressed = 0;
+        }
+
+        private void PrepareForKey(int v)
+        {
+            manager.GetObjectClicked().Returns(x => null);
+            manager.KeyPressed = v;
+        }
+
+        private SelectableObject PrepareForClick()
+        {
+            SelectableObject so = CreateSelectableObject();
+            manager.GetObjectClicked().Returns(so);
+            manager.KeyPressed = 0;
+            return so;
+        }
+
+        private static SelectableObject CreateSelectableObject()
+        {
+            var go = new GameObject();
+            var so = go.AddComponent<SelectableObject>();
+            return so;
         }
         #endregion
     }

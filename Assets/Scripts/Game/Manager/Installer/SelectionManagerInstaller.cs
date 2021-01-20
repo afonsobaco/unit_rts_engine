@@ -1,5 +1,6 @@
 using UnityEngine;
 using Zenject;
+using  RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
@@ -7,7 +8,7 @@ namespace RTSEngine.Manager
     {
         public override void InstallBindings()
         {
-            Container.Bind<ISelectionManager>().To<SelectionManager>().AsSingle();
+            Container.Bind<ISelectionManager<SelectableObject>>().To<SelectionManager>().AsSingle();
             Container.Bind<ICameraManager>().To<CameraManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerInputManager>().AsSingle();
         }

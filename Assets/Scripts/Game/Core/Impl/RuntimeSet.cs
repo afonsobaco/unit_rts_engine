@@ -5,7 +5,15 @@ using UnityEngine;
 
 namespace RTSEngine.Core
 {
-    public abstract class RuntimeSet<T> : ScriptableObject
+    public interface IRuntimeSet<T>
+    {
+        void AddToList(T item);
+        T GetItem(int index);
+        List<T> GetList();
+        void RemoveFromList(T item);
+    }
+
+    public abstract class RuntimeSet<T> : ScriptableObject, IRuntimeSet<T>
     {
         private List<T> _list = new List<T>();
 
