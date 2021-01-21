@@ -87,9 +87,10 @@ namespace RTSEngine.Manager
             }
             if (Input.mouseScrollDelta.y != 0)
             {
-                cameraManager.ZoomCamera(Input.mouseScrollDelta.y);
+                Camera.main.transform.position = cameraManager.ZoomCamera(Input.mouseScrollDelta.y, Camera.main);
             }
-            cameraManager.DoCameraMovement(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.mousePosition);
+            Camera.main.transform.position = cameraManager.DoCameraMovement(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.mousePosition, Time.deltaTime, Camera.main);
+
         }
 
         public void SetDragCameraControls()
@@ -102,7 +103,8 @@ namespace RTSEngine.Manager
 
             if (Input.GetMouseButton(2))
             {
-                cameraManager.DoCameraPanning(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")));
+                var desiredMove = cameraManager.DoCameraPanning(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")), Camera.main);
+                Camera.main.transform.Translate(desiredMove, Space.Self); ;
             }
             if (Input.GetMouseButtonUp(2))
             {

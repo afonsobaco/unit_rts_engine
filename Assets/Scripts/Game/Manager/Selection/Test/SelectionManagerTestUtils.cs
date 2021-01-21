@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using RTSEngine.Selection.Mod;
+using RTSEngine.Selection;
 using UnityEngine;
 using RTSEngine.Core;
 using NSubstitute;
 
-namespace RTSEngine.Selection.Tests
+namespace Tests
 {
     public class SelectionManagerTestUtils
     {
@@ -73,6 +74,13 @@ namespace RTSEngine.Selection.Tests
             args.Settings = Substitute.For<ISelectionSettings<T, E>>();
             args.Settings.Mods = new List<IAbstractSelectionMod<T, E>>();
             return args;
+        }
+
+        public static T CreateGameObject<T>() where T : MonoBehaviour
+        {
+            var go = new GameObject();
+            var so = go.AddComponent<T>();
+            return so;
         }
     }
 }

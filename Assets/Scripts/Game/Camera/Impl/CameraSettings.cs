@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using RTSEngine.Core;
 using UnityEngine;
 
-namespace RTSEngine.Camera
+namespace RTSEngine.RTSCamera
 {
     public class CameraSettings : ScriptableObject, ICameraSettings
     {

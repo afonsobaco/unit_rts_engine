@@ -1,6 +1,6 @@
 using UnityEngine;
 using Zenject;
-using  RTSEngine.Core;
+using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {

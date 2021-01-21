@@ -1,11 +1,12 @@
 {
-    "name": "Test",
+    "name": "CameraManagerTest",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Manager",
         "Core",
-        "Selection"
+        "Selection",
+        "Camera"
     ],
     "includePlatforms": [
         "Editor"

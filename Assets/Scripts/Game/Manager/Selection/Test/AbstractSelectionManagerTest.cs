@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
 using RTSEngine.Manager;
+using RTSEngine.Selection;
 using RTSEngine.Selection.Mod;
 using RTSEngine.Core;
 using NSubstitute;
 
-namespace RTSEngine.Selection.Tests
+namespace Tests.Manager
 {
     [TestFixture]
     public class AbstractSelectionManagerTest
@@ -262,6 +262,6 @@ namespace RTSEngine.Selection.Tests
 
     internal class DerivedClass : AbstractSelectionManager<SelectableObject, SelectionTypeEnum>
     {
-        
+
     }
 }

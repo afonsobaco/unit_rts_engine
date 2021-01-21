@@ -2,7 +2,7 @@
 using RTSEngine.Core;
 using UnityEngine;
 
-namespace RTSEngine.Camera
+namespace RTSEngine.RTSCamera
 {
     public interface ICameraSettings
     {

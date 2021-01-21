@@ -4,9 +4,10 @@ using UnityEngine;
 using RTSEngine.Selection.Mod;
 using RTSEngine.Core;
 using RTSEngine.Selection;
+using RTSEngine.Manager;
 using NSubstitute;
 
-namespace RTSEngine.Manager.Selection.Tests
+namespace Tests.Manager
 {
 
     [TestFixture]
@@ -95,7 +96,7 @@ namespace RTSEngine.Manager.Selection.Tests
         {
             int groupId = 1;
             manager.CurrentSelection = new List<SelectableObject>();
-            manager.CurrentSelection.Add(CreateSelectableObject());
+            manager.CurrentSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             manager.SetGroup(groupId);
             List<SelectableObject> collection = manager.Groups[groupId];
             CollectionAssert.IsNotEmpty(collection);
@@ -118,7 +119,7 @@ namespace RTSEngine.Manager.Selection.Tests
         {
             int groupId = 1;
             var expected = new List<SelectableObject>();
-            expected.Add(CreateSelectableObject());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             manager.Groups[1] = expected;
 
             var collection = manager.GetGroup(groupId);
@@ -143,7 +144,7 @@ namespace RTSEngine.Manager.Selection.Tests
             PrepareForDrag();
 
             List<SelectableObject> expected = new List<SelectableObject>();
-            expected.Add(CreateSelectableObject());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             manager.GetSelectionOnScreen().Returns(expected);
 
             var selection = manager.GetNewSelection();
@@ -167,8 +168,8 @@ namespace RTSEngine.Manager.Selection.Tests
             PrepareForKey(groupId);
 
             var expected = new List<SelectableObject>();
-            expected.Add(CreateSelectableObject());
-            expected.Add(CreateSelectableObject());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             manager.Groups[1] = expected;
 
             var selection = manager.GetNewSelection();
@@ -195,9 +196,9 @@ namespace RTSEngine.Manager.Selection.Tests
         {
 
             List<SelectableObject> original = new List<SelectableObject>();
-            original.Add(CreateSelectableObject());
-            original.Add(CreateSelectableObject());
-            original.Add(CreateSelectableObject());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             var list = manager.UpdateSelectionStatus(original, true);
             CollectionAssert.AreEquivalent(original, list);
             foreach (var item in list)
@@ -212,9 +213,9 @@ namespace RTSEngine.Manager.Selection.Tests
         {
 
             List<SelectableObject> original = new List<SelectableObject>();
-            original.Add(CreateSelectableObject());
-            original.Add(CreateSelectableObject());
-            original.Add(CreateSelectableObject());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             var list = manager.UpdateSelectionStatus(original, false);
             CollectionAssert.AreEquivalent(original, list);
             foreach (var item in list)
@@ -228,9 +229,9 @@ namespace RTSEngine.Manager.Selection.Tests
         {
 
             List<SelectableObject> original = new List<SelectableObject>();
-            original.Add(CreateSelectableObject());
-            original.Add(CreateSelectableObject());
-            original.Add(CreateSelectableObject());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             var list = manager.UpdatePreSelectionStatus(original, true);
             CollectionAssert.AreEquivalent(original, list);
             foreach (var item in list)
@@ -245,9 +246,9 @@ namespace RTSEngine.Manager.Selection.Tests
         {
 
             List<SelectableObject> original = new List<SelectableObject>();
-            original.Add(CreateSelectableObject());
-            original.Add(CreateSelectableObject());
-            original.Add(CreateSelectableObject());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            original.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             var list = manager.UpdatePreSelectionStatus(original, false);
             CollectionAssert.AreEquivalent(original, list);
             foreach (var item in list)
@@ -261,17 +262,17 @@ namespace RTSEngine.Manager.Selection.Tests
         {
             //CurrentSelection
             var currentSelection = new List<SelectableObject>();
-            currentSelection.Add(CreateSelectableObject());
-            currentSelection.Add(CreateSelectableObject());
-            currentSelection.Add(CreateSelectableObject());
+            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             foreach (var item in currentSelection)
             {
                 item.IsSelected = true;
             }
             //NewSelection
             var newSelection = new List<SelectableObject>();
-            newSelection.Add(CreateSelectableObject());
-            newSelection.Add(CreateSelectableObject());
+            newSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            newSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
 
             manager.CurrentSelection = currentSelection;
 
@@ -293,9 +294,9 @@ namespace RTSEngine.Manager.Selection.Tests
         {
             //CurrentSelection
             var currentSelection = new List<SelectableObject>();
-            currentSelection.Add(CreateSelectableObject());
-            currentSelection.Add(CreateSelectableObject());
-            currentSelection.Add(CreateSelectableObject());
+            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             foreach (var item in currentSelection)
             {
                 item.IsSelected = true;
@@ -319,9 +320,9 @@ namespace RTSEngine.Manager.Selection.Tests
         {
             //CurrentSelection
             var currentSelection = new List<SelectableObject>();
-            currentSelection.Add(CreateSelectableObject());
-            currentSelection.Add(CreateSelectableObject());
-            SelectableObject mixedItem = CreateSelectableObject();
+            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            SelectableObject mixedItem = SelectionManagerTestUtils.CreateGameObject<SelectableObject>();
             currentSelection.Add(mixedItem);
             foreach (var item in currentSelection)
             {
@@ -329,7 +330,7 @@ namespace RTSEngine.Manager.Selection.Tests
             }
             //NewSelection
             var newSelection = new List<SelectableObject>();
-            newSelection.Add(CreateSelectableObject());
+            newSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             newSelection.Add(mixedItem);
 
             manager.CurrentSelection = currentSelection;
@@ -353,17 +354,17 @@ namespace RTSEngine.Manager.Selection.Tests
         {
             //PreSelection
             var preSelection = new List<SelectableObject>();
-            preSelection.Add(CreateSelectableObject());
-            preSelection.Add(CreateSelectableObject());
-            preSelection.Add(CreateSelectableObject());
+            preSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            preSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            preSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             foreach (var item in preSelection)
             {
                 item.IsPreSelected = true;
             }
             //NewSelection
             var newSelection = new List<SelectableObject>();
-            newSelection.Add(CreateSelectableObject());
-            newSelection.Add(CreateSelectableObject());
+            newSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            newSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
 
             manager.PreSelection = preSelection;
 
@@ -385,9 +386,9 @@ namespace RTSEngine.Manager.Selection.Tests
         {
             //PreSelection
             var PreSelection = new List<SelectableObject>();
-            PreSelection.Add(CreateSelectableObject());
-            PreSelection.Add(CreateSelectableObject());
-            PreSelection.Add(CreateSelectableObject());
+            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             foreach (var item in PreSelection)
             {
                 item.IsPreSelected = true;
@@ -411,9 +412,9 @@ namespace RTSEngine.Manager.Selection.Tests
         {
             //PreSelection
             var PreSelection = new List<SelectableObject>();
-            PreSelection.Add(CreateSelectableObject());
-            PreSelection.Add(CreateSelectableObject());
-            SelectableObject mixedItem = CreateSelectableObject();
+            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            SelectableObject mixedItem = SelectionManagerTestUtils.CreateGameObject<SelectableObject>();
             PreSelection.Add(mixedItem);
             foreach (var item in PreSelection)
             {
@@ -421,7 +422,7 @@ namespace RTSEngine.Manager.Selection.Tests
             }
             //NewSelection
             var newSelection = new List<SelectableObject>();
-            newSelection.Add(CreateSelectableObject());
+            newSelection.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             newSelection.Add(mixedItem);
 
             manager.PreSelection = PreSelection;
@@ -459,9 +460,9 @@ namespace RTSEngine.Manager.Selection.Tests
             //CurrentSelection
             PrepareForDrag();
             var expected = new List<SelectableObject>();
-            expected.Add(CreateSelectableObject());
-            expected.Add(CreateSelectableObject());
-            expected.Add(CreateSelectableObject());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
 
             manager.GetSelectionOnScreen().Returns(expected);
             manager.PerformSelection(Arg.Any<List<SelectableObject>>(), Arg.Any<List<SelectableObject>>(), Arg.Is(SelectionTypeEnum.DRAG)).Returns(expected);
@@ -486,9 +487,9 @@ namespace RTSEngine.Manager.Selection.Tests
             //PreSelection
             PrepareForDrag();
             var expected = new List<SelectableObject>();
-            expected.Add(CreateSelectableObject());
-            expected.Add(CreateSelectableObject());
-            expected.Add(CreateSelectableObject());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
+            expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
 
             manager.GetSelectionOnScreen().Returns(expected);
             manager.PerformSelection(Arg.Any<List<SelectableObject>>(), Arg.Any<List<SelectableObject>>(), Arg.Is(SelectionTypeEnum.DRAG)).Returns(expected);
@@ -545,18 +546,13 @@ namespace RTSEngine.Manager.Selection.Tests
 
         private SelectableObject PrepareForClick()
         {
-            SelectableObject so = CreateSelectableObject();
+            SelectableObject so = SelectionManagerTestUtils.CreateGameObject<SelectableObject>();
             manager.GetObjectClicked().Returns(so);
             manager.KeyPressed = 0;
             return so;
         }
 
-        private static SelectableObject CreateSelectableObject()
-        {
-            var go = new GameObject();
-            var so = go.AddComponent<SelectableObject>();
-            return so;
-        }
+
         #endregion
     }
 
