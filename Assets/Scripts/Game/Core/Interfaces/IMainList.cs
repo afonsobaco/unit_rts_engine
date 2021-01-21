@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RTSEngine.Core
+namespace RTSEngine.Core.Interfaces
 {
     public interface IMainList<T>
     {

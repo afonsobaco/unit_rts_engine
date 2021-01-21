@@ -1,3 +1,15 @@
-﻿{
-	"name": "Core"
+{
+    "name": "Core",
+    "references": [
+        "GUID:d25f4c6b518de7d429ba902b326c1404"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

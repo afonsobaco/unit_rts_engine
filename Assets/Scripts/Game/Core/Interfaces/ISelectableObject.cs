@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RTSEngine.Core
+namespace RTSEngine.Core.Interfaces
 {
     public interface ISelectableObject
     {
