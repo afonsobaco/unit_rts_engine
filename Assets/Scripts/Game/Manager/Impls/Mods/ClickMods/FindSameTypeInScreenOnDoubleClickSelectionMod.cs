@@ -2,9 +2,9 @@
 
 namespace RTSEngine.Manager.Impls.Deprecated
 {
-    public class FindSameTypeInScreenOnDoubleClickSelectionMod<T, E> : AbstractClickSelectionMod<T, E>
+    public class FindSameTypeInScreenOnDoubleClickSelectionMod<T, E, O> : AbstractClickSelectionMod<T, E, O>
     {
-        public override SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args)
+        public override SelectionArgsXP<T, E, O> Apply(SelectionArgsXP<T, E, O> args)
         {
             throw new NotImplementedException();
         }

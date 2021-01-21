@@ -1,6 +1,6 @@
 ﻿namespace RTSEngine.Core.Enums
 {
-    public enum SelectableTypeEnum
+    public enum ObjectTypeEnum
     {
         UNIT, //Any unit
         BUILDING, //Any building

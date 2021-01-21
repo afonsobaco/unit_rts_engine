@@ -4,17 +4,17 @@ using RTSEngine.Core.Abstracts;
 
 namespace RTSEngine.Manager.Interfaces
 {
-    public interface ISelectionSettings<T, E>
+    public interface ISelectionSettings<T, S, O>
     {
         AbstractMainList<T> MainList { get; set; }
         Vector2 InitialGameScreenPos { get; set; }
         Vector2 FinalGameScreenPos { get; set; }
         int SelectionLimit { get; set; }
 
-        List<E> CanSelectSameType { get; set; }
-        List<E> PrimaryTypes { get; set; }
-        List<E> SecondaryOrderedTypes { get; set; }
-        List<E> CanGroupTypes { get; set; }
-        List<IAbstractSelectionMod<T, E>> Mods { get; set; }
+        List<S> CanSelectSameType { get; set; }
+        List<S> PrimaryTypes { get; set; }
+        List<S> SecondaryOrderedTypes { get; set; }
+        List<S> CanGroupTypes { get; set; }
+        List<IAbstractSelectionMod<T, S, O>> Mods { get; set; }
     }
 }

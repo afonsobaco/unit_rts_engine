@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
   m_Name: CameraSettings
-  m_EditorClassIdentifier: Camera:RTSEngine.RTSCamera:CamerattingsSO
+  m_EditorClassIdentifier: Manager:RTSEngine.Manager.Impls:CamerattingsSO
   cameraSpeed: 1.5
-  panSpeed: 5
+  panSpeed: 7
   boundriesOffset: 0.03
   zoomScale: 100
   minZoom: 3

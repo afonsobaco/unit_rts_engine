@@ -8,7 +8,7 @@ namespace RTSEngine.Core.Impls
     public class SelectableObject : MonoBehaviour, ISelectableObject
     {
         private bool _selected = false;
-        public SelectableTypeEnum type;
+        public ObjectTypeEnum type;
         public SelectionMark selectionMark;
         public SelectionMark preSelectionMark;
 

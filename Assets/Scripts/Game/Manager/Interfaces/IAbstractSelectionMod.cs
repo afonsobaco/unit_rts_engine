@@ -2,11 +2,11 @@ using RTSEngine.Manager.Impls;
 
 namespace RTSEngine.Manager.Interfaces
 {
-    public interface IAbstractSelectionMod<T, E>
+    public interface IAbstractSelectionMod<T, S, O>
     {
         bool Active { get; set; }
-        E Type { get; set; }
+        S Type { get; set; }
 
-        SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args);
+        SelectionArgsXP<T, S, O> Apply(SelectionArgsXP<T, S, O> args);
     }
 }

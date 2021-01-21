@@ -7,7 +7,7 @@ using RTSEngine.Core;
 namespace RTSEngine.Manager.Impls.Deprecated
 {
 
-    public class GetByPrecendenceOrderOnDragSelectionMod<T, E> : AbstractDragSelectionMod<T, E>
+    public class GetByPrecendenceOrderOnDragSelectionMod<T, E, O> : AbstractDragSelectionMod<T, E, O>
     {
 
         // protected override List<SelectableObject> Execute(SelectionArgs args)
@@ -41,7 +41,7 @@ namespace RTSEngine.Manager.Impls.Deprecated
         //     }
         //     return new List<SelectableObject>();
         // }
-        public override SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args)
+        public override SelectionArgsXP<T, E, O> Apply(SelectionArgsXP<T, E, O> args)
         {
             throw new System.NotImplementedException();
         }

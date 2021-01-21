@@ -4,6 +4,7 @@ using UnityEngine;
 using RTSEngine.Core.Impls;
 using RTSEngine.Manager.Interfaces;
 using RTSEngine.Core.Enums;
+using RTSEngine.Manager.Enums;
 
 namespace RTSEngine.Manager.Impls.Deprecated
 {
@@ -19,7 +20,7 @@ namespace RTSEngine.Manager.Impls.Deprecated
         private bool isPreSelection;
         private bool isDoubleClick;
         private List<SelectableObject> preSelectionList;
-        private ISelectionSettings<SelectableObject, SelectableTypeEnum> settings;
+        private ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> settings;
         public List<SelectableObject> MainList { get => mainList; set => mainList = value; }
         public List<SelectableObject> NewList { get => newList; set => newList = value; }
         public List<SelectableObject> OldList { get => oldList; set => oldList = value; }
@@ -30,7 +31,7 @@ namespace RTSEngine.Manager.Impls.Deprecated
         public bool IsPreSelection { get => isPreSelection; set => isPreSelection = value; }
         public bool IsDoubleClick { get => isDoubleClick; set => isDoubleClick = value; }
         public List<SelectableObject> PreSelectionList { get => preSelectionList; set => preSelectionList = value; }
-        public ISelectionSettings<SelectableObject, SelectableTypeEnum> Settings { get => settings; set => settings = value; }
+        public ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> Settings { get => settings; set => settings = value; }
     }
 
 }

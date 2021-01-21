@@ -8,7 +8,8 @@ namespace RTSEngine.Manager.Interfaces
         void SetMouseClick(float doubleClickTime);
         void DoGroupSelection(KeyCode groupKeyCode);
         void SetCameraControls();
-        void SetDragCameraControls();
+        void SetCameraPanningControls();
+        void DoCameraMovement();
     }
 
 }

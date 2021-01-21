@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core.Impls;
+using RTSEngine.Core.Enums;
 using RTSEngine.Manager.Enums;
 using RTSEngine.Manager.Abstracts;
 using RTSEngine.Manager.Interfaces;
 using RTSEngine.Core.Interfaces;
 using RTSEngine.Manager.Utils;
 
-
 namespace RTSEngine.Manager.Impls
 {
-    public class SelectionManager : AbstractSelectionManager<SelectableObject, SelectionTypeEnum>, ISelectionManager<SelectableObject>
+    public class SelectionManager : AbstractSelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>, ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>
     {
 
         private IRuntimeSet<SelectableObject> selectableList;
+        private ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> settings;
         private Vector3 initialScreenPosition;
         private Vector3 finalScreenPosition;
         private bool isAditiveSelection;
@@ -64,6 +65,7 @@ namespace RTSEngine.Manager.Impls
         }
 
         public IRuntimeSet<SelectableObject> SelectableList { get => selectableList; set => selectableList = value; }
+        public ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> Settings { get => settings; set => settings = value; }
         public bool IsDoubleClick { get => isDoubleClick; set => isDoubleClick = value; }
         public Dictionary<int, List<SelectableObject>> Groups { get => groups; private set => groups = value; }
 
@@ -206,9 +208,9 @@ namespace RTSEngine.Manager.Impls
             return SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableList.GetList(), InitialScreenPosition, FinalScreenPosition);
         }
 
-        public override ISelectionSettings<SelectableObject, SelectionTypeEnum> GetSettings()
+        public override ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> GetSettings()
         {
-            return null;
+            return Settings;
         }
     }
 }

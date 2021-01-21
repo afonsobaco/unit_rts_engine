@@ -29,7 +29,8 @@ namespace RTSEngine.Manager.Impls
         public void LateUpdate()
         {
             Manager.SetCameraControls();
-            Manager.SetDragCameraControls();
+            Manager.SetCameraPanningControls();
+            Manager.DoCameraMovement();
         }
     }
 }

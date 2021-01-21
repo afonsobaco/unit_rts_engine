@@ -524,12 +524,12 @@ namespace Tests.Manager
             return manager;
         }
 
-        private static SelectionArgsXP<T, E> GetDefaultArgs<T, E>()
+        private static SelectionArgsXP<T, E, O> GetDefaultArgs<T, E, O>()
         {
-            var settings = Substitute.ForPartsOf<ISelectionSettings<T, E>>();
-            SelectionArgsXP<T, E> args = new SelectionArgsXP<T, E>();
+            var settings = Substitute.ForPartsOf<ISelectionSettings<T, E, O>>();
+            SelectionArgsXP<T, E, O> args = new SelectionArgsXP<T, E, O>();
             args.Settings = settings;
-            args.Settings.Mods = new List<IAbstractSelectionMod<T, E>>();
+            args.Settings.Mods = new List<IAbstractSelectionMod<T, E, O>>();
             return args;
         }
 

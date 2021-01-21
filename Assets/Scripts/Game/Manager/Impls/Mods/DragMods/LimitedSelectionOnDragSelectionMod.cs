@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RTSEngine.Manager.Impls.Deprecated
 {
-    public class LimitedSelectionOnDragSelectionMod<T, E> : AbstractDragSelectionMod<T, E>
+    public class LimitedSelectionOnDragSelectionMod<T, E, O> : AbstractDragSelectionMod<T, E, O>
     {
         // protected override List<SelectableObject> Execute(SelectionArgs args)
         // {
@@ -22,7 +22,7 @@ namespace RTSEngine.Manager.Impls.Deprecated
         //     list.AddRange(args.NewList.Take(args.Settings.SelectionLimit - list.Count).ToList());
         //     return list;
         // }
-        public override SelectionArgsXP<T, E> Apply(SelectionArgsXP<T, E> args)
+        public override SelectionArgsXP<T, E, O> Apply(SelectionArgsXP<T, E, O> args)
         {
             throw new System.NotImplementedException();
         }

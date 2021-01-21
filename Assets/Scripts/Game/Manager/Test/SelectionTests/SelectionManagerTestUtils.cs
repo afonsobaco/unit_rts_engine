@@ -15,15 +15,15 @@ namespace Tests.Manager
         public static List<SelectableObjectTestStruct> GetDefaultTestListOfObjects()
         {
             return new List<SelectableObjectTestStruct>(){
-                new SelectableObjectTestStruct(new Vector3(0,0,0), SelectableTypeEnum.UNIT),
-                new SelectableObjectTestStruct(new Vector3(1,0,1), SelectableTypeEnum.UNIT),
-                new SelectableObjectTestStruct(new Vector3(-1,0,1), SelectableTypeEnum.UNIT),
-                new SelectableObjectTestStruct(new Vector3(-1,0,-1), SelectableTypeEnum.UNIT),
-                new SelectableObjectTestStruct(new Vector3(2,0,3), SelectableTypeEnum.UNIT),
-                new SelectableObjectTestStruct(new Vector3(4,0,3), SelectableTypeEnum.BUILDING),
-                new SelectableObjectTestStruct(new Vector3(2,0,-3), SelectableTypeEnum.BUILDING),
-                new SelectableObjectTestStruct(new Vector3(1,0,4), SelectableTypeEnum.ENVIRONMENT),
-                new SelectableObjectTestStruct(new Vector3(4,0,-2), SelectableTypeEnum.CONSUMABLE)
+                new SelectableObjectTestStruct(new Vector3(0,0,0), ObjectTypeEnum.UNIT),
+                new SelectableObjectTestStruct(new Vector3(1,0,1), ObjectTypeEnum.UNIT),
+                new SelectableObjectTestStruct(new Vector3(-1,0,1), ObjectTypeEnum.UNIT),
+                new SelectableObjectTestStruct(new Vector3(-1,0,-1), ObjectTypeEnum.UNIT),
+                new SelectableObjectTestStruct(new Vector3(2,0,3), ObjectTypeEnum.UNIT),
+                new SelectableObjectTestStruct(new Vector3(4,0,3), ObjectTypeEnum.BUILDING),
+                new SelectableObjectTestStruct(new Vector3(2,0,-3), ObjectTypeEnum.BUILDING),
+                new SelectableObjectTestStruct(new Vector3(1,0,4), ObjectTypeEnum.ENVIRONMENT),
+                new SelectableObjectTestStruct(new Vector3(4,0,-2), ObjectTypeEnum.CONSUMABLE)
             };
         }
 
@@ -49,31 +49,31 @@ namespace Tests.Manager
             return mainList;
         }
 
-        public static IAbstractSelectionMod<T, E> AddNewMod<T, E>(SelectionArgsXP<T, E> args)
+        public static IAbstractSelectionMod<T, E, O> AddNewMod<T, E, O>(SelectionArgsXP<T, E, O> args)
         {
-            var mod = Substitute.For<IAbstractSelectionMod<T, E>>();
+            var mod = Substitute.For<IAbstractSelectionMod<T, E, O>>();
             if (args.Settings == null)
             {
-                args.Settings = Substitute.For<ISelectionSettings<T, E>>();
+                args.Settings = Substitute.For<ISelectionSettings<T, E, O>>();
             }
             if (args.Settings.Mods == null)
             {
-                args.Settings.Mods = new List<IAbstractSelectionMod<T, E>>();
+                args.Settings.Mods = new List<IAbstractSelectionMod<T, E, O>>();
             }
             args.Settings.Mods.Add(mod);
             return mod;
         }
 
-        public static SelectionArgsXP<T, E> GetDefaultArgs<T, E>()
+        public static SelectionArgsXP<T, E, O> GetDefaultArgs<T, E, O>()
         {
-            SelectionArgsXP<T, E> args = new SelectionArgsXP<T, E>();
-            args.Settings = Substitute.For<ISelectionSettings<T, E>>();
+            SelectionArgsXP<T, E, O> args = new SelectionArgsXP<T, E, O>();
+            args.Settings = Substitute.For<ISelectionSettings<T, E, O>>();
             args.NewSelection = new List<T>();
             args.OldSelection = new List<T>();
             args.ToBeAdded = new List<T>();
             args.ToBeRemoved = new List<T>();
-            args.Settings = Substitute.For<ISelectionSettings<T, E>>();
-            args.Settings.Mods = new List<IAbstractSelectionMod<T, E>>();
+            args.Settings = Substitute.For<ISelectionSettings<T, E, O>>();
+            args.Settings.Mods = new List<IAbstractSelectionMod<T, E, O>>();
             return args;
         }
 
@@ -89,9 +89,9 @@ namespace Tests.Manager
 public struct SelectableObjectTestStruct
 {
     internal Vector3 pos;
-    internal SelectableTypeEnum typeEnum;
+    internal ObjectTypeEnum typeEnum;
 
-    internal SelectableObjectTestStruct(Vector3 pos, SelectableTypeEnum typeEnum)
+    internal SelectableObjectTestStruct(Vector3 pos, ObjectTypeEnum typeEnum)
     {
         this.pos = pos;
         this.typeEnum = typeEnum;

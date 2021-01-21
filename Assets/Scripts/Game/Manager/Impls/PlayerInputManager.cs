@@ -2,22 +2,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using RTSEngine.Core.Impls;
+using RTSEngine.Core.Enums;
 using RTSEngine.Manager.Interfaces;
 using RTSEngine.Manager.Utils;
+using RTSEngine.Manager.Enums;
 
 namespace RTSEngine.Manager.Impls
 {
     public class PlayerInputManager : IPlayerInputManager
     {
 
-        private ISelectionManager<SelectableObject> selectionManager;
+        private ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> selectionManager;
         private ICameraManager cameraManager;
         private SelectionOptions selectionOptions;
 
         public SelectionOptions SelectionOptions { get => selectionOptions; private set => selectionOptions = value; }
 
         [Inject]
-        public void Construct(ISelectionManager<SelectableObject> selectionManager, ICameraManager cameraManager)
+        public void Construct(ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> selectionManager, ICameraManager cameraManager)
         {
             this.selectionManager = selectionManager;
             this.cameraManager = cameraManager;
@@ -50,24 +52,37 @@ namespace RTSEngine.Manager.Impls
             }
             if (Input.mouseScrollDelta.y != 0)
             {
-                Camera.main.transform.position = cameraManager.DoCameraZoom(Input.mouseScrollDelta.y, Time.deltaTime, Camera.main);
+                Camera.main.transform.position = cameraManager.DoCameraZooming(Input.mouseScrollDelta.y, Time.deltaTime, Camera.main);
             }
-            Camera.main.transform.position = cameraManager.DoCameraMovement(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.mousePosition, Time.deltaTime, Camera.main);
-
         }
 
-        public void SetDragCameraControls()
+        public void DoCameraMovement()
+        {
+            if (cameraManager.IsCentering)
+            {
+                Camera.main.transform.position = cameraManager.DoCameraCentering(Camera.main);
+            }
+            else
+            {
+                if (cameraManager.IsPanning)
+                {
+                    var desired = cameraManager.DoCameraPanning(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")), Time.deltaTime, Camera.main);
+                    Camera.main.transform.Translate(desired, Space.Self);
+                }
+                else
+                {
+                    Camera.main.transform.position += cameraManager.DoCameraInputMovement(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.mousePosition, Time.deltaTime, Camera.main);
+                }
+            }
+            Camera.main.transform.position = cameraManager.ClampCameraPos(Camera.main);
+        }
+
+        public void SetCameraPanningControls()
         {
             if (Input.GetMouseButtonDown(2))
             {
                 cameraManager.IsPanning = true;
                 cameraManager.Origin = Input.mousePosition;
-            }
-
-            if (Input.GetMouseButton(2))
-            {
-                var desiredMove = cameraManager.DoCameraPanning(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")), Time.deltaTime, Camera.main);
-                Camera.main.transform.Translate(desiredMove, Space.Self); ;
             }
             if (Input.GetMouseButtonUp(2))
             {

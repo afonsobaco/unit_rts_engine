@@ -2,7 +2,7 @@
 
 namespace RTSEngine.Manager.Impls.Deprecated
 {
-    public abstract class AbstractClickSelectionMod<T, E> : AbstractSelectionMod<T, E>
+    public abstract class AbstractClickSelectionMod<T, E, O> : AbstractSelectionMod<T, E, O>
     {
 
         // protected override List<SelectableObject> Apply(SelectionArgs args)
