@@ -2,6 +2,8 @@
 using RTSEngine.Core.Interfaces;
 using RTSEngine.Utils;
 using UnityEngine;
+using RTSEngine.Core.Signals;
+using Zenject;
 
 namespace RTSEngine.Core.Impls
 {
@@ -14,6 +16,14 @@ namespace RTSEngine.Core.Impls
 
         //TODO should be an Enum?
         public string typeStr;
+
+        private SignalBus _signalBus;
+
+        [Inject]
+        public void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+        }
 
         public bool IsSelected
         {
@@ -40,12 +50,12 @@ namespace RTSEngine.Core.Impls
 
         void OnEnable()
         {
-
+            _signalBus.Fire(new SelectableObjectCreatedSignal() { selectableObject = this });
         }
 
         void OnDisable()
         {
-
+            _signalBus.Fire(new SelectableObjectDeletedSignal() { selectableObject = this });
         }
 
     }

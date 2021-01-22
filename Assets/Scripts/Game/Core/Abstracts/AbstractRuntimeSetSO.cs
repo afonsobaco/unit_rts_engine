@@ -6,7 +6,7 @@ namespace RTSEngine.Core.Abstracts
 {
     public abstract class AbstractRuntimeSetSO<T> : ScriptableObject, IRuntimeSet<T>
     {
-        private List<T> _list = new List<T>();
+        [SerializeField] private List<T> _list = new List<T>();
 
         public void AddToList(T item)
         {

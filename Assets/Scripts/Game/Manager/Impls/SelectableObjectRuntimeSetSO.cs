@@ -9,5 +9,6 @@ namespace RTSEngine.Manager.Impls
     [CreateAssetMenu(fileName = "SelectableObjectRuntimeSetSO", menuName = "ScriptableObjects/SelectableObject Runtime Set", order = 1)]
     public class SelectableObjectRuntimeSetSO : AbstractRuntimeSetSO<SelectableObject>
     {
+
     }
 }

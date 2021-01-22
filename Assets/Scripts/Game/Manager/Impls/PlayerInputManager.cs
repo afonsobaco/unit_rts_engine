@@ -94,7 +94,6 @@ namespace RTSEngine.Manager.Impls
         {
             selectionManager.IsAditiveSelection = Input.GetKey(aditive);
             selectionManager.IsSameTypeSelection = Input.GetKey(sameType);
-            DoGroupSelection(groupKeyCode);
         }
 
         public void DoGroupSelection(KeyCode groupKeyCode)
@@ -108,7 +107,8 @@ namespace RTSEngine.Manager.Impls
                 }
                 else
                 {
-                    selectionManager.GetGroup(keyPressed);
+                    selectionManager.KeyPressed = keyPressed;
+                    selectionManager.EndOfSelection(Vector3.zero);
                 }
             }
         }

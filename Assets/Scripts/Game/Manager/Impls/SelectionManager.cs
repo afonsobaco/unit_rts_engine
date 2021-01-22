@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core.Impls;
+using RTSEngine.Core.Signals;
 using RTSEngine.Core.Enums;
 using RTSEngine.Manager.Enums;
 using RTSEngine.Manager.Abstracts;
@@ -25,6 +27,7 @@ namespace RTSEngine.Manager.Impls
         private Dictionary<int, List<SelectableObject>> groups = new Dictionary<int, List<SelectableObject>>();
         private List<SelectableObject> currentSelection;
         private List<SelectableObject> preSelection;
+        private bool isSelecting;
 
         public Vector3 InitialScreenPosition { get => initialScreenPosition; set => initialScreenPosition = value; }
         public Vector3 FinalScreenPosition { get => finalScreenPosition; set => finalScreenPosition = value; }
@@ -68,6 +71,7 @@ namespace RTSEngine.Manager.Impls
         public ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> Settings { get => settings; set => settings = value; }
         public bool IsDoubleClick { get => isDoubleClick; set => isDoubleClick = value; }
         public Dictionary<int, List<SelectableObject>> Groups { get => groups; private set => groups = value; }
+        public bool IsSelecting { get => isSelecting; set => isSelecting = value; }
 
         public List<SelectableObject> GetNewSelection()
         {
@@ -178,6 +182,7 @@ namespace RTSEngine.Manager.Impls
         public void StartOfSelection(Vector3 initialPos)
         {
             InitialScreenPosition = initialPos;
+            IsSelecting = true;
         }
 
         public void DoPreSelection(Vector3 finalPos)
@@ -188,13 +193,22 @@ namespace RTSEngine.Manager.Impls
         }
         public void EndOfSelection(Vector3 finalPos)
         {
+            //TODO ajustar testes
             FinalScreenPosition = finalPos;
             var list = PerformSelection(currentSelection, GetNewSelection(), GetSelectionType());
             CurrentSelection = UpdateCurrentSelection(list);
+            this.UpdatePreSelectionStatus(preSelection, false);
+            KeyPressed = 0;
+            IsSelecting = false;
+
         }
 
         public Vector3 GetSelectionMainPoint()
         {
+            if (CurrentSelection.Count > 0)
+            {
+                return CurrentSelection[0].transform.position;
+            }
             return Vector3.zero;
         }
 
@@ -211,6 +225,21 @@ namespace RTSEngine.Manager.Impls
         public override ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> GetSettings()
         {
             return Settings;
+        }
+
+        public void AddSelectableObject(SelectableObjectCreatedSignal signal)
+        {
+            SelectableList.AddToList(signal.selectableObject);
+        }
+
+        public void RemoveSelectableObject(SelectableObjectDeletedSignal signal)
+        {
+            SelectableList.RemoveFromList(signal.selectableObject);
+        }
+
+        public void Dispose()
+        {
+            SelectableList.GetList().Clear();
         }
     }
 }

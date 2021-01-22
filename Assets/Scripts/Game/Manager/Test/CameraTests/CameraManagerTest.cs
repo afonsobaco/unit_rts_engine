@@ -207,7 +207,6 @@ namespace Tests.Manager
             Assert.AreEqual(expected, roundedResult);
         }
 
-        // TODO panning clamp boundries
         // TODO panning dont move on z after minZoom or maxZoom
 
         #region methods

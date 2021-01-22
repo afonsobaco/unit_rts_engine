@@ -64,7 +64,8 @@ namespace RTSEngine.Manager.Impls
 
         public Vector3 DoCameraZooming(float y, float deltaTime, UnityEngine.Camera mainCamera)
         {
-            Vector3 vZoom = mainCamera.transform.position + mainCamera.transform.forward * (Settings.ZoomScale * deltaTime * y);
+            Vector3 direction = mainCamera.transform.forward * (Settings.ZoomScale * deltaTime * y);
+            Vector3 vZoom = mainCamera.transform.position + direction;
             if (vZoom.y < Settings.MinZoom)
             {
                 var diff = Settings.MinZoom - vZoom.y;

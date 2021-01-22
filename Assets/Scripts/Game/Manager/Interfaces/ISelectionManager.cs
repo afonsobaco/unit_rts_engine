@@ -1,13 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Manager.Enums;
 using RTSEngine.Core.Impls;
 using RTSEngine.Core.Interfaces;
-using RTSEngine.Manager.Impls;
+using RTSEngine.Core.Signals;
 
 namespace RTSEngine.Manager.Interfaces
 {
-    public interface ISelectionManager<T, S, O> where T : SelectableObject
+    public interface ISelectionManager<T, S, O> : IDisposable where T : SelectableObject
     {
         Vector3 InitialScreenPosition { get; set; }
         Vector3 FinalScreenPosition { get; set; }
@@ -19,8 +20,8 @@ namespace RTSEngine.Manager.Interfaces
         bool IsAditiveSelection { get; set; }
         bool IsSameTypeSelection { get; set; }
         bool IsDoubleClick { get; set; }
+        bool IsSelecting { get; set; }
 
-        List<T> GetGroup(int key);
         List<T> GetNewSelection();
         SelectionTypeEnum GetSelectionType();
         void SetGroup(int key);
@@ -30,5 +31,7 @@ namespace RTSEngine.Manager.Interfaces
         void StartOfSelection(Vector3 mousePosition);
         void DoPreSelection(Vector3 mousePosition);
         void EndOfSelection(Vector3 mousePosition);
+        void AddSelectableObject(SelectableObjectCreatedSignal signal);
+        void RemoveSelectableObject(SelectableObjectDeletedSignal signal);
     }
 }

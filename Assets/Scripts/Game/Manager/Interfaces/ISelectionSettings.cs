@@ -6,7 +6,6 @@ namespace RTSEngine.Manager.Interfaces
 {
     public interface ISelectionSettings<T, S, O>
     {
-        AbstractMainList<T> MainList { get; set; }
         Vector2 InitialGameScreenPos { get; set; }
         Vector2 FinalGameScreenPos { get; set; }
         int SelectionLimit { get; set; }

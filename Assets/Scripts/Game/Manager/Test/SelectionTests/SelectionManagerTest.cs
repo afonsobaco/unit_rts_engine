@@ -460,6 +460,7 @@ namespace Tests.Manager
 
             //CurrentSelection
             PrepareForDrag();
+            manager.PreSelection = new List<SelectableObject>();
             var expected = new List<SelectableObject>();
             expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());
             expected.Add(SelectionManagerTestUtils.CreateGameObject<SelectableObject>());

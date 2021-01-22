@@ -7,7 +7,6 @@ namespace RTSEngine.Manager.Abstracts
 {
     public class AbstractSelectionSettingsSO<T, S, O> : ScriptableObject, ISelectionSettings<T, S, O>
     {
-        [SerializeField] private AbstractMainList<T> mainList;
         [SerializeField] private Vector2 initialGameScreenPos = new Vector2(0, 0);
         [SerializeField] private Vector2 finalGameScreenPos = new Vector2(1, 1);
 
@@ -27,7 +26,6 @@ namespace RTSEngine.Manager.Abstracts
         public List<S> PrimaryTypes { get => primaryTypes; set => primaryTypes = value; }
         public List<S> SecondaryOrderedTypes { get => secondaryOrderedTypes; set => secondaryOrderedTypes = value; }
         public List<S> CanGroupTypes { get => canGroupTypes; set => canGroupTypes = value; }
-        public AbstractMainList<T> MainList { get => mainList; set => mainList = value; }
         public List<IAbstractSelectionMod<T, S, O>> Mods { get => mods; set => mods = value; }
     }
 
