@@ -1,4 +1,6 @@
 ﻿
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
+
 namespace RTSEngine.Manager.Impls.Deprecated
 {
     public class PreserveLastOnClickSelectionMod<T, ST> : AbstractClickSelectionMod<T, ST>
@@ -11,7 +13,7 @@ namespace RTSEngine.Manager.Impls.Deprecated
         //     }
         //     return args.NewList;
         // }
-        public override SelectionArgsXP<T, ST> Apply(SelectionArgsXP<T, ST> args)
+        public override ISelectionArgsXP<T, ST> Apply(ISelectionArgsXP<T, ST> args)
         {
             throw new System.NotImplementedException();
         }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
 
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
+
 namespace RTSEngine.Manager.Impls.Deprecated
 {
 
@@ -41,7 +43,7 @@ namespace RTSEngine.Manager.Impls.Deprecated
         //     }
         //     return new List<SelectableObject>();
         // }
-        public override SelectionArgsXP<T, ST> Apply(SelectionArgsXP<T, ST> args)
+        public override ISelectionArgsXP<T, ST> Apply(ISelectionArgsXP<T, ST> args)
         {
             throw new System.NotImplementedException();
         }

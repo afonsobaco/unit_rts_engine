@@ -2386,8 +2386,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectableList: {fileID: 11400000, guid: 6229d869effb45848bfd0c27febbe609, type: 2}
-  settings: {fileID: 11400000, guid: 1468c87f52902da46b6bc7d18ddc4207, type: 2}
   selectionBox: {fileID: 1355525405}
+  mods:
+  - {fileID: 11400000, guid: eceeeb858fd6cb947859ba0d39b78024, type: 2}
 --- !u!114 &5065022366577028078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2400,7 +2401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bef0f78e86a3f94cb382691f0454dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings: {fileID: 11400000, guid: 64c5de8a3e25fa04288dbe2425442120, type: 2}
+  cameraSettings: {fileID: 11400000, guid: 64c5de8a3e25fa04288dbe2425442120, type: 2}
 --- !u!4 &5065022366577028079
 Transform:
   m_ObjectHideFlags: 0

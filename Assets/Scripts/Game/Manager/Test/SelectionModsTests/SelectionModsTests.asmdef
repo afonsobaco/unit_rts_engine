@@ -1,10 +1,10 @@
 {
-    "name": "CameraManagerTest",
+    "name": "SelectionModsTests",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Manager",
-        "Core"
+        "Core",
+        "Manager"
     ],
     "includePlatforms": [
         "Editor"
@@ -15,8 +15,8 @@
     "precompiledReferences": [
         "nunit.framework.dll",
         "Castle.Core.dll",
-        "System.Threading.Tasks.Extensions.dll",
-        "NSubstitute.dll"
+        "NSubstitute.dll",
+        "System.Threading.Tasks.Extensions.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

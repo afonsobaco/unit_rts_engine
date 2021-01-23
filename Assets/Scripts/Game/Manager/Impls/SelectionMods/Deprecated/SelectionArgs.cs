@@ -6,6 +6,8 @@ using RTSEngine.Manager.Interfaces;
 using RTSEngine.Core.Enums;
 using RTSEngine.Manager.Enums;
 
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
+
 namespace RTSEngine.Manager.Impls.Deprecated
 {
     public class SelectionArgs

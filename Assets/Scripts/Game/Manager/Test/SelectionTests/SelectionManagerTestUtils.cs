@@ -49,9 +49,9 @@ namespace Tests.Manager
             return mainList;
         }
 
-        public static SelectionArgsXP<T, ST> GetDefaultArgs<T, ST>()
+        public static ISelectionArgsXP<T, ST> GetDefaultArgs<T, ST>()
         {
-            SelectionArgsXP<T, ST> args = new SelectionArgsXP<T, ST>();
+            ISelectionArgsXP<T, ST> args = new SelectionArgsXP<T, ST>();
             args.NewSelection = new List<T>();
             args.OldSelection = new List<T>();
             args.ToBeAdded = new List<T>();
@@ -65,6 +65,19 @@ namespace Tests.Manager
             var so = go.AddComponent<T>();
             return so;
         }
+
+        public static List<ISelectionMod<O, ST>> GetSomeMods<O, ST>(int amount)
+        {
+            List<ISelectionMod<O, ST>> mods = new List<ISelectionMod<O, ST>>();
+            for (var i = 0; i < amount; i++)
+            {
+                ISelectionMod<O, ST> mod = Substitute.For<ISelectionMod<O, ST>>();
+                mod.Apply(Arg.Any<SelectionArgsXP<O, ST>>()).Returns(x => x[0]);
+                mods.Add(mod);
+            }
+            return mods;
+        }
+
     }
 }
 

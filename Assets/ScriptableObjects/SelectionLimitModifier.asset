@@ -9,14 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: CameraSettings
-  m_EditorClassIdentifier: Manager:RTSEngine.Manager.Impls:CamerattingsSO
-  cameraSpeed: 1.5
-  panSpeed: 5
-  boundriesOffset: 0.03
-  zoomScale: 100
-  minZoom: 3
-  maxZoom: 20
-  axisPressure: 0.1
-  sizeFromMidPoint: 50
+  m_Script: {fileID: 11500000, guid: 40021d46535f2ec4b945940c5b5f7a22, type: 3}
+  m_Name: SelectionLimitModifier
+  m_EditorClassIdentifier: 
+  active: 1
+  type: 0
+  maxLimit: 2

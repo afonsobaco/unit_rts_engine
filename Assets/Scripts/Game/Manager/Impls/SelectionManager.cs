@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core.Impls;
@@ -9,6 +9,7 @@ using RTSEngine.Manager.Abstracts;
 using RTSEngine.Manager.Interfaces;
 using RTSEngine.Core.Interfaces;
 using RTSEngine.Manager.Utils;
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
 
 namespace RTSEngine.Manager.Impls
 {
@@ -16,6 +17,7 @@ namespace RTSEngine.Manager.Impls
     {
 
         private IRuntimeSet<SelectableObject> selectableList;
+        private List<ScriptableObject> scriptableObjectMods;
         private Vector3 initialScreenPosition;
         private Vector3 finalScreenPosition;
         private bool isAditiveSelection;
@@ -70,6 +72,7 @@ namespace RTSEngine.Manager.Impls
         public bool IsDoubleClick { get => isDoubleClick; set => isDoubleClick = value; }
         public Dictionary<int, List<SelectableObject>> Groups { get => groups; private set => groups = value; }
         public bool IsSelecting { get => isSelecting; set => isSelecting = value; }
+        public List<ScriptableObject> ScriptableObjectMods { get => scriptableObjectMods; set => scriptableObjectMods = value; }
 
         public List<SelectableObject> GetNewSelection()
         {
@@ -236,16 +239,26 @@ namespace RTSEngine.Manager.Impls
             SelectableList.GetList().Clear();
         }
 
-        public override SelectionArgsXP<SelectableObject, SelectionTypeEnum> ApplyModifiers(SelectionArgsXP<SelectableObject, SelectionTypeEnum> args)
+        public override ISelectionArgsXP<SelectableObject, SelectionTypeEnum> ApplyModifiers(ISelectionArgsXP<SelectableObject, SelectionTypeEnum> args)
         {
+            //TODO test
+            // var parsedModList = Mods.FindAll(x => x is ISelectionMod<SelectableObject, SelectionTypeEnum>).Select(x => x as ISelectionMod<SelectableObject, SelectionTypeEnum>).ToList();
+            // List<ISelectionMod<SelectableObject, SelectionTypeEnum>> filteredMods = GetModsBySelectionType(parsedModList, args.SelectionType);
+            // filteredMods.Union(GetModsBySelectionType(parsedModList, SelectionTypeEnum.ALL));
+            // foreach (var item in filteredMods)
             // {
-            //     foreach (var item in GetModsBySelectionType(args.Settings.Mods, args.SelectionType))
-            //     {
-            //         args = item.Apply(args);
-            //     }
-            //     return args;
+            //     args = item.Apply(args);
             // }
-            throw new NotImplementedException();
+            return args;
+
+        }
+
+        public override List<ISelectionMod<SelectableObject, SelectionTypeEnum>> GetModifiersToBeApplied(SelectionTypeEnum selectionType)
+        {
+            var parsedModList = ScriptableObjectMods.FindAll(x => x is ISelectionMod<SelectableObject, SelectionTypeEnum>).Select(x => x as ISelectionMod<SelectableObject, SelectionTypeEnum>).ToList();
+            List<ISelectionMod<SelectableObject, SelectionTypeEnum>> modifiersToBeApplied = GetModsBySelectionType(parsedModList, selectionType);
+            modifiersToBeApplied.Union(GetModsBySelectionType(parsedModList, SelectionTypeEnum.ALL));
+            return modifiersToBeApplied;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using RTSEngine.Core;
 
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
+
 namespace RTSEngine.Manager.Impls.Deprecated
 {
     public abstract class AbstractDragSelectionMod<T, ST> : AbstractSelectionMod<T, ST>

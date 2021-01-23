@@ -5,6 +5,7 @@ using RTSEngine.Manager.Enums;
 using RTSEngine.Core.Impls;
 using RTSEngine.Core.Interfaces;
 using RTSEngine.Core.Signals;
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
 
 namespace RTSEngine.Manager.Interfaces
 {
@@ -16,6 +17,7 @@ namespace RTSEngine.Manager.Interfaces
         T Cliked { get; set; }
         List<T> CurrentSelection { get; set; }
         IRuntimeSet<T> SelectableList { get; set; }
+        List<ScriptableObject> ScriptableObjectMods { get; set; }
         bool IsAditiveSelection { get; set; }
         bool IsSameTypeSelection { get; set; }
         bool IsDoubleClick { get; set; }

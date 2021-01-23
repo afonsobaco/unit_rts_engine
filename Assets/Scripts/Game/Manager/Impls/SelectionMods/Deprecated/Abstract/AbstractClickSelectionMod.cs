@@ -1,5 +1,7 @@
 ﻿
 
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
+
 namespace RTSEngine.Manager.Impls.Deprecated
 {
     public abstract class AbstractClickSelectionMod<T, ST> : AbstractSelectionMod<T, ST>

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using RTSEngine.Core.Impls;
 using RTSEngine.Core.Interfaces;
 using RTSEngine.Manager.Enums;
 using RTSEngine.Manager.Impls;
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
 using RTSEngine.Manager.Interfaces;
 using NSubstitute;
 
@@ -518,6 +520,55 @@ namespace Tests.Manager
             Assert.AreEqual(mainPoint, Vector3.zero);
         }
 
+        // [TestCaseSource(nameof(Scenarios))]
+        // public void ShouldGetModifiersToBeApplied(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey, int howManyModsApplied)
+        // {
+        //     var mods = new List<ScriptableObject>();
+        //     mods.AddRange(GetSomeModsFromType(howManyAll, SelectionTypeEnum.ALL));
+        //     mods.AddRange(GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK));
+        //     mods.AddRange(GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG));
+        //     mods.AddRange(GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY));
+        //     manager.ScriptableObjectMods = mods.Select(x => x as ScriptableObject).ToList();
+
+        //     var result = manager.GetModifiersToBeApplied(selectionType);
+
+        // }
+
+
+
+        // [TestCaseSource(nameof(Scenarios))]
+        // public void ShouldApplyModifiers(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey, int howManyModsApplied)
+        // {
+        //     var mods = new List<ISelectionMod<SelectableObject, SelectionTypeEnum>>();
+        //     mods.AddRange(GetSomeModsFromType(howManyAll, SelectionTypeEnum.ALL));
+        //     mods.AddRange(GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK));
+        //     mods.AddRange(GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG));
+        //     mods.AddRange(GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY));
+
+
+        //     var args = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum>();
+        //     args.SelectionType = selectionType;
+        //     args.SelectionModifiers = mods;
+
+        //     var result = manager.ApplyModifiers(args);
+
+        //     int expectedCount = 0;
+        //     foreach (var mod in mods)
+        //     {
+        //         if (mod.Type == selectionType || mod.Type == SelectionTypeEnum.ALL)
+        //         {
+        //             mod.ReceivedWithAnyArgs().Apply(default);
+        //             expectedCount++;
+        //         }
+        //         else
+        //         {
+        //             mod.DidNotReceiveWithAnyArgs().Apply(default);
+        //         }
+        //     }
+        //     Assert.AreEqual(expectedCount, howManyModsApplied);
+
+        // }
+
         #region methods
         private static SelectionManager GetSelectionManager()
         {
@@ -527,12 +578,6 @@ namespace Tests.Manager
             manager.SelectableList = so;
 
             return manager;
-        }
-
-        private static SelectionArgsXP<T, ST> GetDefaultArgs<T, ST>()
-        {
-            SelectionArgsXP<T, ST> args = new SelectionArgsXP<T, ST>();
-            return args;
         }
 
         private void PrepareForDrag()
@@ -555,8 +600,38 @@ namespace Tests.Manager
             return so;
         }
 
+        private static List<ISelectionMod<SelectableObject, SelectionTypeEnum>> GetSomeModsFromType(int amount, SelectionTypeEnum type)
+        {
+            var mods = SelectionManagerTestUtils.GetSomeMods<SelectableObject, SelectionTypeEnum>(amount);
+            mods.ForEach(x => x.Type = type);
+            return mods;
+        }
+
+        private static List<AbstractSelectionMod<SelectableObject, SelectionTypeEnum>> GetSomeAbstractSelectionModifiers(int amount, SelectionTypeEnum type)
+        {
+
+
+            return null;
+        }
+
 
         #endregion
+
+        public static IEnumerable<TestCaseData> Scenarios
+        {
+            get
+            {
+                yield return new TestCaseData(SelectionTypeEnum.ALL, /*HowManyAll*/2, /*HowManyClick*/3, /*HowManyDrag*/2, /*HowManyKey*/1, /*HowManyModsApplied*/2);
+                yield return new TestCaseData(SelectionTypeEnum.CLICK, /*HowManyAll*/2, /*HowManyClick*/3, /*HowManyDrag*/2, /*HowManyKey*/1, /*HowManyModsApplied*/5);
+                yield return new TestCaseData(SelectionTypeEnum.DRAG, /*HowManyAll*/2, /*HowManyClick*/3, /*HowManyDrag*/2, /*HowManyKey*/1, /*HowManyModsApplied*/4);
+                yield return new TestCaseData(SelectionTypeEnum.KEY, /*HowManyAll*/2, /*HowManyClick*/3, /*HowManyDrag*/2, /*HowManyKey*/1, /*HowManyModsApplied*/3);
+
+                yield return new TestCaseData(SelectionTypeEnum.ALL, /*HowManyAll*/0, /*HowManyClick*/0, /*HowManyDrag*/0, /*HowManyKey*/0, /*HowManyModsApplied*/0);
+                yield return new TestCaseData(SelectionTypeEnum.CLICK, /*HowManyAll*/0, /*HowManyClick*/0, /*HowManyDrag*/0, /*HowManyKey*/0, /*HowManyModsApplied*/0);
+                yield return new TestCaseData(SelectionTypeEnum.DRAG, /*HowManyAll*/0, /*HowManyClick*/0, /*HowManyDrag*/0, /*HowManyKey*/0, /*HowManyModsApplied*/0);
+                yield return new TestCaseData(SelectionTypeEnum.KEY, /*HowManyAll*/0, /*HowManyClick*/0, /*HowManyDrag*/0, /*HowManyKey*/0, /*HowManyModsApplied*/0);
+            }
+        }
     }
 
 

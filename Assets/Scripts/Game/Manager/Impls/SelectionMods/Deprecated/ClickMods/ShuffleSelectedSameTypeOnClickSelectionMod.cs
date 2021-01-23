@@ -1,5 +1,7 @@
 ﻿using System;
 
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
+
 namespace RTSEngine.Manager.Impls.Deprecated
 {
     public class ShuffleSelectedSameTypeOnClickSelectionMod<T, ST> : AbstractClickSelectionMod<T, ST>
@@ -22,7 +24,7 @@ namespace RTSEngine.Manager.Impls.Deprecated
 
         //     return listWhitout.Union(listOfSameType).ToList();
         // }
-        public override SelectionArgsXP<T, ST> Apply(SelectionArgsXP<T, ST> args)
+        public override ISelectionArgsXP<T, ST> Apply(ISelectionArgsXP<T, ST> args)
         {
             throw new NotImplementedException();
         }

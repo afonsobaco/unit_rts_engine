@@ -4,8 +4,7 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Core",
-        "Manager",
-        "Selection"
+        "Manager"
     ],
     "includePlatforms": [
         "Editor"

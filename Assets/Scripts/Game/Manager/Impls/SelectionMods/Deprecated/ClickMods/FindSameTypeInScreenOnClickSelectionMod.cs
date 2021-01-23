@@ -1,20 +1,17 @@
 ﻿using System;
 
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
+
 namespace RTSEngine.Manager.Impls.Deprecated
 {
-    public class FindSameTypeInScreenOnDoubleClickSelectionMod<T, ST> : AbstractClickSelectionMod<T, ST>
+    public class FindSameTypeInScreenOnClickSelectionMod<T, ST> : AbstractClickSelectionMod<T, ST>
     {
-        public override SelectionArgsXP<T, ST> Apply(SelectionArgsXP<T, ST> args)
-        {
-            throw new NotImplementedException();
-        }
-
         // protected override List<SelectableObject> Execute(SelectionArgs args)
         // {
-        //     if (args.IsDoubleClick && args.Settings.CanSelectSameType.Contains(args.Clicked.type))
+        //     if (args.IsSameType && args.Settings.CanSelectSameType.Contains(args.Clicked.type))
         //     {
         //         List<SelectableObject> list = SameTypeUtil.GetFromSameTypeInSelection(args, args.Settings.InitialGameScreenPos, args.Settings.FinalGameScreenPos);
-        //         if (!args.OldList.Contains(args.Clicked))
+        //         if (args.OldList.Contains(args.Clicked))
         //         {
         //             args.NewList.RemoveAll(a => list.Contains(a));
         //         }
@@ -30,5 +27,9 @@ namespace RTSEngine.Manager.Impls.Deprecated
         //     }
         //     return args.NewList;
         // }
+        public override ISelectionArgsXP<T, ST> Apply(ISelectionArgsXP<T, ST> args)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

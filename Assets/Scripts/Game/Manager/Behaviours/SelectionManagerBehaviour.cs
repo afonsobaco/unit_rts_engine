@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using Zenject;
 using RTSEngine.Core.Impls;
-using RTSEngine.Core.Enums;
+using System.Collections.Generic;
 using RTSEngine.Manager.Interfaces;
 using RTSEngine.Manager.Enums;
 using RTSEngine.Manager.Utils;
+using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
+using RTSEngine.Manager.Impls.SelectionMods.Impls;
 
 namespace RTSEngine.Manager.Impls
 {
@@ -12,6 +14,7 @@ namespace RTSEngine.Manager.Impls
     {
         [SerializeField] private SelectableObjectRuntimeSetSO selectableList;
         [SerializeField] private RectTransform selectionBox;
+        [SerializeField] private List<ScriptableObject> mods;
         private ISelectionManager<SelectableObject, SelectionTypeEnum> manager;
 
         public ISelectionManager<SelectableObject, SelectionTypeEnum> Manager { get => manager; private set => manager = value; }
@@ -20,7 +23,9 @@ namespace RTSEngine.Manager.Impls
         private void Construct(ISelectionManager<SelectableObject, SelectionTypeEnum> manager)
         {
             Manager = manager;
+            selectableList.GetList().Clear();
             Manager.SelectableList = selectableList;
+            Manager.ScriptableObjectMods = mods;
         }
 
         private void Update()
