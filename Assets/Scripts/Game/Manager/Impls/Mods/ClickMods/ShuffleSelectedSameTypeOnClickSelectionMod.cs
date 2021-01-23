@@ -2,7 +2,7 @@
 
 namespace RTSEngine.Manager.Impls.Deprecated
 {
-    public class ShuffleSelectedSameTypeOnClickSelectionMod<T, E, O> : AbstractClickSelectionMod<T, E, O>
+    public class ShuffleSelectedSameTypeOnClickSelectionMod<T, ST> : AbstractClickSelectionMod<T, ST>
     {
         // protected override List<SelectableObject> Execute(SelectionArgs args)
         // {
@@ -22,7 +22,7 @@ namespace RTSEngine.Manager.Impls.Deprecated
 
         //     return listWhitout.Union(listOfSameType).ToList();
         // }
-        public override SelectionArgsXP<T, E, O> Apply(SelectionArgsXP<T, E, O> args)
+        public override SelectionArgsXP<T, ST> Apply(SelectionArgsXP<T, ST> args)
         {
             throw new NotImplementedException();
         }

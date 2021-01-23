@@ -8,7 +8,7 @@ namespace RTSEngine.Manager.Impls
     public class CameraManagerBehaviour : MonoBehaviour
     {
         private ICameraManager manager;
-        public CameraSettings settings;
+        public CameraSettings cameraSettings;
 
         public ICameraManager Manager { get => manager; private set => manager = value; }
 
@@ -16,7 +16,7 @@ namespace RTSEngine.Manager.Impls
         public void Construct(ICameraManager manager)
         {
             this.Manager = manager;
-            this.Manager.Settings = settings;
+            this.Manager.CameraSettings = cameraSettings;
         }
     }
 }

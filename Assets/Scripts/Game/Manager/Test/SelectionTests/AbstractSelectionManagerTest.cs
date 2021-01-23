@@ -14,7 +14,7 @@ namespace Tests.Manager
     [TestFixture]
     public class AbstractSelectionManagerTest
     {
-        private AbstractSelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> manager;
+        private AbstractSelectionManager<SelectableObject, SelectionTypeEnum> manager;
 
         [SetUp]
         public void Init()
@@ -36,7 +36,7 @@ namespace Tests.Manager
             List<SelectableObject> newSelection = null;
             var args = manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
 
-            AssertArgs(SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>(), args);
+            AssertArgs(SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum>(), args);
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace Tests.Manager
 
             var args = manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
 
-            AssertArgs(SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>(), args);
+            AssertArgs(SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum>(), args);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace Tests.Manager
         {
             List<SelectableObject> oldSelection = new List<SelectableObject>() { SelectionManagerTestUtils.CreateATestableObject<SelectableObject>(0) };
             List<SelectableObject> newSelection = new List<SelectableObject>() { SelectionManagerTestUtils.CreateATestableObject<SelectableObject>(1) };
-            SelectionArgsXP<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> expected = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>();
+            SelectionArgsXP<SelectableObject, SelectionTypeEnum> expected = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum>();
             expected.SelectionType = SelectionTypeEnum.CLICK;
             expected.OldSelection = oldSelection;
             expected.NewSelection = newSelection;
@@ -68,7 +68,7 @@ namespace Tests.Manager
         [Test]
         public void ShouldGetModsBySelectionType()
         {
-            List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>> mods = GetModsToTest();
+            List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum>> mods = GetModsToTest();
             SelectionTypeEnum type = SelectionTypeEnum.CLICK;
             mods[0].Type = type;
             mods[2].Type = type;
@@ -84,7 +84,7 @@ namespace Tests.Manager
         [Test]
         public void ShouldGetEmptyWhenModsDoesNotContainsSelectionType()
         {
-            List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>> mods = GetModsToTest();
+            List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum>> mods = GetModsToTest();
             SelectionTypeEnum type = SelectionTypeEnum.CLICK;
 
             var result = manager.GetModsBySelectionType(mods, type);
@@ -95,10 +95,10 @@ namespace Tests.Manager
         [Test]
         public void ShouldApplyModsToArgs()
         {
-            List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>> mods = GetModsToTest();
+            List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum>> mods = GetModsToTest();
             mods[0].Type = SelectionTypeEnum.CLICK;
 
-            var args = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>();
+            var args = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum>();
             args.SelectionType = SelectionTypeEnum.DRAG;
 
             var result = manager.ApplyModifiers(args);
@@ -109,7 +109,7 @@ namespace Tests.Manager
         [Test]
         public void ShouldFinalizeSelectionCorrectlyWhenHasSomethingToBeAdded()
         {
-            var args = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>();
+            var args = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum>();
             var amount = 4;
             List<SelectableObject> selection = new List<SelectableObject>();
             List<SelectableObject> expected = new List<SelectableObject>();
@@ -134,7 +134,7 @@ namespace Tests.Manager
         [Test]
         public void ShouldFinalizeSelectionCorrectlyWhenHasSomethingToBeRemoved()
         {
-            var args = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>();
+            var args = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum>();
             var amount = 4;
             List<SelectableObject> expected = new List<SelectableObject>();
             for (var i = 0; i < amount; i++)
@@ -222,21 +222,21 @@ namespace Tests.Manager
 
         #region methods
 
-        private static List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>> GetModsToTest()
+        private static List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum>> GetModsToTest()
         {
-            List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>> mods = new List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>>();
-            mods.Add(Substitute.For<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>>());
-            mods.Add(Substitute.For<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>>());
-            mods.Add(Substitute.For<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>>());
+            List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum>> mods = new List<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum>>();
+            mods.Add(Substitute.For<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum>>());
+            mods.Add(Substitute.For<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum>>());
+            mods.Add(Substitute.For<IAbstractSelectionMod<SelectableObject, SelectionTypeEnum>>());
             foreach (var mod in mods)
             {
-                mod.Apply(Arg.Any<SelectionArgsXP<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>>()).Returns(x => x[0]);
+                mod.Apply(Arg.Any<SelectionArgsXP<SelectableObject, SelectionTypeEnum>>()).Returns(x => x[0]);
             }
 
             return mods;
         }
 
-        private void AssertArgs<T, E, O>(SelectionArgsXP<T, E, O> expected, SelectionArgsXP<T, E, O> actual)
+        private void AssertArgs<T, ST>(SelectionArgsXP<T, ST> expected, SelectionArgsXP<T, ST> actual)
         {
             CollectionAssert.AreEquivalent(expected.OldSelection, actual.OldSelection);
             CollectionAssert.AreEquivalent(expected.NewSelection, actual.NewSelection);
@@ -248,11 +248,13 @@ namespace Tests.Manager
         #endregion
     }
 
-    internal class DerivedClass : AbstractSelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>
+    internal class DerivedClass : AbstractSelectionManager<SelectableObject, SelectionTypeEnum>
     {
-        public override ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> GetSettings()
+        public override SelectionArgsXP<SelectableObject, SelectionTypeEnum> ApplyModifiers(SelectionArgsXP<SelectableObject, SelectionTypeEnum> args)
         {
-            return Substitute.For<ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>>();
+            //TODO implementar
+            return args;
         }
+
     }
 }

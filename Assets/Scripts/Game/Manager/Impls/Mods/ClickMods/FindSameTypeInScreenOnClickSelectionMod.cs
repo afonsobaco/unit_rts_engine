@@ -2,7 +2,7 @@
 
 namespace RTSEngine.Manager.Impls.Deprecated
 {
-    public class FindSameTypeInScreenOnClickSelectionMod<T, E, O> : AbstractClickSelectionMod<T, E, O>
+    public class FindSameTypeInScreenOnClickSelectionMod<T, ST> : AbstractClickSelectionMod<T, ST>
     {
         // protected override List<SelectableObject> Execute(SelectionArgs args)
         // {
@@ -25,7 +25,7 @@ namespace RTSEngine.Manager.Impls.Deprecated
         //     }
         //     return args.NewList;
         // }
-        public override SelectionArgsXP<T, E, O> Apply(SelectionArgsXP<T, E, O> args)
+        public override SelectionArgsXP<T, ST> Apply(SelectionArgsXP<T, ST> args)
         {
             throw new NotImplementedException();
         }

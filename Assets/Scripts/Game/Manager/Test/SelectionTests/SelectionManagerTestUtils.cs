@@ -49,31 +49,13 @@ namespace Tests.Manager
             return mainList;
         }
 
-        public static IAbstractSelectionMod<T, E, O> AddNewMod<T, E, O>(SelectionArgsXP<T, E, O> args)
+        public static SelectionArgsXP<T, ST> GetDefaultArgs<T, ST>()
         {
-            var mod = Substitute.For<IAbstractSelectionMod<T, E, O>>();
-            if (args.Settings == null)
-            {
-                args.Settings = Substitute.For<ISelectionSettings<T, E, O>>();
-            }
-            if (args.Settings.Mods == null)
-            {
-                args.Settings.Mods = new List<IAbstractSelectionMod<T, E, O>>();
-            }
-            args.Settings.Mods.Add(mod);
-            return mod;
-        }
-
-        public static SelectionArgsXP<T, E, O> GetDefaultArgs<T, E, O>()
-        {
-            SelectionArgsXP<T, E, O> args = new SelectionArgsXP<T, E, O>();
-            args.Settings = Substitute.For<ISelectionSettings<T, E, O>>();
+            SelectionArgsXP<T, ST> args = new SelectionArgsXP<T, ST>();
             args.NewSelection = new List<T>();
             args.OldSelection = new List<T>();
             args.ToBeAdded = new List<T>();
             args.ToBeRemoved = new List<T>();
-            args.Settings = Substitute.For<ISelectionSettings<T, E, O>>();
-            args.Settings.Mods = new List<IAbstractSelectionMod<T, E, O>>();
             return args;
         }
 

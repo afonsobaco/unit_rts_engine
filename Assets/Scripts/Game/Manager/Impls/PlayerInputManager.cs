@@ -12,14 +12,14 @@ namespace RTSEngine.Manager.Impls
     public class PlayerInputManager : IPlayerInputManager
     {
 
-        private ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> selectionManager;
+        private ISelectionManager<SelectableObject, SelectionTypeEnum> selectionManager;
         private ICameraManager cameraManager;
         private SelectionOptions selectionOptions;
 
         public SelectionOptions SelectionOptions { get => selectionOptions; private set => selectionOptions = value; }
 
         [Inject]
-        public void Construct(ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> selectionManager, ICameraManager cameraManager)
+        public void Construct(ISelectionManager<SelectableObject, SelectionTypeEnum> selectionManager, ICameraManager cameraManager)
         {
             this.selectionManager = selectionManager;
             this.cameraManager = cameraManager;

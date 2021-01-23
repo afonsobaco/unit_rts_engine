@@ -3,16 +3,16 @@ using RTSEngine.Manager.Interfaces;
 
 namespace RTSEngine.Manager.Impls.Deprecated
 {
-    public abstract class AbstractSelectionMod<T, S, O> : MonoBehaviour, IAbstractSelectionMod<T, S, O>
+    public abstract class AbstractSelectionMod<T, ST> : MonoBehaviour, IAbstractSelectionMod<T, ST>
     {
 
         [SerializeField] private bool active = true;
-        private S type;
+        private ST type;
 
         public bool Active { get => active; set => active = value; }
-        public S Type { get => type; set => type = value; }
+        public ST Type { get => type; set => type = value; }
 
-        public abstract SelectionArgsXP<T, S, O> Apply(SelectionArgsXP<T, S, O> args);
+        public abstract SelectionArgsXP<T, ST> Apply(SelectionArgsXP<T, ST> args);
 
 
     }

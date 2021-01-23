@@ -8,7 +8,7 @@ using RTSEngine.Core.Signals;
 
 namespace RTSEngine.Manager.Interfaces
 {
-    public interface ISelectionManager<T, S, O> : IDisposable where T : SelectableObject
+    public interface ISelectionManager<T, ST> : IDisposable where T : SelectableObject
     {
         Vector3 InitialScreenPosition { get; set; }
         Vector3 FinalScreenPosition { get; set; }
@@ -16,7 +16,6 @@ namespace RTSEngine.Manager.Interfaces
         T Cliked { get; set; }
         List<T> CurrentSelection { get; set; }
         IRuntimeSet<T> SelectableList { get; set; }
-        ISelectionSettings<T, S, O> Settings { get; set; }
         bool IsAditiveSelection { get; set; }
         bool IsSameTypeSelection { get; set; }
         bool IsDoubleClick { get; set; }

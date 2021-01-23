@@ -10,7 +10,7 @@ namespace RTSEngine.Manager.Impls
     public class CameraManager : ICameraManager
     {
 
-        private ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> selectionManager;
+        private ISelectionManager<SelectableObject, SelectionTypeEnum> selectionManager;
 
         private Vector3 origin;
         private bool isPanning;
@@ -21,9 +21,9 @@ namespace RTSEngine.Manager.Impls
         public Vector3 Origin { get => origin; set => origin = value; }
         public bool IsPanning { get => isPanning; set => isPanning = value; }
         public bool IsCentering { get => isCentering; set => isCentering = value; }
-        public ICameraSettings Settings { get => settings; set => settings = value; }
+        public ICameraSettings CameraSettings { get => settings; set => settings = value; }
 
-        public CameraManager(ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> selectionManager)
+        public CameraManager(ISelectionManager<SelectableObject, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }
@@ -41,7 +41,7 @@ namespace RTSEngine.Manager.Impls
 
         public Vector3 DoCameraInputMovement(float horizontal, float vertical, Vector3 mousePosition, float deltaTime, UnityEngine.Camera mainCamera)
         {
-            if ((Mathf.Abs(horizontal) > Settings.AxisPressure || Mathf.Abs(vertical) > Settings.AxisPressure))
+            if ((Mathf.Abs(horizontal) > CameraSettings.AxisPressure || Mathf.Abs(vertical) > CameraSettings.AxisPressure))
             {
                 return DoAxisCameraMovement(horizontal, vertical, deltaTime, mainCamera);
             }
@@ -54,7 +54,7 @@ namespace RTSEngine.Manager.Impls
         public Vector3 DoCameraPanning(Vector2 mouseAxis, float deltaTime, UnityEngine.Camera mainCamera)
         {
             Vector3 desiredMove = new Vector3(-mouseAxis.x, 0, -mouseAxis.y);
-            desiredMove *= Settings.PanSpeed * mainCamera.transform.position.y;
+            desiredMove *= CameraSettings.PanSpeed * mainCamera.transform.position.y;
             desiredMove *= deltaTime;
             desiredMove = Quaternion.Euler(new Vector3(0f, mainCamera.transform.eulerAngles.y, 0f)) * desiredMove;
             desiredMove = mainCamera.transform.InverseTransformDirection(desiredMove);
@@ -64,19 +64,27 @@ namespace RTSEngine.Manager.Impls
 
         public Vector3 DoCameraZooming(float y, float deltaTime, UnityEngine.Camera mainCamera)
         {
-            Vector3 direction = mainCamera.transform.forward * (Settings.ZoomScale * deltaTime * y);
-            Vector3 vZoom = mainCamera.transform.position + direction;
-            if (vZoom.y < Settings.MinZoom)
+            Vector3 vZoom = CalcVZoom(mainCamera.transform.position, mainCamera.transform.forward, CameraSettings.ZoomScale * deltaTime * y);
+            if (vZoom.y < CameraSettings.MinZoom)
             {
-                var diff = Settings.MinZoom - vZoom.y;
-                vZoom = new Vector3(mainCamera.transform.position.x, Settings.MinZoom, mainCamera.transform.position.z + diff);
+                vZoom = clampZoomOnY(mainCamera.transform.position, mainCamera.transform.forward, CameraSettings.MinZoom);
             }
-            else if (vZoom.y > Settings.MaxZoom)
+            else if (vZoom.y > CameraSettings.MaxZoom)
             {
-                var diff = vZoom.y - Settings.MaxZoom;
-                vZoom = new Vector3(mainCamera.transform.position.x, Settings.MaxZoom, mainCamera.transform.position.z - diff);
+                vZoom = clampZoomOnY(mainCamera.transform.position, mainCamera.transform.forward, CameraSettings.MaxZoom);
             }
             return vZoom;
+        }
+
+        private static Vector3 CalcVZoom(Vector3 position, Vector3 forward, float k)
+        {
+            return position + (k * forward);
+        }
+
+        private static Vector3 clampZoomOnY(Vector3 position, Vector3 forward, float value)
+        {
+            var k = (value - position.y) / forward.y;
+            return CalcVZoom(position, forward, k);
         }
 
         public Vector3 DoAxisCameraMovement(float horizontal, float vertical, float deltaTime, UnityEngine.Camera mainCamera)
@@ -90,12 +98,12 @@ namespace RTSEngine.Manager.Impls
         public Vector3 ClampCameraPos(Camera mainCamera)
         {
             float zDistance = GetCameraZDistance(mainCamera);
-            if (zDistance > Settings.SizeFromMidPoint / 2)
+            if (zDistance > CameraSettings.SizeFromMidPoint / 2)
             {
                 zDistance = 0;
             }
-            float clampedX = Mathf.Clamp(mainCamera.transform.position.x, -Settings.SizeFromMidPoint + (zDistance), Settings.SizeFromMidPoint - (zDistance));
-            float clampedZ = Mathf.Clamp(mainCamera.transform.position.z, -Settings.SizeFromMidPoint - (zDistance / 2), Settings.SizeFromMidPoint - zDistance);
+            float clampedX = Mathf.Clamp(mainCamera.transform.position.x, -CameraSettings.SizeFromMidPoint + (zDistance), CameraSettings.SizeFromMidPoint - (zDistance));
+            float clampedZ = Mathf.Clamp(mainCamera.transform.position.z, -CameraSettings.SizeFromMidPoint - (zDistance / 2), CameraSettings.SizeFromMidPoint - zDistance);
             return new Vector3(clampedX, mainCamera.transform.position.y, clampedZ);
         }
 
@@ -113,11 +121,11 @@ namespace RTSEngine.Manager.Impls
 
         private float DoMouseMovement(float position, float yPos, float deltaTime)
         {
-            if (position >= 0 && position < (Settings.BoundriesOffset))
+            if (position >= 0 && position < (CameraSettings.BoundriesOffset))
             {
                 return MoveCamera(-1, yPos, deltaTime);
             }
-            else if (position <= 1 && position > (1 - Settings.BoundriesOffset))
+            else if (position <= 1 && position > (1 - CameraSettings.BoundriesOffset))
             {
                 return MoveCamera(1, yPos, deltaTime);
             }
@@ -126,7 +134,7 @@ namespace RTSEngine.Manager.Impls
 
         public float MoveCamera(float value, float yPos, float deltaTime)
         {
-            var speed = (yPos * Settings.CameraSpeed) + yPosMagicNumber; //magic number!
+            var speed = (yPos * CameraSettings.CameraSpeed) + yPosMagicNumber; //magic number!
             return value * speed * deltaTime;
         }
 

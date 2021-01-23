@@ -7,7 +7,7 @@ namespace RTSEngine.Manager.Interfaces
         Vector3 Origin { get; set; }
         bool IsPanning { get; set; }
         bool IsCentering { get; set; }
-        ICameraSettings Settings { get; set; }
+        ICameraSettings CameraSettings { get; set; }
 
         Vector3 DoCameraCentering(UnityEngine.Camera mainCamera);
         Vector3 DoCameraInputMovement(float horizontal, float vertical, Vector3 mousePosition, float deltaTime, UnityEngine.Camera mainCamera);

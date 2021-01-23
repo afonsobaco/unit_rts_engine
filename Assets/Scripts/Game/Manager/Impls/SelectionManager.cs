@@ -12,11 +12,10 @@ using RTSEngine.Manager.Utils;
 
 namespace RTSEngine.Manager.Impls
 {
-    public class SelectionManager : AbstractSelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>, ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>
+    public class SelectionManager : AbstractSelectionManager<SelectableObject, SelectionTypeEnum>, ISelectionManager<SelectableObject, SelectionTypeEnum>
     {
 
         private IRuntimeSet<SelectableObject> selectableList;
-        private ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> settings;
         private Vector3 initialScreenPosition;
         private Vector3 finalScreenPosition;
         private bool isAditiveSelection;
@@ -68,7 +67,6 @@ namespace RTSEngine.Manager.Impls
         }
 
         public IRuntimeSet<SelectableObject> SelectableList { get => selectableList; set => selectableList = value; }
-        public ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> Settings { get => settings; set => settings = value; }
         public bool IsDoubleClick { get => isDoubleClick; set => isDoubleClick = value; }
         public Dictionary<int, List<SelectableObject>> Groups { get => groups; private set => groups = value; }
         public bool IsSelecting { get => isSelecting; set => isSelecting = value; }
@@ -222,11 +220,6 @@ namespace RTSEngine.Manager.Impls
             return SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableList.GetList(), InitialScreenPosition, FinalScreenPosition);
         }
 
-        public override ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> GetSettings()
-        {
-            return Settings;
-        }
-
         public void AddSelectableObject(SelectableObjectCreatedSignal signal)
         {
             SelectableList.AddToList(signal.selectableObject);
@@ -239,7 +232,20 @@ namespace RTSEngine.Manager.Impls
 
         public void Dispose()
         {
+            SelectableList.GetList().ForEach(x => x.gameObject.SetActive(false));
             SelectableList.GetList().Clear();
+        }
+
+        public override SelectionArgsXP<SelectableObject, SelectionTypeEnum> ApplyModifiers(SelectionArgsXP<SelectableObject, SelectionTypeEnum> args)
+        {
+            // {
+            //     foreach (var item in GetModsBySelectionType(args.Settings.Mods, args.SelectionType))
+            //     {
+            //         args = item.Apply(args);
+            //     }
+            //     return args;
+            // }
+            throw new NotImplementedException();
         }
     }
 }

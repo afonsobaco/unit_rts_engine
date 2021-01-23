@@ -11,18 +11,16 @@ namespace RTSEngine.Manager.Impls
     public class SelectionManagerBehaviour : MonoBehaviour
     {
         [SerializeField] private SelectableObjectRuntimeSetSO selectableList;
-        [SerializeField] private SelectionSettingsSO settings;
         [SerializeField] private RectTransform selectionBox;
-        private ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> manager;
+        private ISelectionManager<SelectableObject, SelectionTypeEnum> manager;
 
-        public ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> Manager { get => manager; private set => manager = value; }
+        public ISelectionManager<SelectableObject, SelectionTypeEnum> Manager { get => manager; private set => manager = value; }
 
         [Inject]
-        private void Construct(ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> manager)
+        private void Construct(ISelectionManager<SelectableObject, SelectionTypeEnum> manager)
         {
             Manager = manager;
             Manager.SelectableList = selectableList;
-            Manager.Settings = settings;
         }
 
         private void Update()

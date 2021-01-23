@@ -479,6 +479,10 @@ namespace Tests.Manager
                 Assert.True(item.IsSelected);
             }
 
+            Assert.AreEqual(finalPos, manager.FinalScreenPosition);
+            Assert.AreEqual(0, manager.KeyPressed);
+            Assert.False(manager.IsSelecting);
+
         }
 
 
@@ -525,12 +529,9 @@ namespace Tests.Manager
             return manager;
         }
 
-        private static SelectionArgsXP<T, E, O> GetDefaultArgs<T, E, O>()
+        private static SelectionArgsXP<T, ST> GetDefaultArgs<T, ST>()
         {
-            var settings = Substitute.ForPartsOf<ISelectionSettings<T, E, O>>();
-            SelectionArgsXP<T, E, O> args = new SelectionArgsXP<T, E, O>();
-            args.Settings = settings;
-            args.Settings.Mods = new List<IAbstractSelectionMod<T, E, O>>();
+            SelectionArgsXP<T, ST> args = new SelectionArgsXP<T, ST>();
             return args;
         }
 

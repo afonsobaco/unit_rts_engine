@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace RTSEngine.Manager.Abstracts
 {
-    public abstract class AbstractSelectionManager<T, ST, OT> where T : ISelectableObject
+    public abstract class AbstractSelectionManager<T, ST> where T : ISelectableObject
     {
         public virtual List<T> PerformSelection(List<T> currentSelection, List<T> newSelection, ST selectionType)
         {
@@ -14,12 +14,12 @@ namespace RTSEngine.Manager.Abstracts
             args = ApplyModifiers(args);
             return FinalizeSelection(args);
         }
-        public virtual SelectionArgsXP<T, ST, OT> StartSelection(List<T> currentSelection, List<T> newSelection, ST selectionType)
+        public virtual SelectionArgsXP<T, ST> StartSelection(List<T> currentSelection, List<T> newSelection, ST selectionType)
         {
-            SelectionArgsXP<T, ST, OT> args = GetSelectionArgs(currentSelection, newSelection, selectionType);
+            SelectionArgsXP<T, ST> args = GetSelectionArgs(currentSelection, newSelection, selectionType);
             return args;
         }
-        public virtual List<T> FinalizeSelection(SelectionArgsXP<T, ST, OT> args)
+        public virtual List<T> FinalizeSelection(SelectionArgsXP<T, ST> args)
         {
             List<T> list = new List<T>();
             list.AddRange(args.NewSelection);
@@ -47,32 +47,23 @@ namespace RTSEngine.Manager.Abstracts
             return list;
         }
 
-        public virtual SelectionArgsXP<T, ST, OT> GetSelectionArgs(List<T> currentSelection, List<T> newSelection, ST selectionType)
+        public virtual SelectionArgsXP<T, ST> GetSelectionArgs(List<T> currentSelection, List<T> newSelection, ST selectionType)
         {
-            SelectionArgsXP<T, ST, OT> args = new SelectionArgsXP<T, ST, OT>();
+            SelectionArgsXP<T, ST> args = new SelectionArgsXP<T, ST>();
             args.OldSelection = currentSelection != null ? currentSelection : new List<T>();
             args.NewSelection = newSelection != null ? newSelection : new List<T>();
             args.SelectionType = selectionType;
-            args.Settings = GetSettings();
             return args;
         }
-        public abstract ISelectionSettings<T, ST, OT> GetSettings();
+        public abstract SelectionArgsXP<T, ST> ApplyModifiers(SelectionArgsXP<T, ST> args);
 
-        public virtual SelectionArgsXP<T, ST, OT> ApplyModifiers(SelectionArgsXP<T, ST, OT> args)
-        {
-            foreach (var item in GetModsBySelectionType(args.Settings.Mods, args.SelectionType))
-            {
-                args = item.Apply(args);
-            }
-            return args;
-        }
 
-        public virtual List<IAbstractSelectionMod<T, ST, OT>> GetModsBySelectionType(List<IAbstractSelectionMod<T, ST, OT>> mods, ST type)
+        public virtual List<IAbstractSelectionMod<T, ST>> GetModsBySelectionType(List<IAbstractSelectionMod<T, ST>> mods, ST type)
         {
             if (mods != null)
                 return mods.FindAll(a => a.Type.Equals(type));
             else
-                return new List<IAbstractSelectionMod<T, ST, OT>>();
+                return new List<IAbstractSelectionMod<T, ST>>();
         }
 
     }

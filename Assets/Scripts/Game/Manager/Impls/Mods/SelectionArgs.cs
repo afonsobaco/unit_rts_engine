@@ -20,7 +20,6 @@ namespace RTSEngine.Manager.Impls.Deprecated
         private bool isPreSelection;
         private bool isDoubleClick;
         private List<SelectableObject> preSelectionList;
-        private ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> settings;
         public List<SelectableObject> MainList { get => mainList; set => mainList = value; }
         public List<SelectableObject> NewList { get => newList; set => newList = value; }
         public List<SelectableObject> OldList { get => oldList; set => oldList = value; }
@@ -31,7 +30,6 @@ namespace RTSEngine.Manager.Impls.Deprecated
         public bool IsPreSelection { get => isPreSelection; set => isPreSelection = value; }
         public bool IsDoubleClick { get => isDoubleClick; set => isDoubleClick = value; }
         public List<SelectableObject> PreSelectionList { get => preSelectionList; set => preSelectionList = value; }
-        public ISelectionSettings<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> Settings { get => settings; set => settings = value; }
     }
 
 }

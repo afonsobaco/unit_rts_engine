@@ -17,14 +17,14 @@ namespace Tests.Manager
 
         private CameraManager manager;
         private UnityEngine.Camera mainCamera;
-        private ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum> selectionManager;
+        private ISelectionManager<SelectableObject, SelectionTypeEnum> selectionManager;
 
         private ICameraSettings cameraSettings;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<SelectableObject, SelectionTypeEnum, ObjectTypeEnum>>();
+            selectionManager = Substitute.For<ISelectionManager<SelectableObject, SelectionTypeEnum>>();
             cameraSettings = Substitute.For<ICameraSettings>();
             manager = new CameraManager(selectionManager);
 
@@ -32,7 +32,7 @@ namespace Tests.Manager
             mainCamera.transform.position = new Vector3(0, 20, -20);
             mainCamera.transform.eulerAngles = new Vector3(45f, 0f, 0f);
 
-            manager.Settings = cameraSettings;
+            manager.CameraSettings = cameraSettings;
 
             cameraSettings.SizeFromMidPoint = 15f;
             cameraSettings.BoundriesOffset = 0.03f;
@@ -195,8 +195,8 @@ namespace Tests.Manager
         [TestCase(3f, 30f, -.5f, 20.3536f, -20.3536f)]
         [TestCase(3f, 30f, .2f, 19.8586f, -19.8586f)]
         [TestCase(3f, 30f, -.8f, 20.5657f, -20.5657f)]
-        [TestCase(19.5f, 20.5f, .2f, 19.8586f, -19.8586f)]
-        [TestCase(19.5f, 20.5f, -.8f, 20.5f, -20.0657f)]
+        [TestCase(19.5f, 20.5f, .8f, 19.5f, -19.5f)]
+        [TestCase(19.5f, 20.5f, -.8f, 20.5f, -20.5f)]
         public void ShouldDoCameraZoom(float minZoom, float maxZoom, float deltaScroll, float expectedY, float expectedZ)
         {
             cameraSettings.MinZoom = minZoom;
@@ -206,8 +206,6 @@ namespace Tests.Manager
             Vector3 roundedResult = new Vector3(Mathf.Round(result.x * 10000), Mathf.Round(result.y * 10000), Mathf.Round(result.z * 10000));
             Assert.AreEqual(expected, roundedResult);
         }
-
-        // TODO panning dont move on z after minZoom or maxZoom
 
         #region methods
 
