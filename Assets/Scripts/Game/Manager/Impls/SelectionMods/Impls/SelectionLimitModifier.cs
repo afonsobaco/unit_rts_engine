@@ -1,12 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
-using RTSEngine.Manager.Enums;
-using RTSEngine.Core.Impls;
+﻿using UnityEngine;
 using System.Linq;
 
-namespace RTSEngine.Manager.Impls.SelectionMods.Impls
+namespace RTSEngine.Manager.SelectionMods.Impls
 {
     [CreateAssetMenu(fileName = "SelectionLimitModifier", menuName = "ScriptableObjects/Mods/Selection Limit Modifier", order = 1)]
     public class SelectionLimitModifier : AbstractSelectionMod<SelectableObject, SelectionTypeEnum>
@@ -17,10 +12,14 @@ namespace RTSEngine.Manager.Impls.SelectionMods.Impls
         [Range(1, 100)]
         [SerializeField] private int maxLimit = 20;
 
-        private Modifier modifier;
+        private Modifier selectionModifier;
+
+        public int MaxLimit { get => maxLimit; set => maxLimit = value; }
+        public Modifier SelectionModifier { get => selectionModifier; set => selectionModifier = value; }
+
         public override ISelectionArgsXP<SelectableObject, SelectionTypeEnum> Apply(ISelectionArgsXP<SelectableObject, SelectionTypeEnum> args)
         {
-            return modifier.Apply(maxLimit, args);
+            return SelectionModifier.Apply(MaxLimit, args);
         }
 
         public class Modifier

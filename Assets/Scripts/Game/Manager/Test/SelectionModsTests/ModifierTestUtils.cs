@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using RTSEngine.Core.Impls;
-using RTSEngine.Manager.Enums;
-using RTSEngine.Manager.Impls;
+using RTSEngine.Manager;
 
 namespace Tests
 {

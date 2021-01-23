@@ -1,40 +1,41 @@
-﻿using RTSEngine.Core.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace RTSEngine.Core.Abstracts
+namespace RTSEngine.Core
 {
     public abstract class AbstractRuntimeSetSO<T> : ScriptableObject, IRuntimeSet<T>
     {
         [SerializeField] private List<T> _list = new List<T>();
 
+        public List<T> List { get => _list; set => _list = value; }
+
         public void AddToList(T item)
         {
-            if (item != null && !_list.Contains(item))
+            if (item != null && !List.Contains(item))
             {
-                _list.Add(item);
+                List.Add(item);
             }
         }
 
         public void RemoveFromList(T item)
         {
-            if (item != null && _list.Contains(item))
+            if (item != null && List.Contains(item))
             {
-                _list.Remove(item);
+                List.Remove(item);
             }
         }
 
         public List<T> GetList()
         {
 
-            return _list;
+            return List;
         }
 
         public T GetItem(int index)
         {
-            if (index < _list.Count)
+            if (index < List.Count)
             {
-                return _list[index];
+                return List[index];
             }
             return default(T);
         }

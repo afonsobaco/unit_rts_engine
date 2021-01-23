@@ -1,17 +1,10 @@
-using System.Linq;
+using RTSEngine.Core;
+using RTSEngine.Utils;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using RTSEngine.Core.Impls;
-using RTSEngine.Core.Signals;
-using RTSEngine.Core.Enums;
-using RTSEngine.Manager.Enums;
-using RTSEngine.Manager.Abstracts;
-using RTSEngine.Manager.Interfaces;
-using RTSEngine.Core.Interfaces;
-using RTSEngine.Manager.Utils;
-using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
 
-namespace RTSEngine.Manager.Impls
+namespace RTSEngine.Manager
 {
     public class SelectionManager : AbstractSelectionManager<SelectableObject, SelectionTypeEnum>, ISelectionManager<SelectableObject, SelectionTypeEnum>
     {
@@ -225,12 +218,12 @@ namespace RTSEngine.Manager.Impls
 
         public void AddSelectableObject(SelectableObjectCreatedSignal signal)
         {
-            SelectableList.AddToList(signal.selectableObject);
+            SelectableList.AddToList(signal.Selectable);
         }
 
         public void RemoveSelectableObject(SelectableObjectDeletedSignal signal)
         {
-            SelectableList.RemoveFromList(signal.selectableObject);
+            SelectableList.RemoveFromList(signal.Selectable);
         }
 
         public void Dispose()

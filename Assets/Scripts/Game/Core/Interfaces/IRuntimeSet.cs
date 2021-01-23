@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 
-namespace RTSEngine.Core.Interfaces
+namespace RTSEngine.Core
 {
     public interface IRuntimeSet<T>
     {

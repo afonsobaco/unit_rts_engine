@@ -1,13 +1,6 @@
-﻿using NSubstitute;
-using NUnit.Framework;
-using RTSEngine.Core.Impls;
-using RTSEngine.Core.Enums;
-using RTSEngine.Manager.Abstracts;
-using RTSEngine.Manager.Enums;
-using RTSEngine.Manager.Impls;
-using RTSEngine.Manager.Interfaces;
+﻿using NUnit.Framework;
+using RTSEngine.Manager;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Tests.Manager
 {
@@ -16,10 +9,12 @@ namespace Tests.Manager
     {
         private AbstractSelectionManager<SelectableObject, SelectionTypeEnum> manager;
 
+        public AbstractSelectionManager<SelectableObject, SelectionTypeEnum> Manager { get => manager; set => manager = value; }
+
         [SetUp]
         public void Init()
         {
-            manager = new DerivedClass();
+            Manager = new DerivedClass();
         }
 
         [TearDown]
@@ -34,7 +29,7 @@ namespace Tests.Manager
         {
             List<SelectableObject> oldSelection = null;
             List<SelectableObject> newSelection = null;
-            var args = manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
+            var args = Manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
 
             ISelectionArgsXP<SelectableObject, SelectionTypeEnum> expected = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum>();
             expected.SelectionType = SelectionTypeEnum.DRAG;
@@ -47,7 +42,7 @@ namespace Tests.Manager
             List<SelectableObject> oldSelection = new List<SelectableObject>();
             List<SelectableObject> newSelection = new List<SelectableObject>();
 
-            var args = manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
+            var args = Manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
 
             ISelectionArgsXP<SelectableObject, SelectionTypeEnum> expected = SelectionManagerTestUtils.GetDefaultArgs<SelectableObject, SelectionTypeEnum>();
             expected.SelectionType = SelectionTypeEnum.DRAG;
@@ -65,7 +60,7 @@ namespace Tests.Manager
             expected.OldSelection = oldSelection;
             expected.NewSelection = newSelection;
 
-            var args = manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.CLICK);
+            var args = Manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.CLICK);
 
             AssertArgs(expected, args);
         }
@@ -86,7 +81,7 @@ namespace Tests.Manager
             args.NewSelection = selection;
             args.ToBeAdded = selection;
 
-            var result = manager.FinalizeSelection(args);
+            var result = Manager.FinalizeSelection(args);
 
             Assert.AreEqual(expected, result);
             foreach (var item in result)
@@ -117,7 +112,7 @@ namespace Tests.Manager
                 }
             }
 
-            var result = manager.FinalizeSelection(args);
+            var result = Manager.FinalizeSelection(args);
 
             CollectionAssert.AreEquivalent(expected, result);
             foreach (var item in args.ToBeAdded)
@@ -142,14 +137,14 @@ namespace Tests.Manager
             }
 
             //Act
-            var actual = manager.UpdateSelectionStatus(expected, true);
+            var actual = Manager.UpdateSelectionStatus(expected, true);
             CollectionAssert.AreEquivalent(expected, actual);
             foreach (var item in expected)
             {
                 Assert.True(item.IsSelected);
             }
 
-            actual = manager.UpdateSelectionStatus(expected, false);
+            actual = Manager.UpdateSelectionStatus(expected, false);
             CollectionAssert.AreEquivalent(expected, actual);
             foreach (var item in expected)
             {
@@ -169,14 +164,14 @@ namespace Tests.Manager
             }
 
             //Act
-            var actual = manager.UpdatePreSelectionStatus(expected, true);
+            var actual = Manager.UpdatePreSelectionStatus(expected, true);
             CollectionAssert.AreEquivalent(expected, actual);
             foreach (var item in expected)
             {
                 Assert.True(item.IsPreSelected);
             }
 
-            actual = manager.UpdatePreSelectionStatus(expected, false);
+            actual = Manager.UpdatePreSelectionStatus(expected, false);
             CollectionAssert.AreEquivalent(expected, actual);
             foreach (var item in expected)
             {
@@ -192,7 +187,7 @@ namespace Tests.Manager
             mods[0].Type = type;
             mods[2].Type = type;
 
-            var result = manager.GetModsBySelectionType(mods, type);
+            var result = Manager.GetModsBySelectionType(mods, type);
 
             Assert.AreEqual(2, result.Count);
             Assert.True(result.Contains(mods[0]));
@@ -206,7 +201,7 @@ namespace Tests.Manager
             var mods = SelectionManagerTestUtils.GetSomeMods<SelectableObject, SelectionTypeEnum>(4);
             SelectionTypeEnum type = SelectionTypeEnum.CLICK;
 
-            var result = manager.GetModsBySelectionType(mods, type);
+            var result = Manager.GetModsBySelectionType(mods, type);
 
             Assert.AreEqual(0, result.Count);
         }

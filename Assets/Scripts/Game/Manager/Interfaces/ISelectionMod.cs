@@ -1,6 +1,4 @@
-using RTSEngine.Manager.Impls;
-
-namespace RTSEngine.Manager.Interfaces
+namespace RTSEngine.Manager
 {
     public interface ISelectionMod<T, ST>
     {

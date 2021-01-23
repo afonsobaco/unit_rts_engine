@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using RTSEngine.Manager.Enums;
-using RTSEngine.Core.Impls;
-using RTSEngine.Core.Interfaces;
-using RTSEngine.Core.Signals;
-using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
+using RTSEngine.Core;
 
-namespace RTSEngine.Manager.Interfaces
+namespace RTSEngine.Manager
 {
     public interface ISelectionManager<T, ST> : IDisposable where T : SelectableObject
     {

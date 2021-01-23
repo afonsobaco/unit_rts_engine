@@ -1,12 +1,10 @@
-﻿using RTSEngine.Core.Interfaces;
-using RTSEngine.Manager.Impls;
-using RTSEngine.Manager.Interfaces;
+﻿using RTSEngine.Core;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RTSEngine.Manager.Abstracts
+namespace RTSEngine.Manager
 {
-    public abstract class AbstractSelectionManager<T, ST> where T : ISelectableObject
+    public abstract class AbstractSelectionManager<T, ST> where T : ISelectable
     {
         public virtual List<T> PerformSelection(List<T> currentSelection, List<T> newSelection, ST selectionType)
         {

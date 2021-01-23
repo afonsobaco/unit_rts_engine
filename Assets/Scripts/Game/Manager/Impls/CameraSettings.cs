@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using RTSEngine.Manager.Interfaces;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace RTSEngine.Manager.Impls
+namespace RTSEngine.Manager
 {
     public class CameraSettings : ScriptableObject, ICameraSettings
     {

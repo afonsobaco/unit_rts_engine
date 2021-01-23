@@ -1,13 +1,9 @@
+using RTSEngine.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using RTSEngine.Core.Impls;
-using RTSEngine.Core.Enums;
-using RTSEngine.Manager.Interfaces;
-using RTSEngine.Manager.Utils;
-using RTSEngine.Manager.Enums;
 
-namespace RTSEngine.Manager.Impls
+namespace RTSEngine.Manager
 {
     public class PlayerInputManager : IPlayerInputManager
     {

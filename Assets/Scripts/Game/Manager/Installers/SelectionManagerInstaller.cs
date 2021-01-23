@@ -1,11 +1,5 @@
-using UnityEngine;
 using Zenject;
-using RTSEngine.Core.Impls;
-using RTSEngine.Core.Enums;
-using RTSEngine.Core.Signals;
-using RTSEngine.Manager.Enums;
-using RTSEngine.Manager.Interfaces;
-using RTSEngine.Manager.Impls;
+using RTSEngine.Core;
 namespace RTSEngine.Manager.Installers
 {
     public class SelectionManagerInstaller : MonoInstaller

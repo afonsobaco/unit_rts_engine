@@ -1,11 +1,7 @@
 using UnityEngine;
-using RTSEngine.Core.Impls;
-using RTSEngine.Manager.Interfaces;
-using RTSEngine.Core.Enums;
-using RTSEngine.Manager.Enums;
 
 
-namespace RTSEngine.Manager.Impls
+namespace RTSEngine.Manager
 {
     public class CameraManager : ICameraManager
     {

@@ -1,12 +1,7 @@
 ﻿using NUnit.Framework;
-using RTSEngine.Core.Impls;
-using UnityEngine;
-using RTSEngine.Manager.Impls.SelectionMods.Impls;
-using RTSEngine.Manager.Impls;
-using RTSEngine.Manager.Enums;
+using RTSEngine.Manager;
+using RTSEngine.Manager.SelectionMods.Impls;
 using System.Collections.Generic;
-using NSubstitute;
-using System.Collections;
 
 namespace Tests
 {
@@ -18,14 +13,14 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-            modifier = new SelectionLimitModifier.Modifier();
+            Modifier = new SelectionLimitModifier.Modifier();
         }
 
         [Test]
         public void SelectionLimitModifierTestSimplePasses()
         {
             ISelectionArgsXP<SelectableObject, SelectionTypeEnum> args = ModifierTestUtils.GetDefaultArgs();
-            var result = modifier.Apply(20, args);
+            var result = Modifier.Apply(20, args);
             Assert.AreEqual(args, result);
         }
 
@@ -39,7 +34,7 @@ namespace Tests
             args.NewSelection.AddRange(ModifierTestUtils.GetListByIndex(newSelection, mainList));
             args.ToBeAdded.AddRange(ModifierTestUtils.GetListByIndex(toBeAdded, mainList));
             args.ToBeRemoved.AddRange(ModifierTestUtils.GetListByIndex(toBeRemoved, mainList));
-            var result = modifier.Apply(limit, args);
+            var result = Modifier.Apply(limit, args);
             CollectionAssert.AreEqual(ModifierTestUtils.GetListByIndex(expectedToBeAddedResult, mainList), result.ToBeAdded);
         }
 
@@ -59,5 +54,7 @@ namespace Tests
 
             }
         }
+
+        public SelectionLimitModifier.Modifier Modifier { get => modifier; set => modifier = value; }
     }
 }

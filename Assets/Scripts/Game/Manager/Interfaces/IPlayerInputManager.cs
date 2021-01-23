@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RTSEngine.Manager.Interfaces
+namespace RTSEngine.Manager
 {
     public interface IPlayerInputManager
     {

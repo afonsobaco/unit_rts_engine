@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using RTSEngine.Core.Impls;
-using RTSEngine.Manager.Impls.Deprecated;
 
-namespace RTSEngine.Manager.Utils
+namespace RTSEngine.Manager
 {
     public class SelectionUtil
     {
@@ -107,13 +105,13 @@ namespace RTSEngine.Manager.Utils
             return (initialScreenPosition + finalScreenPosition) / 2;
         }
 
-        public static List<SelectableObject> FindAllOnScreen(SelectionArgs args, Vector2 initialGameScreenPos, Vector2 finalGameScreenPos)
-        {
-            var initialPos = args.Camera.ViewportToScreenPoint(initialGameScreenPos);
-            var finalPos = args.Camera.ViewportToScreenPoint(finalGameScreenPos);
-            var list = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(args.MainList, initialPos, finalPos, args.Camera);
-            return list;
-        }
+        // public static List<SelectableObject> FindAllOnScreen(SelectionArgs args, Vector2 initialGameScreenPos, Vector2 finalGameScreenPos)
+        // {
+        //     var initialPos = args.Camera.ViewportToScreenPoint(initialGameScreenPos);
+        //     var finalPos = args.Camera.ViewportToScreenPoint(finalGameScreenPos);
+        //     var list = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(args.MainList, initialPos, finalPos, args.Camera);
+        //     return list;
+        // }
 
 
         public static List<T> Shuffle<T>(List<T> list)

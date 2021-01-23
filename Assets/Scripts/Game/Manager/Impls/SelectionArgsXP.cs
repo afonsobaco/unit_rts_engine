@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using RTSEngine.Core;
-using RTSEngine.Manager.Interfaces;
 
-namespace RTSEngine.Manager.Impls
+namespace RTSEngine.Manager
 {
     public interface ISelectionArgsXP<T, E>
     {

@@ -1,4 +1,4 @@
-﻿namespace RTSEngine.Manager.Enums
+﻿namespace RTSEngine.Manager
 {
     public enum SelectionTypeEnum
     {

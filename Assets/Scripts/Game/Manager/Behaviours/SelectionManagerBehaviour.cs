@@ -1,14 +1,9 @@
-﻿using UnityEngine;
-using Zenject;
-using RTSEngine.Core.Impls;
+﻿using RTSEngine.Utils;
 using System.Collections.Generic;
-using RTSEngine.Manager.Interfaces;
-using RTSEngine.Manager.Enums;
-using RTSEngine.Manager.Utils;
-using RTSEngine.Manager.Impls.SelectionMods.Abstracts;
-using RTSEngine.Manager.Impls.SelectionMods.Impls;
+using UnityEngine;
+using Zenject;
 
-namespace RTSEngine.Manager.Impls
+namespace RTSEngine.Manager
 {
     public class SelectionManagerBehaviour : MonoBehaviour
     {
@@ -17,15 +12,18 @@ namespace RTSEngine.Manager.Impls
         [SerializeField] private List<ScriptableObject> mods;
         private ISelectionManager<SelectableObject, SelectionTypeEnum> manager;
 
-        public ISelectionManager<SelectableObject, SelectionTypeEnum> Manager { get => manager; private set => manager = value; }
+        public SelectableObjectRuntimeSetSO SelectableList { get => selectableList; set => selectableList = value; }
+        public RectTransform SelectionBox { get => selectionBox; set => selectionBox = value; }
+        public List<ScriptableObject> Mods { get => mods; set => mods = value; }
+        public ISelectionManager<SelectableObject, SelectionTypeEnum> Manager { get => manager; set => manager = value; }
 
         [Inject]
         private void Construct(ISelectionManager<SelectableObject, SelectionTypeEnum> manager)
         {
             Manager = manager;
-            selectableList.GetList().Clear();
-            Manager.SelectableList = selectableList;
-            Manager.ScriptableObjectMods = mods;
+            SelectableList.GetList().Clear();
+            Manager.SelectableList = SelectableList;
+            Manager.ScriptableObjectMods = Mods;
         }
 
         private void Update()
@@ -35,24 +33,24 @@ namespace RTSEngine.Manager.Impls
 
         private void ActivateSelectionBox()
         {
-            if (!selectionBox)
+            if (!SelectionBox)
             {
                 return;
             }
             if (Manager.IsSelecting)
             {
-                if (!selectionBox.gameObject.activeInHierarchy)
+                if (!SelectionBox.gameObject.activeInHierarchy)
                 {
-                    selectionBox.gameObject.SetActive(true);
+                    SelectionBox.gameObject.SetActive(true);
                 }
                 DrawSelectionBox();
             }
             else
             {
 
-                if (selectionBox.gameObject.activeInHierarchy)
+                if (SelectionBox.gameObject.activeInHierarchy)
                 {
-                    selectionBox.gameObject.SetActive(false);
+                    SelectionBox.gameObject.SetActive(false);
                 }
             }
 
@@ -60,8 +58,8 @@ namespace RTSEngine.Manager.Impls
 
         private void DrawSelectionBox()
         {
-            selectionBox.position = SelectionUtil.GetAreaCenter(Manager.InitialScreenPosition, Manager.FinalScreenPosition);
-            selectionBox.sizeDelta = SelectionUtil.GetAreaSize(Manager.InitialScreenPosition, Manager.FinalScreenPosition);
+            SelectionBox.position = SelectionUtil.GetAreaCenter(Manager.InitialScreenPosition, Manager.FinalScreenPosition);
+            SelectionBox.sizeDelta = SelectionUtil.GetAreaSize(Manager.InitialScreenPosition, Manager.FinalScreenPosition);
         }
 
 

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using RTSEngine.Manager.Interfaces;
 
-namespace RTSEngine.Manager.Impls.SelectionMods.Abstracts
+namespace RTSEngine.Manager.SelectionMods
 {
     public abstract class AbstractSelectionMod<T, ST> : ScriptableObject, ISelectionMod<T, ST>
     {

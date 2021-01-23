@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RTSEngine.Manager.Utils
+namespace RTSEngine.Manager
 {
     public struct SelectionOptions
     {

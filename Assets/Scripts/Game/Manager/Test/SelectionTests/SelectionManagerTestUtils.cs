@@ -1,10 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
-using RTSEngine.Core.Impls;
-using RTSEngine.Core.Enums;
-using RTSEngine.Manager.Interfaces;
-using RTSEngine.Manager.Impls;
+using RTSEngine.Manager;
 
 using NSubstitute;
 
@@ -33,7 +30,7 @@ namespace Tests.Manager
             GameObject go = new GameObject();
             var t = go.AddComponent<T>();
             var bc = go.AddComponent<BoxCollider>();
-            t.transform.position = GetDefaultTestListOfObjects()[i].pos;
+            t.transform.position = GetDefaultTestListOfObjects()[i].Pos;
             return t;
         }
 
@@ -83,8 +80,11 @@ namespace Tests.Manager
 
 public struct SelectableObjectTestStruct
 {
-    internal Vector3 pos;
-    internal ObjectTypeEnum typeEnum;
+    private Vector3 pos;
+    private ObjectTypeEnum typeEnum;
+
+    internal Vector3 Pos { get => pos; }
+    internal ObjectTypeEnum TypeEnum { get => typeEnum; }
 
     internal SelectableObjectTestStruct(Vector3 pos, ObjectTypeEnum typeEnum)
     {

@@ -1,22 +1,22 @@
 using UnityEngine;
 using Zenject;
-using RTSEngine.Manager.Interfaces;
 
-namespace RTSEngine.Manager.Impls
+namespace RTSEngine.Manager
 {
 
     public class CameraManagerBehaviour : MonoBehaviour
     {
         private ICameraManager manager;
-        public CameraSettings cameraSettings;
+        private CameraSettings cameraSettings;
 
-        public ICameraManager Manager { get => manager; private set => manager = value; }
+        public CameraSettings CameraSettings { get => cameraSettings; set => cameraSettings = value; }
+        public ICameraManager Manager { get => manager; set => manager = value; }
 
         [Inject]
         public void Construct(ICameraManager manager)
         {
             this.Manager = manager;
-            this.Manager.CameraSettings = cameraSettings;
+            this.Manager.CameraSettings = CameraSettings;
         }
     }
 }

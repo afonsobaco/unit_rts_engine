@@ -1,4 +1,4 @@
-﻿namespace RTSEngine.Manager.Interfaces
+﻿namespace RTSEngine.Manager
 {
     public interface ICameraSettings
     {

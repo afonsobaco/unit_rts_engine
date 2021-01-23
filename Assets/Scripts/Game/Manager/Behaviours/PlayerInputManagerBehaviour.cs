@@ -1,29 +1,30 @@
-﻿
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
-using RTSEngine.Manager.Interfaces;
 
-namespace RTSEngine.Manager.Impls
+namespace RTSEngine.Manager
 {
     public class PlayerInputManagerBehaviour : MonoBehaviour
     {
-        public KeyCode AditiveSelectionKeyCode = KeyCode.LeftShift;
-        public KeyCode SameTypeSelectionKeyCode = KeyCode.LeftControl;
-        public KeyCode groupKeyCode = KeyCode.Z;
-        public float doubleClickTime = 0.3f;
+        private KeyCode aditiveSelectionKeyCode = KeyCode.LeftShift;
+        private KeyCode sameTypeSelectionKeyCode = KeyCode.LeftControl;
+        private KeyCode groupKeyCode = KeyCode.Z;
+        private float doubleClickTime = 0.3f;
 
         [Inject]
         public IPlayerInputManager Manager { get; private set; }
+        public KeyCode AditiveSelectionKeyCode { get => aditiveSelectionKeyCode; set => aditiveSelectionKeyCode = value; }
+        public KeyCode SameTypeSelectionKeyCode { get => sameTypeSelectionKeyCode; set => sameTypeSelectionKeyCode = value; }
+        public KeyCode GroupKeyCode { get => groupKeyCode; set => groupKeyCode = value; }
+        public float DoubleClickTime { get => doubleClickTime; set => doubleClickTime = value; }
 
         public void Update()
         {
 
-            Manager.SetSelectionKeys(AditiveSelectionKeyCode, SameTypeSelectionKeyCode, groupKeyCode);
+            Manager.SetSelectionKeys(AditiveSelectionKeyCode, SameTypeSelectionKeyCode, GroupKeyCode);
 
-            Manager.SetMouseClick(doubleClickTime);
+            Manager.SetMouseClick(DoubleClickTime);
 
-            Manager.DoGroupSelection(groupKeyCode);
+            Manager.DoGroupSelection(GroupKeyCode);
         }
 
         public void LateUpdate()
