@@ -3,8 +3,8 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
-    [CreateAssetMenu(fileName = "SelectableObjectRuntimeSetSO", menuName = "ScriptableObjects/SelectableObject Runtime Set", order = 1)]
-    public class SelectableObjectRuntimeSetSO : AbstractRuntimeSetSO<SelectableObject>
+    [CreateAssetMenu(fileName = "SelectableObjectRuntimeSetSO", menuName = "ScriptableObjects/ISelectable Runtime Set", order = 1)]
+    public class SelectableObjectRuntimeSetSO : AbstractRuntimeSetSO<ISelectable>
     {
 
     }

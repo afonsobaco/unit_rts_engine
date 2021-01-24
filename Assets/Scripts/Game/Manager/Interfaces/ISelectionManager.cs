@@ -5,7 +5,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
-    public interface ISelectionManager<T, ST> : IDisposable where T : SelectableObject
+    public interface ISelectionManager<T, ST> : IDisposable where T : ISelectable
     {
         IRuntimeSet<T> SelectableList { get; set; }
         List<ScriptableObject> ScriptableObjectMods { get; set; }

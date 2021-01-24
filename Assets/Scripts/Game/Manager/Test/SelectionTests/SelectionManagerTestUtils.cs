@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Manager;
+using RTSEngine.Core;
 
 using NSubstitute;
 
@@ -9,7 +10,7 @@ namespace Tests.Manager
 {
     public class SelectionManagerTestUtils
     {
-        public static List<SelectableObjectTestStruct> GetDefaultTestListOfObjects()
+        private static List<SelectableObjectTestStruct> GetDefaultTestListOfObjects()
         {
             return new List<SelectableObjectTestStruct>(){
                 new SelectableObjectTestStruct(new Vector3(0,0,0), ObjectTypeEnum.UNIT),
@@ -25,42 +26,21 @@ namespace Tests.Manager
         }
 
 
-        public static SelectableObject CreateATestableObject(int i)
+        public static ISelectable CreateATestableObject(int i)
         {
-            GameObject go = new GameObject();
-            var t = go.AddComponent<SelectableObject>();
-            var bc = go.AddComponent<BoxCollider>();
-            t.transform.position = GetDefaultTestListOfObjects()[i].Pos;
-            return t;
-        }
-
-        public static List<SelectableObject> GetDefaultTestMainList()
-        {
-            List<SelectableObject> mainList = new List<SelectableObject>();
-
-            for (var i = 0; i < GetDefaultTestListOfObjects().Count; i++)
-            {
-                var t = CreateATestableObject(i);
-                mainList.Add(t);
-            }
-            return mainList;
+            var obj = Substitute.For<ISelectable>();
+            obj.Position.Returns(GetDefaultTestListOfObjects()[i].Pos);
+            return obj;
         }
 
         public static SelectionArgsXP GetDefaultArgs()
         {
             SelectionArgsXP args = new SelectionArgsXP();
-            args.NewSelection = new List<SelectableObject>();
-            args.OldSelection = new List<SelectableObject>();
-            args.ToBeAdded = new List<SelectableObject>();
-            args.ToBeRemoved = new List<SelectableObject>();
+            args.NewSelection = new List<ISelectable>();
+            args.OldSelection = new List<ISelectable>();
+            args.ToBeAdded = new List<ISelectable>();
+            args.ToBeRemoved = new List<ISelectable>();
             return args;
-        }
-
-        public static SelectableObject CreateGameObject()
-        {
-            var go = new GameObject();
-            var so = go.AddComponent<SelectableObject>();
-            return so;
         }
 
         public static List<IBaseSelectionMod> GetSomeModsFromType(int amount, SelectionTypeEnum type)

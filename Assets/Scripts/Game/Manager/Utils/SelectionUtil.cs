@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
@@ -7,17 +8,17 @@ namespace RTSEngine.Manager
     {
         private static System.Random rng = new System.Random();
 
-        public static List<SelectableObject> GetAllObjectsInsideSelectionArea(List<SelectableObject> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
+        public static List<ISelectable> GetAllObjectsInsideSelectionArea(List<ISelectable> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
         {
-            List<SelectableObject> list = new List<SelectableObject>();
+            List<ISelectable> list = new List<ISelectable>();
             if (allObjects == null)
             {
                 return list;
             }
             for (int i = 0; i < allObjects.Count; i++)
             {
-                SelectableObject obj = (SelectableObject)allObjects[i];
-                var screenPos = Camera.main.WorldToScreenPoint(obj.transform.position);
+                ISelectable obj = (ISelectable)allObjects[i];
+                var screenPos = Camera.main.WorldToScreenPoint(obj.Position);
                 if (IsPositionInsideArea(screenPos, initialScreenPosition, finalScreenPosition))
                 {
                     list.Add(obj);
@@ -26,7 +27,7 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public static SelectableObject GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
+        public static ISelectable GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
         {
             var initialObject = GetObjectInScreenPoint(initialScreenPosition, Camera.main);
             var finalObject = GetObjectInScreenPoint(finalScreenPosition, Camera.main);
@@ -37,12 +38,12 @@ namespace RTSEngine.Manager
             return null;
         }
 
-        public static List<SelectableObject> GetAllObjectsInsideSelectionArea(List<SelectableObject> mainList, Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera)
+        public static List<ISelectable> GetAllObjectsInsideSelectionArea(List<ISelectable> mainList, Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera)
         {
-            List<SelectableObject> list = new List<SelectableObject>();
+            List<ISelectable> list = new List<ISelectable>();
             foreach (var obj in mainList)
             {
-                var screenPos = camera.WorldToScreenPoint(obj.transform.position);
+                var screenPos = camera.WorldToScreenPoint(obj.Position);
                 if (IsPositionInsideArea(screenPos, initialScreenPosition, finalScreenPosition))
                 {
                     list.Add(obj);
@@ -73,7 +74,7 @@ namespace RTSEngine.Manager
         }
 
 
-        public static SelectableObject GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera)
+        public static ISelectable GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera)
         {
             var initialObject = GetObjectInScreenPoint(initialScreenPosition, camera);
             var finalObject = GetObjectInScreenPoint(finalScreenPosition, camera);
@@ -84,13 +85,13 @@ namespace RTSEngine.Manager
             return null;
         }
 
-        public static SelectableObject GetObjectInScreenPoint(Vector3 mousePosition, Camera camera)
+        public static ISelectable GetObjectInScreenPoint(Vector3 mousePosition, Camera camera)
         {
             Ray ray = camera.ScreenPointToRay(mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100))
             {
-                return hit.transform.gameObject.GetComponent<SelectableObject>();
+                return hit.transform.gameObject.GetComponent<ISelectable>();
             }
             return null;
         }
@@ -105,23 +106,23 @@ namespace RTSEngine.Manager
             return (initialScreenPosition + finalScreenPosition) / 2;
         }
 
-        // public static List<SelectableObject> FindAllOnScreen(SelectionArgs args, Vector2 initialGameScreenPos, Vector2 finalGameScreenPos)
+        // public static List<ISelectable> FindAllOnScreen(SelectionArgs args, Vector2 initialGameScreenPos, Vector2 finalGameScreenPos)
         // {
         //     var initialPos = args.Camera.ViewportToScreenPoint(initialGameScreenPos);
         //     var finalPos = args.Camera.ViewportToScreenPoint(finalGameScreenPos);
-        //     var list = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(args.MainList, initialPos, finalPos, args.Camera);
+        //     var list = SelectionUtil.GetAllObjectsInsideSelectionArea<ISelectable>(args.MainList, initialPos, finalPos, args.Camera);
         //     return list;
         // }
 
 
-        public static List<SelectableObject> Shuffle<SelectableObject>(List<SelectableObject> list)
+        public static List<ISelectable> Shuffle<ISelectable>(List<ISelectable> list)
         {
             int n = list.Count;
             while (n > 1)
             {
                 n--;
                 int k = rng.Next(n + 1);
-                SelectableObject value = list[k];
+                ISelectable value = list[k];
                 list[k] = list[n];
                 list[n] = value;
             }

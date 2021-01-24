@@ -96,10 +96,10 @@ namespace Tests.Manager
         public void ShouldAddToSpecificGroup()
         {
             int groupId = 1;
-            manager.CurrentSelection = new List<SelectableObject>();
-            manager.CurrentSelection.Add(SelectionManagerTestUtils.CreateGameObject());
+            manager.CurrentSelection = new List<ISelectable>();
+            manager.CurrentSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             manager.SetGroup(groupId);
-            List<SelectableObject> collection = manager.Groups[groupId];
+            List<ISelectable> collection = manager.Groups[groupId];
             CollectionAssert.IsNotEmpty(collection);
             CollectionAssert.AreEquivalent(manager.CurrentSelection, collection);
         }
@@ -108,9 +108,9 @@ namespace Tests.Manager
         public void ShouldClearSpecificGroup()
         {
             int groupId = 1;
-            manager.CurrentSelection = new List<SelectableObject>();
+            manager.CurrentSelection = new List<ISelectable>();
             manager.SetGroup(groupId);
-            List<SelectableObject> collection = manager.Groups[groupId];
+            List<ISelectable> collection = manager.Groups[groupId];
             CollectionAssert.IsEmpty(collection);
             CollectionAssert.AreEquivalent(manager.CurrentSelection, collection);
         }
@@ -119,8 +119,8 @@ namespace Tests.Manager
         public void ShouldGetSpecificGroup()
         {
             int groupId = 1;
-            var expected = new List<SelectableObject>();
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
+            var expected = new List<ISelectable>();
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             manager.Groups[1] = expected;
 
             var collection = manager.GetGroup(groupId);
@@ -144,8 +144,8 @@ namespace Tests.Manager
         {
             PrepareForDrag();
 
-            List<SelectableObject> expected = new List<SelectableObject>();
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
+            List<ISelectable> expected = new List<ISelectable>();
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             manager.When(x => x.GetSelectionOnScreen()).DoNotCallBase();
             manager.GetSelectionOnScreen().Returns(expected);
 
@@ -158,7 +158,7 @@ namespace Tests.Manager
         public void ShouldReturnEmptySelectionWhenDragEmptySpace()
         {
             PrepareForDrag();
-            manager.GetSelectionOnScreen().Returns(new List<SelectableObject>());
+            manager.GetSelectionOnScreen().Returns(new List<ISelectable>());
             var selection = manager.GetNewSelection();
             CollectionAssert.IsEmpty(selection);
         }
@@ -169,9 +169,9 @@ namespace Tests.Manager
             int groupId = 1;
             PrepareForKey(groupId);
 
-            var expected = new List<SelectableObject>();
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
+            var expected = new List<ISelectable>();
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             manager.Groups[1] = expected;
 
             var selection = manager.GetNewSelection();
@@ -186,7 +186,7 @@ namespace Tests.Manager
         {
             int groupId = 1;
             PrepareForKey(groupId);
-            var expected = new List<SelectableObject>();
+            var expected = new List<ISelectable>();
 
             var selection = manager.GetNewSelection();
 
@@ -197,10 +197,10 @@ namespace Tests.Manager
         public void ShouldUpdateSelectionStatusToTrue()
         {
 
-            List<SelectableObject> original = new List<SelectableObject>();
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
+            List<ISelectable> original = new List<ISelectable>();
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             var list = manager.UpdateSelectionStatus(original, true);
             CollectionAssert.AreEquivalent(original, list);
             foreach (var item in list)
@@ -214,10 +214,10 @@ namespace Tests.Manager
         public void ShouldUpdateSelectionStatusToFalse()
         {
 
-            List<SelectableObject> original = new List<SelectableObject>();
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
+            List<ISelectable> original = new List<ISelectable>();
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             var list = manager.UpdateSelectionStatus(original, false);
             CollectionAssert.AreEquivalent(original, list);
             foreach (var item in list)
@@ -230,10 +230,10 @@ namespace Tests.Manager
         public void ShouldUpdatePreSelectionStatusToTrue()
         {
 
-            List<SelectableObject> original = new List<SelectableObject>();
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
+            List<ISelectable> original = new List<ISelectable>();
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             var list = manager.UpdatePreSelectionStatus(original, true);
             CollectionAssert.AreEquivalent(original, list);
             foreach (var item in list)
@@ -247,10 +247,10 @@ namespace Tests.Manager
         public void ShouldUpdatePreSelectionStatusToFalse()
         {
 
-            List<SelectableObject> original = new List<SelectableObject>();
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
-            original.Add(SelectionManagerTestUtils.CreateGameObject());
+            List<ISelectable> original = new List<ISelectable>();
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             var list = manager.UpdatePreSelectionStatus(original, false);
             CollectionAssert.AreEquivalent(original, list);
             foreach (var item in list)
@@ -263,18 +263,18 @@ namespace Tests.Manager
         public void ShouldUpdateCurrentToTotallyNewSelection()
         {
             //CurrentSelection
-            var currentSelection = new List<SelectableObject>();
-            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject());
+            var currentSelection = new List<ISelectable>();
+            currentSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            currentSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            currentSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             foreach (var item in currentSelection)
             {
                 item.IsSelected = true;
             }
             //NewSelection
-            var newSelection = new List<SelectableObject>();
-            newSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            newSelection.Add(SelectionManagerTestUtils.CreateGameObject());
+            var newSelection = new List<ISelectable>();
+            newSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            newSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
 
             manager.CurrentSelection = currentSelection;
 
@@ -295,16 +295,16 @@ namespace Tests.Manager
         public void ShouldUpdateCurrentToEmptyNewSelection()
         {
             //CurrentSelection
-            var currentSelection = new List<SelectableObject>();
-            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject());
+            var currentSelection = new List<ISelectable>();
+            currentSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            currentSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            currentSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             foreach (var item in currentSelection)
             {
                 item.IsSelected = true;
             }
             //NewSelection
-            var newSelection = new List<SelectableObject>();
+            var newSelection = new List<ISelectable>();
 
             manager.CurrentSelection = currentSelection;
 
@@ -321,18 +321,18 @@ namespace Tests.Manager
         public void ShouldUpdateCurrentToMixedNewSelection()
         {
             //CurrentSelection
-            var currentSelection = new List<SelectableObject>();
-            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            currentSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            SelectableObject mixedItem = SelectionManagerTestUtils.CreateGameObject();
+            var currentSelection = new List<ISelectable>();
+            currentSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            currentSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            ISelectable mixedItem = SelectionManagerTestUtils.CreateATestableObject(0);
             currentSelection.Add(mixedItem);
             foreach (var item in currentSelection)
             {
                 item.IsSelected = true;
             }
             //NewSelection
-            var newSelection = new List<SelectableObject>();
-            newSelection.Add(SelectionManagerTestUtils.CreateGameObject());
+            var newSelection = new List<ISelectable>();
+            newSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             newSelection.Add(mixedItem);
 
             manager.CurrentSelection = currentSelection;
@@ -355,18 +355,18 @@ namespace Tests.Manager
         public void ShouldUpdatePreToTotallyNewSelection()
         {
             //PreSelection
-            var preSelection = new List<SelectableObject>();
-            preSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            preSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            preSelection.Add(SelectionManagerTestUtils.CreateGameObject());
+            var preSelection = new List<ISelectable>();
+            preSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            preSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            preSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             foreach (var item in preSelection)
             {
                 item.IsPreSelected = true;
             }
             //NewSelection
-            var newSelection = new List<SelectableObject>();
-            newSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            newSelection.Add(SelectionManagerTestUtils.CreateGameObject());
+            var newSelection = new List<ISelectable>();
+            newSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            newSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
 
             manager.PreSelection = preSelection;
 
@@ -387,16 +387,16 @@ namespace Tests.Manager
         public void ShouldUpdatePreToEmptyNewSelection()
         {
             //PreSelection
-            var PreSelection = new List<SelectableObject>();
-            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject());
+            var PreSelection = new List<ISelectable>();
+            PreSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            PreSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            PreSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             foreach (var item in PreSelection)
             {
                 item.IsPreSelected = true;
             }
             //NewSelection
-            var newSelection = new List<SelectableObject>();
+            var newSelection = new List<ISelectable>();
 
             manager.PreSelection = PreSelection;
 
@@ -413,18 +413,18 @@ namespace Tests.Manager
         public void ShouldUpdatePreToMixedNewSelection()
         {
             //PreSelection
-            var PreSelection = new List<SelectableObject>();
-            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            PreSelection.Add(SelectionManagerTestUtils.CreateGameObject());
-            SelectableObject mixedItem = SelectionManagerTestUtils.CreateGameObject();
+            var PreSelection = new List<ISelectable>();
+            PreSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            PreSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            ISelectable mixedItem = SelectionManagerTestUtils.CreateATestableObject(0);
             PreSelection.Add(mixedItem);
             foreach (var item in PreSelection)
             {
                 item.IsPreSelected = true;
             }
             //NewSelection
-            var newSelection = new List<SelectableObject>();
-            newSelection.Add(SelectionManagerTestUtils.CreateGameObject());
+            var newSelection = new List<ISelectable>();
+            newSelection.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             newSelection.Add(mixedItem);
 
             manager.PreSelection = PreSelection;
@@ -461,14 +461,14 @@ namespace Tests.Manager
 
             //CurrentSelection
             PrepareForDrag();
-            manager.PreSelection = new List<SelectableObject>();
-            var expected = new List<SelectableObject>();
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
+            manager.PreSelection = new List<ISelectable>();
+            var expected = new List<ISelectable>();
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
 
             manager.GetSelectionOnScreen().Returns(expected);
-            manager.PerformSelection(Arg.Any<List<SelectableObject>>(), Arg.Any<List<SelectableObject>>(), Arg.Is(SelectionTypeEnum.DRAG)).Returns(expected);
+            manager.PerformSelection(Arg.Any<List<ISelectable>>(), Arg.Any<List<ISelectable>>(), Arg.Is(SelectionTypeEnum.DRAG)).Returns(expected);
 
             Vector3 finalPos = new Vector3(0.5f, 0.5f, 0f);
             manager.EndOfSelection(finalPos);
@@ -493,10 +493,10 @@ namespace Tests.Manager
         {
             //PreSelection
             PrepareForDrag();
-            var expected = new List<SelectableObject>();
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
-            expected.Add(SelectionManagerTestUtils.CreateGameObject());
+            var expected = new List<ISelectable>();
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
 
             manager.When(x => x.GetAllModifiers()).DoNotCallBase();
             manager.GetAllModifiers().Returns(x => new List<IBaseSelectionMod>());
@@ -581,7 +581,7 @@ namespace Tests.Manager
         {
 
             var manager = Substitute.ForPartsOf<SelectionManager>();
-            var so = Substitute.For<IRuntimeSet<SelectableObject>>();
+            var so = Substitute.For<IRuntimeSet<ISelectable>>();
             manager.SelectableList = so;
 
             return manager;
@@ -599,9 +599,9 @@ namespace Tests.Manager
             manager.KeyPressed = v;
         }
 
-        private SelectableObject PrepareForClick()
+        private ISelectable PrepareForClick()
         {
-            SelectableObject so = SelectionManagerTestUtils.CreateGameObject();
+            ISelectable so = SelectionManagerTestUtils.CreateATestableObject(0);
             manager.GetObjectClicked().Returns(so);
             manager.KeyPressed = 0;
             return so;

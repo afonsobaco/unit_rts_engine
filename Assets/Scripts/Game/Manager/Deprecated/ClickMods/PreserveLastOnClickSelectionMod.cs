@@ -5,7 +5,7 @@
 // {
 //     public class PreserveLastOnClickSelectionMod<T, ST> : AbstractClickSelectionMod
 //     {
-//         // protected override List<SelectableObject> Execute(SelectionArgs args)
+//         // protected override List<ISelectable> Execute(SelectionArgs args)
 //         // {
 //         //     if (args.OldList.Contains(args.Clicked) && args.OldList.Count == 1 && args.NewList.Count == 0)
 //         //     {

@@ -11,11 +11,11 @@
 //             throw new NotImplementedException();
 //         }
 
-//         // protected override List<SelectableObject> Execute(SelectionArgs args)
+//         // protected override List<ISelectable> Execute(SelectionArgs args)
 //         // {
 //         //     if (args.IsDoubleClick && args.Settings.CanSelectSameType.Contains(args.Clicked.type))
 //         //     {
-//         //         List<SelectableObject> list = SameTypeUtil.GetFromSameTypeInSelection(args, args.Settings.InitialGameScreenPos, args.Settings.FinalGameScreenPos);
+//         //         List<ISelectable> list = SameTypeUtil.GetFromSameTypeInSelection(args, args.Settings.InitialGameScreenPos, args.Settings.FinalGameScreenPos);
 //         //         if (!args.OldList.Contains(args.Clicked))
 //         //         {
 //         //             args.NewList.RemoveAll(a => list.Contains(a));

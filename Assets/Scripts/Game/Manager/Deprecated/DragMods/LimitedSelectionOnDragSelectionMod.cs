@@ -10,13 +10,13 @@
 // {
 //     public class LimitedSelectionOnDragSelectionMod<T, ST> : AbstractDragSelectionMod<T, ST>
 //     {
-//         // protected override List<SelectableObject> Execute(SelectionArgs args)
+//         // protected override List<ISelectable> Execute(SelectionArgs args)
 //         // {
 //         //     if (args.NewList.Count <= args.Settings.SelectionLimit)
 //         //     {
 //         //         return args.NewList;
 //         //     }
-//         //     List<SelectableObject> list = new List<SelectableObject>();
+//         //     List<ISelectable> list = new List<ISelectable>();
 
 
 //         //     list.AddRange(args.PreSelectionList.FindAll(a => args.NewList.Contains(a)).Take(args.Settings.SelectionLimit).ToList());

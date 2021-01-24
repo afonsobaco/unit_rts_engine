@@ -6,13 +6,13 @@ namespace RTSEngine.Manager.Old
     {
 
         // [SerializeField] private Camera mainCamera;
-        // [SerializeField] private IAbstractSelectionSettingsSO<SelectableObject, SelectableTypeEnum> selectionSettings;
+        // [SerializeField] private IAbstractSelectionSettingsSO<ISelectable, SelectableTypeEnum> selectionSettings;
         // [SerializeField] private RectTransform selectionBox;
         // [SerializeField] private Transform mods;
 
-        // private List<SelectableObject> selection = new List<SelectableObject>();
-        // private List<SelectableObject> preSelection = new List<SelectableObject>();
-        // private Dictionary<int, List<SelectableObject>> groups = new Dictionary<int, List<SelectableObject>>();
+        // private List<ISelectable> selection = new List<ISelectable>();
+        // private List<ISelectable> preSelection = new List<ISelectable>();
+        // private Dictionary<int, List<ISelectable>> groups = new Dictionary<int, List<ISelectable>>();
         // private bool isSelecting;
         // private Vector3 initialClickPosition;
         // private Vector3 finalClickPosition;
@@ -31,8 +31,8 @@ namespace RTSEngine.Manager.Old
         //     }
         // }
 
-        // public SelectableObject ObjectClicked { get; private set; }
-        // public IAbstractSelectionSettingsSO<SelectableObject, SelectableTypeEnum> SelectionSettings { get => selectionSettings; }
+        // public ISelectable ObjectClicked { get; private set; }
+        // public IAbstractSelectionSettingsSO<ISelectable, SelectableTypeEnum> SelectionSettings { get => selectionSettings; }
 
 
         // void Awake()
@@ -75,7 +75,7 @@ namespace RTSEngine.Manager.Old
         // {
         //     HideSelectionBox();
         //     preSelection.ForEach(a => a.IsPreSelected = false);
-        //     preSelection = new List<SelectableObject>();
+        //     preSelection = new List<ISelectable>();
         //     Instance.IsSelecting = false;
         //     Instance.IsDoubleClick = false;
         // }
@@ -83,12 +83,12 @@ namespace RTSEngine.Manager.Old
 
         // public void DoSelection()
         // {
-        //     SelectableObject clicked = GetSelectableObjectClicked();
-        //     List<SelectableObject> newSelection = GetPrimarySelection(clicked);
+        //     ISelectable clicked = GetSelectableObjectClicked();
+        //     List<ISelectable> newSelection = GetPrimarySelection(clicked);
         //     newSelection = PerformSelection(newSelection, clicked);
         // }
 
-        // private List<SelectableObject> PerformSelection(List<SelectableObject> newSelection, SelectableObject clicked)
+        // private List<ISelectable> PerformSelection(List<ISelectable> newSelection, ISelectable clicked)
         // {
         //     newSelection = ApplyModsToSelection(selection, newSelection, clicked);
         //     SwitchSelectionStatusFromOldToNewList(selection, newSelection);
@@ -99,31 +99,31 @@ namespace RTSEngine.Manager.Old
         // public void DoPreSelection(Vector3 finalPos)
         // {
         //     finalClickPosition = finalPos;
-        //     List<SelectableObject> newSelection = GetPrimaryPreSelection();
+        //     List<ISelectable> newSelection = GetPrimaryPreSelection();
         //     newSelection = ApplyModsToPreSelection(preSelection, newSelection);
         //     SwitchPreSelectionStatusFromOldToNewList(preSelection, newSelection);
         //     preSelection = newSelection;
         // }
 
-        // private List<SelectableObject> GetPrimarySelection(SelectableObject clicked)
+        // private List<ISelectable> GetPrimarySelection(ISelectable clicked)
         // {
-        //     List<SelectableObject> newSelection = new List<SelectableObject>();
+        //     List<ISelectable> newSelection = new List<ISelectable>();
         //     if (clicked)
         //     {
         //         newSelection.Add(clicked);
         //     }
         //     else
         //     {
-        //         newSelection = SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableObjectMainList.Instance.List, initialClickPosition, finalClickPosition, mainCamera);
+        //         newSelection = SelectionUtil.GetAllObjectsInsideSelectionArea<ISelectable>(SelectableObjectMainList.Instance.List, initialClickPosition, finalClickPosition, mainCamera);
         //     }
         //     return newSelection;
         // }
-        // private List<SelectableObject> GetPrimaryPreSelection()
+        // private List<ISelectable> GetPrimaryPreSelection()
         // {
-        //     return SelectionUtil.GetAllObjectsInsideSelectionArea<SelectableObject>(SelectableObjectMainList.Instance.List, initialClickPosition, finalClickPosition, mainCamera);
+        //     return SelectionUtil.GetAllObjectsInsideSelectionArea<ISelectable>(SelectableObjectMainList.Instance.List, initialClickPosition, finalClickPosition, mainCamera);
         // }
 
-        // private List<SelectableObject> ApplyModsToSelection(List<SelectableObject> oldSelection, List<SelectableObject> newSelection, SelectableObject clicked)
+        // private List<ISelectable> ApplyModsToSelection(List<ISelectable> oldSelection, List<ISelectable> newSelection, ISelectable clicked)
         // {
         //     SelectionArgs args = GetSelectionArgs(oldSelection, newSelection);
         //     args.Clicked = clicked;
@@ -131,7 +131,7 @@ namespace RTSEngine.Manager.Old
         //     return ApplyMods(args);
         // }
 
-        // private List<SelectableObject> ApplyModsToPreSelection(List<SelectableObject> oldSelection, List<SelectableObject> newSelection)
+        // private List<ISelectable> ApplyModsToPreSelection(List<ISelectable> oldSelection, List<ISelectable> newSelection)
         // {
         //     SelectionArgs args = GetSelectionArgs(oldSelection, newSelection);
         //     args.Clicked = null;
@@ -139,7 +139,7 @@ namespace RTSEngine.Manager.Old
         //     return ApplyMods(args);
         // }
 
-        // private List<SelectableObject> ApplyMods(SelectionArgs args)
+        // private List<ISelectable> ApplyMods(SelectionArgs args)
         // {
         //     if (args.NewList.Count != 0 || args.IsAditive || args.IsSameType)
         //     {
@@ -147,7 +147,7 @@ namespace RTSEngine.Manager.Old
         //         {
         //             args.NewList = args.OldList.Union(args.NewList).ToList();
         //         }
-        //         foreach (var mod in mods.GetComponents<IAbstractSelectionMod<SelectableObject, SelectableTypeEnum>>())
+        //         foreach (var mod in mods.GetComponents<IAbstractSelectionMod<ISelectable, SelectableTypeEnum>>())
         //         {
         //             // args.NewList = mod.ApplyMod(args);
         //         };
@@ -155,7 +155,7 @@ namespace RTSEngine.Manager.Old
         //     return args.NewList;
         // }
 
-        // private void SwitchSelectionStatusFromOldToNewList(List<SelectableObject> oldSelection, List<SelectableObject> newSelection)
+        // private void SwitchSelectionStatusFromOldToNewList(List<ISelectable> oldSelection, List<ISelectable> newSelection)
         // {
         //     oldSelection.ForEach(a =>
         //     {
@@ -167,15 +167,15 @@ namespace RTSEngine.Manager.Old
         //     });
         // }
 
-        // private void SwitchPreSelectionStatusFromOldToNewList(List<SelectableObject> oldSelection, List<SelectableObject> newSelection)
+        // private void SwitchPreSelectionStatusFromOldToNewList(List<ISelectable> oldSelection, List<ISelectable> newSelection)
         // {
         //     oldSelection.ForEach(a => a.IsPreSelected = newSelection.Contains(a));
         //     newSelection.ForEach(a => a.IsPreSelected = true);
         // }
 
-        // private SelectableObject GetSelectableObjectClicked()
+        // private ISelectable GetSelectableObjectClicked()
         // {
-        //     return SelectionUtil.GetObjectClicked<SelectableObject>(initialClickPosition, finalClickPosition, mainCamera);
+        //     return SelectionUtil.GetObjectClicked<ISelectable>(initialClickPosition, finalClickPosition, mainCamera);
         // }
 
         // private void DrawSelectionBox()
@@ -190,7 +190,7 @@ namespace RTSEngine.Manager.Old
         //     selectionBox.sizeDelta = Vector2.zero;
         // }
 
-        // private SelectionArgs GetSelectionArgs(List<SelectableObject> oldSelection, List<SelectableObject> newSelection)
+        // private SelectionArgs GetSelectionArgs(List<ISelectable> oldSelection, List<ISelectable> newSelection)
         // {
         //     SelectionArgs args = new SelectionArgs();
         //     args.MainList =SelectableObjectMainList.Instance.List;
@@ -203,7 +203,7 @@ namespace RTSEngine.Manager.Old
         //     }
         //     else
         //     {
-        //         args.OldList = new List<SelectableObject>();
+        //         args.OldList = new List<ISelectable>();
         //     }
         //     args.IsDoubleClick = IsDoubleClick;
         //     args.IsSameType = IsSameTypeSelection;
@@ -227,16 +227,16 @@ namespace RTSEngine.Manager.Old
 
         // public void GetGroup(int keyPressed)
         // {
-        //     List<SelectableObject> list;
+        //     List<ISelectable> list;
         //     groups.TryGetValue(keyPressed, out list);
         //     if (list == null)
         //     {
-        //         list = new List<SelectableObject>();
+        //         list = new List<ISelectable>();
         //     }
         //     PerformSelection(list, null);
         // }
 
-        // public List<SelectableObject> GetSelection()
+        // public List<ISelectable> GetSelection()
         // {
         //     return selection;
         // }

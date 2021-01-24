@@ -30,8 +30,8 @@ namespace Tests.Manager
         [Test]
         public void ShouldReturnDefaultArgsWhenGetSelectionArgsWithNull()
         {
-            List<SelectableObject> oldSelection = null;
-            List<SelectableObject> newSelection = null;
+            List<ISelectable> oldSelection = null;
+            List<ISelectable> newSelection = null;
             var args = Manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
 
             SelectionArgsXP expected = SelectionManagerTestUtils.GetDefaultArgs();
@@ -42,8 +42,8 @@ namespace Tests.Manager
         [Test]
         public void ShouldReturnDefaultArgsWhenGetSelectionArgsWithEmpty()
         {
-            List<SelectableObject> oldSelection = new List<SelectableObject>();
-            List<SelectableObject> newSelection = new List<SelectableObject>();
+            List<ISelectable> oldSelection = new List<ISelectable>();
+            List<ISelectable> newSelection = new List<ISelectable>();
 
             var args = Manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
 
@@ -56,8 +56,8 @@ namespace Tests.Manager
         [Test]
         public void ShouldReturnCustomArgsWhenGetSelectionArgsWithCustom()
         {
-            List<SelectableObject> oldSelection = new List<SelectableObject>() { SelectionManagerTestUtils.CreateATestableObject(0) };
-            List<SelectableObject> newSelection = new List<SelectableObject>() { SelectionManagerTestUtils.CreateATestableObject(1) };
+            List<ISelectable> oldSelection = new List<ISelectable>() { SelectionManagerTestUtils.CreateATestableObject(0) };
+            List<ISelectable> newSelection = new List<ISelectable>() { SelectionManagerTestUtils.CreateATestableObject(1) };
             SelectionArgsXP expected = SelectionManagerTestUtils.GetDefaultArgs();
             expected.SelectionType = SelectionTypeEnum.CLICK;
             expected.OldSelection = oldSelection;
@@ -70,73 +70,55 @@ namespace Tests.Manager
             AssertArgs(expected, args);
         }
 
-        [Test]
-        public void ShouldFinalizeSelectionCorrectlyWhenHasSomethingToBeAdded()
+
+        [TestCaseSource(nameof(Scenarios))]
+        public void ShouldFinalizeSelectionCorrectly(int mainListCount, int[] oldSelection, int[] newSelection, int[] expectedToBeAdded, int[] expectedToBeRemoved)
         {
-            var args = SelectionManagerTestUtils.GetDefaultArgs();
-            var amount = 4;
-            List<SelectableObject> selection = new List<SelectableObject>();
-            List<SelectableObject> expected = new List<SelectableObject>();
-            for (var i = 0; i < amount; i++)
-            {
-                var obj = SelectionManagerTestUtils.CreateATestableObject(i);
-                selection.Add(obj);
-                expected.Add(obj);
-            }
-            args.NewSelection = selection;
-            args.ToBeAdded = selection;
 
-            var result = Manager.FinalizeSelection(args);
+            // var list = new List<ISelectable>();
+            // for (var i = 0; i < mainListCount; i++)
+            // {
+            //     var selectable = Substitute.For<ISelectable>();
+            //     list.Add(selectable);
+            // }
 
-            CollectionAssert.AreEquivalent(expected, result);
-            foreach (var item in result)
-            {
-                Assert.True(item.IsSelected);
-            }
+            // var args = SelectionManagerTestUtils.GetDefaultArgs();
+
+            // args.OldSelection = FindByIndex<ISelectable>((List<ISelectable>) list, oldSelection);
+            // args.NewSelection = FindByIndex<ISelectable>(list, newSelection);
+            // var ExpectedToBeAdded = FindByIndex<ISelectable>(list, expectedToBeAdded);
+            // var ExpectedToBeRemoved = FindByIndex<ISelectable>(list, expectedToBeRemoved);
+
+            // var result = manager.FinalizeSelection(args);
+
+            // for (var i = 0; i < ExpectedToBeAdded.Count; i++)
+            // {
+            //     CollectionAssert.Contains(result, expectedToBeAdded[i]);
+            // }
+            // for (var i = 0; i < ExpectedToBeRemoved.Count; i++)
+            // {
+            //     CollectionAssert.DoesNotContain(result, ExpectedToBeRemoved[i]);
+            // }
+
         }
 
-        [Test]
-        public void ShouldFinalizeSelectionCorrectlyWhenHasSomethingToBeRemoved()
+        private List<T> FindByIndex<T>(List<T> mainList, int[] indexes) where T : ISelectable
         {
-            var args = SelectionManagerTestUtils.GetDefaultArgs();
-            var amount = 4;
-            List<SelectableObject> expected = new List<SelectableObject>();
-            for (var i = 0; i < amount; i++)
+            List<T> list = new List<T>();
+            for (var i = 0; i < indexes.Length; i++)
             {
-                var obj = SelectionManagerTestUtils.CreateATestableObject(i);
-                args.NewSelection.Add(obj);
-                if (i > 1)
-                {
-
-                    args.ToBeAdded.Add(obj);
-                    expected.Add(obj);
-                }
-                else
-                {
-                    args.ToBeRemoved.Add(obj);
-                }
+                list.Add(mainList[indexes[i]]);
             }
-
-            var result = Manager.FinalizeSelection(args);
-
-            CollectionAssert.AreEquivalent(expected, result);
-            foreach (var item in args.ToBeAdded)
-            {
-                Assert.True(item.IsSelected);
-            }
-            foreach (var item in args.NewSelection.FindAll(a => !result.Contains(a)))
-            {
-                Assert.False(item.IsSelected);
-            }
+            return list;
         }
 
         [Test]
         public void ShouldUpdateSelectionStatus()
         {
-            List<SelectableObject> expected = new List<SelectableObject>();
+            List<ISelectable> expected = new List<ISelectable>();
             for (var i = 0; i < 4; i++)
             {
-                SelectableObject item = SelectionManagerTestUtils.CreateATestableObject(i);
+                ISelectable item = SelectionManagerTestUtils.CreateATestableObject(i);
                 item.IsSelected = false;
                 expected.Add(item);
             }
@@ -160,10 +142,10 @@ namespace Tests.Manager
         [Test]
         public void ShouldUpdatePreSelectionStatus()
         {
-            List<SelectableObject> expected = new List<SelectableObject>();
+            List<ISelectable> expected = new List<ISelectable>();
             for (var i = 0; i < 4; i++)
             {
-                SelectableObject item = SelectionManagerTestUtils.CreateATestableObject(i);
+                ISelectable item = SelectionManagerTestUtils.CreateATestableObject(i);
                 item.IsPreSelected = false;
                 expected.Add(item);
             }
@@ -226,6 +208,23 @@ namespace Tests.Manager
         }
 
         #endregion
+
+        private static IEnumerable<TestCaseData> Scenarios
+        {
+            get
+            {
+                // (mainListCount, oldSelection, newSelection, toBeAdded, toBeRemoved)
+                //Empty new
+                yield return new TestCaseData(5, new int[] { }, new int[] { }, new int[] { }, new int[] { });
+                yield return new TestCaseData(5, new int[] { 1 }, new int[] { }, new int[] { }, new int[] { 1 });
+                //Not empty new - Not In Old
+                yield return new TestCaseData(5, new int[] { 1 }, new int[] { 2 }, new int[] { 2 }, new int[] { 1 });
+                yield return new TestCaseData(5, new int[] { 1, 3 }, new int[] { 2 }, new int[] { 2 }, new int[] { 1, 3 });
+                //Not empty new - Within Old
+                yield return new TestCaseData(5, new int[] { 1 }, new int[] { 1 }, new int[] { 1 }, new int[] { });
+                yield return new TestCaseData(5, new int[] { 1, 2 }, new int[] { 1 }, new int[] { 1 }, new int[] { 2 });
+            }
+        }
     }
 
     internal class DerivedClass : BaseSelectionManager

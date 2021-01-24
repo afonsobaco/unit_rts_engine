@@ -9,9 +9,9 @@
 // {
 //     public class ProgressiveOrderBySameTypeSelectionMod<T, ST> : IBaseSelectionMod
 //     {
-//         // protected override List<SelectableObject> Apply(SelectionArgs args)
+//         // protected override List<ISelectable> Apply(SelectionArgs args)
 //         // {
-//         //     List<SelectableObject> result = new List<SelectableObject>();
+//         //     List<ISelectable> result = new List<ISelectable>();
 //         //     foreach (var selected in args.NewList)
 //         //     {
 //         //         if (!result.Contains(selected))

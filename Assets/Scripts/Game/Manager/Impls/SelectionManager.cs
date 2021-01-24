@@ -9,12 +9,12 @@ namespace RTSEngine.Manager
     public class SelectionManager : BaseSelectionManager
     {
 
-        private Dictionary<int, List<SelectableObject>> groups = new Dictionary<int, List<SelectableObject>>();
-        private IRuntimeSet<SelectableObject> selectableList;
+        private Dictionary<int, List<ISelectable>> groups = new Dictionary<int, List<ISelectable>>();
+        private IRuntimeSet<ISelectable> selectableList;
         private List<BaseSelectionModSO> scriptableObjectMods;
-        private List<SelectableObject> currentSelection;
-        private List<SelectableObject> preSelection;
-        private SelectableObject cliked;
+        private List<ISelectable> currentSelection;
+        private List<ISelectable> preSelection;
+        private ISelectable cliked;
         private Vector3 finalScreenPosition;
         private Vector3 initialScreenPosition;
         private bool isAditiveSelection;
@@ -23,13 +23,13 @@ namespace RTSEngine.Manager
         private int keyPressed = 0;
         private bool isSelecting;
 
-        public List<SelectableObject> PreSelection
+        public List<ISelectable> PreSelection
         {
             get
             {
                 if (preSelection == null)
                 {
-                    preSelection = new List<SelectableObject>();
+                    preSelection = new List<ISelectable>();
                 }
                 return preSelection;
             }
@@ -39,10 +39,10 @@ namespace RTSEngine.Manager
             }
         }
 
-        public Dictionary<int, List<SelectableObject>> Groups { get => groups; private set => groups = value; }
-        public IRuntimeSet<SelectableObject> SelectableList { get => selectableList; set => selectableList = value; }
+        public Dictionary<int, List<ISelectable>> Groups { get => groups; private set => groups = value; }
+        public IRuntimeSet<ISelectable> SelectableList { get => selectableList; set => selectableList = value; }
         public List<BaseSelectionModSO> ScriptableObjectMods { get => scriptableObjectMods; set => scriptableObjectMods = value; }
-        public SelectableObject Cliked { get => cliked; set => cliked = value; }
+        public ISelectable Cliked { get => cliked; set => cliked = value; }
         public Vector3 FinalScreenPosition { get => finalScreenPosition; set => finalScreenPosition = value; }
         public Vector3 InitialScreenPosition { get => initialScreenPosition; set => initialScreenPosition = value; }
         public bool IsAditiveSelection { get => isAditiveSelection; set => isAditiveSelection = value; }
@@ -51,13 +51,13 @@ namespace RTSEngine.Manager
         public bool IsSelecting { get => isSelecting; set => isSelecting = value; }
         public int KeyPressed { get => keyPressed; set => keyPressed = value; }
 
-        public virtual List<SelectableObject> CurrentSelection
+        public virtual List<ISelectable> CurrentSelection
         {
             get
             {
                 if (currentSelection == null)
                 {
-                    currentSelection = new List<SelectableObject>();
+                    currentSelection = new List<ISelectable>();
                 }
                 return currentSelection;
             }
@@ -67,9 +67,9 @@ namespace RTSEngine.Manager
             }
         }
 
-        public List<SelectableObject> GetNewSelection()
+        public List<ISelectable> GetNewSelection()
         {
-            List<SelectableObject> list = new List<SelectableObject>();
+            List<ISelectable> list = new List<ISelectable>();
 
             switch (GetSelectionType())
             {
@@ -124,21 +124,21 @@ namespace RTSEngine.Manager
             Groups[key] = CurrentSelection;
         }
 
-        public List<SelectableObject> GetGroup(int key)
+        public List<ISelectable> GetGroup(int key)
         {
-            List<SelectableObject> list;
+            List<ISelectable> list;
             Groups.TryGetValue(key, out list);
             if (list == null)
             {
-                list = new List<SelectableObject>();
+                list = new List<ISelectable>();
             }
             return list;
         }
 
 
-        public List<SelectableObject> UpdateCurrentSelection(List<SelectableObject> value)
+        public List<ISelectable> UpdateCurrentSelection(List<ISelectable> value)
         {
-            var list = new List<SelectableObject>();
+            var list = new List<ISelectable>();
             //unselect old
             if (CurrentSelection != null && CurrentSelection.Count > 0)
             {
@@ -154,9 +154,9 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public List<SelectableObject> UpdatePreSelection(List<SelectableObject> value)
+        public List<ISelectable> UpdatePreSelection(List<ISelectable> value)
         {
-            var list = new List<SelectableObject>();
+            var list = new List<ISelectable>();
             //unselect old
             if (preSelection != null && preSelection.Count > 0)
             {
@@ -202,17 +202,17 @@ namespace RTSEngine.Manager
         {
             if (CurrentSelection.Count > 0)
             {
-                return CurrentSelection[0].transform.position;
+                return CurrentSelection[0].Position;
             }
             return Vector3.zero;
         }
 
-        public virtual SelectableObject GetObjectClicked()
+        public virtual ISelectable GetObjectClicked()
         {
             return SelectionUtil.GetObjectClicked(InitialScreenPosition, FinalScreenPosition);
         }
 
-        public virtual List<SelectableObject> GetSelectionOnScreen()
+        public virtual List<ISelectable> GetSelectionOnScreen()
         {
             return SelectionUtil.GetAllObjectsInsideSelectionArea(SelectableList.GetList(), InitialScreenPosition, FinalScreenPosition);
         }
@@ -229,7 +229,6 @@ namespace RTSEngine.Manager
 
         public void Dispose()
         {
-            SelectableList.GetList().ForEach(x => x.gameObject.SetActive(false));
             SelectableList.GetList().Clear();
         }
         public override SelectionArgsXP ApplyModifiers(SelectionArgsXP args)

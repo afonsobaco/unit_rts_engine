@@ -8,7 +8,7 @@
 // {
 //     public class CanGroupSelectionMod<T, ST> : IBaseSelectionMod
 //     {
-//         //     protected override List<SelectableObject> Apply(SelectionArgs args)
+//         //     protected override List<ISelectable> Apply(SelectionArgs args)
 //         //     {
 //         //         var allNewObjectsThatCanGroup = args.NewList.FindAll(a => args.Settings.CanGroupTypes.Contains(a.type));
 //         //         if (allNewObjectsThatCanGroup.Count > 0)
@@ -17,7 +17,7 @@
 //         //         }
 //         //         else if (args.NewList.Count > 0)
 //         //         {
-//         //             return new List<SelectableObject>() { args.NewList[Random.Range(0, args.NewList.Count)] };
+//         //             return new List<ISelectable>() { args.NewList[Random.Range(0, args.NewList.Count)] };
 
 //         //         }
 //         //         else if (args.OldList.Count > 0)

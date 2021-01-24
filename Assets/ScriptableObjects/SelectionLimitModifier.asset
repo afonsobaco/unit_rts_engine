@@ -15,4 +15,4 @@ MonoBehaviour:
   type: 0
   active: 1
   activeOnPreSelection: 1
-  maxLimit: 3
+  maxLimit: 10

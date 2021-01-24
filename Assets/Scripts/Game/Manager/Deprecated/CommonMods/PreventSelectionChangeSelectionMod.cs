@@ -10,7 +10,7 @@
 // {
 //     public class PreventSelectionChangeSelectionMod<T, ST> : IBaseSelectionMod
 //     {
-//         // protected override List<SelectableObject> Apply(SelectionArgs args)
+//         // protected override List<ISelectable> Apply(SelectionArgs args)
 //         // {
 //         //     if (args.OldList.Count >= args.Settings.SelectionLimit)
 //         //     {

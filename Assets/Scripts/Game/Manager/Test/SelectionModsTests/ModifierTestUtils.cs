@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
+using NSubstitute;
+using RTSEngine.Core;
 using RTSEngine.Manager;
 
 namespace Tests
@@ -7,26 +8,23 @@ namespace Tests
     public class ModifierTestUtils
     {
 
-        public static List<SelectableObject> GetListByIndex(int[] oldSelection, List<SelectableObject> mainList)
+        public static List<ISelectable> GetListByIndex(int[] indexes, List<ISelectable> mainList)
         {
-            var list = new List<SelectableObject>();
-            for (var i = 0; i < oldSelection.Length; i++)
+            var list = new List<ISelectable>();
+            for (var i = 0; i < indexes.Length; i++)
             {
-                if (oldSelection[i] < mainList.Count)
-                    list.Add(mainList[oldSelection[i]]);
+                if (indexes[i] < mainList.Count)
+                    list.Add(mainList[indexes[i]]);
             }
             return list;
         }
 
-        public static List<SelectableObject> GetSomeObjects(int qtt)
+        public static List<ISelectable> GetSomeObjects(int qtt)
         {
-            var list = new List<SelectableObject>();
+            var list = new List<ISelectable>();
             for (var i = 0; i < qtt; i++)
             {
-                var go = new GameObject();
-                go.name = "game_object_" + i;
-                var so = go.AddComponent<SelectableObject>();
-                list.Add(so);
+                list.Add(Substitute.For<ISelectable>());
             }
             return list;
         }

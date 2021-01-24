@@ -12,15 +12,15 @@
 //     public class GetByPrecendenceOrderOnDragSelectionMod<T, ST> : AbstractDragSelectionMod<T, ST>
 //     {
 
-//         // protected override List<SelectableObject> Execute(SelectionArgs args)
+//         // protected override List<ISelectable> Execute(SelectionArgs args)
 //         // {
 
-//         //     List<SelectableObject> filteredList = args.NewList.FindAll(a => args.Settings.PrimaryTypes.Contains(a.type));
+//         //     List<ISelectable> filteredList = args.NewList.FindAll(a => args.Settings.PrimaryTypes.Contains(a.type));
 //         //     if (filteredList.Count == 0)
 //         //     {
 //         //         if (args.IsPreSelection)
 //         //         {
-//         //             return new List<SelectableObject>();
+//         //             return new List<ISelectable>();
 //         //         }
 //         //         filteredList = GetSecondarySelection(args);
 //         //     }
@@ -31,17 +31,17 @@
 //         //     return filteredList;
 //         // }
 
-//         // private List<SelectableObject> GetSecondarySelection(SelectionArgs args)
+//         // private List<ISelectable> GetSecondarySelection(SelectionArgs args)
 //         // {
 //         //     foreach (var secondaryType in args.Settings.SecondaryOrderedTypes)
 //         //     {
-//         //         List<SelectableObject> list = args.NewList.FindAll(a => a.type == secondaryType);
+//         //         List<ISelectable> list = args.NewList.FindAll(a => a.type == secondaryType);
 //         //         if (list.Count > 0)
 //         //         {
-//         //             return new List<SelectableObject>() { list[Random.Range(0, list.Count)] };
+//         //             return new List<ISelectable>() { list[Random.Range(0, list.Count)] };
 //         //         }
 //         //     }
-//         //     return new List<SelectableObject>();
+//         //     return new List<ISelectable>();
 //         // }
 //         public override SelectionArgsXP Apply(SelectionArgsXP args)
 //         {

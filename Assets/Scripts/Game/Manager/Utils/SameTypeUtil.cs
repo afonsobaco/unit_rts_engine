@@ -1,17 +1,18 @@
-﻿namespace RTSEngine.Manager
+﻿using RTSEngine.Core;
+namespace RTSEngine.Manager
 {
     public class SameTypeUtil
     {
-        // public static List<SelectableObject> GetFromSameTypeInSelection(SelectionArgs args, Vector2 initialGameScreenPos, Vector2 finalGameScreenPos)
+        // public static List<ISelectable> GetFromSameTypeInSelection(SelectionArgs args, Vector2 initialGameScreenPos, Vector2 finalGameScreenPos)
         // {
-        //     List<SelectableObject> list = SelectionUtil.FindAllOnScreen(args, initialGameScreenPos, finalGameScreenPos);
+        //     List<ISelectable> list = SelectionUtil.FindAllOnScreen(args, initialGameScreenPos, finalGameScreenPos);
         //     list.RemoveAll(a => !isSameType(args.Clicked, a));
         //     return list;
         // }
 
-        public static bool isSameType(SelectableObject first, SelectableObject second)
+        public static bool isSameType(ISelectable first, ISelectable second)
         {
-            return second.Type == first.Type && second.TypeStr.Equals(first.TypeStr);
+            return first.IsCompatible(second);
         }
     }
 }

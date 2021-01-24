@@ -7,7 +7,7 @@
 //     public abstract class AbstractClickSelectionMod : IBaseSelectionMod
 //     {
 
-//         // protected override List<SelectableObject> Apply(SelectionArgs args)
+//         // protected override List<ISelectable> Apply(SelectionArgs args)
 //         // {
 //         //     if (!args.Clicked || args.IsPreSelection)
 //         //     {
@@ -16,7 +16,7 @@
 //         //     return Execute(args);
 //         // }
 
-//         // protected abstract List<SelectableObject> Execute(SelectionArgs args);
+//         // protected abstract List<ISelectable> Execute(SelectionArgs args);
 
 //     }
 // }

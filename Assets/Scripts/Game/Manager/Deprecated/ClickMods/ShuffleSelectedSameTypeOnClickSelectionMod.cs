@@ -6,7 +6,7 @@
 // {
 //     public class ShuffleSelectedSameTypeOnClickSelectionMod<T, ST> : AbstractClickSelectionMod
 //     {
-//         // protected override List<SelectableObject> Execute(SelectionArgs args)
+//         // protected override List<ISelectable> Execute(SelectionArgs args)
 //         // {
 //         //     if ((!args.IsSameType && !args.IsDoubleClick) || !args.NewList.Contains(args.Clicked) )
 //         //     {
@@ -15,10 +15,10 @@
 //         //     return ShuffleOnlyClickedSameType(args);
 //         // }
 
-//         // private List<SelectableObject> ShuffleOnlyClickedSameType(SelectionArgs args)
+//         // private List<ISelectable> ShuffleOnlyClickedSameType(SelectionArgs args)
 //         // {
-//         //     List<SelectableObject> listOfSameType = args.NewList.FindAll(a => SameTypeUtil.isSameType(args.Clicked, a));
-//         //     List<SelectableObject> listWhitout = args.NewList.FindAll(a => !SameTypeUtil.isSameType(args.Clicked, a));
+//         //     List<ISelectable> listOfSameType = args.NewList.FindAll(a => SameTypeUtil.isSameType(args.Clicked, a));
+//         //     List<ISelectable> listWhitout = args.NewList.FindAll(a => !SameTypeUtil.isSameType(args.Clicked, a));
 
 //         //     listOfSameType = SelectionUtil.Shuffle(listOfSameType);
 

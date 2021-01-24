@@ -1,44 +1,45 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
     public abstract class BaseSelectionManager
     {
 
-        public virtual List<SelectableObject> PerformSelection(List<SelectableObject> currentSelection, List<SelectableObject> newSelection, SelectionTypeEnum selectionType)
+        public virtual List<ISelectable> PerformSelection(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType)
         {
             return DoSelection(currentSelection, newSelection, selectionType, false);
         }
 
-        public virtual List<SelectableObject> PerformPreSelection(List<SelectableObject> currentSelection, List<SelectableObject> newSelection, SelectionTypeEnum selectionType)
+        public virtual List<ISelectable> PerformPreSelection(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType)
         {
             return DoSelection(currentSelection, newSelection, selectionType, true);
         }
 
-        private List<SelectableObject> DoSelection(List<SelectableObject> currentSelection, List<SelectableObject> newSelection, SelectionTypeEnum selectionType, bool isPreSelection)
+        private List<ISelectable> DoSelection(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType, bool isPreSelection)
         {
             var args = StartSelection(currentSelection, newSelection, selectionType);
             args.IsPreSelection = isPreSelection;
             //args = ApplyModifiers(args);
             return FinalizeSelection(args);
         }
-        public virtual SelectionArgsXP StartSelection(List<SelectableObject> currentSelection, List<SelectableObject> newSelection, SelectionTypeEnum selectionType)
+        public virtual SelectionArgsXP StartSelection(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType)
         {
             SelectionArgsXP args = GetSelectionArgs(currentSelection, newSelection, selectionType);
             return args;
         }
-        public virtual List<SelectableObject> FinalizeSelection(SelectionArgsXP args)
+        public virtual List<ISelectable> FinalizeSelection(SelectionArgsXP args)
         {
-            List<SelectableObject> list = new List<SelectableObject>();
-            List<SelectableObject> toAddList = UpdateSelectionStatus(args.ToBeAdded, true);
-            List<SelectableObject> toRemoveList = UpdateSelectionStatus(args.ToBeRemoved, false);
+            List<ISelectable> list = new List<ISelectable>();
+            List<ISelectable> toAddList = UpdateSelectionStatus(args.ToBeAdded, true);
+            List<ISelectable> toRemoveList = UpdateSelectionStatus(args.ToBeRemoved, false);
             list = list.Union(toAddList).ToList();
             list.RemoveAll(a => toRemoveList.Contains(a));
             return list;
         }
-        public List<SelectableObject> UpdateSelectionStatus(List<SelectableObject> list, bool selected)
+        public List<ISelectable> UpdateSelectionStatus(List<ISelectable> list, bool selected)
         {
             foreach (var item in list)
             {
@@ -47,7 +48,7 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public List<SelectableObject> UpdatePreSelectionStatus(List<SelectableObject> list, bool preSelected)
+        public List<ISelectable> UpdatePreSelectionStatus(List<ISelectable> list, bool preSelected)
         {
             foreach (var item in list)
             {
@@ -56,11 +57,11 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public virtual SelectionArgsXP GetSelectionArgs(List<SelectableObject> currentSelection, List<SelectableObject> newSelection, SelectionTypeEnum selectionType)
+        public virtual SelectionArgsXP GetSelectionArgs(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType)
         {
             SelectionArgsXP args = new SelectionArgsXP();
-            args.OldSelection = currentSelection != null ? currentSelection : new List<SelectableObject>();
-            args.NewSelection = newSelection != null ? newSelection : new List<SelectableObject>();
+            args.OldSelection = currentSelection != null ? currentSelection : new List<ISelectable>();
+            args.NewSelection = newSelection != null ? newSelection : new List<ISelectable>();
             args.ToBeAdded = args.NewSelection;
             args.ToBeRemoved = args.OldSelection;
             args.SelectionType = selectionType;

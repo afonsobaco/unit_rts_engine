@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using NUnit.Framework;
+using RTSEngine.Core;
 using RTSEngine.Manager;
 using RTSEngine.Manager.SelectionMods.Impls;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Tests
         public void ShouldLimitToBeRemovedToPassedValue(int mainListCount, int limit, int[] oldSelection, int[] newSelection, int[] toBeAdded, int[] toBeRemoved, int[] expectedToBeAddedResult)
         {
             SelectionArgsXP args = ModifierTestUtils.GetDefaultArgs();
-            List<SelectableObject> mainList = ModifierTestUtils.GetSomeObjects(mainListCount);
+            List<ISelectable> mainList = ModifierTestUtils.GetSomeObjects(mainListCount);
             args.OldSelection.AddRange(ModifierTestUtils.GetListByIndex(oldSelection, mainList));
             args.NewSelection.AddRange(ModifierTestUtils.GetListByIndex(newSelection, mainList));
             args.ToBeAdded.AddRange(ModifierTestUtils.GetListByIndex(toBeAdded, mainList));
@@ -38,7 +39,7 @@ namespace Tests
 
             args = Modifier.Apply(limit, args);
 
-            List<SelectableObject> expected = ModifierTestUtils.GetListByIndex(expectedToBeAddedResult, mainList);
+            List<ISelectable> expected = ModifierTestUtils.GetListByIndex(expectedToBeAddedResult, mainList);
             CollectionAssert.AreEqual(expected, args.ToBeAdded);
         }
 

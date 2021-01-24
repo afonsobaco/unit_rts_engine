@@ -4,10 +4,10 @@ namespace RTSEngine.Core
 {
 
     //TODO criar interface
-    public class SelectableObjectCreatedSignal : ISelectableCreatedSignal<SelectableObject>
+    public class SelectableObjectCreatedSignal : ISelectableCreatedSignal<ISelectable>
     {
-        private SelectableObject selectable;
+        private ISelectable selectable;
 
-        public SelectableObject Selectable { get => selectable; set => selectable = value; }
+        public ISelectable Selectable { get => selectable; set => selectable = value; }
     }
 }

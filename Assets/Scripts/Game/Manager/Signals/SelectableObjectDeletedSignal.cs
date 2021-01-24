@@ -2,10 +2,10 @@
 
 namespace RTSEngine.Core
 {
-    public class SelectableObjectDeletedSignal : ISelectableDeletedSignal<SelectableObject>
+    public class SelectableObjectDeletedSignal : ISelectableDeletedSignal<ISelectable>
     {
-        private SelectableObject selectable;
+        private ISelectable selectable;
 
-        public SelectableObject Selectable { get => selectable; set => selectable = value; }
+        public ISelectable Selectable { get => selectable; set => selectable = value; }
     }
 }

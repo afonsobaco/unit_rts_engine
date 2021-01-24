@@ -7,7 +7,7 @@
 // {
 //     public class AddRemoveOnClickSelectionMod : AbstractClickSelectionMod
 //     {
-//         // protected override List<SelectableObject> Execute(SelectionArgs args)
+//         // protected override List<ISelectable> Execute(SelectionArgs args)
 //         // {
 //         //     if (args.OldList.Contains(args.Clicked))
 //         //     {
