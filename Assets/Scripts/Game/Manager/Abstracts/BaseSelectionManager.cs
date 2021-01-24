@@ -46,8 +46,8 @@ namespace RTSEngine.Manager
                 toRemoveList = UpdateSelectionStatus(args.ToBeRemoved, false);
             }
 
-            list = list.Union(toAddList).ToList();
-            list.RemoveAll(a => toRemoveList.Contains(a));
+            list.AddRange(toAddList);
+            list.RemoveAll(a => toRemoveList.FindAll(x => !toAddList.Contains(x)).Contains(a));
             return list;
         }
         public List<ISelectable> UpdateSelectionStatus(List<ISelectable> list, bool selected)
