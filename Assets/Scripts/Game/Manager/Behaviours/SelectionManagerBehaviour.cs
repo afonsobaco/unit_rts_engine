@@ -9,12 +9,12 @@ namespace RTSEngine.Manager
     {
         [SerializeField] private SelectableObjectRuntimeSetSO selectableList;
         [SerializeField] private RectTransform selectionBox;
-        [SerializeField] private List<BaseSelectionModSO> mods;
+        [SerializeField] private List<IBaseSelectionMod> mods;
         private SelectionManager manager;
 
         public SelectableObjectRuntimeSetSO SelectableList { get => selectableList; set => selectableList = value; }
         public RectTransform SelectionBox { get => selectionBox; set => selectionBox = value; }
-        public List<BaseSelectionModSO> Mods { get => mods; set => mods = value; }
+        public List<IBaseSelectionMod> Mods { get => mods; set => mods = value; }
         public SelectionManager Manager { get => manager; set => manager = value; }
 
         [Inject]

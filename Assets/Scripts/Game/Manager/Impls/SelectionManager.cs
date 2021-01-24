@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace RTSEngine.Manager
 {
-    public class SelectionManager : BaseSelectionManager
+    public class SelectionManager : BaseSelectionManager, ISelectionManager<ISelectable, SelectionTypeEnum>
     {
 
         private Dictionary<int, List<ISelectable>> groups = new Dictionary<int, List<ISelectable>>();
         private IRuntimeSet<ISelectable> selectableList;
-        private List<BaseSelectionModSO> scriptableObjectMods;
+        private List<IBaseSelectionMod> scriptableObjectMods;
         private List<ISelectable> currentSelection;
         private List<ISelectable> preSelection;
         private ISelectable cliked;
@@ -41,7 +41,7 @@ namespace RTSEngine.Manager
 
         public Dictionary<int, List<ISelectable>> Groups { get => groups; private set => groups = value; }
         public IRuntimeSet<ISelectable> SelectableList { get => selectableList; set => selectableList = value; }
-        public List<BaseSelectionModSO> ScriptableObjectMods { get => scriptableObjectMods; set => scriptableObjectMods = value; }
+        public List<IBaseSelectionMod> ScriptableObjectMods { get => scriptableObjectMods; set => scriptableObjectMods = value; }
         public ISelectable Cliked { get => cliked; set => cliked = value; }
         public Vector3 FinalScreenPosition { get => finalScreenPosition; set => finalScreenPosition = value; }
         public Vector3 InitialScreenPosition { get => initialScreenPosition; set => initialScreenPosition = value; }
