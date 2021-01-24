@@ -106,12 +106,16 @@ namespace RTSEngine.Manager
 
         private Vector3 DoMouseCameraMovement(Vector3 mousePosition, float deltaTime, UnityEngine.Camera mainCamera)
         {
-            var mousePos = mainCamera.ScreenToViewportPoint(mousePosition);
-            if (mousePos.x >= 0 && mousePos.x <= 1 && mousePos.y >= 0 && mousePos.y <= 1)
+            //TODO test when is selecting
+            if (!selectionManager.IsSelecting)
             {
-                float x = DoMouseMovement(mousePos.x, mainCamera.transform.position.y, deltaTime);
-                float z = DoMouseMovement(mousePos.y, mainCamera.transform.position.y, deltaTime);
-                return new Vector3(x, 0f, z);
+                var mousePos = mainCamera.ScreenToViewportPoint(mousePosition);
+                if (mousePos.x >= 0 && mousePos.x <= 1 && mousePos.y >= 0 && mousePos.y <= 1)
+                {
+                    float x = DoMouseMovement(mousePos.x, mainCamera.transform.position.y, deltaTime);
+                    float z = DoMouseMovement(mousePos.y, mainCamera.transform.position.y, deltaTime);
+                    return new Vector3(x, 0f, z);
+                }
             }
             return Vector3.zero;
         }

@@ -8,7 +8,7 @@ namespace RTSEngine.Manager
     public interface ISelectionManager<T, ST> : IDisposable where T : ISelectable
     {
         IRuntimeSet<T> SelectableList { get; set; }
-        List<IBaseSelectionMod> ScriptableObjectMods { get; set; }
+        List<IBaseSelectionMod> Mods { get; set; }
         List<T> CurrentSelection { get; set; }
         T Cliked { get; set; }
         Vector3 FinalScreenPosition { get; set; }

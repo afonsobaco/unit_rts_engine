@@ -146,8 +146,8 @@ namespace Tests.Manager
 
             List<ISelectable> expected = new List<ISelectable>();
             expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
-            manager.When(x => x.GetSelectionOnScreen()).DoNotCallBase();
-            manager.GetSelectionOnScreen().Returns(expected);
+            manager.When(x => x.GetDragSelection()).DoNotCallBase();
+            manager.GetDragSelection().Returns(expected);
 
             var selection = manager.GetNewSelection();
 
@@ -158,7 +158,7 @@ namespace Tests.Manager
         public void ShouldReturnEmptySelectionWhenDragEmptySpace()
         {
             PrepareForDrag();
-            manager.GetSelectionOnScreen().Returns(new List<ISelectable>());
+            manager.GetDragSelection().Returns(new List<ISelectable>());
             var selection = manager.GetNewSelection();
             CollectionAssert.IsEmpty(selection);
         }
@@ -467,7 +467,7 @@ namespace Tests.Manager
             expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
 
-            manager.GetSelectionOnScreen().Returns(expected);
+            manager.GetDragSelection().Returns(expected);
             manager.PerformSelection(Arg.Any<List<ISelectable>>(), Arg.Any<List<ISelectable>>(), Arg.Is(SelectionTypeEnum.DRAG)).Returns(expected);
 
             Vector3 finalPos = new Vector3(0.5f, 0.5f, 0f);
@@ -498,11 +498,10 @@ namespace Tests.Manager
             expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
 
-            manager.When(x => x.GetAllModifiers()).DoNotCallBase();
-            manager.GetAllModifiers().Returns(x => new List<IBaseSelectionMod>());
+            manager.Mods = new List<IBaseSelectionMod>();
 
-            manager.When(x => x.GetSelectionOnScreen()).DoNotCallBase();
-            manager.GetSelectionOnScreen().Returns(expected);
+            manager.When(x => x.GetDragSelection()).DoNotCallBase();
+            manager.GetDragSelection().Returns(expected);
 
             manager.When(x => x.PerformSelection(default, default, default)).DoNotCallBase();
             manager.PerformSelection(default, default, default).ReturnsForAnyArgs(expected);
@@ -529,19 +528,14 @@ namespace Tests.Manager
         public void ShouldGetModifiersToBeApplied(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey)
         {
             List<IBaseSelectionMod> mods = new List<IBaseSelectionMod>();
+            List<IBaseSelectionMod> expectedMods = new List<IBaseSelectionMod>();
+            GetModsToTest(selectionType, howManyAll, howManyClick, howManyDrag, howManyKey, mods, expectedMods);
 
-            mods.AddRange(SelectionManagerTestUtils.GetSomeModsFromType(howManyAll, SelectionTypeEnum.ALL));
-            mods.AddRange(SelectionManagerTestUtils.GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK));
-            mods.AddRange(SelectionManagerTestUtils.GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG));
-            mods.AddRange(SelectionManagerTestUtils.GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY));
-
-            manager.When(x => x.GetAllModifiers()).DoNotCallBase();
-            manager.GetAllModifiers().Returns(x => mods);
+            manager.Mods = mods;
 
             var result = manager.GetModifiersToBeApplied(selectionType);
 
-            List<IBaseSelectionMod> expected = mods.FindAll(x => x.Type == selectionType || x.Type == SelectionTypeEnum.ALL).ToList();
-            CollectionAssert.AreEquivalent(expected, result);
+            CollectionAssert.AreEquivalent(expectedMods, result);
 
         }
 
@@ -549,14 +543,11 @@ namespace Tests.Manager
         public void ShouldApplyModifiers(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey)
         {
             List<IBaseSelectionMod> mods = new List<IBaseSelectionMod>();
+            List<IBaseSelectionMod> expectedMods = new List<IBaseSelectionMod>();
+            GetModsToTest(selectionType, howManyAll, howManyClick, howManyDrag, howManyKey, mods, expectedMods);
 
-            mods.AddRange(SelectionManagerTestUtils.GetSomeModsFromType(howManyAll, SelectionTypeEnum.ALL));
-            mods.AddRange(SelectionManagerTestUtils.GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK));
-            mods.AddRange(SelectionManagerTestUtils.GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG));
-            mods.AddRange(SelectionManagerTestUtils.GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY));
-
-            manager.When(x => x.GetAllModifiers()).DoNotCallBase();
-            manager.GetAllModifiers().Returns(x => mods);
+            manager.When(x => x.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>())).DoNotCallBase();
+            manager.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>()).Returns(expectedMods);
 
             SelectionArgsXP args = SelectionManagerTestUtils.GetDefaultArgs();
             args.SelectionType = selectionType;
@@ -577,6 +568,35 @@ namespace Tests.Manager
         }
 
         #region methods
+
+        private static void GetModsToTest(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey, List<IBaseSelectionMod> mods, List<IBaseSelectionMod> expectedMods)
+        {
+            List<IBaseSelectionMod> allMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyAll, SelectionTypeEnum.ALL);
+            List<IBaseSelectionMod> clickMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK);
+            List<IBaseSelectionMod> dragMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG);
+            List<IBaseSelectionMod> keyMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY);
+            expectedMods.AddRange(allMods);
+            switch (selectionType)
+            {
+                case SelectionTypeEnum.CLICK:
+                    expectedMods.AddRange(clickMods);
+                    break;
+                case SelectionTypeEnum.DRAG:
+                    expectedMods.AddRange(dragMods);
+                    break;
+                case SelectionTypeEnum.KEY:
+                    expectedMods.AddRange(keyMods);
+                    break;
+                default:
+                    break;
+            }
+
+            mods.AddRange(allMods);
+            mods.AddRange(clickMods);
+            mods.AddRange(dragMods);
+            mods.AddRange(keyMods);
+        }
+
         private static SelectionManager GetSelectionManager()
         {
 

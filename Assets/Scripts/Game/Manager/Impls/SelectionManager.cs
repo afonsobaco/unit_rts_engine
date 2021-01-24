@@ -11,7 +11,7 @@ namespace RTSEngine.Manager
 
         private Dictionary<int, List<ISelectable>> groups = new Dictionary<int, List<ISelectable>>();
         private IRuntimeSet<ISelectable> selectableList;
-        private List<IBaseSelectionMod> scriptableObjectMods;
+        private List<IBaseSelectionMod> mods;
         private List<ISelectable> currentSelection;
         private List<ISelectable> preSelection;
         private ISelectable cliked;
@@ -23,25 +23,11 @@ namespace RTSEngine.Manager
         private int keyPressed = 0;
         private bool isSelecting;
 
-        public List<ISelectable> PreSelection
-        {
-            get
-            {
-                if (preSelection == null)
-                {
-                    preSelection = new List<ISelectable>();
-                }
-                return preSelection;
-            }
-            set
-            {
-                preSelection = value;
-            }
-        }
+
 
         public Dictionary<int, List<ISelectable>> Groups { get => groups; private set => groups = value; }
         public IRuntimeSet<ISelectable> SelectableList { get => selectableList; set => selectableList = value; }
-        public List<IBaseSelectionMod> ScriptableObjectMods { get => scriptableObjectMods; set => scriptableObjectMods = value; }
+        public List<IBaseSelectionMod> Mods { get => mods; set => mods = value; }
         public ISelectable Cliked { get => cliked; set => cliked = value; }
         public Vector3 FinalScreenPosition { get => finalScreenPosition; set => finalScreenPosition = value; }
         public Vector3 InitialScreenPosition { get => initialScreenPosition; set => initialScreenPosition = value; }
@@ -67,6 +53,21 @@ namespace RTSEngine.Manager
             }
         }
 
+        public List<ISelectable> PreSelection
+        {
+            get
+            {
+                if (preSelection == null)
+                {
+                    preSelection = new List<ISelectable>();
+                }
+                return preSelection;
+            }
+            set
+            {
+                preSelection = value;
+            }
+        }
         public List<ISelectable> GetNewSelection()
         {
             List<ISelectable> list = new List<ISelectable>();
@@ -80,7 +81,7 @@ namespace RTSEngine.Manager
                     list.AddRange(GetGroup(KeyPressed));
                     break;
                 case SelectionTypeEnum.DRAG:
-                    list.AddRange(GetSelectionOnScreen());
+                    list.AddRange(GetDragSelection());
                     break;
                 default:
                     break;
@@ -212,9 +213,21 @@ namespace RTSEngine.Manager
             return SelectionUtil.GetObjectClicked(InitialScreenPosition, FinalScreenPosition);
         }
 
-        public virtual List<ISelectable> GetSelectionOnScreen()
+        public virtual List<ISelectable> GetDragSelection()
         {
-            return SelectionUtil.GetAllObjectsInsideSelectionArea(SelectableList.GetList(), InitialScreenPosition, FinalScreenPosition);
+            //TODO tests Should Maintain selection order
+            var selectionOnScreen = SelectionUtil.GetAllObjectsInsideSelectionArea(SelectableList.GetList(), InitialScreenPosition, FinalScreenPosition);
+
+            var listWithOrder = new List<ISelectable>();
+
+            for (var i = 0; i < PreSelection.Count; i++)
+            {
+                if (selectionOnScreen.Contains(PreSelection[i]))
+                {
+                    listWithOrder.Add(PreSelection[i]);
+                }
+            }
+            return listWithOrder.Union(selectionOnScreen).ToList();
         }
 
         public void AddSelectableObject(SelectableObjectCreatedSignal signal)
@@ -258,14 +271,10 @@ namespace RTSEngine.Manager
 
         }
 
-        public List<IBaseSelectionMod> GetModifiersToBeApplied(SelectionTypeEnum type)
+        public virtual List<IBaseSelectionMod> GetModifiersToBeApplied(SelectionTypeEnum type)
         {
-            return GetAllModifiers().FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ALL));
+            return Mods.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ALL));
         }
 
-        public virtual List<IBaseSelectionMod> GetAllModifiers()
-        {
-            return ScriptableObjectMods.FindAll(x => x is IBaseSelectionMod).Select(x => x as IBaseSelectionMod).ToList();
-        }
     }
 }

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   active: 1
-  activeOnPreSelection: 1
-  maxLimit: 10
+  activeOnPreSelection: 0
+  maxLimit: 12

@@ -22,7 +22,7 @@ namespace RTSEngine.Manager
         {
             var args = StartSelection(currentSelection, newSelection, selectionType);
             args.IsPreSelection = isPreSelection;
-            // args = ApplyModifiers(args);
+            args = ApplyModifiers(args);
             return FinalizeSelection(args);
         }
         public virtual SelectionArgsXP StartSelection(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType)
@@ -32,6 +32,7 @@ namespace RTSEngine.Manager
         }
         public virtual List<ISelectable> FinalizeSelection(SelectionArgsXP args)
         {
+            //TODO Tests (flickering and Selection shift)
             List<ISelectable> list = new List<ISelectable>();
             List<ISelectable> toAddList = new List<ISelectable>();
             List<ISelectable> toRemoveList = new List<ISelectable>();
