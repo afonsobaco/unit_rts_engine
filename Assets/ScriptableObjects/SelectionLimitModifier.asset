@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40021d46535f2ec4b945940c5b5f7a22, type: 3}
   m_Name: SelectionLimitModifier
   m_EditorClassIdentifier: 
-  active: 1
   type: 0
-  maxLimit: 2
+  active: 1
+  activeOnPreSelection: 1
+  maxLimit: 3

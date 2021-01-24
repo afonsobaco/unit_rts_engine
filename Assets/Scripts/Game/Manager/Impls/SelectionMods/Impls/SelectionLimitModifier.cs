@@ -4,27 +4,24 @@ using System.Linq;
 namespace RTSEngine.Manager.SelectionMods.Impls
 {
     [CreateAssetMenu(fileName = "SelectionLimitModifier", menuName = "ScriptableObjects/Mods/Selection Limit Modifier", order = 1)]
-    public class SelectionLimitModifier : AbstractSelectionMod<SelectableObject, SelectionTypeEnum>
+    public class SelectionLimitModifier : BaseSelectionModSO
     {
 
         [Header("Modifier attributes: ")]
         [Space(10)]
         [Range(1, 100)]
         [SerializeField] private int maxLimit = 20;
-
-        private Modifier selectionModifier;
+        private SelectionModifier selectionModifier = new SelectionModifier();
 
         public int MaxLimit { get => maxLimit; set => maxLimit = value; }
-        public Modifier SelectionModifier { get => selectionModifier; set => selectionModifier = value; }
-
-        public override ISelectionArgsXP<SelectableObject, SelectionTypeEnum> Apply(ISelectionArgsXP<SelectableObject, SelectionTypeEnum> args)
+        public override SelectionArgsXP Apply(SelectionArgsXP args)
         {
-            return SelectionModifier.Apply(MaxLimit, args);
+            return selectionModifier.Apply(MaxLimit, args);
         }
 
-        public class Modifier
+        public class SelectionModifier
         {
-            public ISelectionArgsXP<SelectableObject, SelectionTypeEnum> Apply(int maxLimit, ISelectionArgsXP<SelectableObject, SelectionTypeEnum> args)
+            public SelectionArgsXP Apply(int maxLimit, SelectionArgsXP args)
             {
                 args.ToBeAdded = args.ToBeAdded.Take(maxLimit).ToList();
                 return args;

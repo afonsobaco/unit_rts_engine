@@ -4,12 +4,12 @@ namespace RTSEngine.Manager
 {
     public interface IPlayerInputManager
     {
-        void SetSelectionKeys(KeyCode aditiveSelectionKeyCode, KeyCode sameTypeSelectionKeyCode, KeyCode groupKeyCode);
-        void SetMouseClick(float doubleClickTime);
+        void DoCameraMovement();
         void DoGroupSelection(KeyCode groupKeyCode);
         void SetCameraControls();
         void SetCameraPanningControls();
-        void DoCameraMovement();
+        void SetMouseClick(float doubleClickTime);
+        void SetSelectionKeys(KeyCode aditiveSelectionKeyCode, KeyCode sameTypeSelectionKeyCode, KeyCode groupKeyCode);
     }
 
 }

@@ -8,14 +8,14 @@ namespace RTSEngine.Manager
     public class PlayerInputManager : IPlayerInputManager
     {
 
-        private ISelectionManager<SelectableObject, SelectionTypeEnum> selectionManager;
+        private SelectionManager selectionManager;
         private ICameraManager cameraManager;
         private SelectionOptions selectionOptions;
 
         public SelectionOptions SelectionOptions { get => selectionOptions; private set => selectionOptions = value; }
 
         [Inject]
-        public void Construct(ISelectionManager<SelectableObject, SelectionTypeEnum> selectionManager, ICameraManager cameraManager)
+        public void Construct(SelectionManager selectionManager, ICameraManager cameraManager)
         {
             this.selectionManager = selectionManager;
             this.cameraManager = cameraManager;
@@ -104,7 +104,7 @@ namespace RTSEngine.Manager
                 else
                 {
                     selectionManager.KeyPressed = keyPressed;
-                    selectionManager.EndOfSelection(Vector3.zero);
+                    selectionManager.EndOfSelection(Input.mousePosition);
                 }
             }
         }

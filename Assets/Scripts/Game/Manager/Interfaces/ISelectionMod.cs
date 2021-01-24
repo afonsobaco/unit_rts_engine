@@ -4,7 +4,8 @@ namespace RTSEngine.Manager
     {
         bool Active { get; set; }
         ST Type { get; set; }
+        bool ActiveOnPreSelection { get; set; }
 
-        ISelectionArgsXP<T, ST> Apply(ISelectionArgsXP<T, ST> args);
+        SelectionArgsXP Apply(SelectionArgsXP args);
     }
 }

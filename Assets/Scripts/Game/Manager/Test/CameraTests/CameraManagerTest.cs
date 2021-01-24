@@ -13,7 +13,7 @@ namespace Tests.Manager
 
         private CameraManager manager;
         private UnityEngine.Camera mainCamera;
-        private ISelectionManager<SelectableObject, SelectionTypeEnum> selectionManager;
+        private SelectionManager selectionManager;
 
         private ICameraSettings cameraSettings;
 
@@ -21,13 +21,13 @@ namespace Tests.Manager
 
         public CameraManager Manager { get => manager; set => manager = value; }
         public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
-        public ISelectionManager<SelectableObject, SelectionTypeEnum> SelectionManager { get => selectionManager; set => selectionManager = value; }
+        public SelectionManager SelectionManager { get => selectionManager; set => selectionManager = value; }
         public ICameraSettings CameraSettings { get => cameraSettings; set => cameraSettings = value; }
 
         [SetUp]
         public void SetUp()
         {
-            SelectionManager = Substitute.For<ISelectionManager<SelectableObject, SelectionTypeEnum>>();
+            SelectionManager = Substitute.For<SelectionManager>();
             CameraSettings = Substitute.For<ICameraSettings>();
             Manager = new CameraManager(SelectionManager);
 
@@ -212,17 +212,17 @@ namespace Tests.Manager
 
         #region methods
 
-        public static T CreateGameObject<T>() where T : MonoBehaviour
+        public static SelectableObject CreateGameObject()
         {
             var go = new GameObject();
-            var so = go.AddComponent<T>();
+            var so = go.AddComponent<SelectableObject>();
             return so;
         }
 
         private List<SelectableObject> GetDefaultCurrentSelection()
         {
             List<SelectableObject> currentSelection = new List<SelectableObject>();
-            SelectableObject obj = CreateGameObject<SelectableObject>();
+            SelectableObject obj = CreateGameObject();
             obj.transform.position = new Vector3(2, 0, 20);
             currentSelection.Add(obj);
 

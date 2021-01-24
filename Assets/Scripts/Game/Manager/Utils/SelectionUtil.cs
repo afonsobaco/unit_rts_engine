@@ -7,16 +7,16 @@ namespace RTSEngine.Manager
     {
         private static System.Random rng = new System.Random();
 
-        public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : SelectableObject
+        public static List<SelectableObject> GetAllObjectsInsideSelectionArea(List<SelectableObject> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
         {
-            List<T> list = new List<T>();
+            List<SelectableObject> list = new List<SelectableObject>();
             if (allObjects == null)
             {
                 return list;
             }
             for (int i = 0; i < allObjects.Count; i++)
             {
-                T obj = (T)allObjects[i];
+                SelectableObject obj = (SelectableObject)allObjects[i];
                 var screenPos = Camera.main.WorldToScreenPoint(obj.transform.position);
                 if (IsPositionInsideArea(screenPos, initialScreenPosition, finalScreenPosition))
                 {
@@ -26,10 +26,10 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public static T GetObjectClicked<T>(Vector3 initialScreenPosition, Vector3 finalScreenPosition) where T : SelectableObject
+        public static SelectableObject GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
         {
-            var initialObject = GetObjectInScreenPoint<T>(initialScreenPosition, Camera.main);
-            var finalObject = GetObjectInScreenPoint<T>(finalScreenPosition, Camera.main);
+            var initialObject = GetObjectInScreenPoint(initialScreenPosition, Camera.main);
+            var finalObject = GetObjectInScreenPoint(finalScreenPosition, Camera.main);
             if (initialObject != null && initialObject.Equals(finalObject))
             {
                 return initialObject;
@@ -37,9 +37,9 @@ namespace RTSEngine.Manager
             return null;
         }
 
-        public static List<T> GetAllObjectsInsideSelectionArea<T>(List<T> mainList, Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera) where T : SelectableObject
+        public static List<SelectableObject> GetAllObjectsInsideSelectionArea(List<SelectableObject> mainList, Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera)
         {
-            List<T> list = new List<T>();
+            List<SelectableObject> list = new List<SelectableObject>();
             foreach (var obj in mainList)
             {
                 var screenPos = camera.WorldToScreenPoint(obj.transform.position);
@@ -73,10 +73,10 @@ namespace RTSEngine.Manager
         }
 
 
-        public static T GetObjectClicked<T>(Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera) where T : SelectableObject
+        public static SelectableObject GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera)
         {
-            var initialObject = GetObjectInScreenPoint<T>(initialScreenPosition, camera);
-            var finalObject = GetObjectInScreenPoint<T>(finalScreenPosition, camera);
+            var initialObject = GetObjectInScreenPoint(initialScreenPosition, camera);
+            var finalObject = GetObjectInScreenPoint(finalScreenPosition, camera);
             if (initialObject != null && initialObject.Equals(finalObject))
             {
                 return initialObject;
@@ -84,13 +84,13 @@ namespace RTSEngine.Manager
             return null;
         }
 
-        public static T GetObjectInScreenPoint<T>(Vector3 mousePosition, Camera camera) where T : SelectableObject
+        public static SelectableObject GetObjectInScreenPoint(Vector3 mousePosition, Camera camera)
         {
             Ray ray = camera.ScreenPointToRay(mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100))
             {
-                return hit.transform.gameObject.GetComponent<T>();
+                return hit.transform.gameObject.GetComponent<SelectableObject>();
             }
             return null;
         }
@@ -114,14 +114,14 @@ namespace RTSEngine.Manager
         // }
 
 
-        public static List<T> Shuffle<T>(List<T> list)
+        public static List<SelectableObject> Shuffle<SelectableObject>(List<SelectableObject> list)
         {
             int n = list.Count;
             while (n > 1)
             {
                 n--;
                 int k = rng.Next(n + 1);
-                T value = list[k];
+                SelectableObject value = list[k];
                 list[k] = list[n];
                 list[n] = value;
             }

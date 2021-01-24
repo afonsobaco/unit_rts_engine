@@ -6,8 +6,8 @@ namespace RTSEngine.Manager
 
     public class CameraManagerBehaviour : MonoBehaviour
     {
+        [SerializeField] private CameraSettings cameraSettings;
         private ICameraManager manager;
-        private CameraSettings cameraSettings;
 
         public CameraSettings CameraSettings { get => cameraSettings; set => cameraSettings = value; }
         public ICameraManager Manager { get => manager; set => manager = value; }

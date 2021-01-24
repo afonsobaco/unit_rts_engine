@@ -14,8 +14,8 @@ namespace RTSEngine.Manager.Installers
             Container.DeclareSignal<SelectableObjectCreatedSignal>();
             Container.DeclareSignal<SelectableObjectDeletedSignal>();
 
-            Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<ISelectionManager<SelectableObject, SelectionTypeEnum>>(x => x.AddSelectableObject).FromResolve();
-            Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<ISelectionManager<SelectableObject, SelectionTypeEnum>>(x => x.RemoveSelectableObject).FromResolve();
+            Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionManager>(x => x.AddSelectableObject).FromResolve();
+            Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionManager>(x => x.RemoveSelectableObject).FromResolve();
         }
     }
 }

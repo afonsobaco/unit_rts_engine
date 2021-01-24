@@ -25,55 +25,58 @@ namespace Tests.Manager
         }
 
 
-        public static T CreateATestableObject<T>(int i) where T : SelectableObject
+        public static SelectableObject CreateATestableObject(int i)
         {
             GameObject go = new GameObject();
-            var t = go.AddComponent<T>();
+            var t = go.AddComponent<SelectableObject>();
             var bc = go.AddComponent<BoxCollider>();
             t.transform.position = GetDefaultTestListOfObjects()[i].Pos;
             return t;
         }
 
-        public static List<T> GetDefaultTestMainList<T>() where T : SelectableObject
+        public static List<SelectableObject> GetDefaultTestMainList()
         {
-            List<T> mainList = new List<T>();
+            List<SelectableObject> mainList = new List<SelectableObject>();
 
             for (var i = 0; i < GetDefaultTestListOfObjects().Count; i++)
             {
-                var t = CreateATestableObject<T>(i);
+                var t = CreateATestableObject(i);
                 mainList.Add(t);
             }
             return mainList;
         }
 
-        public static ISelectionArgsXP<T, ST> GetDefaultArgs<T, ST>()
+        public static SelectionArgsXP GetDefaultArgs()
         {
-            ISelectionArgsXP<T, ST> args = new SelectionArgsXP<T, ST>();
-            args.NewSelection = new List<T>();
-            args.OldSelection = new List<T>();
-            args.ToBeAdded = new List<T>();
-            args.ToBeRemoved = new List<T>();
+            SelectionArgsXP args = new SelectionArgsXP();
+            args.NewSelection = new List<SelectableObject>();
+            args.OldSelection = new List<SelectableObject>();
+            args.ToBeAdded = new List<SelectableObject>();
+            args.ToBeRemoved = new List<SelectableObject>();
             return args;
         }
 
-        public static T CreateGameObject<T>() where T : MonoBehaviour
+        public static SelectableObject CreateGameObject()
         {
             var go = new GameObject();
-            var so = go.AddComponent<T>();
+            var so = go.AddComponent<SelectableObject>();
             return so;
         }
 
-        public static List<ISelectionMod<O, ST>> GetSomeMods<O, ST>(int amount)
+        public static List<IBaseSelectionMod> GetSomeModsFromType(int amount, SelectionTypeEnum type)
         {
-            List<ISelectionMod<O, ST>> mods = new List<ISelectionMod<O, ST>>();
+            List<IBaseSelectionMod> list = new List<IBaseSelectionMod>();
             for (var i = 0; i < amount; i++)
             {
-                ISelectionMod<O, ST> mod = Substitute.For<ISelectionMod<O, ST>>();
-                mod.Apply(Arg.Any<SelectionArgsXP<O, ST>>()).Returns(x => x[0]);
-                mods.Add(mod);
+                IBaseSelectionMod mod = Substitute.For<IBaseSelectionMod>();
+                mod.Type.Returns(type);
+                mod.Active.Returns(true);
+                mod.Apply(Arg.Any<SelectionArgsXP>()).Returns(x => x[0]);
+                list.Add(mod);
             }
-            return mods;
+            return list;
         }
+
 
     }
 }

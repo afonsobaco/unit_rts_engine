@@ -1,33 +1,21 @@
 using System.Collections.Generic;
-
 namespace RTSEngine.Manager
 {
-    public interface ISelectionArgsXP<T, E>
+    public class SelectionArgsXP : ISelectionArgsXP
     {
-        List<T> OldSelection { get; set; }
-        List<T> NewSelection { get; set; }
-        List<T> ToBeAdded { get; set; }
-        List<T> ToBeRemoved { get; set; }
-        E SelectionType { get; set; }
-        List<ISelectionMod<T, E>> SelectionModifiers { get; set; }
-    }
+        private List<SelectableObject> oldSelection = new List<SelectableObject>();
+        private List<SelectableObject> newSelection = new List<SelectableObject>();
+        private List<SelectableObject> toBeAdded = new List<SelectableObject>();
+        private List<SelectableObject> toBeRemoved = new List<SelectableObject>();
+        private SelectionTypeEnum selectionType;
+        private bool isPreSelection;
 
-    public class SelectionArgsXP<T, E> : ISelectionArgsXP<T, E>
-    {
-        private List<T> oldSelection = new List<T>();
-        private List<T> newSelection = new List<T>();
-        private List<T> toBeAdded = new List<T>();
-        private List<T> toBeRemoved = new List<T>();
-        private E selectionType;
-
-        private List<ISelectionMod<T, E>> selectionModifiers = new List<ISelectionMod<T, E>>();
-
-        public List<T> OldSelection { get => oldSelection; set => oldSelection = value; }
-        public List<T> NewSelection { get => newSelection; set => newSelection = value; }
-        public List<T> ToBeAdded { get => toBeAdded; set => toBeAdded = value; }
-        public List<T> ToBeRemoved { get => toBeRemoved; set => toBeRemoved = value; }
-        public E SelectionType { get => selectionType; set => selectionType = value; }
-        public List<ISelectionMod<T, E>> SelectionModifiers { get => selectionModifiers; set => selectionModifiers = value; }
+        public List<SelectableObject> OldSelection { get => oldSelection; set => oldSelection = value; }
+        public List<SelectableObject> NewSelection { get => newSelection; set => newSelection = value; }
+        public List<SelectableObject> ToBeAdded { get => toBeAdded; set => toBeAdded = value; }
+        public List<SelectableObject> ToBeRemoved { get => toBeRemoved; set => toBeRemoved = value; }
+        public SelectionTypeEnum SelectionType { get => selectionType; set => selectionType = value; }
+        public bool IsPreSelection { get => isPreSelection; set => isPreSelection = value; }
     }
 
 }

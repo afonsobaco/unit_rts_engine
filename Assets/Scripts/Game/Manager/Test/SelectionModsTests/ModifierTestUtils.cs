@@ -24,15 +24,16 @@ namespace Tests
             for (var i = 0; i < qtt; i++)
             {
                 var go = new GameObject();
+                go.name = "game_object_" + i;
                 var so = go.AddComponent<SelectableObject>();
                 list.Add(so);
             }
             return list;
         }
 
-        public static ISelectionArgsXP<SelectableObject, SelectionTypeEnum> GetDefaultArgs()
+        public static SelectionArgsXP GetDefaultArgs()
         {
-            return new SelectionArgsXP<SelectableObject, SelectionTypeEnum>();
+            return new SelectionArgsXP();
         }
     }
 }

@@ -7,14 +7,14 @@ namespace RTSEngine.Manager
 {
     public class SelectableObject : MonoBehaviour, ISelectable
     {
-        private bool _selected = false;
-        private ObjectTypeEnum type;
-        private SelectionMark selectionMark;
-        private SelectionMark preSelectionMark;
+        [SerializeField] private ObjectTypeEnum type;
+        [SerializeField] private SelectionMark selectionMark;
+        [SerializeField] private SelectionMark preSelectionMark;
 
         //TODO should be an Enum?
-        private string typeStr;
+        [SerializeField] private string typeStr;
 
+        private bool _selected = false;
         private SignalBus _signalBus;
 
         [Inject]
