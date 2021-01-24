@@ -22,7 +22,7 @@ namespace RTSEngine.Manager
         {
             var args = StartSelection(currentSelection, newSelection, selectionType);
             args.IsPreSelection = isPreSelection;
-            //args = ApplyModifiers(args);
+            // args = ApplyModifiers(args);
             return FinalizeSelection(args);
         }
         public virtual SelectionArgsXP StartSelection(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType)
@@ -33,8 +33,19 @@ namespace RTSEngine.Manager
         public virtual List<ISelectable> FinalizeSelection(SelectionArgsXP args)
         {
             List<ISelectable> list = new List<ISelectable>();
-            List<ISelectable> toAddList = UpdateSelectionStatus(args.ToBeAdded, true);
-            List<ISelectable> toRemoveList = UpdateSelectionStatus(args.ToBeRemoved, false);
+            List<ISelectable> toAddList = new List<ISelectable>();
+            List<ISelectable> toRemoveList = new List<ISelectable>();
+
+            if (args.IsPreSelection)
+            {
+                toAddList = UpdatePreSelectionStatus(args.ToBeAdded, true);
+            }
+            else
+            {
+                toAddList = UpdateSelectionStatus(args.ToBeAdded, true);
+                toRemoveList = UpdateSelectionStatus(args.ToBeRemoved, false);
+            }
+
             list = list.Union(toAddList).ToList();
             list.RemoveAll(a => toRemoveList.Contains(a));
             return list;

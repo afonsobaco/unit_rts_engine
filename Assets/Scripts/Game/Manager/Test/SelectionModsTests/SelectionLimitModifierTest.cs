@@ -28,14 +28,11 @@ namespace Tests
 
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldLimitToBeRemovedToPassedValue(int mainListCount, int limit, int[] oldSelection, int[] newSelection, int[] toBeAdded, int[] toBeRemoved, int[] expectedToBeAddedResult)
+        public void ShouldLimitToBeRemovedToPassedValue(int mainListCount, int limit, int[] toBeAdded, int[] expectedToBeAddedResult)
         {
             SelectionArgsXP args = ModifierTestUtils.GetDefaultArgs();
             List<ISelectable> mainList = ModifierTestUtils.GetSomeObjects(mainListCount);
-            args.OldSelection.AddRange(ModifierTestUtils.GetListByIndex(oldSelection, mainList));
-            args.NewSelection.AddRange(ModifierTestUtils.GetListByIndex(newSelection, mainList));
             args.ToBeAdded.AddRange(ModifierTestUtils.GetListByIndex(toBeAdded, mainList));
-            args.ToBeRemoved.AddRange(ModifierTestUtils.GetListByIndex(toBeRemoved, mainList));
 
             args = Modifier.Apply(limit, args);
 
@@ -48,11 +45,10 @@ namespace Tests
         {
             get
             {
-                yield return new TestCaseData(5, 2, new int[] { }, new int[] { 1, 2, 3, 4 }, new int[] { 1, 2, 3, 4 }, new int[] { }, new int[] { 1, 2 });
-                yield return new TestCaseData(5, 2, new int[] { }, new int[] { 1, 2, 3, 4 }, new int[] { 1, 2, 3, 4 }, new int[] { 3, 4 }, new int[] { 1, 2 });
-                yield return new TestCaseData(5, 2, new int[] { 1, 3 }, new int[] { 1, 2, 3, 4 }, new int[] { 1, 2, 3, 4 }, new int[] { 3 }, new int[] { 1, 2 });
-                yield return new TestCaseData(5, 2, new int[] { 1, 3 }, new int[] { 1, 2, 3, 4 }, new int[] { 1, 2, 3, 4 }, new int[] { 3, 4 }, new int[] { 1, 2 });
-
+                yield return new TestCaseData(5, 2, new int[] { 1, 2, 3, 4 }, new int[] { 1, 2 });
+                yield return new TestCaseData(5, 4, new int[] { 1, 2, 3, 4 }, new int[] { 1, 2, 3, 4 });
+                yield return new TestCaseData(5, 5, new int[] { 1, 2, 3 }, new int[] { 1, 2, 3 });
+                yield return new TestCaseData(5, 3, new int[] { }, new int[] { });
             }
         }
 

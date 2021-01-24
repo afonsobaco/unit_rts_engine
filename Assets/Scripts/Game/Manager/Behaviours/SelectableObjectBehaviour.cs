@@ -53,17 +53,17 @@ namespace RTSEngine.Manager
 
         public void ChangeSelectionMarkStatus(bool value)
         {
-            if (preSelectionMark)
+            if (selectionMark)
             {
-                preSelectionMark.gameObject.SetActive(value);
+                selectionMark.gameObject.SetActive(value);
             }
         }
 
         public void ChangePreSelectionMarkStatus(bool value)
         {
-            if (selectionMark)
+            if (preSelectionMark)
             {
-                selectionMark.gameObject.SetActive(value);
+                preSelectionMark.gameObject.SetActive(value);
             }
         }
 
