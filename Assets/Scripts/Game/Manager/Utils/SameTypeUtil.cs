@@ -1,18 +1,21 @@
-﻿using RTSEngine.Core;
+﻿using System.Collections.Generic;
+using RTSEngine.Core;
+using UnityEngine;
 namespace RTSEngine.Manager
 {
     public class SameTypeUtil
     {
-        // public static List<ISelectable> GetFromSameTypeInSelection(SelectionArgs args, Vector2 initialGameScreenPos, Vector2 finalGameScreenPos)
-        // {
-        //     List<ISelectable> list = SelectionUtil.FindAllOnScreen(args, initialGameScreenPos, finalGameScreenPos);
-        //     list.RemoveAll(a => !isSameType(args.Clicked, a));
-        //     return list;
-        // }
 
-        public static bool isSameType(ISelectable first, ISelectable second)
+        public static List<ISelectable> GetFromSameTypeInScreen(SelectionArgsXP args)
         {
-            return first.IsCompatible(second);
+            if (args.NewSelection == null || args.NewSelection.Count != 1)
+            {
+                return new List<ISelectable>();
+            }
+            List<ISelectable> mainList = null;
+            List<ISelectable> list = SelectionUtil.GetAllObjectsInsideSelectionArea(mainList, args.SameTypeArgs.initialScreenPosition, args.SameTypeArgs.finalScreenPosition);
+            return list.FindAll(a => args.NewSelection[0].IsCompatible(a));
         }
+
     }
 }

@@ -38,20 +38,6 @@ namespace RTSEngine.Manager
             return null;
         }
 
-        public static List<ISelectable> GetAllObjectsInsideSelectionArea(List<ISelectable> mainList, Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera)
-        {
-            List<ISelectable> list = new List<ISelectable>();
-            foreach (var obj in mainList)
-            {
-                var screenPos = camera.WorldToScreenPoint(obj.Position);
-                if (IsPositionInsideArea(screenPos, initialScreenPosition, finalScreenPosition))
-                {
-                    list.Add(obj);
-                }
-            }
-            return list;
-        }
-
         private static bool IsPositionInsideArea(Vector3 screenPos, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
         {
             var min = GetMinAreaPosition(initialScreenPosition, finalScreenPosition);
@@ -71,18 +57,6 @@ namespace RTSEngine.Manager
             Vector2 size = GetAreaSize(initialScreenPosition, finalScreenPosition);
             Vector3 center = GetAreaCenter(initialScreenPosition, finalScreenPosition);
             return new Vector2(center.x - (size.x / 2), center.y - (size.y / 2));
-        }
-
-
-        public static ISelectable GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition, Camera camera)
-        {
-            var initialObject = GetObjectInScreenPoint(initialScreenPosition, camera);
-            var finalObject = GetObjectInScreenPoint(finalScreenPosition, camera);
-            if (initialObject != null && initialObject.Equals(finalObject))
-            {
-                return initialObject;
-            }
-            return null;
         }
 
         public static ISelectable GetObjectInScreenPoint(Vector3 mousePosition, Camera camera)
@@ -105,15 +79,6 @@ namespace RTSEngine.Manager
         {
             return (initialScreenPosition + finalScreenPosition) / 2;
         }
-
-        // public static List<ISelectable> FindAllOnScreen(SelectionArgs args, Vector2 initialGameScreenPos, Vector2 finalGameScreenPos)
-        // {
-        //     var initialPos = args.Camera.ViewportToScreenPoint(initialGameScreenPos);
-        //     var finalPos = args.Camera.ViewportToScreenPoint(finalGameScreenPos);
-        //     var list = SelectionUtil.GetAllObjectsInsideSelectionArea<ISelectable>(args.MainList, initialPos, finalPos, args.Camera);
-        //     return list;
-        // }
-
 
         public static List<ISelectable> Shuffle<ISelectable>(List<ISelectable> list)
         {

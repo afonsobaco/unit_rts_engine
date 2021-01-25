@@ -249,6 +249,13 @@ namespace RTSEngine.Manager
 
             var collection = GetModifiersToBeApplied(args.SelectionType);
             args.IsAdditive = IsAditiveSelection;
+            args.SameTypeArgs = new SameTypeArgs()
+            {
+                isSameType = IsSameTypeSelection,
+                initialScreenPosition = InitialScreenPosition,
+                finalScreenPosition = FinalScreenPosition
+            };
+
             foreach (var item in collection)
             {
                 //TODO testar active/inactive

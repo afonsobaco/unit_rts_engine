@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: SelectionLimitModifier
   m_EditorClassIdentifier: 
   type: 0
-  active: 0
+  active: 1
   activeOnPreSelection: 0
   maxLimit: 12
