@@ -11,6 +11,7 @@ namespace RTSEngine.Manager
         private List<ISelectable> toBeRemoved = new List<ISelectable>();
         private SelectionTypeEnum selectionType;
         private bool isPreSelection;
+        private bool isAdditive;
 
         public List<ISelectable> OldSelection { get => oldSelection; set => oldSelection = value; }
         public List<ISelectable> NewSelection { get => newSelection; set => newSelection = value; }
@@ -18,6 +19,7 @@ namespace RTSEngine.Manager
         public List<ISelectable> ToBeRemoved { get => toBeRemoved; set => toBeRemoved = value; }
         public SelectionTypeEnum SelectionType { get => selectionType; set => selectionType = value; }
         public bool IsPreSelection { get => isPreSelection; set => isPreSelection = value; }
+        public bool IsAdditive { get => isAdditive; set => isAdditive = value; }
     }
 
 }

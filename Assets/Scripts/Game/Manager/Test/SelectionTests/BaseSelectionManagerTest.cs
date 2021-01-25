@@ -60,10 +60,10 @@ namespace Tests.Manager
             List<ISelectable> newSelection = new List<ISelectable>() { SelectionManagerTestUtils.CreateATestableObject(1) };
             SelectionArgsXP expected = SelectionManagerTestUtils.GetDefaultArgs();
             expected.SelectionType = SelectionTypeEnum.CLICK;
-            expected.OldSelection = oldSelection;
-            expected.NewSelection = newSelection;
-            expected.ToBeAdded = newSelection;
-            expected.ToBeRemoved = oldSelection;
+            expected.OldSelection.AddRange(oldSelection);
+            expected.NewSelection.AddRange(newSelection);
+            expected.ToBeAdded.AddRange(newSelection);
+            expected.ToBeRemoved.AddRange(oldSelection);
 
             var args = Manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.CLICK);
 

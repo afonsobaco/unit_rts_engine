@@ -248,6 +248,7 @@ namespace RTSEngine.Manager
         {
 
             var collection = GetModifiersToBeApplied(args.SelectionType);
+            args.IsAdditive = IsAditiveSelection;
             foreach (var item in collection)
             {
                 //TODO testar active/inactive

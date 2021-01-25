@@ -72,10 +72,10 @@ namespace RTSEngine.Manager
         public virtual SelectionArgsXP GetSelectionArgs(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType)
         {
             SelectionArgsXP args = new SelectionArgsXP();
-            args.OldSelection = currentSelection != null ? currentSelection : new List<ISelectable>();
-            args.NewSelection = newSelection != null ? newSelection : new List<ISelectable>();
-            args.ToBeAdded = args.NewSelection;
-            args.ToBeRemoved = args.OldSelection;
+            if (currentSelection != null) args.OldSelection = new List<ISelectable>(currentSelection);
+            if (newSelection != null) args.NewSelection = new List<ISelectable>(newSelection);
+            args.ToBeAdded = new List<ISelectable>(args.NewSelection);
+            args.ToBeRemoved = new List<ISelectable>(args.OldSelection);
             args.SelectionType = selectionType;
             return args;
         }
