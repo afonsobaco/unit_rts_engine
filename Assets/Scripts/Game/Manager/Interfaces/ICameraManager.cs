@@ -18,6 +18,8 @@ namespace RTSEngine.Manager
         Vector3 DoCameraZooming(float y, float deltaTime, UnityEngine.Camera mainCamera);
         float GetCameraZDistance(Camera mainCamera);
         float MoveCamera(float value, float yPos, float deltaTime);
+        Vector3 GetMinScreenBoundries(UnityEngine.Camera mainCamera);
+        Vector3 GetMaxScreenBoundries(UnityEngine.Camera mainCamera);
     }
 
 

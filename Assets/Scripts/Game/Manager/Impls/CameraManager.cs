@@ -146,6 +146,16 @@ namespace RTSEngine.Manager
             return (mainCamera.transform.position.y * Mathf.Tan(angle * Mathf.Deg2Rad));
         }
 
+        public Vector3 GetMinScreenBoundries(UnityEngine.Camera mainCamera)
+        {
+            return mainCamera.ViewportToScreenPoint(CameraSettings.MinViewportPoint);
+        }
+
+        public Vector3 GetMaxScreenBoundries(UnityEngine.Camera mainCamera)
+        {
+            return mainCamera.ViewportToScreenPoint(CameraSettings.MaxViewportPoint);
+        }
+
     }
 
 

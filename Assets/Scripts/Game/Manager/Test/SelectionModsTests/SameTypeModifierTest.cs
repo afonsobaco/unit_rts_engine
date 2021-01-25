@@ -26,7 +26,7 @@ namespace Tests
             SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
             SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
-            var result = Modifier.Apply(args);
+            var result = Modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
             Assert.AreEqual(args, result);
         }
 
@@ -43,10 +43,10 @@ namespace Tests
 
             List<ISelectable> sameTypeList = ModifierTestUtils.GetListByIndex(sameTypeSelection, mainList);
 
-            Modifier.When(x => x.GetAllFromSameTypeOnScreen(default)).DoNotCallBase();
-            Modifier.GetAllFromSameTypeOnScreen(Arg.Any<SelectionArgsXP>()).Returns(sameTypeList);
+            Modifier.When(x => x.GetAllFromSameTypeOnScreen(default, default)).DoNotCallBase();
+            Modifier.GetAllFromSameTypeOnScreen(Arg.Any<SelectionArgsXP>(), Arg.Any<SameTypeSelectionModeEnum>()).Returns(sameTypeList);
 
-            args = Modifier.Apply(args);
+            args = Modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
 
             List<ISelectable> expectedToBeAddedResult = ModifierTestUtils.GetListByIndex(expectedToBeAdded, mainList);
             CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
@@ -59,6 +59,7 @@ namespace Tests
         {
             get
             {
+                //TODO adjust for MODE
                 //Click
                 yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { }, new int[] { 0 }, new int[] { 0, 1, 2, 3, 4 }, new int[] { }).SetName("Click - SameType, Empty Old");
                 yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0 }, new int[] { 0 }, new int[] { }, new int[] { 0, 1, 2, 3, 4 }).SetName("Click - SameType, Single element in Old, Clicked in Old");

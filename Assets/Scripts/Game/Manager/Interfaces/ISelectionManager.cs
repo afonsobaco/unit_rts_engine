@@ -19,6 +19,9 @@ namespace RTSEngine.Manager
         bool IsSelecting { get; set; }
         int KeyPressed { get; set; }
 
+        Vector3 MinScreenPos { get; set; }
+        Vector3 MaxScreenPos { get; set; }
+
         List<T> GetNewSelection();
         List<T> UpdateCurrentSelection(List<T> value);
         List<T> UpdatePreSelection(List<T> value);

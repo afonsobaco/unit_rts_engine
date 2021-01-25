@@ -21,6 +21,9 @@ namespace RTSEngine.Manager
         [Header("Map Configs(REMOVE)")]
 
         [SerializeField] private float sizeFromMidPoint = 10;
+        [SerializeField] private Vector2 minViewportPoint = Vector2.zero;
+        [SerializeField] private Vector2 maxViewportPoint = new Vector2(1f, 1f);
+
 
         public float CameraSpeed { get => cameraSpeed; set => cameraSpeed = value; }
         public float PanSpeed { get => panSpeed; set => panSpeed = value; }
@@ -30,6 +33,8 @@ namespace RTSEngine.Manager
         public float MaxZoom { get => maxZoom; set => maxZoom = value; }
         public float AxisPressure { get => axisPressure; set => axisPressure = value; }
         public float SizeFromMidPoint { get => sizeFromMidPoint; set => sizeFromMidPoint = value; }
+        public Vector2 MinViewportPoint { get => minViewportPoint; set => minViewportPoint = value; }
+        public Vector2 MaxViewportPoint { get => maxViewportPoint; set => maxViewportPoint = value; }
     }
 
 }

@@ -79,7 +79,6 @@ namespace RTSEngine.Manager
 
         public bool IsCompatible(ISelectable other)
         {
-            Debug.Log("IsCompatible");
             if (other != null && other is SelectableObjectBehaviour)
             {
                 var second = other as SelectableObjectBehaviour;

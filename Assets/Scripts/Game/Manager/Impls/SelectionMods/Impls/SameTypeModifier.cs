@@ -9,22 +9,25 @@ namespace RTSEngine.Manager.SelectionMods.Impls
     [CreateAssetMenu(fileName = "SameTypeModifier", menuName = "ScriptableObjects/Mods/SameType Modifier", order = 1)]
     public class SameTypeModifier : BaseSelectionModSO
     {
+
+        [SerializeField] private SameTypeSelectionModeEnum mode;
+
         private SelectionModifier selectionModifier = new SelectionModifier();
 
         public override SelectionArgsXP Apply(SelectionArgsXP args)
         {
-            return selectionModifier.Apply(args);
+            return selectionModifier.Apply(args, mode);
         }
 
         public class SelectionModifier
         {
-            public SelectionArgsXP Apply(SelectionArgsXP args)
+            public SelectionArgsXP Apply(SelectionArgsXP args, SameTypeSelectionModeEnum mode)
             {
                 //TODO add random to be remove to simulate other Mods
+
                 if (args.Arguments.NewSelection.Count == 1 && args.ModifierArgs.IsSameType)
                 {
-                    var allFromType = GetAllFromSameTypeOnScreen(args);
-                    Debug.Log("allFromType: " + allFromType.Count);
+                    var allFromType = GetAllFromSameTypeOnScreen(args, mode);
                     if (args.Arguments.OldSelection.Contains(args.Arguments.NewSelection[0]))
                     {
                         RemoveFromSelection(args, allFromType);
@@ -33,14 +36,7 @@ namespace RTSEngine.Manager.SelectionMods.Impls
                     {
                         AddToSelection(args, allFromType);
                     }
-
                 }
-                Debug.Log("IsAdditive: " + args.ModifierArgs.IsAdditive);
-                Debug.Log("IsPreSelection: " + args.Arguments.IsPreSelection);
-                Debug.Log("OldSelection: " + args.Arguments.OldSelection.Count);
-                Debug.Log("NewSelection: " + args.Arguments.NewSelection.Count);
-                Debug.Log("ToBeAdded: " + args.Result.ToBeAdded.Count);
-                Debug.Log("ToBeRemoved: " + args.Result.ToBeRemoved.Count);
                 return args;
             }
 
@@ -64,9 +60,42 @@ namespace RTSEngine.Manager.SelectionMods.Impls
                 args.Result = result;
             }
 
-            public virtual List<ISelectable> GetAllFromSameTypeOnScreen(SelectionArgsXP args)
+            public virtual List<ISelectable> GetAllFromSameTypeOnScreen(SelectionArgsXP args, SameTypeSelectionModeEnum mode)
             {
-                return SameTypeUtil.GetFromSameTypeInScreen(args);
+                List<ISelectable> selectables = SameTypeUtil.GetFromSameTypeInScreen(args);
+                ISelectable clicked = args.Arguments.NewSelection[0];
+                List<ISelectable> list = new List<ISelectable>() { clicked };
+                if (mode == SameTypeSelectionModeEnum.RANDOM)
+                {
+                    list = list.Union(Shuffle(selectables)).ToList();
+                }
+                else
+                {
+                    list = list.Union(SortListByDistance(selectables, clicked.Position)).ToList();
+                }
+                return list;
+            }
+
+            public List<ISelectable> SortListByDistance(List<ISelectable> list, Vector3 initialPosittion)
+            {
+                list.Sort((v1, v2) => (v1.Position - initialPosittion).sqrMagnitude.CompareTo((v2.Position - initialPosittion).sqrMagnitude));
+                return list;
+            }
+
+            public List<ISelectable> Shuffle(List<ISelectable> list)
+            {
+                System.Random rng = new System.Random();
+
+                int n = list.Count;
+                while (n > 1)
+                {
+                    n--;
+                    int k = rng.Next(n + 1);
+                    ISelectable value = list[k];
+                    list[k] = list[n];
+                    list[n] = value;
+                }
+                return list;
             }
 
 
@@ -74,5 +103,9 @@ namespace RTSEngine.Manager.SelectionMods.Impls
 
     }
 
-
+    public enum SameTypeSelectionModeEnum
+    {
+        DISTANCE,
+        RANDOM
+    }
 }

@@ -13,8 +13,7 @@ namespace RTSEngine.Manager
             {
                 return new List<ISelectable>();
             }
-            List<ISelectable> mainList = null;
-            List<ISelectable> list = SelectionUtil.GetAllObjectsInsideSelectionArea(mainList, args.ModifierArgs.InitialScreenPosition, args.ModifierArgs.FinalScreenPosition);
+            List<ISelectable> list = SelectionUtil.GetAllObjectsInsideSelectionArea(args.Arguments.MainList, args.ModifierArgs.InitialScreenPosition, args.ModifierArgs.FinalScreenPosition);
             return list.FindAll(a => args.Arguments.NewSelection[0].IsCompatible(a));
         }
 

@@ -90,6 +90,12 @@ namespace RTSEngine.Manager
         {
             selectionManager.IsAditiveSelection = Input.GetKey(aditive);
             selectionManager.IsSameTypeSelection = Input.GetKey(sameType);
+            if (selectionManager.IsSameTypeSelection)
+            {
+                selectionManager.MinScreenPos = cameraManager.GetMinScreenBoundries(Camera.main);
+                selectionManager.MaxScreenPos = cameraManager.GetMaxScreenBoundries(Camera.main);
+            }
+
         }
 
         public void DoGroupSelection(KeyCode groupKeyCode)

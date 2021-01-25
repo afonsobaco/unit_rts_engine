@@ -23,6 +23,8 @@ namespace RTSEngine.Manager
         private int keyPressed = 0;
         private bool isSelecting;
 
+        private Vector3 minScreenPos;
+        private Vector3 maxScreenPos;
 
 
         public Dictionary<int, List<ISelectable>> Groups { get => groups; private set => groups = value; }
@@ -68,6 +70,10 @@ namespace RTSEngine.Manager
                 preSelection = value;
             }
         }
+
+        public Vector3 MinScreenPos { get => minScreenPos; set => minScreenPos = value; }
+        public Vector3 MaxScreenPos { get => maxScreenPos; set => maxScreenPos = value; }
+
         public List<ISelectable> GetNewSelection()
         {
             List<ISelectable> list = new List<ISelectable>();
@@ -283,7 +289,7 @@ namespace RTSEngine.Manager
             newSelection = newSelection != null ? newSelection : new List<ISelectable>();
 
             SelectionArguments arguments = new SelectionArguments(selectionType, isPreSelection, currentSelection, newSelection, selectableList.GetList());
-            SelectionModifierArguments modifierArgs = new SelectionModifierArguments(IsSameTypeSelection, IsAditiveSelection, InitialScreenPosition, FinalScreenPosition);
+            SelectionModifierArguments modifierArgs = new SelectionModifierArguments(IsSameTypeSelection, IsAditiveSelection, IsSameTypeSelection ? MinScreenPos : InitialScreenPosition, IsSameTypeSelection ? MaxScreenPos : FinalScreenPosition);
 
             return new SelectionArgsXP(arguments, modifierArgs);
         }
