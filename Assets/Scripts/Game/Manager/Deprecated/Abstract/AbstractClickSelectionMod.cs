@@ -9,7 +9,7 @@
 
 //         // protected override List<ISelectable> Apply(SelectionArgs args)
 //         // {
-//         //     if (!args.Clicked || args.IsPreSelection)
+//         //     if (!args.Clicked || args.Arguments.IsPreSelection)
 //         //     {
 //         //         return args.NewList;
 //         //     }

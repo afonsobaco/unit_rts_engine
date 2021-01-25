@@ -8,13 +8,14 @@ namespace RTSEngine.Manager
 
         public static List<ISelectable> GetFromSameTypeInScreen(SelectionArgsXP args)
         {
-            if (args.NewSelection == null || args.NewSelection.Count != 1)
+            //TODO test
+            if (args.Arguments.NewSelection == null || args.Arguments.NewSelection.Count != 1)
             {
                 return new List<ISelectable>();
             }
             List<ISelectable> mainList = null;
-            List<ISelectable> list = SelectionUtil.GetAllObjectsInsideSelectionArea(mainList, args.SameTypeArgs.initialScreenPosition, args.SameTypeArgs.finalScreenPosition);
-            return list.FindAll(a => args.NewSelection[0].IsCompatible(a));
+            List<ISelectable> list = SelectionUtil.GetAllObjectsInsideSelectionArea(mainList, args.ModifierArgs.InitialScreenPosition, args.ModifierArgs.FinalScreenPosition);
+            return list.FindAll(a => args.Arguments.NewSelection[0].IsCompatible(a));
         }
 
     }

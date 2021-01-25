@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NSubstitute;
+using UnityEngine;
 using RTSEngine.Core;
 using RTSEngine.Manager;
 
@@ -29,9 +30,5 @@ namespace Tests
             return list;
         }
 
-        public static SelectionArgsXP GetDefaultArgs()
-        {
-            return new SelectionArgsXP();
-        }
     }
 }

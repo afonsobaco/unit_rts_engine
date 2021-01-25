@@ -23,7 +23,11 @@ namespace RTSEngine.Manager.SelectionMods.Impls
         {
             public SelectionArgsXP Apply(int maxLimit, SelectionArgsXP args)
             {
-                args.ToBeAdded = args.ToBeAdded.Take(maxLimit).ToList();
+                SelectionResult result = args.Result;
+
+                result.ToBeAdded = args.Result.ToBeAdded.Take(maxLimit).ToList();
+                args.Result = result;
+
                 return args;
             }
         }

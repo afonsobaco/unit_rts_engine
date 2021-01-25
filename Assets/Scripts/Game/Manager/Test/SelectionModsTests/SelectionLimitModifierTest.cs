@@ -21,23 +21,29 @@ namespace Tests
         [Test]
         public void SelectionLimitModifierTestSimplePasses()
         {
-            SelectionArgsXP args = ModifierTestUtils.GetDefaultArgs();
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
+
             var result = Modifier.Apply(20, args);
             Assert.AreEqual(args, result);
         }
 
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldLimitToBeRemovedToPassedValue(int mainListCount, int limit, int[] toBeAdded, int[] expectedToBeAddedResult)
+        public void ShouldLimitToBeRemovedToPassedValue(int mainListCount, int limit, int[] newSelection, int[] expectedToBeAddedResult)
         {
-            SelectionArgsXP args = ModifierTestUtils.GetDefaultArgs();
+            //TODO redo that
             List<ISelectable> mainList = ModifierTestUtils.GetSomeObjects(mainListCount);
-            args.ToBeAdded.AddRange(ModifierTestUtils.GetListByIndex(toBeAdded, mainList));
+
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), ModifierTestUtils.GetListByIndex(newSelection, mainList), mainList);
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
             args = Modifier.Apply(limit, args);
 
             List<ISelectable> expected = ModifierTestUtils.GetListByIndex(expectedToBeAddedResult, mainList);
-            CollectionAssert.AreEqual(expected, args.ToBeAdded);
+            CollectionAssert.AreEquivalent(expected, args.Result.ToBeAdded);
         }
 
 

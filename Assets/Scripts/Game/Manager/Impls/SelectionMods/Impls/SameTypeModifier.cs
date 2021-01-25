@@ -21,22 +21,47 @@ namespace RTSEngine.Manager.SelectionMods.Impls
             public SelectionArgsXP Apply(SelectionArgsXP args)
             {
                 //TODO add random to be remove to simulate other Mods
-                if (args.NewSelection.Count == 1 && args.SameTypeArgs.isSameType)
+                if (args.Arguments.NewSelection.Count == 1 && args.ModifierArgs.IsSameType)
                 {
                     var allFromType = GetAllFromSameTypeOnScreen(args);
-
-                    if (args.OldSelection.Contains(args.NewSelection[0]))
+                    Debug.Log("allFromType: " + allFromType.Count);
+                    if (args.Arguments.OldSelection.Contains(args.Arguments.NewSelection[0]))
                     {
-                        args.ToBeAdded.RemoveAll(x => allFromType.Contains(x));
-                        args.ToBeRemoved = args.ToBeRemoved.Union(allFromType).ToList();
+                        RemoveFromSelection(args, allFromType);
                     }
                     else
                     {
-                        args.ToBeAdded = args.ToBeAdded.Union(allFromType).ToList();
+                        AddToSelection(args, allFromType);
                     }
 
                 }
+                Debug.Log("IsAdditive: " + args.ModifierArgs.IsAdditive);
+                Debug.Log("IsPreSelection: " + args.Arguments.IsPreSelection);
+                Debug.Log("OldSelection: " + args.Arguments.OldSelection.Count);
+                Debug.Log("NewSelection: " + args.Arguments.NewSelection.Count);
+                Debug.Log("ToBeAdded: " + args.Result.ToBeAdded.Count);
+                Debug.Log("ToBeRemoved: " + args.Result.ToBeRemoved.Count);
                 return args;
+            }
+
+            private static void AddToSelection(SelectionArgsXP args, List<ISelectable> allFromType)
+            {
+                SelectionResult result = args.Result;
+
+                result.ToBeAdded = args.Result.ToBeAdded.Union(allFromType).ToList();
+
+                args.Result = result;
+            }
+
+            private static void RemoveFromSelection(SelectionArgsXP args, List<ISelectable> allFromType)
+            {
+                SelectionResult result = args.Result;
+
+                result.ToBeAdded = args.Arguments.OldSelection.Union(args.Result.ToBeAdded).ToList();
+                result.ToBeAdded.RemoveAll(x => allFromType.Contains(x));
+                result.ToBeRemoved = args.Result.ToBeRemoved.Union(allFromType).ToList();
+
+                args.Result = result;
             }
 
             public virtual List<ISelectable> GetAllFromSameTypeOnScreen(SelectionArgsXP args)

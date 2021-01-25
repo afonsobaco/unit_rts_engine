@@ -21,22 +21,39 @@ namespace RTSEngine.Manager.SelectionMods.Impls
             public SelectionArgsXP Apply(SelectionArgsXP args)
             {
                 //TODO add random to be remove to simulate other Mods
-                if (args.IsAdditive)
+                if (args.ModifierArgs.IsAdditive)
                 {
-                    //o[0,1] n[0] => a[1] r[0, 4] 
-                    if (ContainsAllSelected(args.SelectionType, args.OldSelection, args.NewSelection))
+                    if (ContainsAllSelected(args.Arguments.SelectionType, args.Arguments.OldSelection, args.Arguments.NewSelection))
                     {
-                        args.ToBeRemoved.RemoveAll(x => args.OldSelection.Contains(x));
-                        args.ToBeRemoved = args.ToBeRemoved.Union(args.NewSelection).ToList();
-                        args.ToBeAdded = args.OldSelection.FindAll(x => !args.NewSelection.Contains(x));
+                        RemoveFromSelection(args);
                     }
                     else
                     {
-                        args.ToBeAdded = args.OldSelection.Union(args.ToBeAdded).ToList();
-                        args.ToBeRemoved.RemoveAll(x => args.OldSelection.Contains(x));
+                        AddToSelection(args);
                     }
                 }
                 return args;
+            }
+
+            private static void AddToSelection(SelectionArgsXP args)
+            {
+                SelectionResult result = args.Result;
+
+                result.ToBeAdded = args.Arguments.OldSelection.Union(args.Result.ToBeAdded).ToList();
+                result.ToBeRemoved = args.Result.ToBeRemoved.FindAll(x => !args.Arguments.OldSelection.Contains(x));
+
+                args.Result = result;
+            }
+
+            private static void RemoveFromSelection(SelectionArgsXP args)
+            {
+                SelectionResult result = args.Result;
+
+                var toBeRemoved = args.Result.ToBeRemoved.FindAll(x => !args.Arguments.OldSelection.Contains(x));
+                result.ToBeRemoved = toBeRemoved.Union(args.Arguments.NewSelection).ToList();
+                result.ToBeAdded = args.Arguments.OldSelection.FindAll(x => !args.Arguments.NewSelection.Contains(x));
+
+                args.Result = result;
             }
 
             private bool ContainsAllSelected(SelectionTypeEnum selectionType, List<ISelectable> oldSelection, List<ISelectable> newSelection)

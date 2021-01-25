@@ -10,9 +10,9 @@ namespace RTSEngine.Manager
     {
         [SerializeField] private SelectableObjectRuntimeSetSO selectableList;
         [SerializeField] private RectTransform selectionBox;
-        [SerializeField] private List<ScriptableObject> mods;
-        private ISelectionManager<ISelectable, SelectionTypeEnum> manager;
+        [SerializeField] private List<ScriptableObject> modifiersList;
 
+        private ISelectionManager<ISelectable, SelectionTypeEnum> manager;
 
         [Inject]
         private void Construct(ISelectionManager<ISelectable, SelectionTypeEnum> manager)
@@ -25,9 +25,9 @@ namespace RTSEngine.Manager
 
         private List<IBaseSelectionMod> GetScriptableObjectsAsMods()
         {
-            if (mods != null)
+            if (modifiersList != null)
             {
-                return mods.FindAll(x => x is IBaseSelectionMod).Select(x => x as IBaseSelectionMod).ToList();
+                return modifiersList.FindAll(x => x is IBaseSelectionMod).Select(x => x as IBaseSelectionMod).ToList();
             }
             else
             {

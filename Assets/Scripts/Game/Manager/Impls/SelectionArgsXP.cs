@@ -6,30 +6,68 @@ namespace RTSEngine.Manager
 {
     public class SelectionArgsXP : ISelectionArgsXP
     {
-        private List<ISelectable> oldSelection = new List<ISelectable>();
-        private List<ISelectable> newSelection = new List<ISelectable>();
-        private List<ISelectable> toBeAdded = new List<ISelectable>();
-        private List<ISelectable> toBeRemoved = new List<ISelectable>();
-        private SelectionTypeEnum selectionType;
-        private bool isPreSelection;
-        private bool isAdditive;
-        private SameTypeArgs sameTypeArgs;
+        private readonly SelectionModifierArguments modifierArgs;
+        private readonly SelectionArguments arguments;
+        private SelectionResult result;
 
-        public List<ISelectable> OldSelection { get => oldSelection; set => oldSelection = value; }
-        public List<ISelectable> NewSelection { get => newSelection; set => newSelection = value; }
-        public List<ISelectable> ToBeAdded { get => toBeAdded; set => toBeAdded = value; }
-        public List<ISelectable> ToBeRemoved { get => toBeRemoved; set => toBeRemoved = value; }
-        public SelectionTypeEnum SelectionType { get => selectionType; set => selectionType = value; }
-        public bool IsPreSelection { get => isPreSelection; set => isPreSelection = value; }
-        public bool IsAdditive { get => isAdditive; set => isAdditive = value; }
-        public SameTypeArgs SameTypeArgs { get => sameTypeArgs; set => sameTypeArgs = value; }
+        public SelectionArgsXP(SelectionArguments arguments, SelectionModifierArguments modifierArgs)
+        {
+            this.arguments = arguments;
+            this.modifierArgs = modifierArgs;
+            result.ToBeAdded = Arguments.NewSelection;
+            result.ToBeRemoved = Arguments.OldSelection;
+        }
+
+        public SelectionArguments Arguments { get => arguments; }
+        public SelectionModifierArguments ModifierArgs { get => modifierArgs; }
+        public SelectionResult Result { get => result; set => result = value; }
     }
 
-    public struct SameTypeArgs
+    public struct SelectionModifierArguments
     {
-        public bool isSameType;
-        public Vector2 initialScreenPosition;
-        public Vector2 finalScreenPosition;
+        public SelectionModifierArguments(bool isSameType, bool isAdditive, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
+        {
+            this.IsAdditive = isAdditive;
+            this.IsSameType = isSameType;
+            this.InitialScreenPosition = initialScreenPosition;
+            this.FinalScreenPosition = finalScreenPosition;
+        }
+
+        public bool IsAdditive { get; }
+        public bool IsSameType { get; }
+        public Vector2 InitialScreenPosition { get; }
+        public Vector2 FinalScreenPosition { get; }
+    }
+
+
+    public struct SelectionArguments
+    {
+
+        public SelectionArguments(SelectionTypeEnum selectionType, bool isPreSelection, List<ISelectable> oldSelection, List<ISelectable> newSelection, List<ISelectable> mainList)
+        {
+            SelectionType = selectionType;
+            IsPreSelection = isPreSelection;
+            OldSelection = oldSelection != null ? oldSelection : new List<ISelectable>();
+            NewSelection = newSelection != null ? newSelection : new List<ISelectable>();
+            MainList = mainList;
+
+        }
+
+        public SelectionTypeEnum SelectionType { get; }
+        public bool IsPreSelection { get; }
+
+        public List<ISelectable> OldSelection { get; }
+        public List<ISelectable> NewSelection { get; }
+        public List<ISelectable> MainList { get; }
+    }
+
+    public struct SelectionResult
+    {
+        private List<ISelectable> toBeAdded;
+        private List<ISelectable> toBeRemoved;
+
+        public List<ISelectable> ToBeAdded { get => toBeAdded; set => toBeAdded = value; }
+        public List<ISelectable> ToBeRemoved { get => toBeRemoved; set => toBeRemoved = value; }
     }
 
 }

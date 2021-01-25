@@ -18,7 +18,7 @@
 //         //     List<ISelectable> filteredList = args.NewList.FindAll(a => args.Settings.PrimaryTypes.Contains(a.type));
 //         //     if (filteredList.Count == 0)
 //         //     {
-//         //         if (args.IsPreSelection)
+//         //         if (args.Arguments.IsPreSelection)
 //         //         {
 //         //             return new List<ISelectable>();
 //         //         }

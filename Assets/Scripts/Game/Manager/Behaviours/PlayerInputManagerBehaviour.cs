@@ -5,10 +5,10 @@ namespace RTSEngine.Manager
 {
     public class PlayerInputManagerBehaviour : MonoBehaviour
     {
-        private KeyCode aditiveSelectionKeyCode = KeyCode.LeftShift;
-        private KeyCode sameTypeSelectionKeyCode = KeyCode.LeftControl;
-        private KeyCode groupKeyCode = KeyCode.Z;
-        private float doubleClickTime = 0.3f;
+        [SerializeField] private KeyCode aditiveSelectionKeyCode = KeyCode.LeftShift;
+        [SerializeField] private KeyCode sameTypeSelectionKeyCode = KeyCode.LeftControl;
+        [SerializeField] private KeyCode groupKeyCode = KeyCode.Z;
+        [SerializeField] private float doubleClickTime = 0.3f;
 
         [Inject]
         public IPlayerInputManager Manager { get; private set; }

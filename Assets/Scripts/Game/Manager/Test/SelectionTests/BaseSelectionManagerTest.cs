@@ -12,62 +12,10 @@ namespace Tests.Manager
     {
         private BaseSelectionManager manager;
 
-        public BaseSelectionManager Manager { get => manager; set => manager = value; }
-
         [SetUp]
         public void Init()
         {
-            Manager = new DerivedClass();
-        }
-
-        [TearDown]
-        public void Finish()
-        {
-
-        }
-
-
-        [Test]
-        public void ShouldReturnDefaultArgsWhenGetSelectionArgsWithNull()
-        {
-            List<ISelectable> oldSelection = null;
-            List<ISelectable> newSelection = null;
-            var args = Manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
-
-            SelectionArgsXP expected = SelectionManagerTestUtils.GetDefaultArgs();
-            expected.SelectionType = SelectionTypeEnum.DRAG;
-            AssertArgs(expected, args);
-        }
-
-        [Test]
-        public void ShouldReturnDefaultArgsWhenGetSelectionArgsWithEmpty()
-        {
-            List<ISelectable> oldSelection = new List<ISelectable>();
-            List<ISelectable> newSelection = new List<ISelectable>();
-
-            var args = Manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG);
-
-            SelectionArgsXP expected = SelectionManagerTestUtils.GetDefaultArgs();
-            expected.SelectionType = SelectionTypeEnum.DRAG;
-
-            AssertArgs(expected, args);
-        }
-
-        [Test]
-        public void ShouldReturnCustomArgsWhenGetSelectionArgsWithCustom()
-        {
-            List<ISelectable> oldSelection = new List<ISelectable>() { SelectionManagerTestUtils.CreateATestableObject(0) };
-            List<ISelectable> newSelection = new List<ISelectable>() { SelectionManagerTestUtils.CreateATestableObject(1) };
-            SelectionArgsXP expected = SelectionManagerTestUtils.GetDefaultArgs();
-            expected.SelectionType = SelectionTypeEnum.CLICK;
-            expected.OldSelection.AddRange(oldSelection);
-            expected.NewSelection.AddRange(newSelection);
-            expected.ToBeAdded.AddRange(newSelection);
-            expected.ToBeRemoved.AddRange(oldSelection);
-
-            var args = Manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.CLICK);
-
-            AssertArgs(expected, args);
+            manager = new DerivedClass();
         }
 
 
@@ -84,8 +32,8 @@ namespace Tests.Manager
 
             // var args = SelectionManagerTestUtils.GetDefaultArgs();
 
-            // args.OldSelection = FindByIndex<ISelectable>((List<ISelectable>) list, oldSelection);
-            // args.NewSelection = FindByIndex<ISelectable>(list, newSelection);
+            // args.Arguments.OldSelection = FindByIndex<ISelectable>((List<ISelectable>) list, oldSelection);
+            // args.Arguments.NewSelection = FindByIndex<ISelectable>(list, newSelection);
             // var ExpectedToBeAdded = FindByIndex<ISelectable>(list, expectedToBeAdded);
             // var ExpectedToBeRemoved = FindByIndex<ISelectable>(list, expectedToBeRemoved);
 
@@ -124,14 +72,14 @@ namespace Tests.Manager
             }
 
             //Act
-            var actual = Manager.UpdateSelectionStatus(expected, true);
+            var actual = manager.UpdateSelectionStatus(expected, true);
             CollectionAssert.AreEquivalent(expected, actual);
             foreach (var item in expected)
             {
                 Assert.True(item.IsSelected);
             }
 
-            actual = Manager.UpdateSelectionStatus(expected, false);
+            actual = manager.UpdateSelectionStatus(expected, false);
             CollectionAssert.AreEquivalent(expected, actual);
             foreach (var item in expected)
             {
@@ -151,14 +99,14 @@ namespace Tests.Manager
             }
 
             //Act
-            var actual = Manager.UpdatePreSelectionStatus(expected, true);
+            var actual = manager.UpdatePreSelectionStatus(expected, true);
             CollectionAssert.AreEquivalent(expected, actual);
             foreach (var item in expected)
             {
                 Assert.True(item.IsPreSelected);
             }
 
-            actual = Manager.UpdatePreSelectionStatus(expected, false);
+            actual = manager.UpdatePreSelectionStatus(expected, false);
             CollectionAssert.AreEquivalent(expected, actual);
             foreach (var item in expected)
             {
@@ -198,14 +146,6 @@ namespace Tests.Manager
 
         #region methods
 
-        private void AssertArgs(SelectionArgsXP expected, SelectionArgsXP actual)
-        {
-            CollectionAssert.AreEquivalent(expected.OldSelection, actual.OldSelection);
-            CollectionAssert.AreEquivalent(expected.NewSelection, actual.NewSelection);
-            CollectionAssert.AreEquivalent(expected.ToBeAdded, actual.ToBeAdded);
-            CollectionAssert.AreEquivalent(expected.ToBeRemoved, actual.ToBeRemoved);
-            Assert.AreEqual(expected.SelectionType, actual.SelectionType);
-        }
 
         #endregion
 
@@ -234,5 +174,9 @@ namespace Tests.Manager
             return args;
         }
 
+        public override SelectionArgsXP GetSelectionArgs(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType, bool isPreSelection)
+        {
+            return SelectionManagerTestUtils.GetDefaultArgs();
+        }
     }
 }

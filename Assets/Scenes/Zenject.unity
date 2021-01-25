@@ -3154,6 +3154,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d37d6314c08bb541affc823374e3a57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aditiveSelectionKeyCode: 304
+  sameTypeSelectionKeyCode: 306
+  groupKeyCode: 122
+  doubleClickTime: 0.3
 --- !u!114 &5065022366577028077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3168,8 +3172,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectableList: {fileID: 11400000, guid: 6229d869effb45848bfd0c27febbe609, type: 2}
   selectionBox: {fileID: 1355525405}
-  mods:
+  modifiersList:
   - {fileID: 11400000, guid: 393e36b707530c144acaa0d03ddcf40a, type: 2}
+  - {fileID: 11400000, guid: 9cfd427658893f543a11d6edd532cb2e, type: 2}
   - {fileID: 11400000, guid: eceeeb858fd6cb947859ba0d39b78024, type: 2}
 --- !u!114 &5065022366577028078
 MonoBehaviour:

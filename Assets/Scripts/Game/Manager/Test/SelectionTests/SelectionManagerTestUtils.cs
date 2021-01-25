@@ -35,11 +35,26 @@ namespace Tests.Manager
 
         public static SelectionArgsXP GetDefaultArgs()
         {
-            SelectionArgsXP args = new SelectionArgsXP();
-            args.NewSelection = new List<ISelectable>();
-            args.OldSelection = new List<ISelectable>();
-            args.ToBeAdded = new List<ISelectable>();
-            args.ToBeRemoved = new List<ISelectable>();
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            return GetDefaultArgs(arguments, modifierArguments);
+        }
+
+        public static SelectionArgsXP GetDefaultArgs(SelectionArguments arguments)
+        {
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            return GetDefaultArgs(arguments, modifierArguments);
+        }
+
+        public static SelectionArgsXP GetDefaultArgs(SelectionModifierArguments modifierArguments)
+        {
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            return GetDefaultArgs(arguments, modifierArguments);
+        }
+
+        public static SelectionArgsXP GetDefaultArgs(SelectionArguments arguments, SelectionModifierArguments modifierArguments)
+        {
+            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
             return args;
         }
 

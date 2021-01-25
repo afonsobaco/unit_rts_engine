@@ -21,34 +21,32 @@ namespace Tests
         [Test]
         public void AdditiveModifierTestSimplePasses()
         {
-            SelectionArgsXP args = ModifierTestUtils.GetDefaultArgs();
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
+
             var result = Modifier.Apply(args);
             Assert.AreEqual(args, result);
         }
 
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldApplyModifier(SelectionTypeEnum selectionType, int mainListCount, bool additive, int[] oldSelection, int[] newSelection, int[] expectedToBeAdded, int[] expectedToBeRemoved)
+        public void ShouldApplyModifier(SelectionTypeEnum selectionType, int mainListCount, bool isAdditive, int[] oldSelectionIndexes, int[] newSelectionIndexes, int[] expectedToBeAddedIndexes, int[] expectedToBeRemovedIndexes)
         {
-            SelectionArgsXP args = ModifierTestUtils.GetDefaultArgs();
-            args.SelectionType = selectionType;
-            args.IsAdditive = additive;
-
             List<ISelectable> mainList = ModifierTestUtils.GetSomeObjects(mainListCount);
-            args.OldSelection.AddRange(ModifierTestUtils.GetListByIndex(oldSelection, mainList));
-            args.NewSelection.AddRange(ModifierTestUtils.GetListByIndex(newSelection, mainList));
-            args.ToBeRemoved.AddRange(args.OldSelection);
-            args.ToBeAdded.AddRange(args.NewSelection);
+
+            SelectionArguments arguments = new SelectionArguments(selectionType, false, ModifierTestUtils.GetListByIndex(oldSelectionIndexes, mainList), ModifierTestUtils.GetListByIndex(newSelectionIndexes, mainList), mainList);
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, isAdditive, Vector2.zero, new Vector2(800, 600));
+            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
             args = Modifier.Apply(args);
 
-            List<ISelectable> expectedToBeAddedResult = ModifierTestUtils.GetListByIndex(expectedToBeAdded, mainList);
-            CollectionAssert.AreEqual(expectedToBeAddedResult, args.ToBeAdded);
+            List<ISelectable> expectedToBeAddedResult = ModifierTestUtils.GetListByIndex(expectedToBeAddedIndexes, mainList);
+            CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
 
-            List<ISelectable> expectedToBeRemovedResult = ModifierTestUtils.GetListByIndex(expectedToBeRemoved, mainList);
-            CollectionAssert.AreEqual(expectedToBeRemovedResult, args.ToBeRemoved);
+            List<ISelectable> expectedToBeRemovedResult = ModifierTestUtils.GetListByIndex(expectedToBeRemovedIndexes, mainList);
+            CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
         }
-
 
         public static IEnumerable<TestCaseData> Scenarios
         {

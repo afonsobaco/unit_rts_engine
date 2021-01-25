@@ -247,21 +247,14 @@ namespace RTSEngine.Manager
         public override SelectionArgsXP ApplyModifiers(SelectionArgsXP args)
         {
 
-            var collection = GetModifiersToBeApplied(args.SelectionType);
-            args.IsAdditive = IsAditiveSelection;
-            args.SameTypeArgs = new SameTypeArgs()
-            {
-                isSameType = IsSameTypeSelection,
-                initialScreenPosition = InitialScreenPosition,
-                finalScreenPosition = FinalScreenPosition
-            };
+            var collection = GetModifiersToBeApplied(args.Arguments.SelectionType);
 
             foreach (var item in collection)
             {
                 //TODO testar active/inactive
                 if (item.Active)
                 {
-                    if (args.IsPreSelection)
+                    if (args.Arguments.IsPreSelection)
                     {
                         if (item.ActiveOnPreSelection)
                         {
@@ -284,5 +277,15 @@ namespace RTSEngine.Manager
             return Mods.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ALL));
         }
 
+        public override SelectionArgsXP GetSelectionArgs(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType, bool isPreSelection)
+        {
+            currentSelection = currentSelection != null ? currentSelection : new List<ISelectable>();
+            newSelection = newSelection != null ? newSelection : new List<ISelectable>();
+
+            SelectionArguments arguments = new SelectionArguments(selectionType, isPreSelection, currentSelection, newSelection, selectableList.GetList());
+            SelectionModifierArguments modifierArgs = new SelectionModifierArguments(IsSameTypeSelection, IsAditiveSelection, InitialScreenPosition, FinalScreenPosition);
+
+            return new SelectionArgsXP(arguments, modifierArgs);
+        }
     }
 }

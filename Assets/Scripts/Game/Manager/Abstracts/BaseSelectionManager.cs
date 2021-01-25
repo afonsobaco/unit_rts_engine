@@ -20,14 +20,13 @@ namespace RTSEngine.Manager
 
         private List<ISelectable> DoSelection(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType, bool isPreSelection)
         {
-            var args = StartSelection(currentSelection, newSelection, selectionType);
-            args.IsPreSelection = isPreSelection;
+            var args = StartSelection(currentSelection, newSelection, selectionType, isPreSelection);
             args = ApplyModifiers(args);
             return FinalizeSelection(args);
         }
-        public virtual SelectionArgsXP StartSelection(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType)
+        public virtual SelectionArgsXP StartSelection(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType, bool isPreSelection)
         {
-            SelectionArgsXP args = GetSelectionArgs(currentSelection, newSelection, selectionType);
+            SelectionArgsXP args = GetSelectionArgs(currentSelection, newSelection, selectionType, isPreSelection);
             return args;
         }
         public virtual List<ISelectable> FinalizeSelection(SelectionArgsXP args)
@@ -37,14 +36,14 @@ namespace RTSEngine.Manager
             List<ISelectable> toAddList = new List<ISelectable>();
             List<ISelectable> toRemoveList = new List<ISelectable>();
 
-            if (args.IsPreSelection)
+            if (args.Arguments.IsPreSelection)
             {
-                toAddList = UpdatePreSelectionStatus(args.ToBeAdded, true);
+                toAddList = UpdatePreSelectionStatus(args.Result.ToBeAdded, true);
             }
             else
             {
-                toAddList = UpdateSelectionStatus(args.ToBeAdded, true);
-                toRemoveList = UpdateSelectionStatus(args.ToBeRemoved, false);
+                toAddList = UpdateSelectionStatus(args.Result.ToBeAdded, true);
+                toRemoveList = UpdateSelectionStatus(args.Result.ToBeRemoved, false);
             }
 
             list.AddRange(toAddList);
@@ -69,16 +68,6 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public virtual SelectionArgsXP GetSelectionArgs(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType)
-        {
-            SelectionArgsXP args = new SelectionArgsXP();
-            if (currentSelection != null) args.OldSelection = new List<ISelectable>(currentSelection);
-            if (newSelection != null) args.NewSelection = new List<ISelectable>(newSelection);
-            args.ToBeAdded = new List<ISelectable>(args.NewSelection);
-            args.ToBeRemoved = new List<ISelectable>(args.OldSelection);
-            args.SelectionType = selectionType;
-            return args;
-        }
 
         public virtual List<IBaseSelectionMod> GetModsBySelectionType(List<IBaseSelectionMod> mods, SelectionTypeEnum type)
         {
@@ -89,6 +78,7 @@ namespace RTSEngine.Manager
         }
 
         public abstract SelectionArgsXP ApplyModifiers(SelectionArgsXP args);
+        public abstract SelectionArgsXP GetSelectionArgs(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType, bool isPreSelection);
 
     }
 }

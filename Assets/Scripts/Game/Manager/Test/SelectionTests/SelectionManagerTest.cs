@@ -549,8 +549,9 @@ namespace Tests.Manager
             manager.When(x => x.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>())).DoNotCallBase();
             manager.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>()).Returns(expectedMods);
 
-            SelectionArgsXP args = SelectionManagerTestUtils.GetDefaultArgs();
-            args.SelectionType = selectionType;
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.DRAG, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            SelectionArgsXP args = SelectionManagerTestUtils.GetDefaultArgs(arguments);
+
             var result = manager.ApplyModifiers(args);
 
             foreach (var mod in mods)
@@ -565,6 +566,46 @@ namespace Tests.Manager
                 }
             }
 
+        }
+
+        [Test]
+        public void ShouldReturnDefaultArgsWhenGetSelectionArgsWithNull()
+        {
+            List<ISelectable> oldSelection = null;
+            List<ISelectable> newSelection = null;
+            var args = manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG, false);
+
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.DRAG, args.Arguments.IsPreSelection, args.Arguments.OldSelection, args.Arguments.NewSelection, args.Arguments.MainList);
+            SelectionArgsXP expected = SelectionManagerTestUtils.GetDefaultArgs(arguments);
+
+            AssertArgs(expected, args);
+        }
+
+        [Test]
+        public void ShouldReturnDefaultArgsWhenGetSelectionArgsWithEmpty()
+        {
+            List<ISelectable> oldSelection = new List<ISelectable>();
+            List<ISelectable> newSelection = new List<ISelectable>();
+
+            var args = manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG, false);
+
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.DRAG, args.Arguments.IsPreSelection, args.Arguments.OldSelection, args.Arguments.NewSelection, args.Arguments.MainList);
+            SelectionArgsXP expected = SelectionManagerTestUtils.GetDefaultArgs(arguments);
+
+            AssertArgs(expected, args);
+        }
+
+        [Test]
+        public void ShouldReturnCustomArgsWhenGetSelectionArgsWithCustom()
+        {
+            List<ISelectable> oldSelection = new List<ISelectable>() { SelectionManagerTestUtils.CreateATestableObject(0) };
+            List<ISelectable> newSelection = new List<ISelectable>() { SelectionManagerTestUtils.CreateATestableObject(1) };
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.CLICK, false, oldSelection, newSelection, new List<ISelectable>());
+            SelectionArgsXP expected = SelectionManagerTestUtils.GetDefaultArgs(arguments);
+
+            var args = manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.CLICK, false);
+
+            AssertArgs(expected, args);
         }
 
         #region methods
@@ -625,6 +666,16 @@ namespace Tests.Manager
             manager.GetObjectClicked().Returns(so);
             manager.KeyPressed = 0;
             return so;
+        }
+
+
+        private void AssertArgs(SelectionArgsXP expected, SelectionArgsXP actual)
+        {
+            CollectionAssert.AreEquivalent(expected.Arguments.OldSelection, actual.Arguments.OldSelection);
+            CollectionAssert.AreEquivalent(expected.Arguments.NewSelection, actual.Arguments.NewSelection);
+            CollectionAssert.AreEquivalent(expected.Result.ToBeAdded, actual.Result.ToBeAdded);
+            CollectionAssert.AreEquivalent(expected.Result.ToBeRemoved, actual.Result.ToBeRemoved);
+            Assert.AreEqual(expected.Arguments.SelectionType, actual.Arguments.SelectionType);
         }
 
         #endregion

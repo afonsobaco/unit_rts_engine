@@ -127,7 +127,7 @@ namespace RTSEngine.Manager.Old
         // {
         //     SelectionArgs args = GetSelectionArgs(oldSelection, newSelection);
         //     args.Clicked = clicked;
-        //     args.IsPreSelection = false;
+        //     args.Arguments.IsPreSelection = false;
         //     return ApplyMods(args);
         // }
 
@@ -135,7 +135,7 @@ namespace RTSEngine.Manager.Old
         // {
         //     SelectionArgs args = GetSelectionArgs(oldSelection, newSelection);
         //     args.Clicked = null;
-        //     args.IsPreSelection = true;
+        //     args.Arguments.IsPreSelection = true;
         //     return ApplyMods(args);
         // }
 
