@@ -94,7 +94,7 @@ MonoBehaviour:
   type: 0
   selectionMark: {fileID: 3712525122446528118}
   preSelectionMark: {fileID: 6891744311970605129}
-  typeStr: unit
+  typeStr: A
 --- !u!1 &5835298574802741905
 GameObject:
   m_ObjectHideFlags: 0
