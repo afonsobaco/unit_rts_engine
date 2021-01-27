@@ -31,8 +31,6 @@ namespace RTSEngine.Manager
         }
         public virtual List<ISelectable> FinalizeSelection(SelectionArgsXP args)
         {
-            //TODO Tests (flickering and Selection shift)
-            List<ISelectable> list = new List<ISelectable>();
             List<ISelectable> toAddList = new List<ISelectable>();
             List<ISelectable> toRemoveList = new List<ISelectable>();
 
@@ -42,11 +40,11 @@ namespace RTSEngine.Manager
             }
             else
             {
-                toAddList = UpdateSelectionStatus(args.Result.ToBeAdded, true);
                 toRemoveList = UpdateSelectionStatus(args.Result.ToBeRemoved, false);
+                toAddList = UpdateSelectionStatus(args.Result.ToBeAdded, true);
             }
 
-            list.AddRange(toAddList);
+            List<ISelectable> list = new List<ISelectable>(toAddList);
             list.RemoveAll(a => toRemoveList.FindAll(x => !toAddList.Contains(x)).Contains(a));
             return list;
         }
@@ -59,7 +57,7 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public List<ISelectable> UpdatePreSelectionStatus(List<ISelectable> list, bool preSelected)
+        public virtual List<ISelectable> UpdatePreSelectionStatus(List<ISelectable> list, bool preSelected)
         {
             foreach (var item in list)
             {

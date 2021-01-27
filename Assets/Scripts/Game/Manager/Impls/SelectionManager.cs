@@ -74,7 +74,7 @@ namespace RTSEngine.Manager
         public Vector3 MinScreenPos { get => minScreenPos; set => minScreenPos = value; }
         public Vector3 MaxScreenPos { get => maxScreenPos; set => maxScreenPos = value; }
 
-        public List<ISelectable> GetNewSelection()
+        public virtual List<ISelectable> GetNewSelection()
         {
             List<ISelectable> list = new List<ISelectable>();
 
@@ -96,7 +96,7 @@ namespace RTSEngine.Manager
         }
 
 
-        public SelectionTypeEnum GetSelectionType()
+        public virtual SelectionTypeEnum GetSelectionType()
         {
             if (IsKey())
             {
@@ -143,7 +143,7 @@ namespace RTSEngine.Manager
         }
 
 
-        public List<ISelectable> UpdateCurrentSelection(List<ISelectable> value)
+        public virtual List<ISelectable> UpdateCurrentSelection(List<ISelectable> value)
         {
             var list = new List<ISelectable>();
             //unselect old
@@ -194,10 +194,9 @@ namespace RTSEngine.Manager
         }
         public void EndOfSelection(Vector3 finalPos)
         {
-            //TODO ajustar testes
             FinalScreenPosition = finalPos;
             var list = PerformSelection(currentSelection, GetNewSelection(), GetSelectionType());
-            CurrentSelection = UpdateCurrentSelection(list);
+            CurrentSelection = this.UpdateCurrentSelection(list);
             this.UpdatePreSelectionStatus(preSelection, false);
             if (KeyPressed <= 0)
                 IsSelecting = false;
@@ -221,19 +220,22 @@ namespace RTSEngine.Manager
 
         public virtual List<ISelectable> GetDragSelection()
         {
-            //TODO tests Should Maintain selection order
             var selectionOnScreen = SelectionUtil.GetAllObjectsInsideSelectionArea(SelectableList.GetList(), InitialScreenPosition, FinalScreenPosition);
+            return OrderSelection(selectionOnScreen);
+        }
 
-            var listWithOrder = new List<ISelectable>();
+        public virtual List<ISelectable> OrderSelection(List<ISelectable> selection)
+        {
+            var orderedListOfSelection = new List<ISelectable>();
 
             for (var i = 0; i < PreSelection.Count; i++)
             {
-                if (selectionOnScreen.Contains(PreSelection[i]))
+                if (selection.Contains(PreSelection[i]))
                 {
-                    listWithOrder.Add(PreSelection[i]);
+                    orderedListOfSelection.Add(PreSelection[i]);
                 }
             }
-            return listWithOrder.Union(selectionOnScreen).ToList();
+            return orderedListOfSelection.Union(selection).ToList();
         }
 
         public void AddSelectableObject(SelectableObjectCreatedSignal signal)
@@ -280,7 +282,7 @@ namespace RTSEngine.Manager
 
         public virtual List<IBaseSelectionMod> GetModifiersToBeApplied(SelectionTypeEnum type)
         {
-            return Mods.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ALL));
+            return Mods.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
         }
 
         public override SelectionArgsXP GetSelectionArgs(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType, bool isPreSelection)

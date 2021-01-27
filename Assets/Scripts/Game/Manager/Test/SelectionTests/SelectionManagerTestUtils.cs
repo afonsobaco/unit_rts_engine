@@ -35,7 +35,7 @@ namespace Tests.Manager
 
         public static SelectionArgsXP GetDefaultArgs()
         {
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
             SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
             return GetDefaultArgs(arguments, modifierArguments);
         }
@@ -48,7 +48,7 @@ namespace Tests.Manager
 
         public static SelectionArgsXP GetDefaultArgs(SelectionModifierArguments modifierArguments)
         {
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
             return GetDefaultArgs(arguments, modifierArguments);
         }
 

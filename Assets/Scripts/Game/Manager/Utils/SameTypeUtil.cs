@@ -8,7 +8,6 @@ namespace RTSEngine.Manager
 
         public static List<ISelectable> GetFromSameTypeInScreen(SelectionArgsXP args)
         {
-            //TODO test
             if (args.Arguments.NewSelection == null || args.Arguments.NewSelection.Count != 1)
             {
                 return new List<ISelectable>();

@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+using System.Linq;
+using UnityEngine;
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Manager;
 using RTSEngine.Manager.SelectionMods.Impls;
 using System.Collections.Generic;
+using Tests.Utils;
 
 namespace Tests
 {
@@ -21,7 +23,7 @@ namespace Tests
         [Test]
         public void SelectionLimitModifierTestSimplePasses()
         {
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
             SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
             SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
@@ -31,30 +33,35 @@ namespace Tests
 
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldLimitToBeRemovedToPassedValue(int mainListCount, int limit, int[] newSelection, int[] expectedToBeAddedResult)
+        public void ShouldLimitToBeRemovedToPassedValue(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct, int limit)
         {
-            //TODO redo that
-            List<ISelectable> mainList = ModifierTestUtils.GetSomeObjects(mainListCount);
+            List<ISelectable> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
 
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), ModifierTestUtils.GetListByIndex(newSelection, mainList), mainList);
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), TestUtils.GetListByIndex(selectionStruct.newSelection, mainList), mainList);
             SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
             SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
             args = Modifier.Apply(limit, args);
 
-            List<ISelectable> expected = ModifierTestUtils.GetListByIndex(expectedToBeAddedResult, mainList);
+            List<ISelectable> expected = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
             CollectionAssert.AreEquivalent(expected, args.Result.ToBeAdded);
         }
 
 
-        public static IEnumerable<TestCaseData> Scenarios
+
+        private static IEnumerable<TestCaseData> Scenarios
         {
             get
             {
-                yield return new TestCaseData(5, 2, new int[] { 1, 2, 3, 4 }, new int[] { 1, 2 });
-                yield return new TestCaseData(5, 4, new int[] { 1, 2, 3, 4 }, new int[] { 1, 2, 3, 4 });
-                yield return new TestCaseData(5, 5, new int[] { 1, 2, 3 }, new int[] { 1, 2, 3 });
-                yield return new TestCaseData(5, 3, new int[] { }, new int[] { });
+                foreach (var item in TestUtils.GetCases())
+                {
+                    const int limit = 3;
+                    yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct()
+                    {
+                        toBeAdded = item.selection.newSelection.Take(limit).ToArray(),
+                        toBeRemoved = item.selection.oldSelection,
+                    }, limit).SetName(item.name);
+                }
             }
         }
 

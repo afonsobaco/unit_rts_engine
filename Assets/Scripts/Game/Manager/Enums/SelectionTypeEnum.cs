@@ -2,7 +2,7 @@
 {
     public enum SelectionTypeEnum
     {
-        ALL,
+        ANY,
         DRAG,
         CLICK,
         KEY,

@@ -20,16 +20,15 @@ namespace RTSEngine.Manager.SelectionMods.Impls
         {
             public SelectionArgsXP Apply(SelectionArgsXP args)
             {
-                //TODO add random to be remove to simulate other Mods
-                if (args.ModifierArgs.IsAdditive)
+                if (args.Arguments.SelectionType != SelectionTypeEnum.ANY && args.ModifierArgs.IsAdditive && args.Arguments.NewSelection.Count > 0)
                 {
-                    if (ContainsAllSelected(args.Arguments.SelectionType, args.Arguments.OldSelection, args.Arguments.NewSelection))
+                    if (!ContainsAllSelected(args.Arguments.SelectionType, args.Arguments.OldSelection, args.Arguments.NewSelection))
                     {
-                        RemoveFromSelection(args);
+                        AddToSelection(args);
                     }
                     else
                     {
-                        AddToSelection(args);
+                        RemoveFromSelection(args);
                     }
                 }
                 return args;
@@ -40,7 +39,6 @@ namespace RTSEngine.Manager.SelectionMods.Impls
                 SelectionResult result = args.Result;
 
                 result.ToBeAdded = args.Arguments.OldSelection.Union(args.Result.ToBeAdded).ToList();
-                result.ToBeRemoved = args.Result.ToBeRemoved.FindAll(x => !args.Arguments.OldSelection.Contains(x));
 
                 args.Result = result;
             }
@@ -49,9 +47,7 @@ namespace RTSEngine.Manager.SelectionMods.Impls
             {
                 SelectionResult result = args.Result;
 
-                var toBeRemoved = args.Result.ToBeRemoved.FindAll(x => !args.Arguments.OldSelection.Contains(x));
-                result.ToBeRemoved = toBeRemoved.Union(args.Arguments.NewSelection).ToList();
-                result.ToBeAdded = args.Arguments.OldSelection.FindAll(x => !args.Arguments.NewSelection.Contains(x));
+                result.ToBeAdded.RemoveAll(x => args.Arguments.NewSelection.Contains(x));
 
                 args.Result = result;
             }

@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Manager;
 using RTSEngine.Manager.SelectionMods.Impls;
 using System.Collections.Generic;
+using Tests.Utils;
 
 namespace Tests
 {
@@ -21,7 +23,7 @@ namespace Tests
         [Test]
         public void AdditiveModifierTestSimplePasses()
         {
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ALL, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
             SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
             SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
@@ -29,77 +31,107 @@ namespace Tests
             Assert.AreEqual(args, result);
         }
 
+        [Test]
+        public void ShouldApplyModifierAny()
+        {
+            SelectionArgsXP args = new SelectionArgsXP(new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>()), new SelectionModifierArguments(default, true, default, default));
+
+            args = Modifier.Apply(args);
+
+            List<ISelectable> expectedToBeAddedResult = new List<ISelectable>();
+            CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
+
+            List<ISelectable> expectedToBeRemovedResult = new List<ISelectable>();
+            CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
+        }
+
+
+
+        // [TestCaseSource(nameof(Scenarios))]
+        // public void ShouldApplyModifierDrag(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct)
+        // {
+        //     List<ISelectable> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
+
+        //     SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.DRAG, modifiersStruct.isPreSelection, TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList), TestUtils.GetListByIndex(selectionStruct.newSelection, mainList), mainList);
+        //     SelectionModifierArguments modifierArguments = new SelectionModifierArguments(modifiersStruct.isSameType, modifiersStruct.isAdditive, Vector2.zero, new Vector2(800, 600));
+        //     SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
+
+        //     args = Modifier.Apply(args);
+
+        //     List<ISelectable> expectedToBeAddedResult = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
+        //     CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
+
+        //     List<ISelectable> expectedToBeRemovedResult = TestUtils.GetListByIndex(resultStruct.toBeRemoved, mainList);
+        //     CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
+        // }
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldApplyModifier(SelectionTypeEnum selectionType, int mainListCount, bool isAdditive, int[] oldSelectionIndexes, int[] newSelectionIndexes, int[] expectedToBeAddedIndexes, int[] expectedToBeRemovedIndexes)
+        public void ShouldApplyModifierClick(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct)
         {
-            List<ISelectable> mainList = ModifierTestUtils.GetSomeObjects(mainListCount);
+            List<ISelectable> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
 
-            SelectionArguments arguments = new SelectionArguments(selectionType, false, ModifierTestUtils.GetListByIndex(oldSelectionIndexes, mainList), ModifierTestUtils.GetListByIndex(newSelectionIndexes, mainList), mainList);
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, isAdditive, Vector2.zero, new Vector2(800, 600));
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.CLICK, modifiersStruct.isPreSelection, TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList), TestUtils.GetListByIndex(selectionStruct.newSelection, mainList), mainList);
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(modifiersStruct.isSameType, modifiersStruct.isAdditive, Vector2.zero, new Vector2(800, 600));
             SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
             args = Modifier.Apply(args);
 
-            List<ISelectable> expectedToBeAddedResult = ModifierTestUtils.GetListByIndex(expectedToBeAddedIndexes, mainList);
+            List<ISelectable> expectedToBeAddedResult = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
             CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
 
-            List<ISelectable> expectedToBeRemovedResult = ModifierTestUtils.GetListByIndex(expectedToBeRemovedIndexes, mainList);
+            List<ISelectable> expectedToBeRemovedResult = TestUtils.GetListByIndex(resultStruct.toBeRemoved, mainList);
             CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
         }
+
+        // [TestCaseSource(nameof(Scenarios))]
+        // public void ShouldApplyModifierKey(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct)
+        // {
+        //     List<ISelectable> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
+
+        //     SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.KEY, modifiersStruct.isPreSelection, TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList), TestUtils.GetListByIndex(selectionStruct.newSelection, mainList), mainList);
+        //     SelectionModifierArguments modifierArguments = new SelectionModifierArguments(modifiersStruct.isSameType, modifiersStruct.isAdditive, Vector2.zero, new Vector2(800, 600));
+        //     SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
+
+        //     args = Modifier.Apply(args);
+
+        //     List<ISelectable> expectedToBeAddedResult = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
+        //     CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
+
+        //     List<ISelectable> expectedToBeRemovedResult = TestUtils.GetListByIndex(resultStruct.toBeRemoved, mainList);
+        //     CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
+        // }
 
         public static IEnumerable<TestCaseData> Scenarios
         {
             get
             {
-                //Click
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 1, true, new int[] { }, new int[] { 0 }, new int[] { 0 }, new int[] { }).SetName("Click - Additive, Empty Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 1, true, new int[] { 0 }, new int[] { 0 }, new int[] { 0 }, new int[] { }).SetName("Click - Additive, Single Element in Old, Clicked is in Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 2, true, new int[] { 0 }, new int[] { 1 }, new int[] { 0, 1 }, new int[] { }).SetName("Click - Additive, Single Element in Old, Clicked is NOT in Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 2, true, new int[] { 0, 1 }, new int[] { 0 }, new int[] { 1 }, new int[] { 0 }).SetName("Click - Additive, Multiple Element in Old, Clicked is in Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 3, true, new int[] { 0, 1 }, new int[] { 2 }, new int[] { 0, 1, 2 }, new int[] { }).SetName("Click - Additive, Multiple Element in Old, Clicked is NOT in Old");
+                foreach (var item in TestUtils.GetCases(new ModifiersStruct(false, true, false)))
+                {
+                    int[] toBeAdded;
+                    if (item.modifiers.isAdditive && item.selection.newSelection.Length > 0)
+                    {
 
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 1, false, new int[] { }, new int[] { 0 }, new int[] { 0 }, new int[] { }).SetName("Click - NOT Additive, Empty Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 1, false, new int[] { 0 }, new int[] { 0 }, new int[] { 0 }, new int[] { 0 }).SetName("Click - NOT Additive, Single Element in Old, Clicked is in Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 2, false, new int[] { 0 }, new int[] { 1 }, new int[] { 1 }, new int[] { 0 }).SetName("Click - NOT Additive, Single Element in Old, Clicked is NOT in Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 2, false, new int[] { 0, 1 }, new int[] { 0 }, new int[] { 0 }, new int[] { 0, 1 }).SetName("Click - NOT Additive, Multiple Element in Old, Clicked is in Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 3, false, new int[] { 0, 1 }, new int[] { 2 }, new int[] { 2 }, new int[] { 0, 1 }).SetName("Click - NOT Additive, Multiple Element in Old, Clicked is NOT in Old");
-                //Drag
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, true, new int[] { }, new int[] { 0, 1 }, new int[] { 0, 1 }, new int[] { }).SetName("Drag - Additive, Empty Old, -");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, true, new int[] { 0 }, new int[] { 1 }, new int[] { 0, 1 }, new int[] { }).SetName("Drag - Additive, Single Element in Old, Single Element in new, Old does NOT contains new Element");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 1, true, new int[] { 0 }, new int[] { 0 }, new int[] { 0 }, new int[] { }).SetName("Drag - Additive, Single Element in Old, Single Element in new, Old contains new Element");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 3, true, new int[] { 0 }, new int[] { 1, 2 }, new int[] { 0, 1, 2 }, new int[] { }).SetName("Drag - Additive, Single Element in Old, Multiple Element in new, Does NOT contains Old");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, true, new int[] { 0 }, new int[] { 0, 1 }, new int[] { 0, 1 }, new int[] { }).SetName("Drag - Additive, Single Element in Old, Multiple Element in new, Does Contains Old");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 3, true, new int[] { 0, 1 }, new int[] { 2 }, new int[] { 0, 1, 2 }, new int[] { }).SetName("Drag - Additive, Multiple Element in Old, Single Element in new, Old does NOT contains new Element");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, true, new int[] { 0, 1 }, new int[] { 0 }, new int[] { 0, 1 }, new int[] { }).SetName("Drag - Additive, Multiple Element in Old, Single Element in new, Old contains new Element");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 4, true, new int[] { 0, 1 }, new int[] { 2, 3 }, new int[] { 0, 1, 2, 3 }, new int[] { }).SetName("Drag - Additive, Multiple Element in Old, Multiple Element in new, New does NOT contains any from Old");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 3, true, new int[] { 0, 1 }, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 }, new int[] { }).SetName("Drag - Additive, Multiple Element in Old, Multiple Element in new, New Contains All from Old");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 3, true, new int[] { 0, 1 }, new int[] { 0, 2 }, new int[] { 0, 1, 2 }, new int[] { }).SetName("Drag - Additive, Multiple Element in Old, Multiple Element in new, New does Contains some from Old");
-
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, false, new int[] { }, new int[] { 1, 2 }, new int[] { 1, 2 }, new int[] { }).SetName("Drag - NOT Additive, Empty Old, -");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, false, new int[] { 0 }, new int[] { 1 }, new int[] { 1 }, new int[] { 0 }).SetName("Drag - NOT Additive, Single Element in Old, Single Element in new, Old does NOT contains new Element");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 1, false, new int[] { 0 }, new int[] { 0 }, new int[] { 0 }, new int[] { 0 }).SetName("Drag - NOT Additive, Single Element in Old, Single Element in new, Old contains new Element");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 3, false, new int[] { 0 }, new int[] { 1, 2 }, new int[] { 1, 2 }, new int[] { 0 }).SetName("Drag - NOT Additive, Single Element in Old, Multiple Element in new, Does NOT contains Old");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, false, new int[] { 0 }, new int[] { 0, 1 }, new int[] { 0, 1 }, new int[] { 0 }).SetName("Drag - NOT Additive, Single Element in Old, Multiple Element in new, Does Contains Old");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 3, false, new int[] { 0, 1 }, new int[] { 2 }, new int[] { 2 }, new int[] { 0, 1 }).SetName("Drag - NOT Additive, Multiple Element in Old, Single Element in new, Old does NOT contains new Element");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, false, new int[] { 0, 1 }, new int[] { 0 }, new int[] { 0 }, new int[] { 0, 1 }).SetName("Drag - NOT Additive, Multiple Element in Old, Single Element in new, Old contains new Element");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 4, false, new int[] { 0, 1 }, new int[] { 2, 3 }, new int[] { 2, 3 }, new int[] { 0, 1 }).SetName("Drag - NOT Additive, Multiple Element in Old, Multiple Element in new, New does NOT contains any from Old");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 3, false, new int[] { 0, 1 }, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 }, new int[] { 0, 1 }).SetName("Drag - NOT Additive, Multiple Element in Old, Multiple Element in new, New Contains All from Old");
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 3, false, new int[] { 0, 1 }, new int[] { 0, 2 }, new int[] { 0, 2 }, new int[] { 0, 1 }).SetName("Drag - NOT Additive, Multiple Element in Old, Multiple Element in new, New does Contains some from Old");
-
-                //Key
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 3, true, new int[] { }, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 }, new int[] { }).SetName("Key - Additive, Empty Old, -");
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 6, true, new int[] { 0, 1, 2 }, new int[] { 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { }).SetName("Key - Additive, Old Contains none of New");
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 3, true, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 }, new int[] { }).SetName("Key - Additive, New is equals to Old");
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 5, true, new int[] { 0, 1, 2 }, new int[] { 0, 1, 3, 4 }, new int[] { 0, 1, 2, 3, 4 }, new int[] { }).SetName("Key - Additive, Old Contains some of New");
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 6, true, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 3, 4, 5 }, new int[] { 0, 1, 2 }, new int[] { 3, 4, 5 }).SetName("Key - Additive, Old Contains All of New");
-
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 3, false, new int[] { }, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 }, new int[] { }).SetName("Key - NOT Additive, Empty Old, -");
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 6, false, new int[] { 0, 1, 2 }, new int[] { 3, 4, 5 }, new int[] { 3, 4, 5 }, new int[] { 0, 1, 2 }).SetName("Key - NOT Additive, Old Contains none of New");
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 3, false, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 }, new int[] { 0, 1, 2 }).SetName("Key - NOT Additive, New is equals to Old");
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 5, false, new int[] { 0, 1, 2 }, new int[] { 0, 1, 3, 4 }, new int[] { 0, 1, 3, 4 }, new int[] { 0, 1, 2 }).SetName("Key - NOT Additive, Old Contains some of New");
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 6, false, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 3, 4, 5 }, new int[] { 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4, 5 }).SetName("Key - NOT Additive, Old Contains All of New");
-
+                        bool containsAll = item.selection.newSelection.ToList().TrueForAll(x => item.selection.oldSelection.ToList().Contains(x));
+                        bool differentCounts = item.selection.oldSelection.Length != item.selection.newSelection.Length;
+                        if (!(containsAll && differentCounts))
+                        {
+                            toBeAdded = item.selection.oldSelection.Union(item.selection.newSelection).ToArray();
+                        }
+                        else
+                        {
+                            toBeAdded = new int[] { };
+                        }
+                    }
+                    else
+                    {
+                        toBeAdded = item.selection.newSelection;
+                    }
+                    yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct()
+                    {
+                        toBeAdded = toBeAdded,
+                        toBeRemoved = item.selection.oldSelection,
+                    }).SetName(item.name);
+                }
             }
         }
 

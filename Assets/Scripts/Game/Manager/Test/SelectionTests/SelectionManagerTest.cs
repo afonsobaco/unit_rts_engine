@@ -6,6 +6,7 @@ using UnityEngine;
 using RTSEngine.Manager;
 using RTSEngine.Core;
 using NSubstitute;
+using Tests.Utils;
 
 namespace Tests.Manager
 {
@@ -161,6 +162,34 @@ namespace Tests.Manager
             manager.GetDragSelection().Returns(new List<ISelectable>());
             var selection = manager.GetNewSelection();
             CollectionAssert.IsEmpty(selection);
+        }
+
+        [TestCaseSource(nameof(OrderScenarios))]
+        public void ShouldGetDragSelection(int mainListAmount, int[] selectionIndexes, int[] preSelectionIndexes, int[] expectedIndexes)
+        {
+            List<ISelectable> mainList = TestUtils.GetSomeObjects(mainListAmount);
+            List<ISelectable> selection = TestUtils.GetListByIndex(selectionIndexes, mainList);
+            List<ISelectable> preSelection = TestUtils.GetListByIndex(preSelectionIndexes, mainList);
+            List<ISelectable> expected = TestUtils.GetListByIndex(expectedIndexes, mainList);
+
+            PrepareForDrag();
+            manager.PreSelection = preSelection;
+            var result = manager.OrderSelection(selection);
+            CollectionAssert.AreEqual(expected, result);
+        }
+
+        private static IEnumerable OrderScenarios
+        {
+            get
+            {
+                foreach (var item in TestUtils.GetCases(new ModifiersStruct()))
+                {
+                    int[] expected = item.selection.oldSelection;
+                    expected.ToList().AddRange(item.selection.newSelection);
+                    var shuffled = TestUtils.Shuffle<int>(expected.ToList()).ToArray();
+                    yield return new TestCaseData(item.selection.mainListAmount, shuffled, item.selection.oldSelection, expected).SetName(item.name);
+                }
+            }
         }
 
         [Test]
@@ -455,20 +484,38 @@ namespace Tests.Manager
             Assert.AreEqual(initialPos, manager.InitialScreenPosition);
         }
 
-        [Test]
-        public void ShouldEndSelection()
+        [TestCase(0)]
+        [TestCase(1)]
+        public void ShouldEndSelection(int keyPressed)
         {
-
             //CurrentSelection
             PrepareForDrag();
             manager.PreSelection = new List<ISelectable>();
+            manager.KeyPressed = keyPressed;
             var expected = new List<ISelectable>();
             expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
+            SelectionTypeEnum type = keyPressed == 0 ? SelectionTypeEnum.DRAG : SelectionTypeEnum.KEY;
+            manager.When(x => x.GetNewSelection()).DoNotCallBase();
+            manager.GetNewSelection().Returns(expected);
 
-            manager.GetDragSelection().Returns(expected);
-            manager.PerformSelection(Arg.Any<List<ISelectable>>(), Arg.Any<List<ISelectable>>(), Arg.Is(SelectionTypeEnum.DRAG)).Returns(expected);
+            manager.When(x => x.GetSelectionType()).DoNotCallBase();
+            manager.GetSelectionType().Returns(type);
+
+            manager.When(x => x.PerformSelection(Arg.Any<List<ISelectable>>(), Arg.Any<List<ISelectable>>(), Arg.Any<SelectionTypeEnum>())).DoNotCallBase();
+            manager.PerformSelection(Arg.Any<List<ISelectable>>(), Arg.Any<List<ISelectable>>(), Arg.Any<SelectionTypeEnum>()).Returns(expected);
+
+            manager.When(x => x.UpdateCurrentSelection(Arg.Any<List<ISelectable>>())).DoNotCallBase();
+            manager.UpdateCurrentSelection(Arg.Any<List<ISelectable>>()).Returns(x =>
+            {
+                var result = (List<ISelectable>)x[0];
+                result.ForEach(r => r.IsSelected = true);
+                return result;
+            });
+
+            manager.When(x => x.UpdatePreSelectionStatus(Arg.Any<List<ISelectable>>(), Arg.Any<bool>())).DoNotCallBase();
+            manager.UpdatePreSelectionStatus(Arg.Any<List<ISelectable>>(), Arg.Any<bool>()).Returns(new List<ISelectable>());
 
             Vector3 finalPos = new Vector3(0.5f, 0.5f, 0f);
             manager.EndOfSelection(finalPos);
@@ -479,14 +526,10 @@ namespace Tests.Manager
             {
                 Assert.True(item.IsSelected);
             }
-
             Assert.AreEqual(finalPos, manager.FinalScreenPosition);
             Assert.AreEqual(0, manager.KeyPressed);
             Assert.False(manager.IsSelecting);
-
         }
-
-
 
         [Test]
         public void ShouldDoPreSelection()
@@ -545,18 +588,14 @@ namespace Tests.Manager
             List<IBaseSelectionMod> mods = new List<IBaseSelectionMod>();
             List<IBaseSelectionMod> expectedMods = new List<IBaseSelectionMod>();
             GetModsToTest(selectionType, howManyAll, howManyClick, howManyDrag, howManyKey, mods, expectedMods);
-
             manager.When(x => x.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>())).DoNotCallBase();
             manager.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>()).Returns(expectedMods);
-
             SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.DRAG, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
             SelectionArgsXP args = SelectionManagerTestUtils.GetDefaultArgs(arguments);
-
             var result = manager.ApplyModifiers(args);
-
             foreach (var mod in mods)
             {
-                if (mod.Type == selectionType || mod.Type == SelectionTypeEnum.ALL)
+                if (mod.Type == selectionType || mod.Type == SelectionTypeEnum.ANY)
                 {
                     mod.ReceivedWithAnyArgs().Apply(default);
                 }
@@ -565,7 +604,42 @@ namespace Tests.Manager
                     mod.DidNotReceiveWithAnyArgs().Apply(default);
                 }
             }
+        }
 
+        [TestCaseSource(nameof(Scenarios))]
+        public void ShouldNotApplyInactiveModifiers(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey)
+        {
+            List<IBaseSelectionMod> mods = new List<IBaseSelectionMod>();
+            List<IBaseSelectionMod> expectedMods = new List<IBaseSelectionMod>();
+
+            GetMixedInactiveMods(selectionType, howManyAll, howManyClick, howManyDrag, howManyKey, mods, expectedMods);
+
+            manager.When(x => x.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>())).DoNotCallBase();
+            manager.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>()).Returns(expectedMods);
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.DRAG, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
+            SelectionArgsXP args = SelectionManagerTestUtils.GetDefaultArgs(arguments);
+            var result = manager.ApplyModifiers(args);
+            foreach (var mod in mods)
+            {
+                if ((mod.Type == selectionType || mod.Type == SelectionTypeEnum.ANY) && mod.Active)
+                {
+                    mod.ReceivedWithAnyArgs().Apply(default);
+                }
+                else
+                {
+                    mod.DidNotReceiveWithAnyArgs().Apply(default);
+                }
+            }
+        }
+
+        private static void GetMixedInactiveMods(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey, List<IBaseSelectionMod> mods, List<IBaseSelectionMod> expectedMods)
+        {
+            GetModsToTest(selectionType, howManyAll, howManyClick, howManyDrag, howManyKey, mods, expectedMods);
+            if (expectedMods.Count > 0)
+            {
+                mods.Find(a => a == expectedMods[0]).Active = false;
+                expectedMods[0].Active = false;
+            }
         }
 
         [Test]
@@ -584,8 +658,8 @@ namespace Tests.Manager
         [Test]
         public void ShouldReturnDefaultArgsWhenGetSelectionArgsWithEmpty()
         {
-            List<ISelectable> oldSelection = new List<ISelectable>();
             List<ISelectable> newSelection = new List<ISelectable>();
+            List<ISelectable> oldSelection = new List<ISelectable>();
 
             var args = manager.GetSelectionArgs(oldSelection, newSelection, SelectionTypeEnum.DRAG, false);
 
@@ -612,7 +686,7 @@ namespace Tests.Manager
 
         private static void GetModsToTest(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey, List<IBaseSelectionMod> mods, List<IBaseSelectionMod> expectedMods)
         {
-            List<IBaseSelectionMod> allMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyAll, SelectionTypeEnum.ALL);
+            List<IBaseSelectionMod> allMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyAll, SelectionTypeEnum.ANY);
             List<IBaseSelectionMod> clickMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK);
             List<IBaseSelectionMod> dragMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG);
             List<IBaseSelectionMod> keyMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY);
@@ -684,19 +758,20 @@ namespace Tests.Manager
         {
             get
             {
-                yield return new TestCaseData(SelectionTypeEnum.ALL, /*HowManyAll*/2, /*HowManyClick*/3, /*HowManyDrag*/2, /*HowManyKey*/1);
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, /*HowManyAll*/2, /*HowManyClick*/3, /*HowManyDrag*/2, /*HowManyKey*/1);
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, /*HowManyAll*/2, /*HowManyClick*/3, /*HowManyDrag*/2, /*HowManyKey*/1);
-                yield return new TestCaseData(SelectionTypeEnum.KEY, /*HowManyAll*/2, /*HowManyClick*/3, /*HowManyDrag*/2, /*HowManyKey*/1);
+                yield return new TestCaseData(SelectionTypeEnum.ANY, 0, 0, 0, 0);
+                yield return new TestCaseData(SelectionTypeEnum.ANY, 2, 3, 2, 1);
+                yield return new TestCaseData(SelectionTypeEnum.CLICK, 0, 0, 0, 0);
+                yield return new TestCaseData(SelectionTypeEnum.CLICK, 2, 3, 2, 1);
+                yield return new TestCaseData(SelectionTypeEnum.DRAG, 0, 0, 0, 0);
+                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, 3, 2, 1);
+                yield return new TestCaseData(SelectionTypeEnum.KEY, 0, 0, 0, 0);
+                yield return new TestCaseData(SelectionTypeEnum.KEY, 2, 3, 2, 1);
 
-                yield return new TestCaseData(SelectionTypeEnum.ALL, /*HowManyAll*/0, /*HowManyClick*/0, /*HowManyDrag*/0, /*HowManyKey*/0);
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, /*HowManyAll*/0, /*HowManyClick*/0, /*HowManyDrag*/0, /*HowManyKey*/0);
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, /*HowManyAll*/0, /*HowManyClick*/0, /*HowManyDrag*/0, /*HowManyKey*/0);
-                yield return new TestCaseData(SelectionTypeEnum.KEY, /*HowManyAll*/0, /*HowManyClick*/0, /*HowManyDrag*/0, /*HowManyKey*/0);
             }
         }
 
     }
+
 
 
 }
