@@ -51,6 +51,8 @@ namespace RTSEngine.Manager
             }
         }
 
+        public int Index { get; set; }
+
         public void ChangeSelectionMarkStatus(bool value)
         {
             if (selectionMark)

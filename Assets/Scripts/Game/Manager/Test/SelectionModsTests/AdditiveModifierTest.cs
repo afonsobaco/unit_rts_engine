@@ -41,8 +41,6 @@ namespace Tests
             List<ISelectable> expectedToBeAddedResult = new List<ISelectable>();
             CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
 
-            List<ISelectable> expectedToBeRemovedResult = new List<ISelectable>();
-            CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
         }
 
 
@@ -61,8 +59,6 @@ namespace Tests
         //     List<ISelectable> expectedToBeAddedResult = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
         //     CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
 
-        //     List<ISelectable> expectedToBeRemovedResult = TestUtils.GetListByIndex(resultStruct.toBeRemoved, mainList);
-        //     CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
         // }
 
         [TestCaseSource(nameof(Scenarios))]
@@ -79,8 +75,6 @@ namespace Tests
             List<ISelectable> expectedToBeAddedResult = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
             CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
 
-            List<ISelectable> expectedToBeRemovedResult = TestUtils.GetListByIndex(resultStruct.toBeRemoved, mainList);
-            CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
         }
 
         // [TestCaseSource(nameof(Scenarios))]
@@ -96,16 +90,13 @@ namespace Tests
 
         //     List<ISelectable> expectedToBeAddedResult = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
         //     CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
-
-        //     List<ISelectable> expectedToBeRemovedResult = TestUtils.GetListByIndex(resultStruct.toBeRemoved, mainList);
-        //     CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
         // }
 
         public static IEnumerable<TestCaseData> Scenarios
         {
             get
             {
-                foreach (var item in TestUtils.GetCases(new ModifiersStruct(false, true, false)))
+                foreach (var item in TestUtils.GetCasesWithModifiers(new ModifiersStruct(false, true, false)))
                 {
                     int[] toBeAdded;
                     if (item.modifiers.isAdditive && item.selection.newSelection.Length > 0)
@@ -129,7 +120,6 @@ namespace Tests
                     yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct()
                     {
                         toBeAdded = toBeAdded,
-                        toBeRemoved = item.selection.oldSelection,
                     }).SetName(item.name);
                 }
             }

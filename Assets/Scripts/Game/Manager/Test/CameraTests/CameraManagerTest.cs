@@ -26,6 +26,7 @@ namespace Tests.Manager
         public void SetUp()
         {
             selectionManager = Substitute.For<ISelectionManager<ISelectable, SelectionTypeEnum>>();
+            selectionManager.IsSelecting = false;
             cameraSettings = Substitute.For<ICameraSettings>();
             manager = Substitute.ForPartsOf<CameraManager>(new object[] { selectionManager });
 
@@ -133,9 +134,18 @@ namespace Tests.Manager
         }
 
         [Test]
-        public void ShouldNotDoCameraInputMovement()
+        public void ShouldNotDoCameraInputMovementWhenNotInBoundries()
         {
             Vector3 mousePos = mainCamera.ViewportToScreenPoint(new Vector2(.5f, .5f));
+            var result = manager.DoCameraInputMovement(0f, 0f, mousePos, DeltaTime, mainCamera);
+            Assert.AreEqual(Vector3.zero, result);
+        }
+
+        [Test]
+        public void ShouldNotDoCameraInputMovementWhenIsSelecting()
+        {
+            Vector3 mousePos = mainCamera.ViewportToScreenPoint(new Vector2(1f, 1f));
+            selectionManager.IsSelecting = true;
             var result = manager.DoCameraInputMovement(0f, 0f, mousePos, DeltaTime, mainCamera);
             Assert.AreEqual(Vector3.zero, result);
         }

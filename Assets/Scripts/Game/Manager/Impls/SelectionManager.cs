@@ -259,7 +259,6 @@ namespace RTSEngine.Manager
 
             foreach (var item in collection)
             {
-                //TODO testar active/inactive
                 if (item.Active)
                 {
                     if (args.Arguments.IsPreSelection)

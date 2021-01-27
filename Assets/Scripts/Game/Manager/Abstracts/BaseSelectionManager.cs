@@ -40,7 +40,7 @@ namespace RTSEngine.Manager
             }
             else
             {
-                toRemoveList = UpdateSelectionStatus(args.Result.ToBeRemoved, false);
+                toRemoveList = UpdateSelectionStatus(args.Arguments.OldSelection, false);
                 toAddList = UpdateSelectionStatus(args.Result.ToBeAdded, true);
             }
 

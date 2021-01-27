@@ -106,7 +106,6 @@ namespace RTSEngine.Manager
 
         private Vector3 DoMouseCameraMovement(Vector3 mousePosition, float deltaTime, UnityEngine.Camera mainCamera)
         {
-            //TODO test when is selecting
             if (!selectionManager.IsSelecting)
             {
                 var mousePos = mainCamera.ScreenToViewportPoint(mousePosition);

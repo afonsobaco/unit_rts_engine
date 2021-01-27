@@ -182,7 +182,7 @@ namespace Tests.Manager
         {
             get
             {
-                foreach (var item in TestUtils.GetCases(new ModifiersStruct()))
+                foreach (var item in TestUtils.GetDefaultCases())
                 {
                     int[] expected = item.selection.oldSelection;
                     expected.ToList().AddRange(item.selection.newSelection);
@@ -225,7 +225,6 @@ namespace Tests.Manager
         [Test]
         public void ShouldUpdateSelectionStatusToTrue()
         {
-
             List<ISelectable> original = new List<ISelectable>();
             original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
             original.Add(SelectionManagerTestUtils.CreateATestableObject(0));
@@ -237,7 +236,6 @@ namespace Tests.Manager
                 Assert.True(item.IsSelected);
             }
         }
-
 
         [Test]
         public void ShouldUpdateSelectionStatusToFalse()
@@ -748,7 +746,6 @@ namespace Tests.Manager
             CollectionAssert.AreEquivalent(expected.Arguments.OldSelection, actual.Arguments.OldSelection);
             CollectionAssert.AreEquivalent(expected.Arguments.NewSelection, actual.Arguments.NewSelection);
             CollectionAssert.AreEquivalent(expected.Result.ToBeAdded, actual.Result.ToBeAdded);
-            CollectionAssert.AreEquivalent(expected.Result.ToBeRemoved, actual.Result.ToBeRemoved);
             Assert.AreEqual(expected.Arguments.SelectionType, actual.Arguments.SelectionType);
         }
 

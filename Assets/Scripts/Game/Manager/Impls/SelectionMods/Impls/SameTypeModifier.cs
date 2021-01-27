@@ -23,8 +23,6 @@ namespace RTSEngine.Manager.SelectionMods.Impls
         {
             public SelectionArgsXP Apply(SelectionArgsXP args, SameTypeSelectionModeEnum mode)
             {
-                //TODO add random to be remove to simulate other Mods
-
                 if (args.Arguments.NewSelection.Count == 1 && args.ModifierArgs.IsSameType)
                 {
                     var allFromType = GetAllFromSameTypeOnScreen(args, mode);
@@ -46,6 +44,7 @@ namespace RTSEngine.Manager.SelectionMods.Impls
 
                 result.ToBeAdded = args.Result.ToBeAdded.Union(allFromType).ToList();
 
+
                 args.Result = result;
             }
 
@@ -55,7 +54,6 @@ namespace RTSEngine.Manager.SelectionMods.Impls
 
                 result.ToBeAdded = args.Arguments.OldSelection.Union(args.Result.ToBeAdded).ToList();
                 result.ToBeAdded.RemoveAll(x => allFromType.Contains(x));
-                result.ToBeRemoved = args.Result.ToBeRemoved.Union(allFromType).ToList();
 
                 args.Result = result;
             }

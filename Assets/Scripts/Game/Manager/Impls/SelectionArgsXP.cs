@@ -15,7 +15,6 @@ namespace RTSEngine.Manager
             this.arguments = arguments;
             this.modifierArgs = modifierArgs;
             result.ToBeAdded = Arguments.NewSelection;
-            result.ToBeRemoved = Arguments.OldSelection;
         }
 
         public SelectionArguments Arguments { get => arguments; }
@@ -64,10 +63,8 @@ namespace RTSEngine.Manager
     public struct SelectionResult
     {
         private List<ISelectable> toBeAdded;
-        private List<ISelectable> toBeRemoved;
 
         public List<ISelectable> ToBeAdded { get => toBeAdded; set => toBeAdded = value; }
-        public List<ISelectable> ToBeRemoved { get => toBeRemoved; set => toBeRemoved = value; }
     }
 
 }

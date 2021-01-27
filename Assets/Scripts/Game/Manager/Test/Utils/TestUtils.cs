@@ -25,7 +25,9 @@ namespace Tests.Utils
             var list = new List<ISelectable>();
             for (var i = 0; i < qtt; i++)
             {
-                list.Add(Substitute.For<ISelectable>());
+                ISelectable item = Substitute.For<ISelectable>();
+                item.Index = i;
+                list.Add(item);
             }
             return list;
         }
@@ -60,7 +62,7 @@ namespace Tests.Utils
                 return "EMPTY " + collectionName + ", ";
             if (collection.Length == 1)
                 return "SINGLE element in " + collectionName + ", ";
-            return "MULTPLE element in " + collectionName + ", ";
+            return "MULTIPLE elements in " + collectionName + ", ";
         }
 
         private static string NameForCollectionContains(int[] collection, int[] otherCollection, string collectionName, string otherCollectionName)
@@ -76,30 +78,47 @@ namespace Tests.Utils
             return collectionName + " Contains ALL of " + otherCollectionName + "";
         }
 
-        public static List<CaseStruct> GetCases()
+        public static List<CaseStruct> GetDefaultCases()
         {
             ModifiersStruct modifiersStruct = default;
-            return GetSelectionCases(modifiersStruct);
+            return GetSelectionCases(modifiersStruct, false);
         }
 
-        public static List<CaseStruct> GetCases(ModifiersStruct modifiersStruct)
+        public static List<CaseStruct> GetCasesWithAdditionalInfo()
+        {
+            ModifiersStruct modifiersStruct = default;
+            return GetSelectionCases(modifiersStruct, true);
+        }
+
+
+        public static List<CaseStruct> GetCasesWithModifiers(ModifiersStruct modifiersStruct)
+        {
+            return GetSelectionCases(modifiersStruct, false);
+        }
+
+        public static List<CaseStruct> GetCustomCases(ModifiersStruct modifiersStruct, bool additionalInfo)
         {
             List<CaseStruct> caseStructs = new List<CaseStruct>();
             foreach (var item in ModifiersList(modifiersStruct))
             {
-                caseStructs.AddRange(GetSelectionCases(item));
+                caseStructs.AddRange(GetSelectionCases(item, additionalInfo));
             }
             return caseStructs;
         }
 
-        private static List<CaseStruct> GetSelectionCases(ModifiersStruct modifiersStruct)
+        private static List<CaseStruct> GetSelectionCases(ModifiersStruct modifiersStruct, bool additionalInfo)
         {
             List<CaseStruct> caseStructs = new List<CaseStruct>();
-            foreach (var selectionStruct in SelectionList())
+            foreach (var selectionStruct in GetSelectionListWithAdditionalInfos(additionalInfo))
             {
                 caseStructs.Add(new CaseStruct(selectionStruct, modifiersStruct, GetCaseName(selectionStruct, modifiersStruct)));
             }
             return caseStructs;
+        }
+
+        private static List<SelectionStruct> GetSelectionListWithAdditionalInfos(bool additionalInfo)
+        {
+            return SelectionList(additionalInfo);
         }
 
         private static List<ModifiersStruct> ModifiersList(ModifiersStruct modifiersStruct)
@@ -130,21 +149,35 @@ namespace Tests.Utils
 
         private static List<SelectionStruct> SelectionList()
         {
+            return SelectionList(false);
+        }
+        private static List<SelectionStruct> SelectionList(bool additionalInfo)
+        {
             List<SelectionStruct> list = new List<SelectionStruct>();
 
-            list.Add(new SelectionStruct(10, new int[] { }, new int[] { }));
-            list.Add(new SelectionStruct(10, new int[] { }, new int[] { 0 }));
-            list.Add(new SelectionStruct(10, new int[] { }, new int[] { 0, 1, 2, 3, 4 }));
-            list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { }));
-            list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { 0 }));
-            list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { 1 }));
-            list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { 1, 2, 3, 4, 5 }));
-            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { }));
-            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0 }));
-            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 5 }));
-            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 1, 2, 3, 4 }));
-            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 1, 2, 5, 6, 7, 8, 9 }));
-            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 5, 6, 7, 8, 9 }));
+            AdditionalInfo addInfo = new AdditionalInfo();
+            if (additionalInfo)
+            {
+                addInfo = new AdditionalInfo()
+                {
+                    group_a = new int[] { 0, 2, 4, 6, 8 },
+                    group_b = new int[] { 1, 3, 5, 7, 9 }
+                };
+            }
+
+            list.Add(new SelectionStruct(10, new int[] { }, new int[] { }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { }, new int[] { 0 }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { }, new int[] { 0, 1, 2, 3, 4 }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { 0 }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { 1 }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { 1, 2, 3, 4, 5 }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0 }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 5 }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 1, 2, 3, 4 }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 1, 2, 5, 6, 7, 8, 9 }, addInfo));
+            list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 5, 6, 7, 8, 9 }, addInfo));
 
             return list;
         }
@@ -201,11 +234,25 @@ namespace Tests.Utils
         public int[] oldSelection;
         public int[] newSelection;
 
-        public SelectionStruct(int mainListAmount, int[] oldSelection, int[] newSelection)
+        public AdditionalInfo additionalInfo;
+
+        public SelectionStruct(int mainListAmount, int[] oldSelection, int[] newSelection, AdditionalInfo additionalInfo)
         {
             this.mainListAmount = mainListAmount;
             this.oldSelection = oldSelection;
             this.newSelection = newSelection;
+            this.additionalInfo = additionalInfo;
+        }
+    }
+
+    public struct AdditionalInfo
+    {
+        public int[] group_a;
+        public int[] group_b;
+        public AdditionalInfo(int[] group_a, int[] group_b)
+        {
+            this.group_a = group_a;
+            this.group_b = group_b;
         }
     }
 
@@ -213,12 +260,10 @@ namespace Tests.Utils
     public struct ResultStruct
     {
         public int[] toBeAdded;
-        public int[] toBeRemoved;
 
-        public ResultStruct(int[] toBeAdded, int[] toBeRemoved)
+        public ResultStruct(int[] toBeAdded)
         {
             this.toBeAdded = toBeAdded;
-            this.toBeRemoved = toBeRemoved;
         }
     }
 

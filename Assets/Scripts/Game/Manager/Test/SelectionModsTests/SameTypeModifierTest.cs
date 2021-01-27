@@ -6,6 +6,7 @@ using RTSEngine.Manager.SelectionMods.Impls;
 using System.Collections.Generic;
 using NSubstitute;
 using Tests.Utils;
+using System.Linq;
 
 namespace Tests
 {
@@ -33,52 +34,79 @@ namespace Tests
 
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldApplyModifier(SelectionTypeEnum selectionType, int mainListCount, bool isSameType, int[] sameTypeSelection, int[] oldSelection, int[] newSelection, int[] expectedToBeAdded, int[] expectedToBeRemoved)
+        public void ShouldApplyModifierOnClick(SelectionStruct selection, ModifiersStruct modifier, ResultStruct result)
         {
 
-            List<ISelectable> mainList = TestUtils.GetSomeObjects(mainListCount);
+            List<ISelectable> mainList = TestUtils.GetSomeObjects(selection.mainListAmount);
+            List<ISelectable> oldSelection = TestUtils.GetListByIndex(selection.oldSelection, mainList);
+            List<ISelectable> newSelection = TestUtils.GetListByIndex(selection.newSelection, mainList);
+            List<ISelectable> sameTypeList = new List<ISelectable>();
+            List<ISelectable> expected = new List<ISelectable>();
+            if (selection.newSelection.Length > 0)
+            {
+                if (selection.additionalInfo.group_a.Contains(selection.newSelection[0]))
+                {
+                    sameTypeList = TestUtils.GetListByIndex(selection.additionalInfo.group_a, mainList);
+                }
+                else
+                {
+                    sameTypeList = TestUtils.GetListByIndex(selection.additionalInfo.group_b, mainList); ;
+                }
+            }
+            if (modifier.isSameType)
+            {
+                expected = TestUtils.GetListByIndex(result.toBeAdded, mainList);
+            }
+            else
+            {
+                expected = TestUtils.GetListByIndex(selection.newSelection, mainList);
+            }
 
-            SelectionArguments arguments = new SelectionArguments(selectionType, false, TestUtils.GetListByIndex(oldSelection, mainList), TestUtils.GetListByIndex(newSelection, mainList), mainList);
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(isSameType, false, Vector2.zero, new Vector2(800, 600));
+            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.CLICK, false, oldSelection, newSelection, mainList);
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(modifier.isSameType, false, Vector2.zero, new Vector2(800, 600));
             SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
-
-            List<ISelectable> sameTypeList = TestUtils.GetListByIndex(sameTypeSelection, mainList);
 
             Modifier.When(x => x.GetAllFromSameTypeOnScreen(default, default)).DoNotCallBase();
             Modifier.GetAllFromSameTypeOnScreen(Arg.Any<SelectionArgsXP>(), Arg.Any<SameTypeSelectionModeEnum>()).Returns(sameTypeList);
 
             args = Modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
 
-            List<ISelectable> expectedToBeAddedResult = TestUtils.GetListByIndex(expectedToBeAdded, mainList);
-            CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.Result.ToBeAdded);
+            CollectionAssert.AreEquivalent(expected, args.Result.ToBeAdded);
 
-            List<ISelectable> expectedToBeRemovedResult = TestUtils.GetListByIndex(expectedToBeRemoved, mainList);
-            CollectionAssert.AreEquivalent(expectedToBeRemovedResult, args.Result.ToBeRemoved);
         }
 
         public static IEnumerable<TestCaseData> Scenarios
         {
             get
             {
-                //TODO adjust for MODE
-                //Click
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { }, new int[] { 0 }, new int[] { 0, 1, 2, 3, 4 }, new int[] { }).SetName("Click - SameType, Empty Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0 }, new int[] { 0 }, new int[] { }, new int[] { 0, 1, 2, 3, 4 }).SetName("Click - SameType, Single element in Old, Clicked in Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0 }, new int[] { 1 }, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0 }).SetName("Click - SameType, Single element in Old, Clicked NOT in Old, Old is of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { 7 }, new int[] { 0 }, new int[] { 0, 1, 2, 3, 4 }, new int[] { 7 }).SetName("Click - SameType, Single element in Old, Clicked NOT in Old, Old is NOT of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 7 }, new int[] { 0 }, new int[] { 7 }, new int[] { 0, 1, 2, 3, 4, 7 }).SetName("Click - SameType, Multiple element in Old, Clicked in Old, Old has only clicked of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 1, 7 }, new int[] { 0 }, new int[] { 7 }, new int[] { 0, 1, 2, 3, 4, 7 }).SetName("Click - SameType, Multiple element in Old, Clicked in Old, Old has more of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 1, 7 }, new int[] { 2 }, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 1, 7 }).SetName("Click - SameType, Multiple element in Old, Clicked NOT in Old, Old contains some of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, true, new int[] { 0, 1, 2, 3, 4 }, new int[] { 5, 6, 7 }, new int[] { 0 }, new int[] { 0, 1, 2, 3, 4 }, new int[] { 5, 6, 7 }).SetName("Click - SameType, Multiple element in Old, Clicked NOT in Old, Old does NOT contains any of same type");
-
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, false, new int[] { }, new int[] { }, new int[] { 0 }, new int[] { 0 }, new int[] { }).SetName("Click - NOT SameType, Empty Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, false, new int[] { }, new int[] { 0 }, new int[] { 0 }, new int[] { 0 }, new int[] { 0 }).SetName("Click - NOT SameType, Single element in Old, Clicked in Old");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, false, new int[] { }, new int[] { 0 }, new int[] { 1 }, new int[] { 1 }, new int[] { 0 }).SetName("Click - NOT SameType, Single element in Old, Clicked NOT in Old, Old is of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, false, new int[] { }, new int[] { 7 }, new int[] { 0 }, new int[] { 0 }, new int[] { 7 }).SetName("Click - NOT SameType, Single element in Old, Clicked NOT in Old, Old is NOT of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, false, new int[] { }, new int[] { 0, 7 }, new int[] { 0 }, new int[] { 0 }, new int[] { 0, 7 }).SetName("Click - NOT SameType, Multiple element in Old, Clicked in Old, Old has only clicked of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, false, new int[] { }, new int[] { 0, 1, 7 }, new int[] { 0 }, new int[] { 0 }, new int[] { 0, 1, 7 }).SetName("Click - NOT SameType, Multiple element in Old, Clicked in Old, Old has more of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, false, new int[] { }, new int[] { 0, 1, 7 }, new int[] { 1 }, new int[] { 1 }, new int[] { 0, 1, 7 }).SetName("Click - NOT SameType, Multiple element in Old, Clicked NOT in Old, Old contains some of same type");
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 10, false, new int[] { }, new int[] { 5, 6, 7 }, new int[] { 0 }, new int[] { 0 }, new int[] { 5, 6, 7 }).SetName("Click - NOT SameType, Multiple element in Old, Clicked NOT in Old, Old does NOT contains any of same type");
+                foreach (var item in TestUtils.GetCustomCases(new ModifiersStruct(false, false, true), true))
+                {
+                    int[] toBeAdded = new int[] { };
+                    if (item.selection.newSelection.Length == 1)
+                    {
+                        if (item.selection.oldSelection.Contains(item.selection.newSelection[0]))
+                        {
+                            toBeAdded = item.selection.oldSelection.ToList().FindAll(x => !item.selection.additionalInfo.group_a.Contains(x)).ToArray();
+                        }
+                        else
+                        {
+                            // list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { 1 }, addInfo));
+                            if (item.selection.additionalInfo.group_a.Contains(item.selection.newSelection[0]))
+                            {
+                                toBeAdded = item.selection.additionalInfo.group_a;
+                            }
+                            else
+                            {
+                                toBeAdded = item.selection.additionalInfo.group_b;
+                            }
+                        }
+                    }
+                    else if (item.selection.newSelection.Length > 1)
+                    {
+                        toBeAdded = item.selection.newSelection;
+                    }
+                    yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct { toBeAdded = toBeAdded }).SetName(item.name);
+                }
             }
         }
 

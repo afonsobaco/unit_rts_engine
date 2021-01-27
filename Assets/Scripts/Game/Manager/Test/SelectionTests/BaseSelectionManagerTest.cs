@@ -123,12 +123,11 @@ namespace Tests.Manager
         {
             get
             {
-                foreach (var item in TestUtils.GetCases())
+                foreach (var item in TestUtils.GetDefaultCases())
                 {
                     yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct()
                     {
                         toBeAdded = item.selection.newSelection,
-                        toBeRemoved = item.selection.oldSelection,
                     }).SetName(item.name);
                 }
             }

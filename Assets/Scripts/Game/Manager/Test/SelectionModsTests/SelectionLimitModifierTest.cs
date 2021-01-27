@@ -33,7 +33,7 @@ namespace Tests
 
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldLimitToBeRemovedToPassedValue(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct, int limit)
+        public void ShouldLimitSelectionToPassedValue(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct, int limit)
         {
             List<ISelectable> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
 
@@ -53,13 +53,12 @@ namespace Tests
         {
             get
             {
-                foreach (var item in TestUtils.GetCases())
+                foreach (var item in TestUtils.GetDefaultCases())
                 {
                     const int limit = 3;
                     yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct()
                     {
                         toBeAdded = item.selection.newSelection.Take(limit).ToArray(),
-                        toBeRemoved = item.selection.oldSelection,
                     }, limit).SetName(item.name);
                 }
             }
