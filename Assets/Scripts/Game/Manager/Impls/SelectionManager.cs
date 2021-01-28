@@ -14,7 +14,8 @@ namespace RTSEngine.Manager
         private List<IBaseSelectionMod> mods;
         private List<ISelectable> currentSelection;
         private List<ISelectable> preSelection;
-        private ISelectable cliked;
+        public ISelectable LastClicked { get; set; }
+        private ISelectable clicked;
         private Vector3 finalScreenPosition;
         private Vector3 initialScreenPosition;
         private bool isAditiveSelection;
@@ -26,11 +27,10 @@ namespace RTSEngine.Manager
         private Vector3 minScreenPos;
         private Vector3 maxScreenPos;
 
-
         public Dictionary<int, List<ISelectable>> Groups { get => groups; private set => groups = value; }
         public IRuntimeSet<ISelectable> SelectableList { get => selectableList; set => selectableList = value; }
         public List<IBaseSelectionMod> Mods { get => mods; set => mods = value; }
-        public ISelectable Cliked { get => cliked; set => cliked = value; }
+        public ISelectable Clicked { get => clicked; set => clicked = value; }
         public Vector3 FinalScreenPosition { get => finalScreenPosition; set => finalScreenPosition = value; }
         public Vector3 InitialScreenPosition { get => initialScreenPosition; set => initialScreenPosition = value; }
         public bool IsAditiveSelection { get => isAditiveSelection; set => isAditiveSelection = value; }
@@ -81,7 +81,7 @@ namespace RTSEngine.Manager
             switch (GetSelectionType())
             {
                 case SelectionTypeEnum.CLICK:
-                    list.Add(Cliked);
+                    list.Add(Clicked);
                     break;
                 case SelectionTypeEnum.KEY:
                     list.AddRange(GetGroup(KeyPressed));
@@ -100,7 +100,7 @@ namespace RTSEngine.Manager
         {
             if (IsKey())
             {
-                Cliked = null;
+                Clicked = null;
                 return SelectionTypeEnum.KEY;
             }
             else if (IsClick())
@@ -108,7 +108,7 @@ namespace RTSEngine.Manager
                 KeyPressed = 0;
                 return SelectionTypeEnum.CLICK;
             }
-            Cliked = null;
+            Clicked = null;
             KeyPressed = 0;
             return SelectionTypeEnum.DRAG;
         }
@@ -120,8 +120,8 @@ namespace RTSEngine.Manager
 
         public bool IsClick()
         {
-            Cliked = GetObjectClicked();
-            return Cliked != null;
+            Clicked = GetObjectClicked();
+            return Clicked != null;
         }
 
 
@@ -200,6 +200,15 @@ namespace RTSEngine.Manager
             this.UpdatePreSelectionStatus(preSelection, false);
             if (KeyPressed <= 0)
                 IsSelecting = false;
+            if (Clicked != null)
+            {
+                LastClicked = Clicked;
+            }
+            if (IsDoubleClick)
+            {
+                LastClicked = null;
+            }
+            IsDoubleClick = false;
             KeyPressed = 0;
 
         }
@@ -286,13 +295,34 @@ namespace RTSEngine.Manager
 
         public override SelectionArgsXP GetSelectionArgs(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType, bool isPreSelection)
         {
+
             currentSelection = currentSelection != null ? currentSelection : new List<ISelectable>();
             newSelection = newSelection != null ? newSelection : new List<ISelectable>();
 
+            if (IsDoubleClick && Clicked != null && Clicked == LastClicked && !IsSameTypeSelection)
+            {
+                if (newSelection.Count == 0)
+                {
+                    newSelection.Add(Clicked);
+                }
+                if (currentSelection.Contains(Clicked))
+                {
+                    currentSelection.Remove(Clicked);
+                }
+                else
+                {
+                    currentSelection.Add(Clicked);
+                }
+                IsSameTypeSelection = true;
+            }
+
+            Vector3 initialSelectionPos = IsSameTypeSelection ? MinScreenPos : InitialScreenPosition;
+            Vector3 finalSelectionPos = IsSameTypeSelection ? MaxScreenPos : FinalScreenPosition;
             SelectionArguments arguments = new SelectionArguments(selectionType, isPreSelection, currentSelection, newSelection, selectableList.GetList());
-            SelectionModifierArguments modifierArgs = new SelectionModifierArguments(IsSameTypeSelection, IsAditiveSelection, IsSameTypeSelection ? MinScreenPos : InitialScreenPosition, IsSameTypeSelection ? MaxScreenPos : FinalScreenPosition);
+            SelectionModifierArguments modifierArgs = new SelectionModifierArguments(IsSameTypeSelection, IsAditiveSelection, initialSelectionPos, finalSelectionPos);
 
             return new SelectionArgsXP(arguments, modifierArgs);
         }
+
     }
 }

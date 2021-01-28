@@ -3,7 +3,6 @@ using UnityEngine;
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Manager;
-using RTSEngine.Manager.SelectionMods.Impls;
 using System.Collections.Generic;
 using Tests.Utils;
 
@@ -12,12 +11,12 @@ namespace Tests
     [TestFixture]
     public class AdditiveModifierTest
     {
-        private AdditiveModifier.SelectionModifier modifier;
+        private AdditiveSelectionModifier modifier;
 
         [SetUp]
         public void SetUp()
         {
-            Modifier = new AdditiveModifier.SelectionModifier();
+            Modifier = new AdditiveSelectionModifier();
         }
 
         [Test]
@@ -34,7 +33,8 @@ namespace Tests
         [Test]
         public void ShouldApplyModifierAny()
         {
-            SelectionArgsXP args = new SelectionArgsXP(new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>()), new SelectionModifierArguments(default, true, default, default));
+            SelectionModifierArguments modifierArgs = new SelectionModifierArguments(default, true, default, default);
+            SelectionArgsXP args = new SelectionArgsXP(new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>()), modifierArgs);
 
             args = Modifier.Apply(args);
 
@@ -98,24 +98,20 @@ namespace Tests
             {
                 foreach (var item in TestUtils.GetCasesWithModifiers(new ModifiersStruct(false, true, false)))
                 {
-                    int[] toBeAdded;
-                    if (item.modifiers.isAdditive && item.selection.newSelection.Length > 0)
+                    int[] toBeAdded = item.selection.newSelection;
+                    if (item.modifiers.isAdditive)
                     {
+                        bool containsAll = toBeAdded.Length > 0 && toBeAdded.ToList().TrueForAll(x => item.selection.oldSelection.ToList().Contains(x));
+                        bool differentCounts = item.selection.oldSelection.Length != toBeAdded.Length;
 
-                        bool containsAll = item.selection.newSelection.ToList().TrueForAll(x => item.selection.oldSelection.ToList().Contains(x));
-                        bool differentCounts = item.selection.oldSelection.Length != item.selection.newSelection.Length;
-                        if (!(containsAll && differentCounts))
+                        var newToBeAdded = item.selection.oldSelection.Union(toBeAdded).ToList();
+
+                        if (containsAll && differentCounts)
                         {
-                            toBeAdded = item.selection.oldSelection.Union(item.selection.newSelection).ToArray();
+                            newToBeAdded.RemoveAll(x => toBeAdded.Contains(x));
                         }
-                        else
-                        {
-                            toBeAdded = new int[] { };
-                        }
-                    }
-                    else
-                    {
-                        toBeAdded = item.selection.newSelection;
+
+                        toBeAdded = newToBeAdded.ToArray();
                     }
                     yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct()
                     {
@@ -125,6 +121,6 @@ namespace Tests
             }
         }
 
-        public AdditiveModifier.SelectionModifier Modifier { get => modifier; set => modifier = value; }
+        public AdditiveSelectionModifier Modifier { get => modifier; set => modifier = value; }
     }
 }

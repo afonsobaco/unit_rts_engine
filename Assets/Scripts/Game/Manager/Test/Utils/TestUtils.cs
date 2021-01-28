@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
 using RTSEngine.Core;
+using RTSEngine.Manager;
 
 namespace Tests.Utils
 {
@@ -27,6 +29,10 @@ namespace Tests.Utils
             {
                 ISelectable item = Substitute.For<ISelectable>();
                 item.Index = i;
+                item.IsCompatible(Arg.Any<ISelectable>()).Returns((x) =>
+                {
+                    return ((ISelectable)x[0]).Index % 2 == 0;
+                });
                 list.Add(item);
             }
             return list;
@@ -160,8 +166,8 @@ namespace Tests.Utils
             {
                 addInfo = new AdditionalInfo()
                 {
-                    group_a = new int[] { 0, 2, 4, 6, 8 },
-                    group_b = new int[] { 1, 3, 5, 7, 9 }
+                    group_evens = new int[] { 0, 2, 4, 6, 8 },
+                    group_odds = new int[] { 1, 3, 5, 7, 9 }
                 };
             }
 
@@ -247,12 +253,12 @@ namespace Tests.Utils
 
     public struct AdditionalInfo
     {
-        public int[] group_a;
-        public int[] group_b;
-        public AdditionalInfo(int[] group_a, int[] group_b)
+        public int[] group_evens;
+        public int[] group_odds;
+        public AdditionalInfo(int[] evens, int[] odds)
         {
-            this.group_a = group_a;
-            this.group_b = group_b;
+            this.group_evens = evens;
+            this.group_odds = odds;
         }
     }
 

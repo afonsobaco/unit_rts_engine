@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40021d46535f2ec4b945940c5b5f7a22, type: 3}
-  m_Name: SelectionLimitModifier
+  m_Name: LimitModifier
   m_EditorClassIdentifier: 
   type: 0
   active: 1

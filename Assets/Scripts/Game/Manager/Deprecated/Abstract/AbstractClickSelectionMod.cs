@@ -1,6 +1,6 @@
 ﻿
 
-// using RTSEngine.Manager.SelectionMods;
+// using RTSEngine.Manager;
 
 // namespace RTSEngine.Manager.Deprecated
 // {

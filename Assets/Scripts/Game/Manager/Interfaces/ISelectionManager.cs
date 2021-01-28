@@ -10,7 +10,7 @@ namespace RTSEngine.Manager
         IRuntimeSet<T> SelectableList { get; set; }
         List<IBaseSelectionMod> Mods { get; set; }
         List<T> CurrentSelection { get; set; }
-        T Cliked { get; set; }
+        T Clicked { get; set; }
         Vector3 FinalScreenPosition { get; set; }
         Vector3 InitialScreenPosition { get; set; }
         bool IsAditiveSelection { get; set; }

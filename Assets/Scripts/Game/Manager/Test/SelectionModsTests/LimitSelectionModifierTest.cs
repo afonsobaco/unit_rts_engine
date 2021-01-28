@@ -3,31 +3,30 @@ using UnityEngine;
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Manager;
-using RTSEngine.Manager.SelectionMods.Impls;
 using System.Collections.Generic;
 using Tests.Utils;
 
 namespace Tests
 {
     [TestFixture]
-    public class SelectionLimitModifierTest
+    public class LimitModifierTest
     {
-        private SelectionLimitModifier.SelectionModifier modifier;
+        private LimitSelectionModifier modifier;
 
         [SetUp]
         public void SetUp()
         {
-            Modifier = new SelectionLimitModifier.SelectionModifier();
+            Modifier = new LimitSelectionModifier();
         }
 
         [Test]
         public void SelectionLimitModifierTestSimplePasses()
         {
             SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
             SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
-            var result = Modifier.Apply(20, args);
+            var result = Modifier.Apply(args, 20);
             Assert.AreEqual(args, result);
         }
 
@@ -38,11 +37,10 @@ namespace Tests
             List<ISelectable> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
 
             SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), TestUtils.GetListByIndex(selectionStruct.newSelection, mainList), mainList);
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
             SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
-            args = Modifier.Apply(limit, args);
-
+            args = Modifier.Apply(args, limit);
             List<ISelectable> expected = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
             CollectionAssert.AreEquivalent(expected, args.Result.ToBeAdded);
         }
@@ -64,6 +62,6 @@ namespace Tests
             }
         }
 
-        public SelectionLimitModifier.SelectionModifier Modifier { get => modifier; set => modifier = value; }
+        public LimitSelectionModifier Modifier { get => modifier; set => modifier = value; }
     }
 }

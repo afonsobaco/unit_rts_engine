@@ -19,6 +19,9 @@ namespace RTSEngine.Manager
         {
             this.selectionManager = selectionManager;
             this.cameraManager = cameraManager;
+
+            this.selectionManager.MinScreenPos = this.cameraManager.GetMinScreenBoundries(Camera.main);
+            this.selectionManager.MaxScreenPos = this.cameraManager.GetMaxScreenBoundries(Camera.main);
         }
 
         private Dictionary<KeyCode, int> groupKeys = new Dictionary<KeyCode, int>()
@@ -90,12 +93,6 @@ namespace RTSEngine.Manager
         {
             selectionManager.IsAditiveSelection = Input.GetKey(aditive);
             selectionManager.IsSameTypeSelection = Input.GetKey(sameType);
-            if (selectionManager.IsSameTypeSelection)
-            {
-                selectionManager.MinScreenPos = cameraManager.GetMinScreenBoundries(Camera.main);
-                selectionManager.MaxScreenPos = cameraManager.GetMaxScreenBoundries(Camera.main);
-            }
-
         }
 
         public void DoGroupSelection(KeyCode groupKeyCode)

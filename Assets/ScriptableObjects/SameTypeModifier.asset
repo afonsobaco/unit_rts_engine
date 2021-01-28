@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d0cca9de2dac0b4ead9c60358192ab3, type: 3}
+  m_Script: {fileID: 11500000, guid: d499c8b0f93feb9498df046b00c40ab2, type: 3}
   m_Name: SameTypeModifier
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Manager:RTSEngine.Manager.SelectionMods:SameTypeModifierSO
   type: 2
   active: 1
   activeOnPreSelection: 0

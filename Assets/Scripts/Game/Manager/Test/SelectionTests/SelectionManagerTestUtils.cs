@@ -36,13 +36,13 @@ namespace Tests.Manager
         public static SelectionArgsXP GetDefaultArgs()
         {
             SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
             return GetDefaultArgs(arguments, modifierArguments);
         }
 
         public static SelectionArgsXP GetDefaultArgs(SelectionArguments arguments)
         {
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
             return GetDefaultArgs(arguments, modifierArguments);
         }
 

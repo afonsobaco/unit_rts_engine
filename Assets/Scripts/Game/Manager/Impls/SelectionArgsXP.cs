@@ -14,7 +14,7 @@ namespace RTSEngine.Manager
         {
             this.arguments = arguments;
             this.modifierArgs = modifierArgs;
-            result.ToBeAdded = Arguments.NewSelection;
+            result = new SelectionResult(Arguments.NewSelection);
         }
 
         public SelectionArguments Arguments { get => arguments; }
@@ -24,18 +24,19 @@ namespace RTSEngine.Manager
 
     public struct SelectionModifierArguments
     {
-        public SelectionModifierArguments(bool isSameType, bool isAdditive, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
-        {
-            this.IsAdditive = isAdditive;
-            this.IsSameType = isSameType;
-            this.InitialScreenPosition = initialScreenPosition;
-            this.FinalScreenPosition = finalScreenPosition;
-        }
-
         public bool IsAdditive { get; }
         public bool IsSameType { get; }
         public Vector2 InitialScreenPosition { get; }
         public Vector2 FinalScreenPosition { get; }
+
+        public SelectionModifierArguments(bool isSameType, bool isAdditive, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
+        {
+            IsAdditive = isAdditive;
+            IsSameType = isSameType;
+            InitialScreenPosition = initialScreenPosition;
+            FinalScreenPosition = finalScreenPosition;
+        }
+
     }
 
 
@@ -64,7 +65,12 @@ namespace RTSEngine.Manager
     {
         private List<ISelectable> toBeAdded;
 
-        public List<ISelectable> ToBeAdded { get => toBeAdded; set => toBeAdded = value; }
+        public SelectionResult(List<ISelectable> toBeAdded)
+        {
+            this.toBeAdded = toBeAdded;
+        }
+
+        public List<ISelectable> ToBeAdded { get => toBeAdded; }
     }
 
 }

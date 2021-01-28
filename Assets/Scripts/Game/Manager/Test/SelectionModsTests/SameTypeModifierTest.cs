@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Manager;
-using RTSEngine.Manager.SelectionMods.Impls;
 using System.Collections.Generic;
 using NSubstitute;
 using Tests.Utils;
@@ -13,19 +12,19 @@ namespace Tests
     [TestFixture]
     public class SameTypeModifierTest
     {
-        private SameTypeModifier.SelectionModifier modifier;
+        private SameTypeSelectionModifier modifier;
 
         [SetUp]
         public void SetUp()
         {
-            Modifier = Substitute.ForPartsOf<SameTypeModifier.SelectionModifier>();
+            Modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>();
         }
 
         [Test]
         public void SameTypeModifierTestSimplePasses()
         {
             SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(false, false, Vector2.zero, Vector2.zero);
+            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
             SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
 
             var result = Modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
@@ -44,13 +43,13 @@ namespace Tests
             List<ISelectable> expected = new List<ISelectable>();
             if (selection.newSelection.Length > 0)
             {
-                if (selection.additionalInfo.group_a.Contains(selection.newSelection[0]))
+                if (selection.additionalInfo.group_evens.Contains(selection.newSelection[0]))
                 {
-                    sameTypeList = TestUtils.GetListByIndex(selection.additionalInfo.group_a, mainList);
+                    sameTypeList = TestUtils.GetListByIndex(selection.additionalInfo.group_evens, mainList);
                 }
                 else
                 {
-                    sameTypeList = TestUtils.GetListByIndex(selection.additionalInfo.group_b, mainList); ;
+                    sameTypeList = TestUtils.GetListByIndex(selection.additionalInfo.group_odds, mainList); ;
                 }
             }
             if (modifier.isSameType)
@@ -84,20 +83,20 @@ namespace Tests
                     int[] toBeAdded = new int[] { };
                     if (item.selection.newSelection.Length == 1)
                     {
-                        if (item.selection.oldSelection.Contains(item.selection.newSelection[0]))
+                        if (item.selection.oldSelection.Contains(item.selection.newSelection[0]) && item.selection.oldSelection.Length > 1)
                         {
-                            toBeAdded = item.selection.oldSelection.ToList().FindAll(x => !item.selection.additionalInfo.group_a.Contains(x)).ToArray();
+                            toBeAdded = item.selection.oldSelection.ToList().FindAll(x => !item.selection.additionalInfo.group_evens.Contains(x)).ToArray();
                         }
                         else
                         {
                             // list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { 1 }, addInfo));
-                            if (item.selection.additionalInfo.group_a.Contains(item.selection.newSelection[0]))
+                            if (item.selection.additionalInfo.group_evens.Contains(item.selection.newSelection[0]))
                             {
-                                toBeAdded = item.selection.additionalInfo.group_a;
+                                toBeAdded = item.selection.additionalInfo.group_evens;
                             }
                             else
                             {
-                                toBeAdded = item.selection.additionalInfo.group_b;
+                                toBeAdded = item.selection.additionalInfo.group_odds;
                             }
                         }
                     }
@@ -110,6 +109,6 @@ namespace Tests
             }
         }
 
-        public SameTypeModifier.SelectionModifier Modifier { get => modifier; set => modifier = value; }
+        public SameTypeSelectionModifier Modifier { get => modifier; set => modifier = value; }
     }
 }
