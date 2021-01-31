@@ -7,7 +7,7 @@ namespace RTSEngine.Core
     {
         void AddToList(T item);
         T GetItem(int index);
-        List<T> GetList();
+        HashSet<T> GetList();
         void RemoveFromList(T item);
     }
 }

@@ -1,15 +1,26 @@
+using System.Security.Cryptography.X509Certificates;
 using System.Linq;
 using System.Collections.Generic;
 using RTSEngine.Core;
 using UnityEngine;
+using Zenject;
 
 namespace RTSEngine.Manager
 {
     public class AdditiveSelectionModifier : ISelectionModifier
     {
+
+        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager;
+
+        [Inject]
+        public void Construct(ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager)
+        {
+            this.selectionManager = selectionManager;
+        }
+
         public SelectionArgsXP Apply(SelectionArgsXP args, params object[] other)
         {
-            if (args.ModifierArgs.IsAdditive)
+            if (selectionManager.IsAdditive())
             {
                 AddOrRemoveFromSelection(args);
             }
@@ -18,21 +29,21 @@ namespace RTSEngine.Manager
 
         private void AddOrRemoveFromSelection(SelectionArgsXP args)
         {
-            SelectionResult result = args.Result;
-            List<ISelectable> toBeAdded = args.Arguments.OldSelection.Union(args.Result.ToBeAdded).ToList();
-            if (ContainsAllSelected(args.Arguments.SelectionType, args.Arguments.OldSelection, args.Result.ToBeAdded))
+            HashSet<ISelectableObjectBehaviour> aux = new HashSet<ISelectableObjectBehaviour>(args.OldSelection);
+            aux.UnionWith(args.ToBeAdded);
+            if (ContainsAllSelected(args.OldSelection, args.NewSelection))
             {
-                toBeAdded.RemoveAll(x => args.Result.ToBeAdded.Contains(x));
+                aux.RemoveWhere(x => args.ToBeAdded.Contains(x));
             }
-            args.Result = new SelectionResult(toBeAdded);
+            args.ToBeAdded = aux;
         }
 
-        private bool ContainsAllSelected(SelectionTypeEnum selectionType, List<ISelectable> oldSelection, List<ISelectable> toBeAdded)
+        private bool ContainsAllSelected(HashSet<ISelectableObjectBehaviour> oldSelection, HashSet<ISelectableObjectBehaviour> newSelection)
         {
-            bool types = selectionType == SelectionTypeEnum.CLICK || selectionType == SelectionTypeEnum.KEY;
-            bool containsAll = toBeAdded.Count > 0 && toBeAdded.TrueForAll(x => oldSelection.Contains(x));
-            bool differentCounts = oldSelection.Count != toBeAdded.Count;
-            return types && containsAll && differentCounts;
+            bool oldContainsNew = newSelection.All(x => oldSelection.Contains(x));
+            HashSet<ISelectableObjectBehaviour> aux = new HashSet<ISelectableObjectBehaviour>(oldSelection);
+            aux.RemoveWhere(x => newSelection.Contains(x));
+            return oldContainsNew && aux.Count > 0;
         }
     }
 }

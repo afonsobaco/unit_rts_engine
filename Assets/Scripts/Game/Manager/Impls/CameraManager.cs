@@ -1,13 +1,13 @@
 using UnityEngine;
-using RTSEngine.Core;
-
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RTSEngine.Manager
 {
     public class CameraManager : ICameraManager
     {
 
-        private ISelectionManager<ISelectable, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager;
 
         private Vector3 origin;
         private bool isPanning;
@@ -20,20 +20,29 @@ namespace RTSEngine.Manager
         public bool IsCentering { get => isCentering; set => isCentering = value; }
         public ICameraSettings CameraSettings { get => settings; set => settings = value; }
 
-        public CameraManager(ISelectionManager<ISelectable, SelectionTypeEnum> selectionManager)
+        public CameraManager(ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }
 
         public Vector3 DoCameraCentering(UnityEngine.Camera mainCamera)
         {
-            if (selectionManager.CurrentSelection.Count != 0)
+            if (selectionManager.GetCurrentSelection().Count != 0)
             {
-                Vector3 midPoint = selectionManager.GetSelectionMainPoint();
+                Vector3 midPoint = GetSelectionMainPoint(mainCamera, selectionManager.GetCurrentSelection());
                 float z = midPoint.z - GetCameraZDistance(mainCamera);
                 return new Vector3(midPoint.x, mainCamera.transform.position.y, (float)z);
             }
             return mainCamera.transform.position;
+        }
+
+        private Vector3 GetSelectionMainPoint(UnityEngine.Camera mainCamera, HashSet<ISelectableObjectBehaviour> selectableObjectBehaviours)
+        {
+            if (selectableObjectBehaviours.Count == 0)
+            {
+                return new Vector3(mainCamera.transform.position.x, 0, mainCamera.transform.position.z);
+            }
+            return selectableObjectBehaviours.First().Position;
         }
 
         public Vector3 DoCameraInputMovement(float horizontal, float vertical, Vector3 mousePosition, float deltaTime, UnityEngine.Camera mainCamera)
@@ -57,7 +66,6 @@ namespace RTSEngine.Manager
             desiredMove = mainCamera.transform.InverseTransformDirection(desiredMove);
             return desiredMove;
         }
-
 
         public Vector3 DoCameraZooming(float y, float deltaTime, UnityEngine.Camera mainCamera)
         {
@@ -106,7 +114,7 @@ namespace RTSEngine.Manager
 
         private Vector3 DoMouseCameraMovement(Vector3 mousePosition, float deltaTime, UnityEngine.Camera mainCamera)
         {
-            if (!selectionManager.IsSelecting)
+            if (!selectionManager.IsSelecting())
             {
                 var mousePos = mainCamera.ScreenToViewportPoint(mousePosition);
                 if (mousePos.x >= 0 && mousePos.x <= 1 && mousePos.y >= 0 && mousePos.y <= 1)

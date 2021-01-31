@@ -20,8 +20,7 @@ namespace RTSEngine.Manager
             this.selectionManager = selectionManager;
             this.cameraManager = cameraManager;
 
-            this.selectionManager.MinScreenPos = this.cameraManager.GetMinScreenBoundries(Camera.main);
-            this.selectionManager.MaxScreenPos = this.cameraManager.GetMaxScreenBoundries(Camera.main);
+            this.selectionManager.SetScreenBoundries(this.cameraManager.GetMinScreenBoundries(Camera.main), this.cameraManager.GetMaxScreenBoundries(Camera.main));
         }
 
         private Dictionary<KeyCode, int> groupKeys = new Dictionary<KeyCode, int>()
@@ -91,8 +90,7 @@ namespace RTSEngine.Manager
 
         public void SetSelectionKeys(KeyCode aditive, KeyCode sameType, KeyCode groupKeyCode)
         {
-            selectionManager.IsAditiveSelection = Input.GetKey(aditive);
-            selectionManager.IsSameTypeSelection = Input.GetKey(sameType);
+            selectionManager.SetKeysPressed(Input.GetKey(aditive), Input.GetKey(sameType));
         }
 
         public void DoGroupSelection(KeyCode groupKeyCode)
@@ -102,12 +100,12 @@ namespace RTSEngine.Manager
             {
                 if (Input.GetKey(groupKeyCode))
                 {
-                    selectionManager.SetGroup(keyPressed);
+                    selectionManager.CreateGroupSet(keyPressed);
                 }
                 else
                 {
-                    selectionManager.KeyPressed = keyPressed;
-                    selectionManager.EndOfSelection(Input.mousePosition);
+                    selectionManager.SetGroupNumperPressed(keyPressed);
+                    selectionManager.DoSelection(Input.mousePosition);
                 }
             }
         }
@@ -139,7 +137,8 @@ namespace RTSEngine.Manager
             if (Input.GetMouseButtonUp(0))
             {
                 VerifyDoubleClick(doubleClickTime);
-                selectionManager.EndOfSelection(Input.mousePosition);
+                selectionManager.DoSelection(Input.mousePosition);
+                //TODO create a perform double click here
             }
 
         }
@@ -148,7 +147,7 @@ namespace RTSEngine.Manager
         {
             if (Time.time - lastTimeClicked <= doubleClickTime)
             {
-                selectionManager.IsDoubleClick = true;
+                selectionManager.SetDoubleClick(true);
             }
             else
             {

@@ -5,7 +5,7 @@
         UNIT, //Any unit
         BUILDING, //Any building
         CONSUMABLE, // Items, Resources, etc... 
-        ENVIRONMENT,  //Any Environment'
+        ENVIRONMENT,  //Any Environment
         NONE //Can't be selected
     }
 }

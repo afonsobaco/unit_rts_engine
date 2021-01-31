@@ -1,11 +1,11 @@
-﻿using RTSEngine.Manager;
+﻿using RTSEngine.Core;
 
-namespace RTSEngine.Core
+namespace RTSEngine.Manager
 {
-    public class SelectableObjectDeletedSignal : ISelectableDeletedSignal<ISelectable>
+    public class SelectableObjectDeletedSignal : ISelectableDeletedSignal<ISelectableObjectBehaviour>
     {
-        private ISelectable selectable;
+        private ISelectableObjectBehaviour selectable;
 
-        public ISelectable Selectable { get => selectable; set => selectable = value; }
+        public ISelectableObjectBehaviour Selectable { get => selectable; set => selectable = value; }
     }
 }

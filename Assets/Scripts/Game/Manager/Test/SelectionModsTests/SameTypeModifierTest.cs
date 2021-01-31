@@ -14,63 +14,55 @@ namespace Tests
     {
         private SameTypeSelectionModifier modifier;
 
+        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager;
+
         [SetUp]
         public void SetUp()
         {
-            Modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>();
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum>>();
+            modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>();
+            modifier.Construct(selectionManager);
         }
 
         [Test]
         public void SameTypeModifierTestSimplePasses()
         {
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
-            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
+            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
 
-            var result = Modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
+            var result = modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
             Assert.AreEqual(args, result);
         }
 
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldApplyModifierOnClick(SelectionStruct selection, ModifiersStruct modifier, ResultStruct result)
+        public void ShouldApplyModifierOnClick(SelectionStruct selectionStruct, ModifiersStruct modifierStruct, ResultStruct resultStruct)
         {
+            selectionManager.IsSameType().Returns(modifierStruct.isSameType);
 
-            List<ISelectable> mainList = TestUtils.GetSomeObjects(selection.mainListAmount);
-            List<ISelectable> oldSelection = TestUtils.GetListByIndex(selection.oldSelection, mainList);
-            List<ISelectable> newSelection = TestUtils.GetListByIndex(selection.newSelection, mainList);
-            List<ISelectable> sameTypeList = new List<ISelectable>();
-            List<ISelectable> expected = new List<ISelectable>();
-            if (selection.newSelection.Length > 0)
+            HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(selectionStruct.mainListAmount);
+            HashSet<ISelectableObjectBehaviour> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
+            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
+            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
+
+            HashSet<ISelectableObjectBehaviour> sameTypeList = new HashSet<ISelectableObjectBehaviour>();
+            if (modifierStruct.isSameType && selectionStruct.newSelection.Length > 0)
             {
-                if (selection.additionalInfo.group_evens.Contains(selection.newSelection[0]))
+                if (selectionStruct.additionalInfo.group_evens.Contains(selectionStruct.newSelection[0])) //TODO should not work with newSelection
                 {
-                    sameTypeList = TestUtils.GetListByIndex(selection.additionalInfo.group_evens, mainList);
+                    sameTypeList = TestUtils.GetListByIndex(selectionStruct.additionalInfo.group_evens, mainList);
                 }
                 else
                 {
-                    sameTypeList = TestUtils.GetListByIndex(selection.additionalInfo.group_odds, mainList); ;
+                    sameTypeList = TestUtils.GetListByIndex(selectionStruct.additionalInfo.group_odds, mainList); ;
                 }
             }
-            if (modifier.isSameType)
-            {
-                expected = TestUtils.GetListByIndex(result.toBeAdded, mainList);
-            }
-            else
-            {
-                expected = TestUtils.GetListByIndex(selection.newSelection, mainList);
-            }
+            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
+            modifier.When(x => x.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>(), Arg.Any<object[]>())).DoNotCallBase();
+            modifier.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>(), Arg.Any<object[]>()).Returns(sameTypeList);
 
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.CLICK, false, oldSelection, newSelection, mainList);
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments(modifier.isSameType, false, Vector2.zero, new Vector2(800, 600));
-            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
+            args = modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
 
-            Modifier.When(x => x.GetAllFromSameTypeOnScreen(default, default)).DoNotCallBase();
-            Modifier.GetAllFromSameTypeOnScreen(Arg.Any<SelectionArgsXP>(), Arg.Any<SameTypeSelectionModeEnum>()).Returns(sameTypeList);
-
-            args = Modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
-
-            CollectionAssert.AreEquivalent(expected, args.Result.ToBeAdded);
+            CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
 
         }
 
@@ -78,37 +70,23 @@ namespace Tests
         {
             get
             {
-                foreach (var item in TestUtils.GetCustomCases(new ModifiersStruct(false, false, true), true))
+                foreach (var item in TestUtils.GetCustomCases(new ModifiersStruct(false, true), true))
                 {
-                    int[] toBeAdded = new int[] { };
-                    if (item.selection.newSelection.Length == 1)
+                    int[] toBeAdded = item.selection.newSelection;
+                    if (item.modifiers.isSameType && toBeAdded.Length == 1) //click
                     {
-                        if (item.selection.oldSelection.Contains(item.selection.newSelection[0]) && item.selection.oldSelection.Length > 1)
+                        if (item.selection.additionalInfo.group_evens.Contains(item.selection.newSelection[0]))
                         {
-                            toBeAdded = item.selection.oldSelection.ToList().FindAll(x => !item.selection.additionalInfo.group_evens.Contains(x)).ToArray();
+                            toBeAdded = item.selection.additionalInfo.group_evens;
                         }
                         else
                         {
-                            // list.Add(new SelectionStruct(10, new int[] { 0 }, new int[] { 1 }, addInfo));
-                            if (item.selection.additionalInfo.group_evens.Contains(item.selection.newSelection[0]))
-                            {
-                                toBeAdded = item.selection.additionalInfo.group_evens;
-                            }
-                            else
-                            {
-                                toBeAdded = item.selection.additionalInfo.group_odds;
-                            }
+                            toBeAdded = item.selection.additionalInfo.group_odds;
                         }
-                    }
-                    else if (item.selection.newSelection.Length > 1)
-                    {
-                        toBeAdded = item.selection.newSelection;
                     }
                     yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct { toBeAdded = toBeAdded }).SetName(item.name);
                 }
             }
         }
-
-        public SameTypeSelectionModifier Modifier { get => modifier; set => modifier = value; }
     }
 }

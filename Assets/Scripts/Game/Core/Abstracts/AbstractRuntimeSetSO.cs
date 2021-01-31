@@ -1,41 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RTSEngine.Core
 {
     public abstract class AbstractRuntimeSetSO<T> : ScriptableObject, IRuntimeSet<T>
     {
-        [SerializeField] private List<T> _list = new List<T>();
+        [SerializeField] private HashSet<T> _list = new HashSet<T>();
 
-        public List<T> List { get => _list; set => _list = value; }
+        public HashSet<T> HashSet { get => _list; set => _list = value; }
 
         public void AddToList(T item)
         {
-            if (item != null && !List.Contains(item))
+            if (item != null && !HashSet.Contains(item))
             {
-                List.Add(item);
+                HashSet.Add(item);
             }
         }
 
         public void RemoveFromList(T item)
         {
-            if (item != null && List.Contains(item))
+            if (item != null && HashSet.Contains(item))
             {
-                List.Remove(item);
+                HashSet.Remove(item);
             }
         }
 
-        public List<T> GetList()
+        public HashSet<T> GetList()
         {
 
-            return List;
+            return HashSet;
         }
 
         public T GetItem(int index)
         {
-            if (index < List.Count)
+            if (index < HashSet.Count)
             {
-                return List[index];
+                return HashSet.ElementAt(index);
             }
             return default(T);
         }

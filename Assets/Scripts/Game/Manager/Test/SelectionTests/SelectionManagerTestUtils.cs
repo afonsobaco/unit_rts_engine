@@ -1,4 +1,5 @@
 ﻿
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Manager;
@@ -10,9 +11,9 @@ namespace Tests.Manager
 {
     public class SelectionManagerTestUtils
     {
-        private static List<SelectableObjectTestStruct> GetDefaultTestListOfObjects()
+        private static HashSet<SelectableObjectTestStruct> GetDefaultTestListOfObjects()
         {
-            return new List<SelectableObjectTestStruct>(){
+            return new HashSet<SelectableObjectTestStruct>(){
                 new SelectableObjectTestStruct(new Vector3(0,0,0), ObjectTypeEnum.UNIT),
                 new SelectableObjectTestStruct(new Vector3(1,0,1), ObjectTypeEnum.UNIT),
                 new SelectableObjectTestStruct(new Vector3(-1,0,1), ObjectTypeEnum.UNIT),
@@ -26,41 +27,27 @@ namespace Tests.Manager
         }
 
 
-        public static ISelectable CreateATestableObject(int i)
+        public static ISelectableObjectBehaviour CreateATestableObject(int i)
         {
-            var obj = Substitute.For<ISelectable>();
-            obj.Position.Returns(GetDefaultTestListOfObjects()[i].Pos);
+            var obj = Substitute.For<ISelectableObjectBehaviour>();
+            obj.Position.Returns(GetDefaultTestListOfObjects().ElementAt(i).Pos);
             return obj;
         }
 
         public static SelectionArgsXP GetDefaultArgs()
         {
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
-            return GetDefaultArgs(arguments, modifierArguments);
+            return GetDefaultArgs(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
         }
 
-        public static SelectionArgsXP GetDefaultArgs(SelectionArguments arguments)
+        public static SelectionArgsXP GetDefaultArgs(HashSet<ISelectableObjectBehaviour> oldSelection, HashSet<ISelectableObjectBehaviour> newSelection, HashSet<ISelectableObjectBehaviour> mainList)
         {
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
-            return GetDefaultArgs(arguments, modifierArguments);
-        }
-
-        public static SelectionArgsXP GetDefaultArgs(SelectionModifierArguments modifierArguments)
-        {
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
-            return GetDefaultArgs(arguments, modifierArguments);
-        }
-
-        public static SelectionArgsXP GetDefaultArgs(SelectionArguments arguments, SelectionModifierArguments modifierArguments)
-        {
-            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
+            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
             return args;
         }
 
-        public static List<IBaseSelectionMod> GetSomeModsFromType(int amount, SelectionTypeEnum type)
+        public static HashSet<IBaseSelectionMod> GetSomeModsFromType(int amount, SelectionTypeEnum type)
         {
-            List<IBaseSelectionMod> list = new List<IBaseSelectionMod>();
+            HashSet<IBaseSelectionMod> list = new HashSet<IBaseSelectionMod>();
             for (var i = 0; i < amount; i++)
             {
                 IBaseSelectionMod mod = Substitute.For<IBaseSelectionMod>();

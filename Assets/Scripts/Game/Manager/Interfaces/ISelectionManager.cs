@@ -5,33 +5,24 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
-    public interface ISelectionManager<T, ST> : IDisposable where T : ISelectable
+    public interface ISelectionManager<T, M, ST> : IDisposable where T : ISelectable
     {
-        IRuntimeSet<T> SelectableList { get; set; }
-        List<IBaseSelectionMod> Mods { get; set; }
-        List<T> CurrentSelection { get; set; }
-        T Clicked { get; set; }
-        Vector3 FinalScreenPosition { get; set; }
-        Vector3 InitialScreenPosition { get; set; }
-        bool IsAditiveSelection { get; set; }
-        bool IsDoubleClick { get; set; }
-        bool IsSameTypeSelection { get; set; }
-        bool IsSelecting { get; set; }
-        int KeyPressed { get; set; }
+        void SetMainList(HashSet<T> list);
+        void SetSelctionModifiers(HashSet<M> list);
+        void SetScreenBoundries(Vector2 minScreenPoint, Vector2 maxScreenPoint);
+        void SetKeysPressed(bool additiveKeyPressed, bool sameTypeKeyPressed);
+        void SetGroupNumperPressed(int keyPressed);
+        void SetDoubleClick(bool doubleClick);
 
-        Vector3 MinScreenPos { get; set; }
-        Vector3 MaxScreenPos { get; set; }
+        bool IsSelecting();
+        bool IsAdditive();
+        bool IsSameType();
 
-        List<T> GetNewSelection();
-        List<T> UpdateCurrentSelection(List<T> value);
-        List<T> UpdatePreSelection(List<T> value);
-        SelectionTypeEnum GetSelectionType();
-        Vector3 GetSelectionMainPoint();
-        void AddSelectableObject(SelectableObjectCreatedSignal signal);
-        void DoPreSelection(Vector3 mousePosition);
-        void EndOfSelection(Vector3 mousePosition);
-        void RemoveSelectableObject(SelectableObjectDeletedSignal signal);
-        void SetGroup(int key);
-        void StartOfSelection(Vector3 mousePosition);
+        int GetGroupSetNumberPressed();
+        Vector2 GetInitialScreenPosition();
+        Vector2 GetFinalScreenPosition();
+        HashSet<T> GetCurrentSelection();
+        HashSet<T> GetGroupSet(int groupSetId);
+        Dictionary<int, HashSet<ISelectableObjectBehaviour>> GetAllGroupSets();
     }
 }

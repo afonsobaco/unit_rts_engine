@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
@@ -15,7 +15,7 @@ namespace Tests.Manager
 
         private ICameraManager manager;
         private UnityEngine.Camera mainCamera;
-        private ISelectionManager<ISelectable, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager;
 
         private ICameraSettings cameraSettings;
 
@@ -25,8 +25,7 @@ namespace Tests.Manager
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectable, SelectionTypeEnum>>();
-            selectionManager.IsSelecting = false;
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum>>();
             cameraSettings = Substitute.For<ICameraSettings>();
             manager = Substitute.ForPartsOf<CameraManager>(new object[] { selectionManager });
 
@@ -61,7 +60,7 @@ namespace Tests.Manager
         [Test]
         public void ShouldNotMoveCameraWhenCenterCameraToSelectionWithEmptySelection()
         {
-            selectionManager.CurrentSelection.Returns(new List<ISelectable>());
+            selectionManager.GetCurrentSelection().Returns(new HashSet<ISelectableObjectBehaviour>());
             var result = manager.DoCameraCentering(mainCamera);
             Assert.AreEqual(mainCamera.transform.position, result);
         }
@@ -74,12 +73,13 @@ namespace Tests.Manager
         {
 
             Vector3 expectedPos = new Vector3(2, 0, 20);
-            List<ISelectable> list = new List<ISelectable>();
-            list.Add(Substitute.For<ISelectable>());
-            list[0].Position.Returns(expectedPos);
-            selectionManager.CurrentSelection.Returns(list);
+            HashSet<ISelectableObjectBehaviour> list = new HashSet<ISelectableObjectBehaviour>();
+            list.Add(Substitute.For<ISelectableObjectBehaviour>());
+            list.First().Position.Returns(expectedPos);
+            selectionManager.GetCurrentSelection().Returns(list);
 
-            selectionManager.GetSelectionMainPoint().Returns(expectedPos);
+            //TODO adjust test
+            // selectionManager.GetSelectionMainPoint().Returns(expectedPos);
 
 
 
@@ -145,7 +145,7 @@ namespace Tests.Manager
         public void ShouldNotDoCameraInputMovementWhenIsSelecting()
         {
             Vector3 mousePos = mainCamera.ViewportToScreenPoint(new Vector2(1f, 1f));
-            selectionManager.IsSelecting = true;
+            selectionManager.IsSelecting().Returns(true);
             var result = manager.DoCameraInputMovement(0f, 0f, mousePos, DeltaTime, mainCamera);
             Assert.AreEqual(Vector3.zero, result);
         }

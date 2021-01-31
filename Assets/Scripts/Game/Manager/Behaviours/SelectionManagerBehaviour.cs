@@ -10,28 +10,29 @@ namespace RTSEngine.Manager
     {
         [SerializeField] private SelectableObjectRuntimeSetSO selectableList;
         [SerializeField] private RectTransform selectionBox;
-        [SerializeField] private List<ScriptableObject> modifiersList;
+        [SerializeField] private HashSet<ScriptableObject> modifiersList;
 
-        private ISelectionManager<ISelectable, SelectionTypeEnum> manager;
+        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> manager;
 
         [Inject]
-        private void Construct(ISelectionManager<ISelectable, SelectionTypeEnum> manager)
+        private void Construct(ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> manager)
         {
             this.manager = manager;
             selectableList.GetList().Clear();
-            this.manager.SelectableList = this.selectableList;
-            this.manager.Mods = GetScriptableObjectsAsMods();
+            this.manager.SetMainList(this.selectableList.GetList());
+            this.manager.SetSelctionModifiers(GetScriptableObjectsAsMods());
         }
 
-        private List<IBaseSelectionMod> GetScriptableObjectsAsMods()
+        private HashSet<IBaseSelectionMod> GetScriptableObjectsAsMods()
         {
             if (modifiersList != null)
             {
-                return modifiersList.FindAll(x => x is IBaseSelectionMod).Select(x => x as IBaseSelectionMod).ToList();
+                IEnumerable<IBaseSelectionMod> list = modifiersList.ToList().FindAll(x => x is IBaseSelectionMod).Select(x => x as IBaseSelectionMod);
+                return new HashSet<IBaseSelectionMod>(list);
             }
             else
             {
-                return new List<IBaseSelectionMod>();
+                return new HashSet<IBaseSelectionMod>();
             }
         }
 
@@ -46,7 +47,7 @@ namespace RTSEngine.Manager
             {
                 return;
             }
-            if (manager.IsSelecting)
+            if (manager.IsSelecting())
             {
                 if (!selectionBox.gameObject.activeInHierarchy)
                 {
@@ -67,8 +68,8 @@ namespace RTSEngine.Manager
 
         private void DrawSelectionBox()
         {
-            selectionBox.position = SelectionUtil.GetAreaCenter(manager.InitialScreenPosition, manager.FinalScreenPosition);
-            selectionBox.sizeDelta = SelectionUtil.GetAreaSize(manager.InitialScreenPosition, manager.FinalScreenPosition);
+            selectionBox.position = SelectionUtil.GetAreaCenter(manager.GetInitialScreenPosition(), manager.GetFinalScreenPosition());
+            selectionBox.sizeDelta = SelectionUtil.GetAreaSize(manager.GetInitialScreenPosition(), manager.GetFinalScreenPosition());
         }
 
 

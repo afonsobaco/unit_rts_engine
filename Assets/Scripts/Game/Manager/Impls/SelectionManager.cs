@@ -1,93 +1,232 @@
 using RTSEngine.Core;
 using RTSEngine.Utils;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace RTSEngine.Manager
 {
-    public class SelectionManager : BaseSelectionManager, ISelectionManager<ISelectable, SelectionTypeEnum>
+    public class SelectionManager : ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum>
     {
 
-        private Dictionary<int, List<ISelectable>> groups = new Dictionary<int, List<ISelectable>>();
-        private IRuntimeSet<ISelectable> selectableList;
-        private List<IBaseSelectionMod> mods;
-        private List<ISelectable> currentSelection;
-        private List<ISelectable> preSelection;
-        public ISelectable LastClicked { get; set; }
-        private ISelectable clicked;
-        private Vector3 finalScreenPosition;
-        private Vector3 initialScreenPosition;
+        private Dictionary<int, HashSet<ISelectableObjectBehaviour>> groupSet = new Dictionary<int, HashSet<ISelectableObjectBehaviour>>();
+        private HashSet<ISelectableObjectBehaviour> mainList;
+        private HashSet<ISelectableObjectBehaviour> currentSelection;
+        private HashSet<ISelectableObjectBehaviour> preSelection;
+        private HashSet<IBaseSelectionMod> mods;
+        private ISelectableObjectBehaviour lastClicked;
+        private ISelectableObjectBehaviour clicked;
+
+        private int groupNumberPressed = 0;
         private bool isAditiveSelection;
         private bool isDoubleClick;
         private bool isSameTypeSelection;
-        private int keyPressed = 0;
         private bool isSelecting;
-
+        private bool isPreSelection;
+        private Vector3 finalScreenPosition;
+        private Vector3 initialScreenPosition;
         private Vector3 minScreenPos;
         private Vector3 maxScreenPos;
+        private SelectionTypeEnum selectionType;
 
-        public Dictionary<int, List<ISelectable>> Groups { get => groups; private set => groups = value; }
-        public IRuntimeSet<ISelectable> SelectableList { get => selectableList; set => selectableList = value; }
-        public List<IBaseSelectionMod> Mods { get => mods; set => mods = value; }
-        public ISelectable Clicked { get => clicked; set => clicked = value; }
-        public Vector3 FinalScreenPosition { get => finalScreenPosition; set => finalScreenPosition = value; }
-        public Vector3 InitialScreenPosition { get => initialScreenPosition; set => initialScreenPosition = value; }
-        public bool IsAditiveSelection { get => isAditiveSelection; set => isAditiveSelection = value; }
-        public bool IsDoubleClick { get => isDoubleClick; set => isDoubleClick = value; }
-        public bool IsSameTypeSelection { get => isSameTypeSelection; set => isSameTypeSelection = value; }
-        public bool IsSelecting { get => isSelecting; set => isSelecting = value; }
-        public int KeyPressed { get => keyPressed; set => keyPressed = value; }
 
-        public virtual List<ISelectable> CurrentSelection
+        public void SetMainList(HashSet<ISelectableObjectBehaviour> list)
         {
-            get
-            {
-                if (currentSelection == null)
-                {
-                    currentSelection = new List<ISelectable>();
-                }
-                return currentSelection;
-            }
-            set
-            {
-                currentSelection = value;
-            }
+            this.mainList = list;
         }
 
-        public List<ISelectable> PreSelection
+        public void SetSelctionModifiers(HashSet<IBaseSelectionMod> list)
         {
-            get
-            {
-                if (preSelection == null)
-                {
-                    preSelection = new List<ISelectable>();
-                }
-                return preSelection;
-            }
-            set
-            {
-                preSelection = value;
-            }
+            this.mods = list;
         }
 
-        public Vector3 MinScreenPos { get => minScreenPos; set => minScreenPos = value; }
-        public Vector3 MaxScreenPos { get => maxScreenPos; set => maxScreenPos = value; }
-
-        public virtual List<ISelectable> GetNewSelection()
+        public void SetScreenBoundries(Vector2 minScreenPoint, Vector2 maxScreenPoint)
         {
-            List<ISelectable> list = new List<ISelectable>();
+            this.minScreenPos = minScreenPoint;
+            this.maxScreenPos = maxScreenPoint;
+        }
 
-            switch (GetSelectionType())
+        public void SetKeysPressed(bool additiveKeyPressed, bool sameTypeKeyPressed)
+        {
+            this.isAditiveSelection = additiveKeyPressed;
+            this.isSameTypeSelection = sameTypeKeyPressed;
+        }
+
+        public void SetGroupNumperPressed(int groupNumber)
+        {
+            this.groupNumberPressed = groupNumber;
+        }
+
+        public void SetDoubleClick(bool doubleClick)
+        {
+            this.isDoubleClick = doubleClick;
+        }
+
+        public void SetCurrentSelection(HashSet<ISelectableObjectBehaviour> selection)
+        {
+            this.currentSelection = selection;
+        }
+
+        public void SetClicked(ISelectableObjectBehaviour selected)
+        {
+            this.clicked = selected;
+        }
+
+        public void SetLastClicked(ISelectableObjectBehaviour selected)
+        {
+            this.lastClicked = selected;
+        }
+
+        public void SetIsPreSelection(bool value)
+        {
+            this.isPreSelection = value;
+        }
+
+        public void SetPreSelection(HashSet<ISelectableObjectBehaviour> preSelection)
+        {
+            this.preSelection = preSelection;
+        }
+
+        public void SetSelectionType(SelectionTypeEnum type)
+        {
+            this.selectionType = type;
+        }
+
+        public bool IsSelecting()
+        {
+            return this.isSelecting;
+        }
+
+        public bool IsAdditive()
+        {
+            return this.isAditiveSelection;
+        }
+        public bool IsSameType()
+        {
+            return this.isSameTypeSelection;
+        }
+
+        public Vector2 GetInitialScreenPosition()
+        {
+            return this.initialScreenPosition;
+        }
+
+        public Vector2 GetFinalScreenPosition()
+        {
+            return this.finalScreenPosition;
+
+        }
+
+        public HashSet<ISelectableObjectBehaviour> GetCurrentSelection()
+        {
+            return this.currentSelection;
+        }
+
+        public int GetGroupSetNumberPressed()
+        {
+            return this.groupNumberPressed;
+        }
+
+        public IEnumerable<ISelectableObjectBehaviour> GetPreSelection()
+        {
+            return this.preSelection;
+        }
+
+        public void CreateGroupSet(int number)
+        {
+            this.groupSet[number] = this.currentSelection;
+        }
+
+        public void AddSelectableObject(SelectableObjectCreatedSignal signal)
+        {
+            this.mainList.Add(signal.Selectable);
+        }
+
+        public void RemoveSelectableObject(SelectableObjectDeletedSignal signal)
+        {
+            this.mainList.Remove(signal.Selectable);
+        }
+
+        public void Dispose()
+        {
+            this.mainList.Clear();
+        }
+
+        public virtual ISelectableObjectBehaviour GetObjectClicked()
+        {
+            return SelectionUtil.GetObjectClicked(this.initialScreenPosition, this.finalScreenPosition);
+        }
+
+        public virtual Dictionary<int, HashSet<ISelectableObjectBehaviour>> GetAllGroupSets()
+        {
+            return this.groupSet;
+        }
+
+        public HashSet<ISelectableObjectBehaviour> OrderSelection(HashSet<ISelectableObjectBehaviour> newSelection)
+        {
+            var orderedListOfSelection = new HashSet<ISelectableObjectBehaviour>(this.preSelection);
+            orderedListOfSelection.RemoveWhere(x => newSelection.Contains(x));
+            orderedListOfSelection.UnionWith(newSelection);
+            return orderedListOfSelection;
+        }
+
+        public virtual HashSet<ISelectableObjectBehaviour> GetDragSelection()
+        {
+            var selectionOnScreen = SelectionUtil.GetAllObjectsInsideSelectionArea(this.mainList, this.initialScreenPosition, this.finalScreenPosition);
+            return OrderSelection(selectionOnScreen);
+        }
+
+        public virtual HashSet<IBaseSelectionMod> GetModifiersToBeApplied(SelectionTypeEnum type)
+        {
+            List<IBaseSelectionMod> baseSelectionMods = this.mods.ToList().FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
+            return new HashSet<IBaseSelectionMod>(baseSelectionMods);
+        }
+
+        public virtual HashSet<ISelectableObjectBehaviour> GetGroupSet(int number)
+        {
+            HashSet<ISelectableObjectBehaviour> list;
+            GetAllGroupSets().TryGetValue(number, out list);
+            if (list == null)
+            {
+                list = new HashSet<ISelectableObjectBehaviour>();
+            }
+            return list;
+        }
+
+        //TODO clear selectiontype after selection
+        public virtual SelectionTypeEnum GetSelectionType()
+        {
+            this.selectionType = SelectionTypeEnum.DRAG;
+            if (this.groupNumberPressed > 0)
+            {
+                this.selectionType = SelectionTypeEnum.KEY;
+            }
+            else
+            {
+                this.clicked = GetObjectClicked();
+                if (this.clicked != null)
+                {
+                    this.selectionType = SelectionTypeEnum.CLICK;
+                }
+            }
+            return this.selectionType;
+        }
+
+        public virtual HashSet<ISelectableObjectBehaviour> GetSelectionBySelectionType()
+        {
+            HashSet<ISelectableObjectBehaviour> list = new HashSet<ISelectableObjectBehaviour>();
+            switch (this.selectionType)
             {
                 case SelectionTypeEnum.CLICK:
-                    list.Add(Clicked);
+                    list.Add(this.clicked);
                     break;
                 case SelectionTypeEnum.KEY:
-                    list.AddRange(GetGroup(KeyPressed));
+                    list.UnionWith(GetGroupSet(this.groupNumberPressed));
                     break;
                 case SelectionTypeEnum.DRAG:
-                    list.AddRange(GetDragSelection());
+                    list.UnionWith(GetDragSelection());
                     break;
                 default:
                     break;
@@ -95,182 +234,37 @@ namespace RTSEngine.Manager
             return list;
         }
 
-
-        public virtual SelectionTypeEnum GetSelectionType()
+        private void AdjustSameTypeIfDoubleClick(HashSet<ISelectableObjectBehaviour> newSelection)
         {
-            if (IsKey())
+            if (this.clicked != null && this.clicked == lastClicked && !this.isSameTypeSelection)
             {
-                Clicked = null;
-                return SelectionTypeEnum.KEY;
+                if (newSelection.Count == 0) newSelection.Add(this.clicked);
+                if (this.currentSelection.Contains(this.clicked)) this.currentSelection.Remove(this.clicked);
+                else this.currentSelection.Add(this.clicked);
+                this.isSameTypeSelection = true;
             }
-            else if (IsClick())
+        }
+
+        public SelectionArgsXP GetSelectionArgs(HashSet<ISelectableObjectBehaviour> newSelection)
+        {
+            if (this.isDoubleClick)
             {
-                KeyPressed = 0;
-                return SelectionTypeEnum.CLICK;
+                AdjustSameTypeIfDoubleClick(newSelection);
             }
-            Clicked = null;
-            KeyPressed = 0;
-            return SelectionTypeEnum.DRAG;
+            Vector3 initialSelectionPos = this.isSameTypeSelection ? this.minScreenPos : this.initialScreenPosition;
+            Vector3 finalSelectionPos = this.isSameTypeSelection ? this.maxScreenPos : this.finalScreenPosition;
+
+            return new SelectionArgsXP(this.currentSelection, newSelection, this.mainList);
         }
 
-        public bool IsKey()
+        public SelectionArgsXP ApplyModifiers(SelectionArgsXP args)
         {
-            return KeyPressed > 0;
-        }
-
-        public bool IsClick()
-        {
-            Clicked = GetObjectClicked();
-            return Clicked != null;
-        }
-
-
-
-        public void SetGroup(int key)
-        {
-            Groups[key] = CurrentSelection;
-        }
-
-        public List<ISelectable> GetGroup(int key)
-        {
-            List<ISelectable> list;
-            Groups.TryGetValue(key, out list);
-            if (list == null)
-            {
-                list = new List<ISelectable>();
-            }
-            return list;
-        }
-
-
-        public virtual List<ISelectable> UpdateCurrentSelection(List<ISelectable> value)
-        {
-            var list = new List<ISelectable>();
-            //unselect old
-            if (CurrentSelection != null && CurrentSelection.Count > 0)
-            {
-                this.UpdateSelectionStatus(CurrentSelection, false);
-            }
-            //select new
-            if (value != null)
-            {
-                this.UpdateSelectionStatus(value, true);
-                list = value;
-            }
-
-            return list;
-        }
-
-        public List<ISelectable> UpdatePreSelection(List<ISelectable> value)
-        {
-            var list = new List<ISelectable>();
-            //unselect old
-            if (preSelection != null && preSelection.Count > 0)
-            {
-                this.UpdatePreSelectionStatus(preSelection, false);
-            }
-            //select new
-            if (value != null)
-            {
-                this.UpdatePreSelectionStatus(value, true);
-                list = value;
-            }
-
-            return list;
-        }
-
-
-        public void StartOfSelection(Vector3 initialPos)
-        {
-            InitialScreenPosition = initialPos;
-            IsSelecting = true;
-        }
-
-        public void DoPreSelection(Vector3 finalPos)
-        {
-            FinalScreenPosition = finalPos;
-            var list = PerformPreSelection(preSelection, GetNewSelection(), GetSelectionType());
-            PreSelection = UpdatePreSelection(list);
-        }
-        public void EndOfSelection(Vector3 finalPos)
-        {
-            FinalScreenPosition = finalPos;
-            var list = PerformSelection(currentSelection, GetNewSelection(), GetSelectionType());
-            CurrentSelection = this.UpdateCurrentSelection(list);
-            this.UpdatePreSelectionStatus(preSelection, false);
-            if (KeyPressed <= 0)
-                IsSelecting = false;
-            if (Clicked != null)
-            {
-                LastClicked = Clicked;
-            }
-            if (IsDoubleClick)
-            {
-                LastClicked = null;
-            }
-            IsDoubleClick = false;
-            KeyPressed = 0;
-
-        }
-
-        public virtual Vector3 GetSelectionMainPoint()
-        {
-            if (CurrentSelection.Count > 0)
-            {
-                return CurrentSelection[0].Position;
-            }
-            return Vector3.zero;
-        }
-
-        public virtual ISelectable GetObjectClicked()
-        {
-            return SelectionUtil.GetObjectClicked(InitialScreenPosition, FinalScreenPosition);
-        }
-
-        public virtual List<ISelectable> GetDragSelection()
-        {
-            var selectionOnScreen = SelectionUtil.GetAllObjectsInsideSelectionArea(SelectableList.GetList(), InitialScreenPosition, FinalScreenPosition);
-            return OrderSelection(selectionOnScreen);
-        }
-
-        public virtual List<ISelectable> OrderSelection(List<ISelectable> selection)
-        {
-            var orderedListOfSelection = new List<ISelectable>();
-
-            for (var i = 0; i < PreSelection.Count; i++)
-            {
-                if (selection.Contains(PreSelection[i]))
-                {
-                    orderedListOfSelection.Add(PreSelection[i]);
-                }
-            }
-            return orderedListOfSelection.Union(selection).ToList();
-        }
-
-        public void AddSelectableObject(SelectableObjectCreatedSignal signal)
-        {
-            SelectableList.AddToList(signal.Selectable);
-        }
-
-        public void RemoveSelectableObject(SelectableObjectDeletedSignal signal)
-        {
-            SelectableList.RemoveFromList(signal.Selectable);
-        }
-
-        public void Dispose()
-        {
-            SelectableList.GetList().Clear();
-        }
-        public override SelectionArgsXP ApplyModifiers(SelectionArgsXP args)
-        {
-
-            var collection = GetModifiersToBeApplied(args.Arguments.SelectionType);
-
+            var collection = GetModifiersToBeApplied(this.selectionType);
             foreach (var item in collection)
             {
                 if (item.Active)
                 {
-                    if (args.Arguments.IsPreSelection)
+                    if (this.isPreSelection)
                     {
                         if (item.ActiveOnPreSelection)
                         {
@@ -281,48 +275,121 @@ namespace RTSEngine.Manager
                     {
                         args = item.Apply(args);
                     }
-
                 }
             }
             return args;
-
         }
 
-        public virtual List<IBaseSelectionMod> GetModifiersToBeApplied(SelectionTypeEnum type)
+        private static void UpdatePreSelectionStatus(HashSet<ISelectableObjectBehaviour> list, bool status)
         {
-            return Mods.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
-        }
-
-        public override SelectionArgsXP GetSelectionArgs(List<ISelectable> currentSelection, List<ISelectable> newSelection, SelectionTypeEnum selectionType, bool isPreSelection)
-        {
-
-            currentSelection = currentSelection != null ? currentSelection : new List<ISelectable>();
-            newSelection = newSelection != null ? newSelection : new List<ISelectable>();
-
-            if (IsDoubleClick && Clicked != null && Clicked == LastClicked && !IsSameTypeSelection)
+            foreach (var item in list)
             {
-                if (newSelection.Count == 0)
-                {
-                    newSelection.Add(Clicked);
-                }
-                if (currentSelection.Contains(Clicked))
-                {
-                    currentSelection.Remove(Clicked);
-                }
-                else
-                {
-                    currentSelection.Add(Clicked);
-                }
-                IsSameTypeSelection = true;
+                item.IsPreSelected = status;
+            }
+        }
+
+        private static void UpdateSelectionStatus(HashSet<ISelectableObjectBehaviour> list, bool status)
+        {
+            foreach (var item in list)
+            {
+                item.IsSelected = status;
+            }
+        }
+
+        public HashSet<ISelectableObjectBehaviour> GetFinalSelection(SelectionArgsXP args)
+        {
+            if (this.isPreSelection)
+            {
+                UpdatePreSelectionStatus(args.ToBeAdded, true);
+            }
+            else
+            {
+                UpdateSelectionStatus(args.OldSelection, false);
+                UpdateSelectionStatus(args.ToBeAdded, true);
+            }
+            return new HashSet<ISelectableObjectBehaviour>(args.ToBeAdded);
+        }
+
+        public HashSet<ISelectableObjectBehaviour> PerformSelection(HashSet<ISelectableObjectBehaviour> newSelection)
+        {
+            var args = GetSelectionArgs(newSelection);
+            args = ApplyModifiers(args);
+            return GetFinalSelection(args);
+        }
+
+        public HashSet<ISelectableObjectBehaviour> GetUpdatedPreSelection(HashSet<ISelectableObjectBehaviour> newSelection)
+        {
+            var list = new HashSet<ISelectableObjectBehaviour>();
+            if (this.preSelection != null && this.preSelection.Count > 0)
+            {
+                UpdatePreSelectionStatus(this.preSelection, false);
+            }
+            if (newSelection != null)
+            {
+                UpdatePreSelectionStatus(newSelection, true);
+                list = newSelection;
             }
 
-            Vector3 initialSelectionPos = IsSameTypeSelection ? MinScreenPos : InitialScreenPosition;
-            Vector3 finalSelectionPos = IsSameTypeSelection ? MaxScreenPos : FinalScreenPosition;
-            SelectionArguments arguments = new SelectionArguments(selectionType, isPreSelection, currentSelection, newSelection, selectableList.GetList());
-            SelectionModifierArguments modifierArgs = new SelectionModifierArguments(IsSameTypeSelection, IsAditiveSelection, initialSelectionPos, finalSelectionPos);
-
-            return new SelectionArgsXP(arguments, modifierArgs);
+            return list;
         }
+
+        public virtual HashSet<ISelectableObjectBehaviour> GetUpdatedCurrentSelection(HashSet<ISelectableObjectBehaviour> newSelection)
+        {
+            var list = new HashSet<ISelectableObjectBehaviour>();
+            if (this.currentSelection != null && this.currentSelection.Count > 0)
+            {
+                UpdateSelectionStatus(this.currentSelection, false);
+            }
+            if (newSelection != null)
+            {
+                UpdateSelectionStatus(newSelection, true);
+                list = newSelection;
+            }
+            return list;
+        }
+
+        private void RestartVariables()
+        {
+            if (this.groupNumberPressed <= 0) this.isSelecting = false;
+            if (this.clicked != null) lastClicked = this.clicked;
+            if (this.isDoubleClick) lastClicked = null;
+            this.isDoubleClick = false;
+            this.groupNumberPressed = 0;
+        }
+
+        private HashSet<ISelectableObjectBehaviour> PerformSelection(Vector3 finalPos)
+        {
+            this.finalScreenPosition = finalPos;
+            this.selectionType = GetSelectionType();
+            var list = PerformSelection(GetSelectionBySelectionType());
+            return list;
+        }
+
+        public void DoPreSelection(Vector3 finalPos)
+        {
+            this.isPreSelection = true;
+            HashSet<ISelectableObjectBehaviour> list = PerformSelection(finalPos);
+            this.preSelection = GetUpdatedPreSelection(list);
+        }
+
+        public void DoSelection(Vector3 finalPos)
+        {
+            this.isPreSelection = false;
+            UpdatePreSelectionStatus(this.preSelection, false);
+
+            HashSet<ISelectableObjectBehaviour> list = PerformSelection(finalPos);
+            this.currentSelection = GetUpdatedCurrentSelection(list);
+
+            RestartVariables();
+        }
+
+        public void StartOfSelection(Vector3 initialPos)
+        {
+            this.initialScreenPosition = initialPos;
+            this.isSelecting = true;
+        }
+
+
 
     }
 }

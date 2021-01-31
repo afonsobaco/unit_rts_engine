@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Collections.Generic;
 
 namespace RTSEngine.Manager
 {
@@ -6,12 +7,8 @@ namespace RTSEngine.Manager
     {
         public SelectionArgsXP Apply(SelectionArgsXP args, params object[] other)
         {
-            SelectionResult result = args.Result;
-
             int maxLimit = GetMaxLimit(other);
-            result = new SelectionResult(args.Result.ToBeAdded.Take(maxLimit).ToList());
-            args.Result = result;
-
+            args.ToBeAdded = new HashSet<ISelectableObjectBehaviour>(args.ToBeAdded.Take(maxLimit));
             return args;
         }
 

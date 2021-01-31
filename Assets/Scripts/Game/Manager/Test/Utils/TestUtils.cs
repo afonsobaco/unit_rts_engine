@@ -11,25 +11,26 @@ namespace Tests.Utils
     public class TestUtils
     {
 
-        public static List<ISelectable> GetListByIndex(int[] indexes, List<ISelectable> mainList)
+        public static HashSet<T> GetListByIndex<T>(int[] indexes, HashSet<T> mainList) where T : ISelectable
         {
-            var list = new List<ISelectable>();
+            var list = new HashSet<T>();
             for (var i = 0; i < indexes.Length; i++)
             {
                 if (indexes[i] < mainList.Count)
-                    list.Add(mainList[indexes[i]]);
+                    list.Add(mainList.ElementAt(indexes.ElementAt(i)));
             }
             return list;
         }
 
-        public static List<ISelectable> GetSomeObjects(int qtt)
+        public static HashSet<T> GetSomeObjects<T>(int qtt) where T : class
         {
-            var list = new List<ISelectable>();
+            var list = new HashSet<T>();
             for (var i = 0; i < qtt; i++)
             {
-                ISelectable item = Substitute.For<ISelectable>();
-                item.Index = i;
-                item.IsCompatible(Arg.Any<ISelectable>()).Returns((x) =>
+                T item = Substitute.For<T>();
+                ISelectable selectable = (ISelectable)item;
+                selectable.Index = i;
+                selectable.IsCompatible(Arg.Any<ISelectableObjectBehaviour>()).Returns((x) =>
                 {
                     return ((ISelectable)x[0]).Index % 2 == 0;
                 });
@@ -38,7 +39,7 @@ namespace Tests.Utils
             return list;
         }
 
-        private static string GetCaseName(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct)
+        public static string GetCaseName(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct)
         {
             string name = "";
             name += NameForModifiers(modifiersStruct);
@@ -50,13 +51,11 @@ namespace Tests.Utils
 
         private static string NameForModifiers(ModifiersStruct modifiersStruct)
         {
-            if (!modifiersStruct.isAdditive && !modifiersStruct.isPreSelection && !modifiersStruct.isSameType) return "NO MODIFIERS | ";
+            if (!modifiersStruct.isAdditive && !modifiersStruct.isSameType) return "NO MODIFIERS | ";
 
             string name = "";
             if (modifiersStruct.isAdditive)
                 name += "ADDITIVE | ";
-            if (modifiersStruct.isPreSelection)
-                name += "PRESELECTION | ";
             if (modifiersStruct.isSameType)
                 name += "SAMETYPE | ";
             return name;
@@ -75,91 +74,85 @@ namespace Tests.Utils
         {
             if (collection.Length == 0) return "";
 
-            var first = new List<int>(collection);
-            var second = new List<int>(otherCollection);
+            var first = new HashSet<int>(collection);
+            var second = new HashSet<int>(otherCollection);
 
-            List<int> list = first.FindAll(x => second.Contains(x));
+            HashSet<int> list = new HashSet<int>(first.ToList().FindAll(x => second.Contains(x)));
             if (list.Count == 0) return collectionName + " Does not contains ANY of " + otherCollectionName + "";
             if (list.Count < second.Count) return collectionName + " Contains SOME of " + otherCollectionName + "";
             return collectionName + " Contains ALL of " + otherCollectionName + "";
         }
 
-        public static List<CaseStruct> GetDefaultCases()
+        public static HashSet<CaseStruct> GetDefaultCases()
         {
             ModifiersStruct modifiersStruct = default;
             return GetSelectionCases(modifiersStruct, false);
         }
 
-        public static List<CaseStruct> GetCasesWithAdditionalInfo()
+        public static HashSet<CaseStruct> GetCasesWithAdditionalInfo()
         {
             ModifiersStruct modifiersStruct = default;
             return GetSelectionCases(modifiersStruct, true);
         }
 
 
-        public static List<CaseStruct> GetCasesWithModifiers(ModifiersStruct modifiersStruct)
+        public static HashSet<CaseStruct> GetCasesWithModifiers(ModifiersStruct modifiersStruct)
         {
             return GetSelectionCases(modifiersStruct, false);
         }
 
-        public static List<CaseStruct> GetCustomCases(ModifiersStruct modifiersStruct, bool additionalInfo)
+        public static HashSet<CaseStruct> GetCustomCases(ModifiersStruct modifiersStruct, bool additionalInfo)
         {
-            List<CaseStruct> caseStructs = new List<CaseStruct>();
+            HashSet<CaseStruct> caseStructs = new HashSet<CaseStruct>();
             foreach (var item in ModifiersList(modifiersStruct))
             {
-                caseStructs.AddRange(GetSelectionCases(item, additionalInfo));
+                caseStructs.UnionWith(GetSelectionCases(item, additionalInfo));
             }
             return caseStructs;
         }
 
-        private static List<CaseStruct> GetSelectionCases(ModifiersStruct modifiersStruct, bool additionalInfo)
+        private static HashSet<CaseStruct> GetSelectionCases(ModifiersStruct modifiersStruct, bool additionalInfo)
         {
-            List<CaseStruct> caseStructs = new List<CaseStruct>();
+            HashSet<CaseStruct> caseStructs = new HashSet<CaseStruct>();
             foreach (var selectionStruct in GetSelectionListWithAdditionalInfos(additionalInfo))
             {
-                caseStructs.Add(new CaseStruct(selectionStruct, modifiersStruct, GetCaseName(selectionStruct, modifiersStruct)));
+                caseStructs.Add(new CaseStruct(selectionStruct, modifiersStruct, default, GetCaseName(selectionStruct, modifiersStruct)));
             }
             return caseStructs;
         }
 
-        private static List<SelectionStruct> GetSelectionListWithAdditionalInfos(bool additionalInfo)
+        private static HashSet<SelectionStruct> GetSelectionListWithAdditionalInfos(bool additionalInfo)
         {
             return SelectionList(additionalInfo);
         }
 
-        private static List<ModifiersStruct> ModifiersList(ModifiersStruct modifiersStruct)
+        private static HashSet<ModifiersStruct> ModifiersList(ModifiersStruct modifiersStruct)
         {
-            List<ModifiersStruct> list = new List<ModifiersStruct>();
-            list.Add(new ModifiersStruct(true, true, true));
-            list.Add(new ModifiersStruct(true, true, false));
-            list.Add(new ModifiersStruct(true, false, true));
-            list.Add(new ModifiersStruct(true, false, false));
-            list.Add(new ModifiersStruct(false, true, true));
-            list.Add(new ModifiersStruct(false, true, false));
-            list.Add(new ModifiersStruct(false, false, true));
-            list.Add(new ModifiersStruct(false, false, false));
-            if (!modifiersStruct.isPreSelection)
-            {
-                list.RemoveAll(a => a.isPreSelection);
-            }
+            HashSet<ModifiersStruct> list = new HashSet<ModifiersStruct>();
+            list.Add(new ModifiersStruct(false, false));
+            list.Add(new ModifiersStruct(false, true));
+            list.Add(new ModifiersStruct(true, false));
+            list.Add(new ModifiersStruct(true, true));
+
             if (!modifiersStruct.isAdditive)
             {
-                list.RemoveAll(a => a.isAdditive);
+                list.RemoveWhere(a => a.isAdditive);
             }
             if (!modifiersStruct.isSameType)
             {
-                list.RemoveAll(a => a.isSameType);
+                list.RemoveWhere(a => a.isSameType);
             }
+            list.Add(new ModifiersStruct(false, false));
             return list;
         }
 
-        private static List<SelectionStruct> SelectionList()
+        private static HashSet<SelectionStruct> SelectionList()
         {
             return SelectionList(false);
         }
-        private static List<SelectionStruct> SelectionList(bool additionalInfo)
+        private static HashSet<SelectionStruct> SelectionList(bool additionalInfo)
         {
-            List<SelectionStruct> list = new List<SelectionStruct>();
+            HashSet<SelectionStruct> list = new HashSet<SelectionStruct>();
 
             AdditionalInfo addInfo = new AdditionalInfo();
             if (additionalInfo)
@@ -184,15 +177,14 @@ namespace Tests.Utils
             list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 1, 2, 3, 4 }, addInfo));
             list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 0, 1, 2, 5, 6, 7, 8, 9 }, addInfo));
             list.Add(new SelectionStruct(10, new int[] { 0, 1, 2, 3, 4 }, new int[] { 5, 6, 7, 8, 9 }, addInfo));
-
             return list;
         }
 
-        public static List<T> Shuffle<T>(List<T> list)
+        public static HashSet<T> Shuffle<T>(IEnumerable<T> collection)
         {
+            T[] list = collection.ToArray();
             System.Random rng = new System.Random();
-
-            int n = list.Count;
+            int n = list.Length;
             while (n > 1)
             {
                 n--;
@@ -201,7 +193,7 @@ namespace Tests.Utils
                 list[k] = list[n];
                 list[n] = value;
             }
-            return list;
+            return new HashSet<T>(list);
         }
     }
 
@@ -210,25 +202,26 @@ namespace Tests.Utils
         public SelectionStruct selection;
         public ModifiersStruct modifiers;
 
+        public int[] result;
+
         public string name;
 
-        public CaseStruct(SelectionStruct selection, ModifiersStruct modifiers, string name)
+        public CaseStruct(SelectionStruct selection, ModifiersStruct modifiers, int[] result, string name)
         {
             this.selection = selection;
             this.modifiers = modifiers;
+            this.result = result;
             this.name = name;
         }
     }
 
     public struct ModifiersStruct
     {
-        public bool isPreSelection;
         public bool isAdditive;
         public bool isSameType;
 
-        public ModifiersStruct(bool isPreSelection, bool isAdditive, bool isSameType)
+        public ModifiersStruct(bool isAdditive, bool isSameType)
         {
-            this.isPreSelection = isPreSelection;
             this.isAdditive = isAdditive;
             this.isSameType = isSameType;
         }
@@ -253,10 +246,13 @@ namespace Tests.Utils
 
     public struct AdditionalInfo
     {
+
+        public SelectionTypeEnum type;
         public int[] group_evens;
         public int[] group_odds;
-        public AdditionalInfo(int[] evens, int[] odds)
+        public AdditionalInfo(SelectionTypeEnum type, int[] evens, int[] odds)
         {
+            this.type = type;
             this.group_evens = evens;
             this.group_odds = odds;
         }

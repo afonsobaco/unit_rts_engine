@@ -5,7 +5,15 @@ using Zenject;
 
 namespace RTSEngine.Manager
 {
-    public class SelectableObjectBehaviour : MonoBehaviour, ISelectable
+    public interface ISelectableObjectBehaviour : ISelectable
+    {
+        ObjectTypeEnum Type { get; set; }
+        SelectionMark SelectionMark { get; set; }
+        SelectionMark PreSelectionMark { get; set; }
+
+    }
+
+    public class SelectableObjectBehaviour : MonoBehaviour, ISelectableObjectBehaviour
     {
 
         [Inject]
@@ -52,20 +60,23 @@ namespace RTSEngine.Manager
         }
 
         public int Index { get; set; }
+        public ObjectTypeEnum Type { get => type; set => type = value; }
+        public SelectionMark SelectionMark { get => selectionMark; set => selectionMark = value; }
+        public SelectionMark PreSelectionMark { get => preSelectionMark; set => preSelectionMark = value; }
 
         public void ChangeSelectionMarkStatus(bool value)
         {
-            if (selectionMark)
+            if (SelectionMark)
             {
-                selectionMark.gameObject.SetActive(value);
+                SelectionMark.gameObject.SetActive(value);
             }
         }
 
         public void ChangePreSelectionMarkStatus(bool value)
         {
-            if (preSelectionMark)
+            if (PreSelectionMark)
             {
-                preSelectionMark.gameObject.SetActive(value);
+                PreSelectionMark.gameObject.SetActive(value);
             }
         }
 
@@ -84,7 +95,7 @@ namespace RTSEngine.Manager
             if (other != null && other is SelectableObjectBehaviour)
             {
                 var second = other as SelectableObjectBehaviour;
-                return second.type == this.type && second.typeStr.Equals(this.typeStr);
+                return second.Type == this.Type && second.typeStr.Equals(this.typeStr);
             }
             return false;
         }

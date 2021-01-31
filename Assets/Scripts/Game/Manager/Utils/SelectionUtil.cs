@@ -1,23 +1,21 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using RTSEngine.Core;
+using System.Linq;
 
 namespace RTSEngine.Manager
 {
     public class SelectionUtil
     {
-        private static System.Random rng = new System.Random();
-
-        public static List<ISelectable> GetAllObjectsInsideSelectionArea(List<ISelectable> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
+        public static HashSet<ISelectableObjectBehaviour> GetAllObjectsInsideSelectionArea(HashSet<ISelectableObjectBehaviour> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
         {
-            List<ISelectable> list = new List<ISelectable>();
+            HashSet<ISelectableObjectBehaviour> list = new HashSet<ISelectableObjectBehaviour>();
             if (allObjects == null)
             {
                 return list;
             }
             for (int i = 0; i < allObjects.Count; i++)
             {
-                ISelectable obj = (ISelectable)allObjects[i];
+                ISelectableObjectBehaviour obj = (ISelectableObjectBehaviour)allObjects.ElementAt(i);
                 var screenPos = Camera.main.WorldToScreenPoint(obj.Position);
                 if (IsPositionInsideArea(screenPos, initialScreenPosition, finalScreenPosition))
                 {
@@ -27,7 +25,7 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public static ISelectable GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
+        public static ISelectableObjectBehaviour GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
         {
             var initialObject = GetObjectInScreenPoint(initialScreenPosition, Camera.main);
             var finalObject = GetObjectInScreenPoint(finalScreenPosition, Camera.main);
@@ -59,13 +57,13 @@ namespace RTSEngine.Manager
             return new Vector2(center.x - (size.x / 2), center.y - (size.y / 2));
         }
 
-        public static ISelectable GetObjectInScreenPoint(Vector3 mousePosition, Camera camera)
+        public static ISelectableObjectBehaviour GetObjectInScreenPoint(Vector3 mousePosition, Camera camera)
         {
             Ray ray = camera.ScreenPointToRay(mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100))
             {
-                return hit.transform.gameObject.GetComponent<ISelectable>();
+                return hit.transform.gameObject.GetComponent<ISelectableObjectBehaviour>();
             }
             return null;
         }
@@ -79,21 +77,6 @@ namespace RTSEngine.Manager
         {
             return (initialScreenPosition + finalScreenPosition) / 2;
         }
-
-        public static List<ISelectable> Shuffle<ISelectable>(List<ISelectable> list)
-        {
-            int n = list.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                ISelectable value = list[k];
-                list[k] = list[n];
-                list[n] = value;
-            }
-            return list;
-        }
-
 
     }
 }

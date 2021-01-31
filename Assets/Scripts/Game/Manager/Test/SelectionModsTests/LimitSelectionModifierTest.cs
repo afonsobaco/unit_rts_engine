@@ -22,10 +22,7 @@ namespace Tests
         [Test]
         public void SelectionLimitModifierTestSimplePasses()
         {
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), new List<ISelectable>(), new List<ISelectable>());
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
-            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
-
+            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
             var result = Modifier.Apply(args, 20);
             Assert.AreEqual(args, result);
         }
@@ -34,15 +31,15 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldLimitSelectionToPassedValue(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct, int limit)
         {
-            List<ISelectable> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
+            HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(selectionStruct.mainListAmount);
+            HashSet<ISelectableObjectBehaviour> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
+            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
 
-            SelectionArguments arguments = new SelectionArguments(SelectionTypeEnum.ANY, false, new List<ISelectable>(), TestUtils.GetListByIndex(selectionStruct.newSelection, mainList), mainList);
-            SelectionModifierArguments modifierArguments = new SelectionModifierArguments();
-            SelectionArgsXP args = new SelectionArgsXP(arguments, modifierArguments);
+            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
 
             args = Modifier.Apply(args, limit);
-            List<ISelectable> expected = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
-            CollectionAssert.AreEquivalent(expected, args.Result.ToBeAdded);
+            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
+            CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
         }
 
 
