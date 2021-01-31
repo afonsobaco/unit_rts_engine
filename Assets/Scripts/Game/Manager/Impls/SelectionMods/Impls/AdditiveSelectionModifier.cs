@@ -10,15 +10,16 @@ namespace RTSEngine.Manager
     public class AdditiveSelectionModifier : ISelectionModifier
     {
 
-        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
+        public SelectionTypeEnum Type { get { return SelectionTypeEnum.ANY; } }
+        public bool ActiveOnPreSelection { get { return false; } }
 
-        [Inject]
-        public void Construct(ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager)
+        public AdditiveSelectionModifier(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }
 
-        public SelectionArgsXP Apply(SelectionArgsXP args, params object[] other)
+        public SelectionArgsXP Apply(SelectionArgsXP args)
         {
             if (selectionManager.IsAdditive())
             {

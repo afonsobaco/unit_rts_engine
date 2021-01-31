@@ -10,30 +10,16 @@ namespace RTSEngine.Manager
     {
         [SerializeField] private SelectableObjectRuntimeSetSO selectableList;
         [SerializeField] private RectTransform selectionBox;
-        [SerializeField] private HashSet<ScriptableObject> modifiersList;
+        [SerializeField] private List<ScriptableObject> modifiersList;
 
-        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> manager;
+        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> manager;
 
         [Inject]
-        private void Construct(ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> manager)
+        private void Construct(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> manager)
         {
             this.manager = manager;
             selectableList.GetList().Clear();
             this.manager.SetMainList(this.selectableList.GetList());
-            this.manager.SetSelctionModifiers(GetScriptableObjectsAsMods());
-        }
-
-        private HashSet<IBaseSelectionMod> GetScriptableObjectsAsMods()
-        {
-            if (modifiersList != null)
-            {
-                IEnumerable<IBaseSelectionMod> list = modifiersList.ToList().FindAll(x => x is IBaseSelectionMod).Select(x => x as IBaseSelectionMod);
-                return new HashSet<IBaseSelectionMod>(list);
-            }
-            else
-            {
-                return new HashSet<IBaseSelectionMod>();
-            }
         }
 
         private void Update()

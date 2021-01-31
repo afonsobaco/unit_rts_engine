@@ -241,8 +241,8 @@ namespace Tests.Manager
         public void ShouldApplyModifiers(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey)
         {
 
-            HashSet<IBaseSelectionMod> mods = new HashSet<IBaseSelectionMod>();
-            HashSet<IBaseSelectionMod> expectedMods = new HashSet<IBaseSelectionMod>();
+            List<ISelectionModifier> mods = new List<ISelectionModifier>();
+            List<ISelectionModifier> expectedMods = new List<ISelectionModifier>();
             GetModsToTest(selectionType, howManyAll, howManyClick, howManyDrag, howManyKey, mods, expectedMods);
             manager.When(x => x.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>())).DoNotCallBase();
             manager.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>()).Returns(expectedMods);
@@ -263,36 +263,6 @@ namespace Tests.Manager
             }
         }
 
-        [TestCaseSource(nameof(Scenarios))]
-        public void ShouldNotApplyInactiveModifiers(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey)
-        {
-            HashSet<IBaseSelectionMod> mods = new HashSet<IBaseSelectionMod>();
-            HashSet<IBaseSelectionMod> expectedMods = new HashSet<IBaseSelectionMod>();
-
-            GetModsToTest(selectionType, howManyAll, howManyClick, howManyDrag, howManyKey, mods, expectedMods);
-            if (expectedMods.Count > 0)
-            {
-                expectedMods.First().Active = false;
-            }
-
-            manager.When(x => x.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>())).DoNotCallBase();
-            manager.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>()).Returns(expectedMods);
-
-            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
-
-            var result = manager.ApplyModifiers(args);
-            foreach (var mod in mods)
-            {
-                if ((mod.Type == selectionType || mod.Type == SelectionTypeEnum.ANY) && mod.Active)
-                {
-                    mod.ReceivedWithAnyArgs().Apply(default);
-                }
-                else
-                {
-                    mod.DidNotReceiveWithAnyArgs().Apply(default);
-                }
-            }
-        }
 
         [Test]
         public void ShouldFinalizeSelection()
@@ -410,32 +380,32 @@ namespace Tests.Manager
             }
         }
 
-        private static void GetModsToTest(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey, HashSet<IBaseSelectionMod> mods, HashSet<IBaseSelectionMod> expectedMods)
+        private static void GetModsToTest(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey, List<ISelectionModifier> mods, List<ISelectionModifier> expectedMods)
         {
-            HashSet<IBaseSelectionMod> allMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyAll, SelectionTypeEnum.ANY);
-            HashSet<IBaseSelectionMod> clickMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK);
-            HashSet<IBaseSelectionMod> dragMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG);
-            HashSet<IBaseSelectionMod> keyMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY);
-            expectedMods.UnionWith(allMods);
+            List<ISelectionModifier> allMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyAll, SelectionTypeEnum.ANY);
+            List<ISelectionModifier> clickMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK);
+            List<ISelectionModifier> dragMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG);
+            List<ISelectionModifier> keyMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY);
+            expectedMods.AddRange(allMods);
             switch (selectionType)
             {
                 case SelectionTypeEnum.CLICK:
-                    expectedMods.UnionWith(clickMods);
+                    expectedMods.AddRange(clickMods);
                     break;
                 case SelectionTypeEnum.DRAG:
-                    expectedMods.UnionWith(dragMods);
+                    expectedMods.AddRange(dragMods);
                     break;
                 case SelectionTypeEnum.KEY:
-                    expectedMods.UnionWith(keyMods);
+                    expectedMods.AddRange(keyMods);
                     break;
                 default:
                     break;
             }
 
-            mods.UnionWith(allMods);
-            mods.UnionWith(clickMods);
-            mods.UnionWith(dragMods);
-            mods.UnionWith(keyMods);
+            mods.AddRange(allMods);
+            mods.AddRange(clickMods);
+            mods.AddRange(dragMods);
+            mods.AddRange(keyMods);
         }
 
         public static IEnumerable<TestCaseData> Scenarios

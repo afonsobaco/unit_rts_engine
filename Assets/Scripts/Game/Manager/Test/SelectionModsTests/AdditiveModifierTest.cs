@@ -13,14 +13,14 @@ namespace Tests
     public class AdditiveModifierTest
     {
         private AdditiveSelectionModifier modifier;
-        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum>>();
-            modifier = Substitute.ForPartsOf<AdditiveSelectionModifier>();
-            modifier.Construct(selectionManager);
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>>();
+            modifier = Substitute.ForPartsOf<AdditiveSelectionModifier>(new object[] { selectionManager });
+
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace Tests
 
             args = modifier.Apply(args);
 
-            HashSet<ISelectableObjectBehaviour> expectedToBeAddedResult = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
+            HashSet<ISelectableObjectBehaviour> expectedToBeAddedResult = TestUtils.GetListByIndex(resultStruct.expected, mainList);
             CollectionAssert.AreEquivalent(expectedToBeAddedResult, args.ToBeAdded);
 
         }
@@ -72,7 +72,7 @@ namespace Tests
                     }
                     yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct()
                     {
-                        toBeAdded = toBeAdded,
+                        expected = toBeAdded,
                     }).SetName(item.name);
                 }
             }

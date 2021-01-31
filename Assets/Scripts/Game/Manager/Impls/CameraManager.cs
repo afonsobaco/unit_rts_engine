@@ -7,7 +7,7 @@ namespace RTSEngine.Manager
     public class CameraManager : ICameraManager
     {
 
-        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
 
         private Vector3 origin;
         private bool isPanning;
@@ -20,7 +20,7 @@ namespace RTSEngine.Manager
         public bool IsCentering { get => isCentering; set => isCentering = value; }
         public ICameraSettings CameraSettings { get => settings; set => settings = value; }
 
-        public CameraManager(ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager)
+        public CameraManager(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }

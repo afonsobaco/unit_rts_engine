@@ -5,10 +5,9 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
-    public interface ISelectionManager<T, M, ST> : IDisposable where T : ISelectable
+    public interface ISelectionManager<T, ST> : IDisposable where T : ISelectable
     {
         void SetMainList(HashSet<T> list);
-        void SetSelctionModifiers(HashSet<M> list);
         void SetScreenBoundries(Vector2 minScreenPoint, Vector2 maxScreenPoint);
         void SetKeysPressed(bool additiveKeyPressed, bool sameTypeKeyPressed);
         void SetGroupNumperPressed(int keyPressed);
@@ -24,5 +23,9 @@ namespace RTSEngine.Manager
         HashSet<T> GetCurrentSelection();
         HashSet<T> GetGroupSet(int groupSetId);
         Dictionary<int, HashSet<ISelectableObjectBehaviour>> GetAllGroupSets();
+        void CreateGroupSet(int keyPressed);
+        void DoSelection(Vector3 mousePosition);
+        void StartOfSelection(Vector3 mousePosition);
+        void DoPreSelection(Vector3 mousePosition);
     }
 }

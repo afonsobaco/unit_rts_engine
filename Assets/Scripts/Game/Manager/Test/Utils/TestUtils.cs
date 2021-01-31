@@ -41,7 +41,9 @@ namespace Tests.Utils
 
         public static string GetCaseName(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct)
         {
+
             string name = "";
+
             name += NameForModifiers(modifiersStruct);
             name += NameForCollectionLength(selectionStruct.oldSelection, "Old");
             name += NameForCollectionLength(selectionStruct.newSelection, "New");
@@ -63,11 +65,14 @@ namespace Tests.Utils
 
         private static string NameForCollectionLength(int[] collection, string collectionName)
         {
+
+            var name = " [" + string.Join(", ", collection) + "] ";
+
             if (collection.Length == 0)
                 return "EMPTY " + collectionName + ", ";
             if (collection.Length == 1)
-                return "SINGLE element in " + collectionName + ", ";
-            return "MULTIPLE elements in " + collectionName + ", ";
+                return "SINGLE " + collectionName + name + ", ";
+            return "MULTIPLE " + collectionName + name + ", ";
         }
 
         private static string NameForCollectionContains(int[] collection, int[] otherCollection, string collectionName, string otherCollectionName)
@@ -261,11 +266,11 @@ namespace Tests.Utils
 
     public struct ResultStruct
     {
-        public int[] toBeAdded;
+        public int[] expected;
 
         public ResultStruct(int[] toBeAdded)
         {
-            this.toBeAdded = toBeAdded;
+            this.expected = toBeAdded;
         }
     }
 

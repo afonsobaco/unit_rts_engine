@@ -15,7 +15,7 @@ namespace Tests.Manager
 
         private ICameraManager manager;
         private UnityEngine.Camera mainCamera;
-        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
 
         private ICameraSettings cameraSettings;
 
@@ -25,7 +25,7 @@ namespace Tests.Manager
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum>>();
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>>();
             cameraSettings = Substitute.For<ICameraSettings>();
             manager = Substitute.ForPartsOf<CameraManager>(new object[] { selectionManager });
 

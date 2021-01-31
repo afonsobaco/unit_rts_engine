@@ -16,14 +16,14 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-            Modifier = new LimitSelectionModifier();
+            modifier = new LimitSelectionModifier();
         }
 
         [Test]
         public void SelectionLimitModifierTestSimplePasses()
         {
             SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
-            var result = Modifier.Apply(args, 20);
+            var result = modifier.Apply(args);
             Assert.AreEqual(args, result);
         }
 
@@ -36,9 +36,10 @@ namespace Tests
             HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
 
             SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
+            modifier.MaxLimit = limit;
 
-            args = Modifier.Apply(args, limit);
-            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
+            args = modifier.Apply(args);
+            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
             CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
         }
 
@@ -53,12 +54,11 @@ namespace Tests
                     const int limit = 3;
                     yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct()
                     {
-                        toBeAdded = item.selection.newSelection.Take(limit).ToArray(),
+                        expected = item.selection.newSelection.Take(limit).ToArray(),
                     }, limit).SetName(item.name);
                 }
             }
         }
 
-        public LimitSelectionModifier Modifier { get => modifier; set => modifier = value; }
     }
 }

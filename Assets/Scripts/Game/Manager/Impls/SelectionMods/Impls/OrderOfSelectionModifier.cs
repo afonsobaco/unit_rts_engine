@@ -7,28 +7,35 @@ namespace RTSEngine.Manager
 {
     public class OrderOfSelectionModifier : ISelectionModifier
     {
-        public SelectionArgsXP Apply(SelectionArgsXP args, params object[] other)
+
+        public SelectionTypeEnum Type { get { return SelectionTypeEnum.DRAG; } }
+        public bool ActiveOnPreSelection { get { return true; } }
+
+        private List<ObjectTypeEnum> primary = new List<ObjectTypeEnum>() { ObjectTypeEnum.UNIT };
+        private List<ObjectTypeEnum> secondary = new List<ObjectTypeEnum>() { ObjectTypeEnum.BUILDING };
+
+        public SelectionArgsXP Apply(SelectionArgsXP args)
         {
-            if (other != null && other.Length > 1)
+
+            var aux = GetObjectsFromListOfPriority(args.ToBeAdded, primary);
+            if (aux.Count == 0)
             {
-                HashSet<ObjectTypeEnum> primary = (HashSet<ObjectTypeEnum>)other[0];
-                HashSet<ObjectTypeEnum> secondary = (HashSet<ObjectTypeEnum>)other[1];
-                var aux = GetObjectsFromListOfPriority(args.ToBeAdded, primary);
-                if (aux.Count == 0)
+                var sec = GetObjectsFromListOfPriority(args.ToBeAdded, secondary);
+                if (sec.Count > 0)
                 {
-                    var sec = GetObjectsFromListOfPriority(args.ToBeAdded, secondary);
-                    if (sec.Count > 0)
-                    {
-                        aux.Add(sec.First());
-                    }
+                    aux.Add(sec.First());
                 }
-                args.ToBeAdded = aux;
             }
+            args.ToBeAdded = aux;
             return args;
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> GetObjectsFromListOfPriority(HashSet<ISelectableObjectBehaviour> toBeAdded, HashSet<ObjectTypeEnum> objectTypeList)
+        public virtual HashSet<ISelectableObjectBehaviour> GetObjectsFromListOfPriority(HashSet<ISelectableObjectBehaviour> toBeAdded, List<ObjectTypeEnum> objectTypeList)
         {
+            if (objectTypeList == null)
+            {
+                objectTypeList = new List<ObjectTypeEnum>();
+            }
             var result = new HashSet<ISelectableObjectBehaviour>();
             foreach (var type in objectTypeList)
             {

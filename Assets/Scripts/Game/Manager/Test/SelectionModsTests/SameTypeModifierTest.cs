@@ -14,14 +14,13 @@ namespace Tests
     {
         private SameTypeSelectionModifier modifier;
 
-        private ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum>>();
-            modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>();
-            modifier.Construct(selectionManager);
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>>();
+            modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>(new object[] { selectionManager });
         }
 
         [Test]
@@ -29,20 +28,20 @@ namespace Tests
         {
             SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
 
-            var result = modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
+            var result = modifier.Apply(args);
             Assert.AreEqual(args, result);
         }
 
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldApplyModifierOnClick(SelectionStruct selectionStruct, ModifiersStruct modifierStruct, ResultStruct resultStruct)
+        public void ShouldApplyModifier(SelectionStruct selectionStruct, ModifiersStruct modifierStruct, ResultStruct resultStruct)
         {
             selectionManager.IsSameType().Returns(modifierStruct.isSameType);
 
             HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(selectionStruct.mainListAmount);
             HashSet<ISelectableObjectBehaviour> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
             HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
-            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.toBeAdded, mainList);
+            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
 
             HashSet<ISelectableObjectBehaviour> sameTypeList = new HashSet<ISelectableObjectBehaviour>();
             if (modifierStruct.isSameType && selectionStruct.newSelection.Length > 0)
@@ -57,10 +56,10 @@ namespace Tests
                 }
             }
             SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
-            modifier.When(x => x.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>(), Arg.Any<object[]>())).DoNotCallBase();
-            modifier.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>(), Arg.Any<object[]>()).Returns(sameTypeList);
+            modifier.When(x => x.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>())).DoNotCallBase();
+            modifier.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>()).Returns(sameTypeList);
 
-            args = modifier.Apply(args, SameTypeSelectionModeEnum.DISTANCE);
+            args = modifier.Apply(args);
 
             CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
 
@@ -84,7 +83,7 @@ namespace Tests
                             toBeAdded = item.selection.additionalInfo.group_odds;
                         }
                     }
-                    yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct { toBeAdded = toBeAdded }).SetName(item.name);
+                    yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct { expected = toBeAdded }).SetName(item.name);
                 }
             }
         }

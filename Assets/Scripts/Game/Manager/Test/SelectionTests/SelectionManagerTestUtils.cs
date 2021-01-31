@@ -45,14 +45,13 @@ namespace Tests.Manager
             return args;
         }
 
-        public static HashSet<IBaseSelectionMod> GetSomeModsFromType(int amount, SelectionTypeEnum type)
+        public static List<ISelectionModifier> GetSomeModsFromType(int amount, SelectionTypeEnum type)
         {
-            HashSet<IBaseSelectionMod> list = new HashSet<IBaseSelectionMod>();
+            List<ISelectionModifier> list = new List<ISelectionModifier>();
             for (var i = 0; i < amount; i++)
             {
-                IBaseSelectionMod mod = Substitute.For<IBaseSelectionMod>();
+                ISelectionModifier mod = Substitute.For<ISelectionModifier>();
                 mod.Type.Returns(type);
-                mod.Active.Returns(true);
                 mod.Apply(Arg.Any<SelectionArgsXP>()).Returns(x => x[0]);
                 list.Add(mod);
             }

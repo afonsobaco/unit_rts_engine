@@ -5,22 +5,21 @@ namespace RTSEngine.Manager
 {
     public class LimitSelectionModifier : ISelectionModifier
     {
-        public SelectionArgsXP Apply(SelectionArgsXP args, params object[] other)
+
+
+        public SelectionTypeEnum Type { get { return SelectionTypeEnum.ANY; } }
+        public bool ActiveOnPreSelection { get { return false; } }
+
+        public int MaxLimit { get => maxLimit; set => maxLimit = value; }
+
+        private int maxLimit = 10;
+
+        public SelectionArgsXP Apply(SelectionArgsXP args)
         {
-            int maxLimit = GetMaxLimit(other);
-            args.ToBeAdded = new HashSet<ISelectableObjectBehaviour>(args.ToBeAdded.Take(maxLimit));
+            args.ToBeAdded = new HashSet<ISelectableObjectBehaviour>(args.ToBeAdded.Take(MaxLimit));
             return args;
         }
 
-        private int GetMaxLimit(object[] other)
-        {
-            int limit = 10;
-            if (other.Length > 0 && other[0] is int)
-            {
-                limit = (int)other[0];
-            }
-            return limit;
-        }
     }
 
 

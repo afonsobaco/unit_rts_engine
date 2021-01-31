@@ -8,14 +8,13 @@ using UnityEngine;
 
 namespace RTSEngine.Manager
 {
-    public class SelectionManager : ISelectionManager<ISelectableObjectBehaviour, IBaseSelectionMod, SelectionTypeEnum>
+    public class SelectionManager : ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>
     {
 
         private Dictionary<int, HashSet<ISelectableObjectBehaviour>> groupSet = new Dictionary<int, HashSet<ISelectableObjectBehaviour>>();
-        private HashSet<ISelectableObjectBehaviour> mainList;
-        private HashSet<ISelectableObjectBehaviour> currentSelection;
-        private HashSet<ISelectableObjectBehaviour> preSelection;
-        private HashSet<IBaseSelectionMod> mods;
+        private HashSet<ISelectableObjectBehaviour> mainList = new HashSet<ISelectableObjectBehaviour>();
+        private HashSet<ISelectableObjectBehaviour> currentSelection = new HashSet<ISelectableObjectBehaviour>();
+        private HashSet<ISelectableObjectBehaviour> preSelection = new HashSet<ISelectableObjectBehaviour>();
         private ISelectableObjectBehaviour lastClicked;
         private ISelectableObjectBehaviour clicked;
 
@@ -30,14 +29,25 @@ namespace RTSEngine.Manager
         private Vector3 minScreenPos;
         private Vector3 maxScreenPos;
         private SelectionTypeEnum selectionType;
+        private List<ISelectionModifier> mods;
 
+        public SelectionManager()
+        {
+            mods = new List<ISelectionModifier>()
+            {
+                new SameTypeSelectionModifier(this),
+                new OrderOfSelectionModifier(),
+                new AdditiveSelectionModifier(this),
+                new LimitSelectionModifier()
+            };
+        }
 
         public void SetMainList(HashSet<ISelectableObjectBehaviour> list)
         {
             this.mainList = list;
         }
 
-        public void SetSelctionModifiers(HashSet<IBaseSelectionMod> list)
+        public void SetSelectionModifiers(List<ISelectionModifier> list)
         {
             this.mods = list;
         }
@@ -178,10 +188,9 @@ namespace RTSEngine.Manager
             return OrderSelection(selectionOnScreen);
         }
 
-        public virtual HashSet<IBaseSelectionMod> GetModifiersToBeApplied(SelectionTypeEnum type)
+        public virtual List<ISelectionModifier> GetModifiersToBeApplied(SelectionTypeEnum type)
         {
-            List<IBaseSelectionMod> baseSelectionMods = this.mods.ToList().FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
-            return new HashSet<IBaseSelectionMod>(baseSelectionMods);
+            return this.mods.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
         }
 
         public virtual HashSet<ISelectableObjectBehaviour> GetGroupSet(int number)
@@ -262,19 +271,16 @@ namespace RTSEngine.Manager
             var collection = GetModifiersToBeApplied(this.selectionType);
             foreach (var item in collection)
             {
-                if (item.Active)
+                if (this.isPreSelection)
                 {
-                    if (this.isPreSelection)
-                    {
-                        if (item.ActiveOnPreSelection)
-                        {
-                            args = item.Apply(args);
-                        }
-                    }
-                    else
+                    if (item.ActiveOnPreSelection)
                     {
                         args = item.Apply(args);
                     }
+                }
+                else
+                {
+                    args = item.Apply(args);
                 }
             }
             return args;
