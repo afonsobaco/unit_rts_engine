@@ -43,7 +43,9 @@ namespace Tests.Manager
             HashSet<ISelectableObjectBehaviour> result = new HashSet<ISelectableObjectBehaviour>();
             for (var i = 0; i < parameters.Length; i++)
             {
-                result.Add(SelectionManagerTestUtils.CreateATestableObject(parameters[i]));
+                ISelectableObjectBehaviour item = SelectionManagerTestUtils.CreateATestableObject(parameters[i]);
+                item.Index = parameters[i];
+                result.Add(item);
             }
             return result;
         }
@@ -237,6 +239,50 @@ namespace Tests.Manager
             Assert.True(manager.IsSameType());
         }
 
+        private static void GetModsToTest(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey, List<ISelectionModifier> mods, List<ISelectionModifier> expectedMods)
+        {
+            List<ISelectionModifier> allMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyAll, SelectionTypeEnum.ANY);
+            List<ISelectionModifier> clickMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK);
+            List<ISelectionModifier> dragMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG);
+            List<ISelectionModifier> keyMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY);
+            expectedMods.AddRange(allMods);
+            switch (selectionType)
+            {
+                case SelectionTypeEnum.CLICK:
+                    expectedMods.AddRange(clickMods);
+                    break;
+                case SelectionTypeEnum.DRAG:
+                    expectedMods.AddRange(dragMods);
+                    break;
+                case SelectionTypeEnum.KEY:
+                    expectedMods.AddRange(keyMods);
+                    break;
+                default:
+                    break;
+            }
+
+            mods.AddRange(allMods);
+            mods.AddRange(clickMods);
+            mods.AddRange(dragMods);
+            mods.AddRange(keyMods);
+        }
+
+        public static IEnumerable<TestCaseData> Scenarios
+        {
+            get
+            {
+                yield return new TestCaseData(SelectionTypeEnum.ANY, 0, 0, 0, 0);
+                yield return new TestCaseData(SelectionTypeEnum.ANY, 2, 3, 2, 1);
+                yield return new TestCaseData(SelectionTypeEnum.CLICK, 0, 0, 0, 0);
+                yield return new TestCaseData(SelectionTypeEnum.CLICK, 2, 3, 2, 1);
+                yield return new TestCaseData(SelectionTypeEnum.DRAG, 0, 0, 0, 0);
+                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, 3, 2, 1);
+                yield return new TestCaseData(SelectionTypeEnum.KEY, 0, 0, 0, 0);
+                yield return new TestCaseData(SelectionTypeEnum.KEY, 2, 3, 2, 1);
+
+            }
+        }
+
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldApplyModifiers(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey)
         {
@@ -380,52 +426,89 @@ namespace Tests.Manager
             }
         }
 
-        private static void GetModsToTest(SelectionTypeEnum selectionType, int howManyAll, int howManyClick, int howManyDrag, int howManyKey, List<ISelectionModifier> mods, List<ISelectionModifier> expectedMods)
+        [Test]
+        public void ShouldDoPreSelectionAddition()
         {
-            List<ISelectionModifier> allMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyAll, SelectionTypeEnum.ANY);
-            List<ISelectionModifier> clickMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyClick, SelectionTypeEnum.CLICK);
-            List<ISelectionModifier> dragMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyDrag, SelectionTypeEnum.DRAG);
-            List<ISelectionModifier> keyMods = SelectionManagerTestUtils.GetSomeModsFromType(howManyKey, SelectionTypeEnum.KEY);
-            expectedMods.AddRange(allMods);
-            switch (selectionType)
+            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            HashSet<ISelectableObjectBehaviour> preSelection = GetSelectionListFromMainList(mainList);
+            manager.SetPreSelection(preSelection);
+            foreach (var item in preSelection)
             {
-                case SelectionTypeEnum.CLICK:
-                    expectedMods.AddRange(clickMods);
-                    break;
-                case SelectionTypeEnum.DRAG:
-                    expectedMods.AddRange(dragMods);
-                    break;
-                case SelectionTypeEnum.KEY:
-                    expectedMods.AddRange(keyMods);
-                    break;
-                default:
-                    break;
+                item.IsPreSelected = true;
+            }
+            manager.When(x => x.PerformSelection(Arg.Any<Vector3>())).DoNotCallBase();
+            manager.PerformSelection(Arg.Any<Vector3>()).Returns(newSelection);
+
+            manager.DoPreSelection(new Vector3(0, 1, 2));
+
+            CollectionAssert.AreEquivalent(manager.GetPreSelection(), newSelection);
+
+            foreach (var item in manager.GetPreSelection())
+            {
+                Assert.AreEqual(item.IsPreSelected, newSelection.Contains(item));
+                Assert.False(item.IsSelected);
             }
 
-            mods.AddRange(allMods);
-            mods.AddRange(clickMods);
-            mods.AddRange(dragMods);
-            mods.AddRange(keyMods);
+            foreach (var item in manager.GetPreSelection())
+            {
+                Assert.True(item.IsPreSelected);
+                Assert.False(item.IsSelected);
+            }
         }
 
-        public static IEnumerable<TestCaseData> Scenarios
+        [Test]
+        public void ShouldDoPreSelectionDeletion()
         {
-            get
+            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            HashSet<ISelectableObjectBehaviour> preSelection = GetSelectionListFromMainList(mainList, 0, 3, 4);
+            manager.SetPreSelection(preSelection);
+            foreach (var item in preSelection)
             {
-                yield return new TestCaseData(SelectionTypeEnum.ANY, 0, 0, 0, 0);
-                yield return new TestCaseData(SelectionTypeEnum.ANY, 2, 3, 2, 1);
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 0, 0, 0, 0);
-                yield return new TestCaseData(SelectionTypeEnum.CLICK, 2, 3, 2, 1);
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 0, 0, 0, 0);
-                yield return new TestCaseData(SelectionTypeEnum.DRAG, 2, 3, 2, 1);
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 0, 0, 0, 0);
-                yield return new TestCaseData(SelectionTypeEnum.KEY, 2, 3, 2, 1);
-
+                item.IsPreSelected = true;
             }
+            manager.When(x => x.PerformSelection(Arg.Any<Vector3>())).DoNotCallBase();
+            manager.PerformSelection(Arg.Any<Vector3>()).Returns(newSelection);
+
+            manager.DoPreSelection(new Vector3(0, 1, 2));
+
+            CollectionAssert.AreEquivalent(manager.GetPreSelection(), newSelection);
+
+            foreach (var item in manager.GetPreSelection())
+            {
+                Assert.AreEqual(item.IsPreSelected, newSelection.Contains(item));
+                Assert.False(item.IsSelected);
+            }
+
+        }
+
+
+        [Test]
+        public void ShouldAddToSelectionOrderedWhenNewSelectionIsSent()
+        {
+            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2, 3, 4);
+            HashSet<ISelectableObjectBehaviour> preSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            manager.SetPreSelection(preSelection);
+
+            var result = manager.OrderSelection(newSelection);
+
+            CollectionAssert.AreEquivalent(newSelection, result);
+        }
+
+        [Test]
+        public void ShouldRemoveToSelectionOrderedWhenNewSelectionIsSent()
+        {
+            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1);
+            HashSet<ISelectableObjectBehaviour> preSelection = GetSelectionListFromMainList(mainList, 0, 1, 2, 3, 4);
+            manager.SetPreSelection(preSelection);
+
+            var result = manager.OrderSelection(newSelection);
+
+            CollectionAssert.AreEquivalent(newSelection, result);
         }
 
     }
-
-
-
 }

@@ -151,6 +151,7 @@ namespace RTSEngine.Manager
 
         public void AddSelectableObject(SelectableObjectCreatedSignal signal)
         {
+            signal.Selectable.Index = this.mainList.Count;
             this.mainList.Add(signal.Selectable);
         }
 
@@ -177,7 +178,7 @@ namespace RTSEngine.Manager
         public HashSet<ISelectableObjectBehaviour> OrderSelection(HashSet<ISelectableObjectBehaviour> newSelection)
         {
             var orderedListOfSelection = new HashSet<ISelectableObjectBehaviour>(this.preSelection);
-            orderedListOfSelection.RemoveWhere(x => newSelection.Contains(x));
+            orderedListOfSelection.RemoveWhere(x => !newSelection.Contains(x));
             orderedListOfSelection.UnionWith(newSelection);
             return orderedListOfSelection;
         }
@@ -316,7 +317,7 @@ namespace RTSEngine.Manager
             return new HashSet<ISelectableObjectBehaviour>(args.ToBeAdded);
         }
 
-        public HashSet<ISelectableObjectBehaviour> PerformSelection(HashSet<ISelectableObjectBehaviour> newSelection)
+        public HashSet<ISelectableObjectBehaviour> GetSelection(HashSet<ISelectableObjectBehaviour> newSelection)
         {
             var args = GetSelectionArgs(newSelection);
             args = ApplyModifiers(args);
@@ -361,13 +362,14 @@ namespace RTSEngine.Manager
             if (this.isDoubleClick) lastClicked = null;
             this.isDoubleClick = false;
             this.groupNumberPressed = 0;
+            this.preSelection = new HashSet<ISelectableObjectBehaviour>();
         }
 
-        private HashSet<ISelectableObjectBehaviour> PerformSelection(Vector3 finalPos)
+        public virtual HashSet<ISelectableObjectBehaviour> PerformSelection(Vector3 finalPos)
         {
             this.finalScreenPosition = finalPos;
             this.selectionType = GetSelectionType();
-            var list = PerformSelection(GetSelectionBySelectionType());
+            var list = GetSelection(GetSelectionBySelectionType());
             return list;
         }
 
