@@ -7,19 +7,17 @@ using Zenject;
 
 namespace RTSEngine.Manager
 {
-    public class AdditiveSelectionModifier : ISelectionModifier
+    public class AdditiveSelectionModifier : AbstractSelectionModifier
     {
 
         private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
-        public SelectionTypeEnum Type { get { return SelectionTypeEnum.ANY; } }
-        public bool ActiveOnPreSelection { get { return false; } }
 
         public AdditiveSelectionModifier(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }
 
-        public SelectionArgsXP Apply(SelectionArgsXP args)
+        public override SelectionArgsXP Apply(SelectionArgsXP args)
         {
             if (selectionManager.IsAdditive())
             {

@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using NUnit.Framework;
 using RTSEngine.Core;
+using NSubstitute;
 using RTSEngine.Manager;
 using System.Collections.Generic;
 using Tests.Utils;
@@ -12,11 +13,14 @@ namespace Tests
     public class LimitModifierTest
     {
         private LimitSelectionModifier modifier;
+        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            modifier = new LimitSelectionModifier();
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>>();
+            modifier = Substitute.ForPartsOf<LimitSelectionModifier>(new object[] { selectionManager });
+
         }
 
         [Test]
@@ -36,7 +40,9 @@ namespace Tests
             HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
 
             SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
-            modifier.MaxLimit = limit;
+            ISelectionSettings settings = Substitute.For<ISelectionSettings>();
+            selectionManager.GetSettings().Returns(settings);
+            settings.Limit.Returns(limit);
 
             args = modifier.Apply(args);
             HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
