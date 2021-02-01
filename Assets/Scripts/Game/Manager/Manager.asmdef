@@ -1,0 +1,17 @@
+{
+    "name": "Manager",
+    "references": [
+        "GUID:85e21ed01ae1b674fb03499feed34dec",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:d25f4c6b518de7d429ba902b326c1404"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
