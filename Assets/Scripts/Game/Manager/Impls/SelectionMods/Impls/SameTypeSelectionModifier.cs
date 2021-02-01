@@ -24,15 +24,39 @@ namespace RTSEngine.Manager
             {
                 args.ToBeAdded = GetAllFromSameTypeThatCanGroup(args);
             }
+
             return args;
         }
 
         public virtual HashSet<ISelectableObjectBehaviour> GetAllFromSameTypeThatCanGroup(SelectionArgsXP args)
         {
             HashSet<ISelectableObjectBehaviour> allFromSameType =
-                SameTypeUtil.GetAllFromSameType(args.ToBeAdded.First(), args.MainList, selectionManager.GetInitialScreenPosition(), selectionManager.GetFinalScreenPosition(), mode);
+                GetAllFromSameType(args.ToBeAdded.First(), args.MainList, selectionManager.GetInitialScreenPosition(), selectionManager.GetFinalScreenPosition(), mode);
             return allFromSameType;
         }
 
+        public HashSet<ISelectableObjectBehaviour> GetAllFromSameType(ISelectableObjectBehaviour selected, HashSet<ISelectableObjectBehaviour> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition, SameTypeSelectionModeEnum mode)
+        {
+            HashSet<ISelectableObjectBehaviour> list = new HashSet<ISelectableObjectBehaviour>();
+            if (selected != null)
+            {
+                list.Add(selected);
+                HashSet<ISelectableObjectBehaviour> allFromSameType = GetFromSameTypeInScreen(selected, mainList, initialScreenPosition, finalScreenPosition);
+                if (mode == SameTypeSelectionModeEnum.RANDOM)
+                {
+                    list.UnionWith(SameTypeUtil.Shuffle(allFromSameType));
+                }
+                else
+                {
+                    list.UnionWith(SameTypeUtil.SortListByDistance(allFromSameType, selected.Position));
+                }
+            }
+            return list;
+        }
+
+        public virtual HashSet<ISelectableObjectBehaviour> GetFromSameTypeInScreen(ISelectableObjectBehaviour selected, HashSet<ISelectableObjectBehaviour> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
+        {
+            return SameTypeUtil.GetFromSameTypeInScreen(selected, mainList, initialScreenPosition, finalScreenPosition);
+        }
     }
 }

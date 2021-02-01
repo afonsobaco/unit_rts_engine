@@ -6,27 +6,8 @@ namespace RTSEngine.Manager
 {
     public class SameTypeUtil
     {
-        public static HashSet<ISelectableObjectBehaviour> GetAllFromSameType(ISelectableObjectBehaviour selected, HashSet<ISelectableObjectBehaviour> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition, SameTypeSelectionModeEnum mode)
-        {
-            HashSet<ISelectableObjectBehaviour> list = new HashSet<ISelectableObjectBehaviour>();
-            if (selected != null)
-            {
-                list.Add(selected);
-                HashSet<ISelectableObjectBehaviour> allFromSameType = SameTypeUtil.GetFromSameTypeInScreen(selected, mainList, initialScreenPosition, finalScreenPosition);
-                if (mode == SameTypeSelectionModeEnum.RANDOM)
-                {
-                    list.UnionWith(Shuffle(allFromSameType));
-                }
-                else
-                {
-                    list.UnionWith(SortListByDistance(allFromSameType, selected.Position));
-                }
-                return new HashSet<ISelectableObjectBehaviour>();
-            }
-            return list;
-        }
 
-        private static HashSet<ISelectableObjectBehaviour> GetFromSameTypeInScreen(ISelectableObjectBehaviour selected, HashSet<ISelectableObjectBehaviour> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
+        public static HashSet<ISelectableObjectBehaviour> GetFromSameTypeInScreen(ISelectableObjectBehaviour selected, HashSet<ISelectableObjectBehaviour> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
         {
             if (selected == null)
             {
@@ -38,8 +19,9 @@ namespace RTSEngine.Manager
 
         public static HashSet<ISelectableObjectBehaviour> SortListByDistance(HashSet<ISelectableObjectBehaviour> list, Vector3 initialPosittion)
         {
-            list.ToList().Sort((v1, v2) => (v1.Position - initialPosittion).sqrMagnitude.CompareTo((v2.Position - initialPosittion).sqrMagnitude));
-            return list;
+            var sorted = new SortedSet<ISelectableObjectBehaviour>(new SameTypeComparer(initialPosittion));
+            sorted.UnionWith(list);
+            return new HashSet<ISelectableObjectBehaviour>(sorted);
         }
 
         public static HashSet<ISelectableObjectBehaviour> Shuffle(HashSet<ISelectableObjectBehaviour> collection)
@@ -58,5 +40,20 @@ namespace RTSEngine.Manager
             return new HashSet<ISelectableObjectBehaviour>(list);
         }
 
+    }
+
+    public class SameTypeComparer : IComparer<ISelectableObjectBehaviour>
+    {
+        private Vector3 initialPosittion;
+
+        public SameTypeComparer(Vector3 initialPosittion)
+        {
+            this.initialPosittion = initialPosittion;
+        }
+
+        public int Compare(ISelectableObjectBehaviour v1, ISelectableObjectBehaviour v2)
+        {
+            return (v1.Position - initialPosittion).sqrMagnitude.CompareTo((v2.Position - initialPosittion).sqrMagnitude);
+        }
     }
 }

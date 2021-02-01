@@ -10,7 +10,6 @@ namespace RTSEngine.Manager
     {
         [SerializeField] private SelectableObjectRuntimeSetSO selectableList;
         [SerializeField] private RectTransform selectionBox;
-        [SerializeField] private List<ScriptableObject> modifiersList;
 
         private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> manager;
 

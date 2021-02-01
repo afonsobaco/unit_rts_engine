@@ -65,6 +65,32 @@ namespace Tests
 
         }
 
+        [Test]
+        public void ShouldGetAllFromSameTypeThatCanGroup()
+        {
+
+            HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(10);
+            mainList.ToList().ForEach(x =>
+            {
+                x.IsCompatible(Arg.Any<ISelectableObjectBehaviour>()).Returns(a =>
+                {
+                    var other = (ISelectableObjectBehaviour)a[0];
+                    return other.Index < 5 && x.Index < 0;
+                });
+            });
+            HashSet<ISelectableObjectBehaviour> oldSelection = TestUtils.GetListByIndex(new int[] { }, mainList);
+            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(new int[] { 0 }, mainList);
+            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(new int[] { 0, 1, 2, 3, 4 }, mainList);
+
+            modifier.WhenForAnyArgs(x => x.GetFromSameTypeInScreen(default, default, default, default)).DoNotCallBase();
+            modifier.GetFromSameTypeInScreen(default, default, default, default).ReturnsForAnyArgs(expected);
+
+            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
+            var result = modifier.GetAllFromSameTypeThatCanGroup(args);
+
+            CollectionAssert.AreEquivalent(expected, result);
+        }
+
         public static IEnumerable<TestCaseData> Scenarios
         {
             get

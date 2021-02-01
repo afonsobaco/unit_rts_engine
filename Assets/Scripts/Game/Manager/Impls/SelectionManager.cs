@@ -120,12 +120,14 @@ namespace RTSEngine.Manager
 
         public Vector2 GetInitialScreenPosition()
         {
-            return this.initialScreenPosition;
+            Vector3 initialSelectionPos = this.isSameTypeSelection ? this.minScreenPos : this.initialScreenPosition;
+            return initialSelectionPos;
         }
 
         public Vector2 GetFinalScreenPosition()
         {
-            return this.finalScreenPosition;
+            Vector3 finalSelectionPos = this.isSameTypeSelection ? this.maxScreenPos : this.finalScreenPosition;
+            return finalSelectionPos;
 
         }
 
@@ -261,9 +263,6 @@ namespace RTSEngine.Manager
             {
                 AdjustSameTypeIfDoubleClick(newSelection);
             }
-            Vector3 initialSelectionPos = this.isSameTypeSelection ? this.minScreenPos : this.initialScreenPosition;
-            Vector3 finalSelectionPos = this.isSameTypeSelection ? this.maxScreenPos : this.finalScreenPosition;
-
             return new SelectionArgsXP(this.currentSelection, newSelection, this.mainList);
         }
 

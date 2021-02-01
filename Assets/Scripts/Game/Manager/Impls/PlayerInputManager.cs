@@ -20,7 +20,6 @@ namespace RTSEngine.Manager
             this.selectionManager = selectionManager;
             this.cameraManager = cameraManager;
 
-            this.selectionManager.SetScreenBoundries(this.cameraManager.GetMinScreenBoundries(Camera.main), this.cameraManager.GetMaxScreenBoundries(Camera.main));
         }
 
         private Dictionary<KeyCode, int> groupKeys = new Dictionary<KeyCode, int>()
@@ -136,9 +135,11 @@ namespace RTSEngine.Manager
 
             if (Input.GetMouseButtonUp(0))
             {
+                this.selectionManager.SetScreenBoundries(this.cameraManager.GetMinScreenBoundries(Camera.main), this.cameraManager.GetMaxScreenBoundries(Camera.main));
                 VerifyDoubleClick(doubleClickTime);
                 selectionManager.DoSelection(Input.mousePosition);
                 //TODO create a perform double click here
+
             }
 
         }

@@ -52,11 +52,6 @@ namespace Tests
             });
 
             args = modifier.Apply(args);
-            Debug.Log("expected");
-            expected.ToList().ForEach(x => Debug.Log(x.Index));
-            Debug.Log("ToBeAdded");
-            args.ToBeAdded.ToList().ForEach(x => Debug.Log(x.Index));
-
             CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
         }
 
