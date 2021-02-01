@@ -5,22 +5,23 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
-    public class OrderOfSelectionModifier : ISelectionModifier
+    public class OrderOfSelectionModifier : AbstractDragSelectionModifier
     {
 
-        public SelectionTypeEnum Type { get { return SelectionTypeEnum.DRAG; } }
-        public bool ActiveOnPreSelection { get { return true; } }
+        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
 
-        private List<ObjectTypeEnum> primary = new List<ObjectTypeEnum>() { ObjectTypeEnum.UNIT };
-        private List<ObjectTypeEnum> secondary = new List<ObjectTypeEnum>() { ObjectTypeEnum.BUILDING };
+        public OrderOfSelectionModifier(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager)
+        {
+            this.selectionManager = selectionManager;
+        }
 
-        public SelectionArgsXP Apply(SelectionArgsXP args)
+        public override SelectionArgsXP Apply(SelectionArgsXP args)
         {
 
-            var aux = GetObjectsFromListOfPriority(args.ToBeAdded, primary);
+            var aux = GetObjectsFromListOfPriority(args.ToBeAdded, selectionManager.GetSettings().Primary.ToList());
             if (aux.Count == 0)
             {
-                var sec = GetObjectsFromListOfPriority(args.ToBeAdded, secondary);
+                var sec = GetObjectsFromListOfPriority(args.ToBeAdded, selectionManager.GetSettings().Secondary.ToList());
                 if (sec.Count > 0)
                 {
                     aux.Add(sec.First());

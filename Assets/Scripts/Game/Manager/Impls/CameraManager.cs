@@ -8,12 +8,12 @@ namespace RTSEngine.Manager
     {
 
         private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
+        private ICameraSettings settings;
 
         private Vector3 origin;
         private bool isPanning;
         private float yPosMagicNumber = 7.08f;
         private bool isCentering;
-        private ICameraSettings settings;
 
         public Vector3 Origin { get => origin; set => origin = value; }
         public bool IsPanning { get => isPanning; set => isPanning = value; }
