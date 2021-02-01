@@ -20,7 +20,7 @@ namespace RTSEngine.Manager
             this.manager = manager;
             selectableList.GetList().Clear();
             this.manager.SetMainList(this.selectableList.GetList());
-            this.manager.SetSettings(settings); 
+            this.manager.SetSettings(settings);
         }
 
         private void Update()
