@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: CameraSettings
   m_EditorClassIdentifier: Manager:RTSEngine.Manager:CamerattingsSO
   cameraSpeed: 1.5
-  panSpeed: 8
+  panSpeed: 5
   boundriesOffset: 0.03
   zoomScale: 100
   minZoom: 3
   maxZoom: 20
   axisPressure: 0.1
   sizeFromMidPoint: 50
+  minViewportPoint: {x: 0, y: 0}
+  maxViewportPoint: {x: 1, y: 1}
