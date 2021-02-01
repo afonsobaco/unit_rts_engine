@@ -19,8 +19,8 @@ namespace RTSEngine.Manager
 
         public static HashSet<ISelectableObjectBehaviour> SortListByDistance(HashSet<ISelectableObjectBehaviour> list, Vector3 initialPosittion)
         {
-            var sorted = new SortedSet<ISelectableObjectBehaviour>(new SameTypeComparer(initialPosittion));
-            sorted.UnionWith(list);
+            var sorted = new List<ISelectableObjectBehaviour>(list);
+            sorted.Sort(new SameTypeComparer(initialPosittion));
             return new HashSet<ISelectableObjectBehaviour>(sorted);
         }
 

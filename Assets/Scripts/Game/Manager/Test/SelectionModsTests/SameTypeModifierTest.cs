@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Security.Cryptography.X509Certificates;
+using UnityEngine;
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Manager;
@@ -62,33 +63,61 @@ namespace Tests
             args = modifier.Apply(args);
 
             CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
+        }
 
+        [TestCase(new int[] { 0 }, new int[] { 0, 1, 2, 3 }, TestName = "Should Get All Units")]
+        [TestCase(new int[] { 5 }, new int[] { 4, 5, 6 }, TestName = "Should Get All Buildings")]
+        [TestCase(new int[] { 9 }, new int[] { 9 }, TestName = "Should Get Empty")]
+        public void ShouldGetAllFromSameTypeThatCanGroup(int[] selectedIndex, int[] expectedResult)
+        {
+            HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(10);
+            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectedIndex, mainList);
+            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(expectedResult, mainList);
+            SetObjectSelectableTypes(mainList);
+
+            modifier.WhenForAnyArgs(x => x.GetAllFromSameType(default, default, default, default, default)).DoNotCallBase();
+            modifier.GetAllFromSameType(default, default, default, default, default).ReturnsForAnyArgs(expected);
+
+            SelectionArgsXP args = new SelectionArgsXP(default, newSelection, mainList);
+            var result = modifier.GetAllFromSameTypeThatCanGroup(args);
+
+            CollectionAssert.AreEquivalent(expected, result);
         }
 
         [Test]
-        public void ShouldGetAllFromSameTypeThatCanGroup()
+        public void ShouldGetAllFromSameType()
         {
-
             HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(10);
-            mainList.ToList().ForEach(x =>
-            {
-                x.IsCompatible(Arg.Any<ISelectableObjectBehaviour>()).Returns(a =>
-                {
-                    var other = (ISelectableObjectBehaviour)a[0];
-                    return other.Index < 5 && x.Index < 0;
-                });
-            });
-            HashSet<ISelectableObjectBehaviour> oldSelection = TestUtils.GetListByIndex(new int[] { }, mainList);
-            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(new int[] { 0 }, mainList);
-            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(new int[] { 0, 1, 2, 3, 4 }, mainList);
+            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(new int[] { 0, 1, 2, 3 }, mainList);
+            ISelectableObjectBehaviour selected = TestUtils.GetListByIndex(new int[] { 0 }, mainList).First();
+
+            SetObjectSelectableTypes(mainList);
 
             modifier.WhenForAnyArgs(x => x.GetFromSameTypeInScreen(default, default, default, default)).DoNotCallBase();
             modifier.GetFromSameTypeInScreen(default, default, default, default).ReturnsForAnyArgs(expected);
 
-            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
-            var result = modifier.GetAllFromSameTypeThatCanGroup(args);
+            var result = modifier.GetAllFromSameType(selected, mainList, default, default, default);
 
             CollectionAssert.AreEquivalent(expected, result);
+        }
+
+        private static void SetObjectSelectableTypes(HashSet<ISelectableObjectBehaviour> mainList)
+        {
+            mainList.ToList().ForEach(x =>
+            {
+                if (x.Index < 4)
+                {
+                    x.Type = ObjectTypeEnum.UNIT;
+                }
+                else if (x.Index < 7)
+                {
+                    x.Type = ObjectTypeEnum.BUILDING;
+                }
+                else
+                {
+                    x.Type = ObjectTypeEnum.ENVIRONMENT;
+                }
+            }); ;
         }
 
         public static IEnumerable<TestCaseData> Scenarios
