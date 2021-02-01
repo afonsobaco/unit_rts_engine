@@ -2,7 +2,7 @@
 
 namespace RTSEngine.Manager
 {
-    public class CameraSettings : ScriptableObject, ICameraSettings
+    public abstract class AbstractCameraSettings : ScriptableObject, ICameraSettings
     {
         [Space]
         [Header("Camera movement")]
@@ -20,7 +20,7 @@ namespace RTSEngine.Manager
         [Space]
         [Header("Map Configs(REMOVE)")]
 
-        [SerializeField] private float sizeFromMidPoint = 10;
+        [SerializeField] private float sizeFromMidPoint = 50;
         [SerializeField] private Vector2 minViewportPoint = Vector2.zero;
         [SerializeField] private Vector2 maxViewportPoint = new Vector2(1f, 1f);
 

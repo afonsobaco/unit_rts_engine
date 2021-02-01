@@ -10,6 +10,7 @@ namespace RTSEngine.Manager
 {
     public class SelectionManager : ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>
     {
+        private ISelectionSettings settings;
 
         private Dictionary<int, HashSet<ISelectableObjectBehaviour>> groupSet = new Dictionary<int, HashSet<ISelectableObjectBehaviour>>();
         private HashSet<ISelectableObjectBehaviour> mainList = new HashSet<ISelectableObjectBehaviour>();
@@ -36,10 +37,20 @@ namespace RTSEngine.Manager
             mods = new List<ISelectionModifier>()
             {
                 new SameTypeSelectionModifier(this),
-                new OrderOfSelectionModifier(),
+                new OrderOfSelectionModifier(this),
                 new AdditiveSelectionModifier(this),
-                new LimitSelectionModifier()
+                new LimitSelectionModifier(this)
             };
+        }
+
+        public ISelectionSettings GetSettings()
+        {
+            return settings;
+        }
+
+        public void SetSettings(ISelectionSettings value)
+        {
+            settings = value;
         }
 
         public void SetMainList(HashSet<ISelectableObjectBehaviour> list)
@@ -120,13 +131,13 @@ namespace RTSEngine.Manager
 
         public Vector2 GetInitialScreenPosition()
         {
-            Vector3 initialSelectionPos = this.isSameTypeSelection ? this.minScreenPos : this.initialScreenPosition;
+            Vector3 initialSelectionPos = this.isSameTypeSelection && !this.isPreSelection ? this.minScreenPos : this.initialScreenPosition;
             return initialSelectionPos;
         }
 
         public Vector2 GetFinalScreenPosition()
         {
-            Vector3 finalSelectionPos = this.isSameTypeSelection ? this.maxScreenPos : this.finalScreenPosition;
+            Vector3 finalSelectionPos = this.isSameTypeSelection && !this.isPreSelection ? this.maxScreenPos : this.finalScreenPosition;
             return finalSelectionPos;
 
         }
@@ -273,7 +284,7 @@ namespace RTSEngine.Manager
             {
                 if (this.isPreSelection)
                 {
-                    if (item.ActiveOnPreSelection)
+                    if (item is IPreSelectionModifier && ((IPreSelectionModifier)item).ActiveOnPreSelection)
                     {
                         args = item.Apply(args);
                     }

@@ -5,21 +5,16 @@ using Zenject;
 
 namespace RTSEngine.Manager
 {
-    public class SameTypeSelectionModifier : ISelectionModifier
+    public class SameTypeSelectionModifier : AbstractClickSelectionModifier
     {
 
         private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
-        public SelectionTypeEnum Type { get { return SelectionTypeEnum.CLICK; } }
-        public List<ObjectTypeEnum> CanGroup { get { return new List<ObjectTypeEnum> { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING }; } }
-        public bool ActiveOnPreSelection { get { return false; } }
-        private SameTypeSelectionModeEnum mode = SameTypeSelectionModeEnum.DISTANCE;
-
         public SameTypeSelectionModifier(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }
 
-        public SelectionArgsXP Apply(SelectionArgsXP args)
+        public override SelectionArgsXP Apply(SelectionArgsXP args)
         {
             if (selectionManager.IsSameType() && args.ToBeAdded.Count == 1)
             {
@@ -33,9 +28,9 @@ namespace RTSEngine.Manager
         {
             ISelectableObjectBehaviour selected = args.ToBeAdded.First();
             HashSet<ISelectableObjectBehaviour> allFromSameType = new HashSet<ISelectableObjectBehaviour>();
-            if (CanGroup.Contains(selected.Type))
+            if (selectionManager.GetSettings().CanGroup.Contains(selected.Type))
             {
-                allFromSameType = GetAllFromSameType(selected, args.MainList, selectionManager.GetInitialScreenPosition(), selectionManager.GetFinalScreenPosition(), mode);
+                allFromSameType = GetAllFromSameType(selected, args.MainList, selectionManager.GetInitialScreenPosition(), selectionManager.GetFinalScreenPosition(), selectionManager.GetSettings().Mode);
             }
             else
             {

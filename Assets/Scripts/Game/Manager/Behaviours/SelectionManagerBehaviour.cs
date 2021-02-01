@@ -9,6 +9,7 @@ namespace RTSEngine.Manager
     public class SelectionManagerBehaviour : MonoBehaviour
     {
         [SerializeField] private SelectableObjectRuntimeSetSO selectableList;
+        [SerializeField] private SelectionSettingsSO settings;
         [SerializeField] private RectTransform selectionBox;
 
         private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> manager;
@@ -19,6 +20,7 @@ namespace RTSEngine.Manager
             this.manager = manager;
             selectableList.GetList().Clear();
             this.manager.SetMainList(this.selectableList.GetList());
+            this.manager.SetSettings(settings); 
         }
 
         private void Update()

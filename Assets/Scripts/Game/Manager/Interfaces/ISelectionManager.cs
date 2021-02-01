@@ -8,6 +8,7 @@ namespace RTSEngine.Manager
     public interface ISelectionManager<T, ST> : IDisposable where T : ISelectable
     {
         void SetMainList(HashSet<T> list);
+        void SetSettings(ISelectionSettings settings);
         void SetScreenBoundries(Vector2 minScreenPoint, Vector2 maxScreenPoint);
         void SetKeysPressed(bool additiveKeyPressed, bool sameTypeKeyPressed);
         void SetGroupNumperPressed(int keyPressed);
@@ -17,6 +18,7 @@ namespace RTSEngine.Manager
         bool IsAdditive();
         bool IsSameType();
 
+        ISelectionSettings GetSettings();
         int GetGroupSetNumberPressed();
         Vector2 GetInitialScreenPosition();
         Vector2 GetFinalScreenPosition();
