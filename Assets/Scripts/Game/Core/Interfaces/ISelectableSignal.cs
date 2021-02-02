@@ -1,6 +1,6 @@
 namespace RTSEngine.Core
 {
-    public interface ISelectableDeletedSignal<T>
+    public interface ISelectableSignal<T>
     {
         T Selectable { get; set; }
     }

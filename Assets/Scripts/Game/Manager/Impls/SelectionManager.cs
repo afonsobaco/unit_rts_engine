@@ -1,10 +1,7 @@
-using RTSEngine.Core;
-using RTSEngine.Utils;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using Zenject;
+
 
 namespace RTSEngine.Manager
 {
@@ -31,9 +28,11 @@ namespace RTSEngine.Manager
         private Vector3 maxScreenPos;
         private SelectionTypeEnum selectionType;
         private List<ISelectionModifier> mods;
+        private SignalBus signalBus;
 
-        public SelectionManager()
+        public SelectionManager(SignalBus signalBus)
         {
+            this.signalBus = signalBus;
             mods = new List<ISelectionModifier>()
             {
                 new SameTypeSelectionModifier(this),
@@ -160,6 +159,7 @@ namespace RTSEngine.Manager
         public void CreateGroupSet(int number)
         {
             this.groupSet[number] = this.currentSelection;
+            //TODO call signal
         }
 
         public void AddSelectableObject(SelectableObjectCreatedSignal signal)
@@ -397,7 +397,7 @@ namespace RTSEngine.Manager
 
             HashSet<ISelectableObjectBehaviour> list = PerformSelection(finalPos);
             this.currentSelection = GetUpdatedCurrentSelection(list);
-
+            signalBus.Fire<UpdateGUISignal>();
             RestartVariables();
         }
 
