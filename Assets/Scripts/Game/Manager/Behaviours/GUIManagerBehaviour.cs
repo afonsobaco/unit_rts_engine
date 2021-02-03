@@ -28,12 +28,12 @@ namespace RTSEngine.Manager
 
         private void UpdateSelection()
         {
-            HashSet<ISelectableObjectBehaviour> selection = GetOrderedSelection();
+            List<ISelectableObjectBehaviour> selection = GetOrderedSelection();
 
             UpdateSelectionWithNew(selection);
         }
 
-        private void UpdateSelectionWithNew(HashSet<ISelectableObjectBehaviour> selection)
+        private void UpdateSelectionWithNew(List<ISelectableObjectBehaviour> selection)
         {
             for (var i = 0; i < miniatureList.Length; i++)
             {
@@ -45,18 +45,60 @@ namespace RTSEngine.Manager
                 {
                     miniatureList[i].Selected = null;
                 }
-                miniatureList[i].gameObject.SetActive(miniatureList[i].Selected != null);
+                UpdateMiniature(miniatureList[i]);
             }
         }
 
-        private HashSet<ISelectableObjectBehaviour> GetOrderedSelection()
+        private void UpdateMiniature(SelectedMiniatureBehaviour miniature)
         {
-            HashSet<ISelectableObjectBehaviour> selectableObjectBehaviours = manager.GetCurrentSelection();
-            foreach (var item in selectableObjectBehaviours)
+            if (miniature.Selected != null)
             {
-                //TODO Do Order 
+                miniature.gameObject.SetActive(true);
+                miniature.Picture.sprite = miniature.Selected.Picture;
+                miniature.LifeBar.gameObject.SetActive(miniature.Selected.Life.Enabled);
+                miniature.ManaBar.gameObject.SetActive(miniature.Selected.Mana.Enabled);
+                miniature.LifeBar.StatusBar.fillAmount = (float)miniature.Selected.Life.Value / (float)miniature.Selected.Life.MaxValue;
+                miniature.ManaBar.StatusBar.fillAmount = (float)miniature.Selected.Mana.Value / (float)miniature.Selected.Mana.MaxValue;
             }
-            return selectableObjectBehaviours;
+            else
+            {
+                miniature.gameObject.SetActive(false);
+            }
+        }
+
+        private List<ISelectableObjectBehaviour> GetOrderedSelection()
+        {
+            List<ISelectableObjectBehaviour> list = new List<ISelectableObjectBehaviour>();
+            var grouped = manager.GetCurrentSelection().GroupBy(x => x.SelectionOrder);
+            var sorted = grouped.ToList();
+            sorted.Sort(new ObjectComparer());
+            foreach (var item in sorted)
+            {
+                list.AddRange(item);
+            }
+            return new List<ISelectableObjectBehaviour>(list);
+        }
+
+        private class ObjectComparer : IComparer<IGrouping<int, ISelectableObjectBehaviour>>
+        {
+            public int Compare(IGrouping<int, ISelectableObjectBehaviour> x, IGrouping<int, ISelectableObjectBehaviour> y)
+            {
+                int v = y.Key - x.Key;
+                if (v == 0)
+                {
+                    if (y.First().Life.MaxValue > x.First().Life.MaxValue)
+                    {
+                        return 1;
+                    }
+                    else if (y.First().Life.MaxValue < x.First().Life.MaxValue)
+                    {
+                        return -1;
+                    }
+                }
+                return v;
+            }
         }
     }
+
+
 }

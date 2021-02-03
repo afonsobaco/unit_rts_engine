@@ -4,7 +4,10 @@ namespace RTSEngine.Manager
 {
     public class StatusBarBehaviour : MonoBehaviour
     {
-        [SerializeField] private Image StatusBar;
-        [SerializeField] private Text StatusText;
+        [SerializeField] private Image statusBar;
+        [SerializeField] private Text statusText;
+
+        public Image StatusBar { get => statusBar; set => statusBar = value; }
+        public Text StatusText { get => statusText; set => statusText = value; }
     }
 }

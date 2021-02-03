@@ -216,7 +216,7 @@ Transform:
   m_GameObject: {fileID: 2859740324267526079}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children: []
   m_Father: {fileID: 3967659217511259958}
   m_RootOrder: 0
@@ -274,7 +274,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: -8555599076299583737, guid: ea02c7a94cddd614b954390a163f4a84,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.8, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -323,8 +323,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1278388355246058652}
-  - component: {fileID: 1111280823837574182}
-  - component: {fileID: 6460583853769734127}
   m_Layer: 0
   m_Name: SelectableModel
   m_TagString: Untagged
@@ -347,36 +345,6 @@ Transform:
   m_Father: {fileID: 3967659217511259958}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &1111280823837574182
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5224436528258742008}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.45
-  m_Height: 1.7
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.7, z: 0}
---- !u!114 &6460583853769734127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5224436528258742008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 804b92ea658ce284f9bae1ed480648d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
-  selectionMark: {fileID: 4782704107103593911}
-  preSelectionMark: {fileID: 3350248310140437384}
-  typeStr: Wizzard
 --- !u!1 &6902918871165927099
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,6 +384,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3967659217511259958}
+  - component: {fileID: 7573665321347929631}
+  - component: {fileID: 1759904571232850837}
   m_Layer: 0
   m_Name: Unit_002
   m_TagString: Untagged
@@ -441,6 +411,46 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7573665321347929631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909930287666605681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804b92ea658ce284f9bae1ed480648d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  selectionMark: {fileID: 4782704107103593911}
+  preSelectionMark: {fileID: 3350248310140437384}
+  picture: {fileID: 4956942758328581113, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
+  life:
+    value: 200
+    maxValue: 200
+    enabled: 1
+  mana:
+    value: 200
+    maxValue: 200
+    enabled: 1
+  typeStr: Wizzard
+  selectionOrder: 0
+--- !u!136 &1759904571232850837
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909930287666605681}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.45
+  m_Height: 1.7
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!1001 &921565070994784896
 PrefabInstance:
   m_ObjectHideFlags: 0
