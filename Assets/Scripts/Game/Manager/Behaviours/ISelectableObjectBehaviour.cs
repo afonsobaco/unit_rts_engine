@@ -4,7 +4,7 @@ using RTSEngine.Utils;
 
 namespace RTSEngine.Manager
 {
-    public interface ISelectableObjectBehaviour : ISelectable
+    public interface ISelectableObject : ISelectable
     {
         int SelectionOrder { get; set; }
         ObjectTypeEnum Type { get; set; }

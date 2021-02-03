@@ -8,6 +8,7 @@ namespace RTSEngine.Manager
         ObjectTypeEnum[] Primary { get; }
         ObjectTypeEnum[] Secondary { get; }
         SameTypeSelectionModeEnum Mode { get; }
+        ObjectTypeEnum[] Restricted { get; }
     }
 
 }

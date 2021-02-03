@@ -8,8 +8,8 @@ namespace RTSEngine.Manager
     public class SameTypeSelectionModifier : AbstractClickSelectionModifier
     {
 
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
-        public SameTypeSelectionModifier(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager)
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        public SameTypeSelectionModifier(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }
@@ -24,10 +24,10 @@ namespace RTSEngine.Manager
             return args;
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> GetAllFromSameTypeThatCanGroup(SelectionArgsXP args)
+        public virtual HashSet<ISelectableObject> GetAllFromSameTypeThatCanGroup(SelectionArgsXP args)
         {
-            ISelectableObjectBehaviour selected = args.ToBeAdded.First();
-            HashSet<ISelectableObjectBehaviour> allFromSameType = new HashSet<ISelectableObjectBehaviour>();
+            ISelectableObject selected = args.ToBeAdded.First();
+            HashSet<ISelectableObject> allFromSameType = new HashSet<ISelectableObject>();
             if (selectionManager.GetSettings().CanGroup.Contains(selected.Type))
             {
                 allFromSameType = GetAllFromSameType(selected, args.MainList, selectionManager.GetInitialScreenPosition(), selectionManager.GetFinalScreenPosition(), selectionManager.GetSettings().Mode);
@@ -39,13 +39,13 @@ namespace RTSEngine.Manager
             return allFromSameType;
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> GetAllFromSameType(ISelectableObjectBehaviour selected, HashSet<ISelectableObjectBehaviour> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition, SameTypeSelectionModeEnum mode)
+        public virtual HashSet<ISelectableObject> GetAllFromSameType(ISelectableObject selected, HashSet<ISelectableObject> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition, SameTypeSelectionModeEnum mode)
         {
-            HashSet<ISelectableObjectBehaviour> list = new HashSet<ISelectableObjectBehaviour>();
+            HashSet<ISelectableObject> list = new HashSet<ISelectableObject>();
             if (selected != null)
             {
                 list.Add(selected);
-                HashSet<ISelectableObjectBehaviour> allFromSameType = GetFromSameTypeInScreen(selected, mainList, initialScreenPosition, finalScreenPosition);
+                HashSet<ISelectableObject> allFromSameType = GetFromSameTypeInScreen(selected, mainList, initialScreenPosition, finalScreenPosition);
                 if (mode == SameTypeSelectionModeEnum.RANDOM)
                 {
                     list.UnionWith(SameTypeUtil.Shuffle(allFromSameType));
@@ -58,7 +58,7 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> GetFromSameTypeInScreen(ISelectableObjectBehaviour selected, HashSet<ISelectableObjectBehaviour> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
+        public virtual HashSet<ISelectableObject> GetFromSameTypeInScreen(ISelectableObject selected, HashSet<ISelectableObject> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
         {
             return SameTypeUtil.GetFromSameTypeInScreen(selected, mainList, initialScreenPosition, finalScreenPosition);
         }

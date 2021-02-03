@@ -4,9 +4,13 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
-    public class SelectionArgsXP : ISelectionArgsXP<ISelectableObjectBehaviour>
+    public class SelectionArgsXP : ISelectionArgsXP<ISelectableObject>
     {
-        public SelectionArgsXP(HashSet<ISelectableObjectBehaviour> oldSelection, HashSet<ISelectableObjectBehaviour> newSelection, HashSet<ISelectableObjectBehaviour> mainList)
+        public HashSet<ISelectableObject> OldSelection { get; }
+        public HashSet<ISelectableObject> NewSelection { get; }
+        public HashSet<ISelectableObject> MainList { get; }
+        public HashSet<ISelectableObject> ToBeAdded { get; set; }
+        public SelectionArgsXP(HashSet<ISelectableObject> oldSelection, HashSet<ISelectableObject> newSelection, HashSet<ISelectableObject> mainList)
         {
             OldSelection = oldSelection;
             NewSelection = newSelection;
@@ -14,10 +18,6 @@ namespace RTSEngine.Manager
             ToBeAdded = newSelection;
         }
 
-        public HashSet<ISelectableObjectBehaviour> OldSelection { get; }
-        public HashSet<ISelectableObjectBehaviour> NewSelection { get; }
-        public HashSet<ISelectableObjectBehaviour> MainList { get; }
-        public HashSet<ISelectableObjectBehaviour> ToBeAdded { get; set; }
     }
 
 }

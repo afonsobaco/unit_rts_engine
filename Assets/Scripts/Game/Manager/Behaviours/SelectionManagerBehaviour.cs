@@ -12,10 +12,10 @@ namespace RTSEngine.Manager
         [SerializeField] private SelectionSettingsSO settings;
         [SerializeField] private RectTransform selectionBox;
 
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> manager;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> manager;
 
         [Inject]
-        private void Construct(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> manager)
+        private void Construct(ISelectionManager<ISelectableObject, SelectionTypeEnum> manager)
         {
             this.manager = manager;
             selectableList.GetList().Clear();

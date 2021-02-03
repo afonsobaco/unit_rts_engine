@@ -24,7 +24,7 @@ namespace RTSEngine.Manager
         Vector2 GetFinalScreenPosition();
         HashSet<T> GetCurrentSelection();
         HashSet<T> GetGroupSet(int groupSetId);
-        Dictionary<int, HashSet<ISelectableObjectBehaviour>> GetAllGroupSets();
+        Dictionary<int, HashSet<ISelectableObject>> GetAllGroupSets();
         void CreateGroupSet(int keyPressed);
         void DoSelection(Vector3 mousePosition);
         void StartOfSelection(Vector3 mousePosition);

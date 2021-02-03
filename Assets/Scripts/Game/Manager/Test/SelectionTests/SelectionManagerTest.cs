@@ -21,16 +21,16 @@ namespace Tests.Manager
         public void SetUp()
         {
             manager = Substitute.ForPartsOf<SelectionManager>();
-            var so = Substitute.For<IRuntimeSet<ISelectableObjectBehaviour>>();
+            var so = Substitute.For<IRuntimeSet<ISelectableObject>>();
             manager.SetMainList(so.GetList());
             manager.SetGroupNumperPressed(0);
             manager.When(x => x.GetObjectClicked()).DoNotCallBase();
             manager.GetObjectClicked().Returns(x => null);
         }
 
-        private Dictionary<int, HashSet<ISelectableObjectBehaviour>> GetDefaultDictionary(params HashSet<ISelectableObjectBehaviour>[] parameters)
+        private Dictionary<int, HashSet<ISelectableObject>> GetDefaultDictionary(params HashSet<ISelectableObject>[] parameters)
         {
-            Dictionary<int, HashSet<ISelectableObjectBehaviour>> result = new Dictionary<int, HashSet<ISelectableObjectBehaviour>>();
+            Dictionary<int, HashSet<ISelectableObject>> result = new Dictionary<int, HashSet<ISelectableObject>>();
             for (var i = 0; i < parameters.Length; i++)
             {
                 result[i + 1] = parameters[i];
@@ -38,21 +38,21 @@ namespace Tests.Manager
             return result;
         }
 
-        private HashSet<ISelectableObjectBehaviour> GetSelectionListByParams(params int[] parameters)
+        private HashSet<ISelectableObject> GetSelectionListByParams(params int[] parameters)
         {
-            HashSet<ISelectableObjectBehaviour> result = new HashSet<ISelectableObjectBehaviour>();
+            HashSet<ISelectableObject> result = new HashSet<ISelectableObject>();
             for (var i = 0; i < parameters.Length; i++)
             {
-                ISelectableObjectBehaviour item = SelectionManagerTestUtils.CreateATestableObject(parameters[i]);
+                ISelectableObject item = SelectionManagerTestUtils.CreateATestableObject(parameters[i]);
                 item.Index = parameters[i];
                 result.Add(item);
             }
             return result;
         }
 
-        private HashSet<ISelectableObjectBehaviour> GetSelectionListFromMainList(HashSet<ISelectableObjectBehaviour> mainList, params int[] parameters)
+        private HashSet<ISelectableObject> GetSelectionListFromMainList(HashSet<ISelectableObject> mainList, params int[] parameters)
         {
-            HashSet<ISelectableObjectBehaviour> result = new HashSet<ISelectableObjectBehaviour>();
+            HashSet<ISelectableObject> result = new HashSet<ISelectableObject>();
             for (var i = 0; i < parameters.Length; i++)
             {
                 result.Add(mainList.ElementAt(parameters[i]));
@@ -82,7 +82,7 @@ namespace Tests.Manager
         [Test]
         public void ShouldReturnClickSelectionType()
         {
-            ISelectableObjectBehaviour clicked = SelectionManagerTestUtils.CreateATestableObject(0);
+            ISelectableObject clicked = SelectionManagerTestUtils.CreateATestableObject(0);
             manager.GetObjectClicked().Returns(clicked);
 
             var type = manager.GetSelectionType();
@@ -105,7 +105,7 @@ namespace Tests.Manager
         {
             int groupId = 1;
 
-            var expected = new HashSet<ISelectableObjectBehaviour>();
+            var expected = new HashSet<ISelectableObject>();
             expected.Add(SelectionManagerTestUtils.CreateATestableObject(0));
 
             manager.When(x => x.GetAllGroupSets()).DoNotCallBase();
@@ -132,7 +132,7 @@ namespace Tests.Manager
         [Test]
         public void ShouldReturnNewSelectionOnClick()
         {
-            ISelectableObjectBehaviour expected = SelectionManagerTestUtils.CreateATestableObject(0);
+            ISelectableObject expected = SelectionManagerTestUtils.CreateATestableObject(0);
             manager.SetClicked(expected);
             manager.SetSelectionType(SelectionTypeEnum.CLICK);
 
@@ -147,7 +147,7 @@ namespace Tests.Manager
         {
             manager.SetSelectionType(SelectionTypeEnum.DRAG);
 
-            HashSet<ISelectableObjectBehaviour> expected = GetSelectionListByParams(0);
+            HashSet<ISelectableObject> expected = GetSelectionListByParams(0);
 
             manager.When(x => x.GetDragSelection()).DoNotCallBase();
             manager.GetDragSelection().Returns(expected);
@@ -163,7 +163,7 @@ namespace Tests.Manager
             manager.SetSelectionType(SelectionTypeEnum.KEY);
 
             manager.When(x => x.GetGroupSet(Arg.Any<int>())).DoNotCallBase();
-            HashSet<ISelectableObjectBehaviour> expected = GetSelectionListByParams(0);
+            HashSet<ISelectableObject> expected = GetSelectionListByParams(0);
             manager.GetGroupSet(Arg.Any<int>()).Returns(expected);
 
             var selection = manager.GetSelectionBySelectionType();
@@ -177,7 +177,7 @@ namespace Tests.Manager
             manager.SetSelectionType(SelectionTypeEnum.DRAG);
 
             manager.When(x => x.GetDragSelection()).DoNotCallBase();
-            manager.GetDragSelection().Returns(new HashSet<ISelectableObjectBehaviour>());
+            manager.GetDragSelection().Returns(new HashSet<ISelectableObject>());
 
             var selection = manager.GetSelectionBySelectionType();
             CollectionAssert.IsEmpty(selection);
@@ -187,9 +187,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldReturnSelectionArgs()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0);
-            HashSet<ISelectableObjectBehaviour> currentSelection = GetSelectionListFromMainList(mainList, 0);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0);
+            HashSet<ISelectableObject> currentSelection = GetSelectionListFromMainList(mainList, 0);
             manager.SetMainList(mainList);
             manager.SetCurrentSelection(currentSelection);
             manager.SetDoubleClick(false);
@@ -203,9 +203,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldRemoveClickedFromSelectionArgsWhenDoubleClick()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0);
-            HashSet<ISelectableObjectBehaviour> currentSelection = GetSelectionListFromMainList(mainList, 0);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0);
+            HashSet<ISelectableObject> currentSelection = GetSelectionListFromMainList(mainList, 0);
             manager.SetMainList(mainList);
             manager.SetCurrentSelection(currentSelection);
             manager.SetLastClicked(mainList.ElementAt(0));
@@ -214,7 +214,7 @@ namespace Tests.Manager
 
             var args = manager.GetSelectionArgs(newSelection);
 
-            SelectionArgsXP expected = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), newSelection, mainList);
+            SelectionArgsXP expected = new SelectionArgsXP(new HashSet<ISelectableObject>(), newSelection, mainList);
             AssertArgs(args, expected);
             Assert.True(manager.IsSameType());
         }
@@ -222,9 +222,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldAddClickedFromSelectionArgsWhenDoubleClick()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0);
-            HashSet<ISelectableObjectBehaviour> currentSelection = new HashSet<ISelectableObjectBehaviour>();
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0);
+            HashSet<ISelectableObject> currentSelection = new HashSet<ISelectableObject>();
             manager.SetMainList(mainList);
             manager.SetCurrentSelection(currentSelection);
             manager.SetLastClicked(mainList.ElementAt(0));
@@ -233,7 +233,7 @@ namespace Tests.Manager
 
             var args = manager.GetSelectionArgs(newSelection);
 
-            HashSet<ISelectableObjectBehaviour> expectedCurrent = GetSelectionListFromMainList(mainList, 0);
+            HashSet<ISelectableObject> expectedCurrent = GetSelectionListFromMainList(mainList, 0);
             SelectionArgsXP expected = new SelectionArgsXP(expectedCurrent, newSelection, mainList);
             AssertArgs(args, expected);
             Assert.True(manager.IsSameType());
@@ -292,7 +292,7 @@ namespace Tests.Manager
             GetModsToTest(selectionType, howManyAll, howManyClick, howManyDrag, howManyKey, mods, expectedMods);
             manager.When(x => x.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>())).DoNotCallBase();
             manager.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>()).Returns(expectedMods);
-            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
+            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
 
             var result = manager.ApplyModifiers(args);
 
@@ -313,9 +313,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldFinalizeSelection()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
-            HashSet<ISelectableObjectBehaviour> currentSelection = GetSelectionListFromMainList(mainList, 2, 3);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            HashSet<ISelectableObject> currentSelection = GetSelectionListFromMainList(mainList, 2, 3);
             foreach (var item in currentSelection)
             {
                 item.IsSelected = true;
@@ -343,9 +343,9 @@ namespace Tests.Manager
         public void ShouldFinalizePreSelection()
         {
             manager.SetIsPreSelection(true);
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
-            HashSet<ISelectableObjectBehaviour> currentSelection = GetSelectionListFromMainList(mainList, 2, 3);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            HashSet<ISelectableObject> currentSelection = GetSelectionListFromMainList(mainList, 2, 3);
             foreach (var item in currentSelection)
             {
                 item.IsSelected = true;
@@ -374,9 +374,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldUpdateNewAndOldPreSelectionStatus()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
-            HashSet<ISelectableObjectBehaviour> preSelection = GetSelectionListFromMainList(mainList, 2, 3);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            HashSet<ISelectableObject> preSelection = GetSelectionListFromMainList(mainList, 2, 3);
             manager.SetPreSelection(preSelection);
             foreach (var item in preSelection)
             {
@@ -402,9 +402,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldUpdateNewAndOldCurrentSelectionStatus()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
-            HashSet<ISelectableObjectBehaviour> currentSelection = GetSelectionListFromMainList(mainList, 2, 3);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            HashSet<ISelectableObject> currentSelection = GetSelectionListFromMainList(mainList, 2, 3);
             manager.SetCurrentSelection(currentSelection);
             foreach (var item in currentSelection)
             {
@@ -429,9 +429,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldDoPreSelectionAddition()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
-            HashSet<ISelectableObjectBehaviour> preSelection = GetSelectionListFromMainList(mainList);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            HashSet<ISelectableObject> preSelection = GetSelectionListFromMainList(mainList);
             manager.SetPreSelection(preSelection);
             foreach (var item in preSelection)
             {
@@ -460,9 +460,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldDoPreSelectionDeletion()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
-            HashSet<ISelectableObjectBehaviour> preSelection = GetSelectionListFromMainList(mainList, 0, 3, 4);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            HashSet<ISelectableObject> preSelection = GetSelectionListFromMainList(mainList, 0, 3, 4);
             manager.SetPreSelection(preSelection);
             foreach (var item in preSelection)
             {
@@ -487,9 +487,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldAddToSelectionOrderedWhenNewSelectionIsSent()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2, 3, 4);
-            HashSet<ISelectableObjectBehaviour> preSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> preSelection = GetSelectionListFromMainList(mainList, 0, 1, 2);
             manager.SetPreSelection(preSelection);
 
             var result = manager.OrderSelection(newSelection);
@@ -500,9 +500,9 @@ namespace Tests.Manager
         [Test]
         public void ShouldRemoveToSelectionOrderedWhenNewSelectionIsSent()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
-            HashSet<ISelectableObjectBehaviour> newSelection = GetSelectionListFromMainList(mainList, 0, 1);
-            HashSet<ISelectableObjectBehaviour> preSelection = GetSelectionListFromMainList(mainList, 0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> mainList = GetSelectionListByParams(0, 1, 2, 3, 4);
+            HashSet<ISelectableObject> newSelection = GetSelectionListFromMainList(mainList, 0, 1);
+            HashSet<ISelectableObject> preSelection = GetSelectionListFromMainList(mainList, 0, 1, 2, 3, 4);
             manager.SetPreSelection(preSelection);
 
             var result = manager.OrderSelection(newSelection);

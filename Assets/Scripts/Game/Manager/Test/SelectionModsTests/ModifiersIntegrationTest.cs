@@ -13,14 +13,14 @@ namespace Tests
     public class ModifiersIntegrationTest
     {
 
-        HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(10);
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
+        HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(10);
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>>();
+            mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
 
             mainList.ToList().ForEach(x =>
             {
@@ -42,9 +42,9 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldRunAllIntegrationCases(SelectionTypeEnum type, bool isAdditive, bool isSameType, int[] oldSelectionIndexes, int[] newSelectionIndexes, int[] expectedResultIndexes)
         {
-            HashSet<ISelectableObjectBehaviour> oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
-            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
-            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(expectedResultIndexes, mainList);
+            HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
+            HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
+            HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(expectedResultIndexes, mainList);
             selectionManager.IsAdditive().Returns(isAdditive);
             selectionManager.IsSameType().Returns(isSameType);
 
@@ -85,10 +85,10 @@ namespace Tests
                     {
                         if (item.Contains(index))
                         {
-                            return new HashSet<ISelectableObjectBehaviour>(mainList.ToList().FindAll(x => item.Contains(x.Index)));
+                            return new HashSet<ISelectableObject>(mainList.ToList().FindAll(x => item.Contains(x.Index)));
                         }
                     }
-                    return new HashSet<ISelectableObjectBehaviour>();
+                    return new HashSet<ISelectableObject>();
                 }
             );
             return modifier;
