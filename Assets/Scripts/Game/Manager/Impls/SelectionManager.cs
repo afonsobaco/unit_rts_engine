@@ -1,15 +1,13 @@
-using RTSEngine.Core;
-using RTSEngine.Utils;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using Zenject;
+
 
 namespace RTSEngine.Manager
 {
     public class SelectionManager : ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>
     {
+        private ISelectionSettings settings;
 
         private Dictionary<int, HashSet<ISelectableObjectBehaviour>> groupSet = new Dictionary<int, HashSet<ISelectableObjectBehaviour>>();
         private HashSet<ISelectableObjectBehaviour> mainList = new HashSet<ISelectableObjectBehaviour>();
@@ -30,16 +28,28 @@ namespace RTSEngine.Manager
         private Vector3 maxScreenPos;
         private SelectionTypeEnum selectionType;
         private List<ISelectionModifier> mods;
+        private SignalBus signalBus;
 
-        public SelectionManager()
+        public SelectionManager(SignalBus signalBus)
         {
+            this.signalBus = signalBus;
             mods = new List<ISelectionModifier>()
             {
                 new SameTypeSelectionModifier(this),
-                new OrderOfSelectionModifier(),
+                new OrderOfSelectionModifier(this),
                 new AdditiveSelectionModifier(this),
-                new LimitSelectionModifier()
+                new LimitSelectionModifier(this)
             };
+        }
+
+        public ISelectionSettings GetSettings()
+        {
+            return settings;
+        }
+
+        public void SetSettings(ISelectionSettings value)
+        {
+            settings = value;
         }
 
         public void SetMainList(HashSet<ISelectableObjectBehaviour> list)
@@ -120,13 +130,13 @@ namespace RTSEngine.Manager
 
         public Vector2 GetInitialScreenPosition()
         {
-            Vector3 initialSelectionPos = this.isSameTypeSelection ? this.minScreenPos : this.initialScreenPosition;
+            Vector3 initialSelectionPos = this.isSameTypeSelection && !this.isPreSelection ? this.minScreenPos : this.initialScreenPosition;
             return initialSelectionPos;
         }
 
         public Vector2 GetFinalScreenPosition()
         {
-            Vector3 finalSelectionPos = this.isSameTypeSelection ? this.maxScreenPos : this.finalScreenPosition;
+            Vector3 finalSelectionPos = this.isSameTypeSelection && !this.isPreSelection ? this.maxScreenPos : this.finalScreenPosition;
             return finalSelectionPos;
 
         }
@@ -149,6 +159,7 @@ namespace RTSEngine.Manager
         public void CreateGroupSet(int number)
         {
             this.groupSet[number] = this.currentSelection;
+            //TODO call signal
         }
 
         public void AddSelectableObject(SelectableObjectCreatedSignal signal)
@@ -273,7 +284,7 @@ namespace RTSEngine.Manager
             {
                 if (this.isPreSelection)
                 {
-                    if (item.ActiveOnPreSelection)
+                    if (item is IPreSelectionModifier && ((IPreSelectionModifier)item).ActiveOnPreSelection)
                     {
                         args = item.Apply(args);
                     }
@@ -386,7 +397,7 @@ namespace RTSEngine.Manager
 
             HashSet<ISelectableObjectBehaviour> list = PerformSelection(finalPos);
             this.currentSelection = GetUpdatedCurrentSelection(list);
-
+            signalBus.Fire<UpdateGUISignal>();
             RestartVariables();
         }
 

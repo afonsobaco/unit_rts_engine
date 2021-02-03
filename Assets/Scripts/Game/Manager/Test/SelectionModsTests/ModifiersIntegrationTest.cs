@@ -6,7 +6,7 @@ using RTSEngine.Manager;
 using Tests.Utils;
 using NSubstitute;
 
-namespace Tests.Manager
+namespace Tests
 {
 
     [TestFixture]
