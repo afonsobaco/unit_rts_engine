@@ -5,6 +5,6 @@ namespace RTSEngine.Manager
 {
     public interface ISelectedInfo
     {
-        ISelectableObjectBehaviour Selected { get; set; }
+        ISelectableObject Selected { get; set; }
     }
 }

@@ -5,16 +5,16 @@ using Zenject;
 
 namespace RTSEngine.Manager
 {
-    public class SelectionManager : ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>
+    public class SelectionManager : ISelectionManager<ISelectableObject, SelectionTypeEnum>
     {
         private ISelectionSettings settings;
 
-        private Dictionary<int, HashSet<ISelectableObjectBehaviour>> groupSet = new Dictionary<int, HashSet<ISelectableObjectBehaviour>>();
-        private HashSet<ISelectableObjectBehaviour> mainList = new HashSet<ISelectableObjectBehaviour>();
-        private HashSet<ISelectableObjectBehaviour> currentSelection = new HashSet<ISelectableObjectBehaviour>();
-        private HashSet<ISelectableObjectBehaviour> preSelection = new HashSet<ISelectableObjectBehaviour>();
-        private ISelectableObjectBehaviour lastClicked;
-        private ISelectableObjectBehaviour clicked;
+        private Dictionary<int, HashSet<ISelectableObject>> groupSet = new Dictionary<int, HashSet<ISelectableObject>>();
+        private HashSet<ISelectableObject> mainList = new HashSet<ISelectableObject>();
+        private HashSet<ISelectableObject> currentSelection = new HashSet<ISelectableObject>();
+        private HashSet<ISelectableObject> preSelection = new HashSet<ISelectableObject>();
+        private ISelectableObject lastClicked;
+        private ISelectableObject clicked;
 
         private int groupNumberPressed = 0;
         private bool isAditiveSelection;
@@ -38,6 +38,7 @@ namespace RTSEngine.Manager
                 new SameTypeSelectionModifier(this),
                 new OrderOfSelectionModifier(this),
                 new AdditiveSelectionModifier(this),
+                new GroupRestrictorSelectionModifier(this),
                 new LimitSelectionModifier(this)
             };
         }
@@ -52,7 +53,7 @@ namespace RTSEngine.Manager
             settings = value;
         }
 
-        public void SetMainList(HashSet<ISelectableObjectBehaviour> list)
+        public void SetMainList(HashSet<ISelectableObject> list)
         {
             this.mainList = list;
         }
@@ -84,17 +85,17 @@ namespace RTSEngine.Manager
             this.isDoubleClick = doubleClick;
         }
 
-        public void SetCurrentSelection(HashSet<ISelectableObjectBehaviour> selection)
+        public void SetCurrentSelection(HashSet<ISelectableObject> selection)
         {
             this.currentSelection = selection;
         }
 
-        public void SetClicked(ISelectableObjectBehaviour selected)
+        public void SetClicked(ISelectableObject selected)
         {
             this.clicked = selected;
         }
 
-        public void SetLastClicked(ISelectableObjectBehaviour selected)
+        public void SetLastClicked(ISelectableObject selected)
         {
             this.lastClicked = selected;
         }
@@ -104,7 +105,7 @@ namespace RTSEngine.Manager
             this.isPreSelection = value;
         }
 
-        public void SetPreSelection(HashSet<ISelectableObjectBehaviour> preSelection)
+        public void SetPreSelection(HashSet<ISelectableObject> preSelection)
         {
             this.preSelection = preSelection;
         }
@@ -141,7 +142,7 @@ namespace RTSEngine.Manager
 
         }
 
-        public HashSet<ISelectableObjectBehaviour> GetCurrentSelection()
+        public HashSet<ISelectableObject> GetCurrentSelection()
         {
             return this.currentSelection;
         }
@@ -151,7 +152,7 @@ namespace RTSEngine.Manager
             return this.groupNumberPressed;
         }
 
-        public IEnumerable<ISelectableObjectBehaviour> GetPreSelection()
+        public IEnumerable<ISelectableObject> GetPreSelection()
         {
             return this.preSelection;
         }
@@ -178,25 +179,25 @@ namespace RTSEngine.Manager
             this.mainList.Clear();
         }
 
-        public virtual ISelectableObjectBehaviour GetObjectClicked()
+        public virtual ISelectableObject GetObjectClicked()
         {
             return SelectionUtil.GetObjectClicked(this.initialScreenPosition, this.finalScreenPosition);
         }
 
-        public virtual Dictionary<int, HashSet<ISelectableObjectBehaviour>> GetAllGroupSets()
+        public virtual Dictionary<int, HashSet<ISelectableObject>> GetAllGroupSets()
         {
             return this.groupSet;
         }
 
-        public HashSet<ISelectableObjectBehaviour> OrderSelection(HashSet<ISelectableObjectBehaviour> newSelection)
+        public HashSet<ISelectableObject> OrderSelection(HashSet<ISelectableObject> newSelection)
         {
-            var orderedListOfSelection = new HashSet<ISelectableObjectBehaviour>(this.preSelection);
+            var orderedListOfSelection = new HashSet<ISelectableObject>(this.preSelection);
             orderedListOfSelection.RemoveWhere(x => !newSelection.Contains(x));
             orderedListOfSelection.UnionWith(newSelection);
             return orderedListOfSelection;
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> GetDragSelection()
+        public virtual HashSet<ISelectableObject> GetDragSelection()
         {
             var selectionOnScreen = SelectionUtil.GetAllObjectsInsideSelectionArea(this.mainList, this.initialScreenPosition, this.finalScreenPosition);
             return OrderSelection(selectionOnScreen);
@@ -207,13 +208,13 @@ namespace RTSEngine.Manager
             return this.mods.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> GetGroupSet(int number)
+        public virtual HashSet<ISelectableObject> GetGroupSet(int number)
         {
-            HashSet<ISelectableObjectBehaviour> list;
+            HashSet<ISelectableObject> list;
             GetAllGroupSets().TryGetValue(number, out list);
             if (list == null)
             {
-                list = new HashSet<ISelectableObjectBehaviour>();
+                list = new HashSet<ISelectableObject>();
             }
             return list;
         }
@@ -237,9 +238,9 @@ namespace RTSEngine.Manager
             return this.selectionType;
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> GetSelectionBySelectionType()
+        public virtual HashSet<ISelectableObject> GetSelectionBySelectionType()
         {
-            HashSet<ISelectableObjectBehaviour> list = new HashSet<ISelectableObjectBehaviour>();
+            HashSet<ISelectableObject> list = new HashSet<ISelectableObject>();
             switch (this.selectionType)
             {
                 case SelectionTypeEnum.CLICK:
@@ -257,7 +258,7 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        private void AdjustSameTypeIfDoubleClick(HashSet<ISelectableObjectBehaviour> newSelection)
+        private void AdjustSameTypeIfDoubleClick(HashSet<ISelectableObject> newSelection)
         {
             if (this.clicked != null && this.clicked == lastClicked && !this.isSameTypeSelection)
             {
@@ -268,7 +269,7 @@ namespace RTSEngine.Manager
             }
         }
 
-        public SelectionArgsXP GetSelectionArgs(HashSet<ISelectableObjectBehaviour> newSelection)
+        public SelectionArgsXP GetSelectionArgs(HashSet<ISelectableObject> newSelection)
         {
             if (this.isDoubleClick)
             {
@@ -297,7 +298,7 @@ namespace RTSEngine.Manager
             return args;
         }
 
-        private static void UpdatePreSelectionStatus(HashSet<ISelectableObjectBehaviour> list, bool status)
+        private static void UpdatePreSelectionStatus(HashSet<ISelectableObject> list, bool status)
         {
             foreach (var item in list)
             {
@@ -305,7 +306,7 @@ namespace RTSEngine.Manager
             }
         }
 
-        private static void UpdateSelectionStatus(HashSet<ISelectableObjectBehaviour> list, bool status)
+        private static void UpdateSelectionStatus(HashSet<ISelectableObject> list, bool status)
         {
             foreach (var item in list)
             {
@@ -313,7 +314,7 @@ namespace RTSEngine.Manager
             }
         }
 
-        public HashSet<ISelectableObjectBehaviour> GetFinalSelection(SelectionArgsXP args)
+        public HashSet<ISelectableObject> GetFinalSelection(SelectionArgsXP args)
         {
             if (this.isPreSelection)
             {
@@ -324,19 +325,19 @@ namespace RTSEngine.Manager
                 UpdateSelectionStatus(args.OldSelection, false);
                 UpdateSelectionStatus(args.ToBeAdded, true);
             }
-            return new HashSet<ISelectableObjectBehaviour>(args.ToBeAdded);
+            return new HashSet<ISelectableObject>(args.ToBeAdded);
         }
 
-        public HashSet<ISelectableObjectBehaviour> GetSelection(HashSet<ISelectableObjectBehaviour> newSelection)
+        public HashSet<ISelectableObject> GetSelection(HashSet<ISelectableObject> newSelection)
         {
             var args = GetSelectionArgs(newSelection);
             args = ApplyModifiers(args);
             return GetFinalSelection(args);
         }
 
-        public HashSet<ISelectableObjectBehaviour> GetUpdatedPreSelection(HashSet<ISelectableObjectBehaviour> newSelection)
+        public HashSet<ISelectableObject> GetUpdatedPreSelection(HashSet<ISelectableObject> newSelection)
         {
-            var list = new HashSet<ISelectableObjectBehaviour>();
+            var list = new HashSet<ISelectableObject>();
             if (this.preSelection != null && this.preSelection.Count > 0)
             {
                 UpdatePreSelectionStatus(this.preSelection, false);
@@ -350,9 +351,9 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> GetUpdatedCurrentSelection(HashSet<ISelectableObjectBehaviour> newSelection)
+        public virtual HashSet<ISelectableObject> GetUpdatedCurrentSelection(HashSet<ISelectableObject> newSelection)
         {
-            var list = new HashSet<ISelectableObjectBehaviour>();
+            var list = new HashSet<ISelectableObject>();
             if (this.currentSelection != null && this.currentSelection.Count > 0)
             {
                 UpdateSelectionStatus(this.currentSelection, false);
@@ -372,10 +373,10 @@ namespace RTSEngine.Manager
             if (this.isDoubleClick) lastClicked = null;
             this.isDoubleClick = false;
             this.groupNumberPressed = 0;
-            this.preSelection = new HashSet<ISelectableObjectBehaviour>();
+            this.preSelection = new HashSet<ISelectableObject>();
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> PerformSelection(Vector3 finalPos)
+        public virtual HashSet<ISelectableObject> PerformSelection(Vector3 finalPos)
         {
             this.finalScreenPosition = finalPos;
             this.selectionType = GetSelectionType();
@@ -386,7 +387,7 @@ namespace RTSEngine.Manager
         public void DoPreSelection(Vector3 finalPos)
         {
             this.isPreSelection = true;
-            HashSet<ISelectableObjectBehaviour> list = PerformSelection(finalPos);
+            HashSet<ISelectableObject> list = PerformSelection(finalPos);
             this.preSelection = GetUpdatedPreSelection(list);
         }
 
@@ -395,7 +396,7 @@ namespace RTSEngine.Manager
             this.isPreSelection = false;
             UpdatePreSelectionStatus(this.preSelection, false);
 
-            HashSet<ISelectableObjectBehaviour> list = PerformSelection(finalPos);
+            HashSet<ISelectableObject> list = PerformSelection(finalPos);
             this.currentSelection = GetUpdatedCurrentSelection(list);
             signalBus.Fire<UpdateGUISignal>();
             RestartVariables();

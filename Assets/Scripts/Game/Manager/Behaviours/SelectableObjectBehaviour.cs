@@ -7,7 +7,7 @@ using System;
 namespace RTSEngine.Manager
 {
 
-    public class SelectableObjectBehaviour : MonoBehaviour, ISelectableObjectBehaviour
+    public class SelectableObjectBehaviour : MonoBehaviour, ISelectableObject
     {
 
         [Inject]

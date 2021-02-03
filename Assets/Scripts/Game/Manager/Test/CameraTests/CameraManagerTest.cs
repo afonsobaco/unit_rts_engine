@@ -15,7 +15,7 @@ namespace Tests.Manager
 
         private ICameraManager manager;
         private UnityEngine.Camera mainCamera;
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
 
         private ICameraSettings cameraSettings;
 
@@ -25,7 +25,7 @@ namespace Tests.Manager
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>>();
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
             cameraSettings = Substitute.For<ICameraSettings>();
             manager = Substitute.ForPartsOf<CameraManager>(new object[] { selectionManager });
 
@@ -60,7 +60,7 @@ namespace Tests.Manager
         [Test]
         public void ShouldNotMoveCameraWhenCenterCameraToSelectionWithEmptySelection()
         {
-            selectionManager.GetCurrentSelection().Returns(new HashSet<ISelectableObjectBehaviour>());
+            selectionManager.GetCurrentSelection().Returns(new HashSet<ISelectableObject>());
             var result = manager.DoCameraCentering(mainCamera);
             Assert.AreEqual(mainCamera.transform.position, result);
         }
@@ -73,8 +73,8 @@ namespace Tests.Manager
         {
 
             Vector3 expectedPos = new Vector3(2, 0, 20);
-            HashSet<ISelectableObjectBehaviour> list = new HashSet<ISelectableObjectBehaviour>();
-            list.Add(Substitute.For<ISelectableObjectBehaviour>());
+            HashSet<ISelectableObject> list = new HashSet<ISelectableObject>();
+            list.Add(Substitute.For<ISelectableObject>());
             list.First().Position.Returns(expectedPos);
             selectionManager.GetCurrentSelection().Returns(list);
 

@@ -17,3 +17,4 @@ MonoBehaviour:
   canGroup: 0000000001000000
   mode: 0
   limit: 20
+  restricted: 00000000

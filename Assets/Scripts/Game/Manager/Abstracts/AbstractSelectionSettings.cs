@@ -19,12 +19,17 @@ namespace RTSEngine.Manager
         [Space]
         [Header("Limit of selection")]
         [SerializeField] private int limit;
+        
+        [Space]
+        [Header("Restricted group")]
+        [SerializeField] private ObjectTypeEnum [] restricted;
 
         public int Limit => limit;
         public ObjectTypeEnum[] CanGroup => canGroup;
         public ObjectTypeEnum[] Primary => primary;
         public ObjectTypeEnum[] Secondary => secondary;
         public SameTypeSelectionModeEnum Mode => mode;
+        public ObjectTypeEnum[] Restricted => restricted;
     }
 
 }
