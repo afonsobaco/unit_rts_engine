@@ -6,5 +6,6 @@ namespace RTSEngine.Manager
 {
     public interface IGUIManager
     {
+        void OnSelectionChange();
     }
 }
