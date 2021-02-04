@@ -20,7 +20,7 @@ namespace Tests.Manager
         [SetUp]
         public void SetUp()
         {
-            manager = Substitute.ForPartsOf<SelectionManager>();
+            manager = Substitute.ForPartsOf<SelectionManager>(new object[] { null });
             var so = Substitute.For<IRuntimeSet<ISelectableObject>>();
             manager.SetMainList(so.GetList());
             manager.SetGroupNumperPressed(0);

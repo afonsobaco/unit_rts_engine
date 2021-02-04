@@ -15,12 +15,19 @@ namespace Tests
 
         HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
         private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private ISelectionSettings settings;
 
         [SetUp]
         public void SetUp()
         {
             mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
             selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
+            settings = Substitute.For<ISelectionSettings>();
+            settings.Restricted.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
+            settings.Limit.Returns(10);
+            settings.Primary.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT });
+            settings.Secondary.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.BUILDING });
+            selectionManager.GetSettings().Returns(settings);
 
             mainList.ToList().ForEach(x =>
             {
@@ -52,7 +59,9 @@ namespace Tests
 
             foreach (var item in GetModifiersBySelectionType(type, new HashSet<int[]> { new int[] { 0, 1 }, new int[] { 2, 3 }, new int[] { 4, 5, 6 } }))
             {
+                Debug.Log(item.GetType().Name);
                 args = item.Apply(args);
+                args.ToBeAdded.ToList().ForEach(x => Debug.Log(x.Index));
             }
             CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
         }
@@ -63,8 +72,15 @@ namespace Tests
             modifiers.Add(GetDefaultSameTypeMod(sameType));
             modifiers.Add(GetDefaultOrderOfSelectionModifier());
             modifiers.Add(GetDefaultAdditiveMod());
+            modifiers.Add(GetDefaultGroupRestrictorMod());
             modifiers.Add(GetDefaultLimitMod());
             return modifiers.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
+        }
+
+        private ISelectionModifier GetDefaultGroupRestrictorMod()
+        {
+            GroupRestrictorSelectionModifier modifier = Substitute.ForPartsOf<GroupRestrictorSelectionModifier>(new object[] { selectionManager });
+            return modifier;
         }
 
         private ISelectionModifier GetDefaultAdditiveMod()
@@ -97,13 +113,13 @@ namespace Tests
 
         private ISelectionModifier GetDefaultOrderOfSelectionModifier()
         {
-            OrderOfSelectionModifier modifier = Substitute.ForPartsOf<OrderOfSelectionModifier>();
+            OrderOfSelectionModifier modifier = Substitute.ForPartsOf<OrderOfSelectionModifier>(new object[] { selectionManager });
             return modifier;
         }
 
         private ISelectionModifier GetDefaultLimitMod()
         {
-            LimitSelectionModifier modifier = Substitute.ForPartsOf<LimitSelectionModifier>();
+            LimitSelectionModifier modifier = Substitute.ForPartsOf<LimitSelectionModifier>(new object[] { selectionManager });
             return modifier;
         }
 
@@ -189,8 +205,8 @@ namespace Tests
                     new CaseStruct(new SelectionStruct(10, new int[] { 0 }, new int[] { 4 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( false, false), new int[] { 4 }, ""),
                     new CaseStruct(new SelectionStruct(10, new int[] { }, new int[] { 7 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( false, false), new int[] { 7 }, ""),
                     new CaseStruct(new SelectionStruct(10, new int[] { 0 }, new int[] { 7 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( false, false), new int[] { 7 }, ""),
-                    new CaseStruct(new SelectionStruct(10, new int[] { }, new int[] { 0, 4, 7 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( false, false), new int[] { 0, 4, 7 }, ""),
-                    new CaseStruct(new SelectionStruct(10, new int[] { 0 }, new int[] { 0, 4, 7 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( false, false), new int[] { 0, 4, 7 }, ""),
+                    new CaseStruct(new SelectionStruct(10, new int[] { }, new int[] { 0, 4, 7 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( false, false), new int[] { 0, 4}, ""),
+                    new CaseStruct(new SelectionStruct(10, new int[] { 0 }, new int[] { 0, 4, 7 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( false, false), new int[] { 0, 4}, ""),
                     new CaseStruct(new SelectionStruct(10, new int[] { }, new int[] { }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( true, false), new int[] { }, ""),
                     new CaseStruct(new SelectionStruct(10, new int[] { 0 }, new int[] { 0 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( true, false), new int[] { 0 }, ""),
                     new CaseStruct(new SelectionStruct(10, new int[] { 0 }, new int[] { }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( true, false), new int[] { 0 }, ""),
@@ -199,7 +215,7 @@ namespace Tests
                     new CaseStruct(new SelectionStruct(10, new int[] { 0 }, new int[] { 0, 4 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( true, false), new int[] { 0, 4 }, ""),
                     new CaseStruct(new SelectionStruct(10, new int[] { 0, 4 }, new int[] { 0 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( true, false), new int[] { 4 }, ""),
                     new CaseStruct(new SelectionStruct(10, new int[] { 0, 4 }, new int[] { 0, 4 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( true, false), new int[] { 0, 4 }, ""),
-                    new CaseStruct(new SelectionStruct(10, new int[] { 0, 4 }, new int[] { 0, 4, 7 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( true, false), new int[] { 0, 4, 7 }, ""),
+                    new CaseStruct(new SelectionStruct(10, new int[] { 0, 4 }, new int[] { 0, 4, 7 }, new AdditionalInfo(SelectionTypeEnum.KEY, default, default)),  new ModifiersStruct( true, false), new int[] { 0, 4}, ""),
                 };
 
             }

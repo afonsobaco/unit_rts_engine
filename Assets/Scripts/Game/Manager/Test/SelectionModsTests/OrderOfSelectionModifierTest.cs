@@ -13,11 +13,18 @@ namespace Tests
     public class OrderOfSelectionModifierTest
     {
         private OrderOfSelectionModifier modifier;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private ISelectionSettings settings;
 
         [SetUp]
         public void SetUp()
         {
-            modifier = Substitute.ForPartsOf<OrderOfSelectionModifier>();
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
+            settings = Substitute.For<ISelectionSettings>();
+            settings.Primary.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT });
+            settings.Secondary.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.BUILDING });
+            selectionManager.GetSettings().Returns(settings);
+            modifier = Substitute.ForPartsOf<OrderOfSelectionModifier>(new object[] { selectionManager });
         }
 
         [Test]
