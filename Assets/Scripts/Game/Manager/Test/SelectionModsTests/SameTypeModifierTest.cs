@@ -24,6 +24,7 @@ namespace Tests
             settings = Substitute.For<ISelectionSettings>();
             selectionManager.GetSettings().Returns(settings);
             settings.CanGroup.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
+
             modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>(new object[] { selectionManager });
         }
 
