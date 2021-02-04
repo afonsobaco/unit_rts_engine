@@ -14,13 +14,16 @@ namespace Tests
     public class SameTypeModifierTest
     {
         private SameTypeSelectionModifier modifier;
-
+        private ISelectionSettings settings;
         private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
 
         [SetUp]
         public void SetUp()
         {
             selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
+            settings = Substitute.For<ISelectionSettings>();
+            selectionManager.GetSettings().Returns(settings);
+            settings.CanGroup.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
             modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>(new object[] { selectionManager });
         }
 
