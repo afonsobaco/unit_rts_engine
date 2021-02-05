@@ -11,8 +11,8 @@ namespace RTSEngine.Manager
         [SerializeField] private Image picture;
         [SerializeField] private StatusBarBehaviour lifeBar;
         [SerializeField] private StatusBarBehaviour manaBar;
-        private ISelectableObjectBehaviour selected;
-        public ISelectableObjectBehaviour Selected { get => selected; set => selected = value; }
+        private ISelectableObject selected;
+        public ISelectableObject Selected { get => selected; set => selected = value; }
         public Image SelectionBorder { get => selectionBorder; set => selectionBorder = value; }
         public Image Picture { get => picture; set => picture = value; }
         public StatusBarBehaviour LifeBar { get => lifeBar; set => lifeBar = value; }

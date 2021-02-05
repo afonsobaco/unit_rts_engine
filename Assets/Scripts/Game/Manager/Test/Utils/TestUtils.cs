@@ -30,7 +30,7 @@ namespace Tests.Utils
                 T item = Substitute.For<T>();
                 ISelectable selectable = (ISelectable)item;
                 selectable.Index = i;
-                selectable.IsCompatible(Arg.Any<ISelectableObjectBehaviour>()).Returns((x) =>
+                selectable.IsCompatible(Arg.Any<ISelectableObject>()).Returns((x) =>
                 {
                     return ((ISelectable)x[0]).Index % 2 == 0;
                 });

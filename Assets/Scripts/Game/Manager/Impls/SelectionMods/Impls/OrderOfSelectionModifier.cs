@@ -8,9 +8,9 @@ namespace RTSEngine.Manager
     public class OrderOfSelectionModifier : AbstractDragSelectionModifier
     {
 
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
 
-        public OrderOfSelectionModifier(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager)
+        public OrderOfSelectionModifier(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }
@@ -31,20 +31,20 @@ namespace RTSEngine.Manager
             return args;
         }
 
-        public virtual HashSet<ISelectableObjectBehaviour> GetObjectsFromListOfPriority(HashSet<ISelectableObjectBehaviour> toBeAdded, List<ObjectTypeEnum> objectTypeList)
+        public virtual HashSet<ISelectableObject> GetObjectsFromListOfPriority(HashSet<ISelectableObject> toBeAdded, List<ObjectTypeEnum> objectTypeList)
         {
             if (objectTypeList == null)
             {
                 objectTypeList = new List<ObjectTypeEnum>();
             }
-            var result = new HashSet<ISelectableObjectBehaviour>();
+            var result = new HashSet<ISelectableObject>();
             foreach (var type in objectTypeList)
             {
                 result.UnionWith(toBeAdded.ToList().FindAll(x =>
                 {
-                    if (x is ISelectableObjectBehaviour)
+                    if (x is ISelectableObject)
                     {
-                        var b = x as ISelectableObjectBehaviour;
+                        var b = x as ISelectableObject;
                         return b.Type == type;
                     }
                     return false;

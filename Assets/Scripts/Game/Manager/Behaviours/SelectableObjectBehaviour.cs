@@ -7,7 +7,7 @@ using System;
 namespace RTSEngine.Manager
 {
 
-    public class SelectableObjectBehaviour : MonoBehaviour, ISelectableObjectBehaviour
+    public class SelectableObjectBehaviour : MonoBehaviour, ISelectableObject
     {
 
         [Inject]
@@ -25,14 +25,17 @@ namespace RTSEngine.Manager
         [Space]
         [Header("Selectable Info")]
         [SerializeField] private Sprite picture;
-        
         [Space]
         [SerializeField] ObjectStatus life;
         [SerializeField] ObjectStatus mana;
-        
         [Space]
+
         [SerializeField] private string typeStr;  //TODO should be an Enum?
         [SerializeField] private int selectionOrder;
+
+
+
+
 
         private bool isSelected = false;
         private bool isPreSelected = false;

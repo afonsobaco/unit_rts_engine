@@ -9,7 +9,6 @@ namespace RTSEngine.Manager.Installers
             Container.BindInterfacesAndSelfTo<SelectionManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerInputManager>().AsSingle();
             Container.Bind<ICameraManager>().To<CameraManager>().AsSingle();
-            Container.Bind<IGUIManager>().To<GUIManager>().AsSingle();
             DeclareSignals();
         }
 
@@ -22,7 +21,7 @@ namespace RTSEngine.Manager.Installers
 
             Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionManager>(x => x.AddSelectableObject).FromResolve();
             Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionManager>(x => x.RemoveSelectableObject).FromResolve();
-            Container.BindSignal<UpdateGUISignal>().ToMethod<GUIManager>(x => x.OnSelectionChange).FromResolve();
+            Container.BindSignal<UpdateGUISignal>().ToMethod<GUIManagerBehaviour>(x => x.OnSelectionChange).FromResolve();
         }
     }
 }

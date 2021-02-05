@@ -8,7 +8,7 @@ namespace RTSEngine.Manager
     public class PlayerInputManager : IPlayerInputManager
     {
 
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> _selectionManager;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> _selectionManager;
         private ICameraManager _cameraManager;
         private IGUIManager _GUIManager;
         private SelectionOptions _selectionOptions;
@@ -16,7 +16,7 @@ namespace RTSEngine.Manager
         public SelectionOptions SelectionOptions { get => this._selectionOptions; private set => this._selectionOptions = value; }
 
         [Inject]
-        public void Construct(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager, ICameraManager cameraManager, IGUIManager gUIManager)
+        public void Construct(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager, ICameraManager cameraManager, IGUIManager gUIManager)
         {
             this._selectionManager = selectionManager;
             this._cameraManager = cameraManager;

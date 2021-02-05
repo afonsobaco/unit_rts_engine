@@ -13,12 +13,12 @@ namespace Tests
     public class LimitModifierTest
     {
         private LimitSelectionModifier modifier;
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>>();
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
             modifier = Substitute.ForPartsOf<LimitSelectionModifier>(new object[] { selectionManager });
 
         }
@@ -26,7 +26,7 @@ namespace Tests
         [Test]
         public void SelectionLimitModifierTestSimplePasses()
         {
-            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
+            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
             var result = modifier.Apply(args);
             Assert.AreEqual(args, result);
         }
@@ -35,9 +35,9 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldLimitSelectionToPassedValue(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct, int limit)
         {
-            HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(selectionStruct.mainListAmount);
-            HashSet<ISelectableObjectBehaviour> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
-            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(selectionStruct.mainListAmount);
+            HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
+            HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
 
             SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
             ISelectionSettings settings = Substitute.For<ISelectionSettings>();
@@ -45,7 +45,7 @@ namespace Tests
             settings.Limit.Returns(limit);
 
             args = modifier.Apply(args);
-            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
+            HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
             CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
         }
 

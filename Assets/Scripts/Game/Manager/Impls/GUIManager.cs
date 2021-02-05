@@ -10,12 +10,12 @@ namespace RTSEngine.Manager
         [SerializeField] private SelectionGridBehaviour selectionGrid;
         [SerializeField] private ProfileInfoBehaviour profileInfo;
         private SelectedMiniatureBehaviour[] miniatureList;
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> manager;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> manager;
 
         private int layerMask = 1 << 5;
 
         [Inject]
-        public void Construct(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> manager)
+        public void Construct(ISelectionManager<ISelectableObject, SelectionTypeEnum> manager)
         {
             this.manager = manager;
             miniatureList = selectionGrid.transform.GetComponentsInChildren<SelectedMiniatureBehaviour>(true);
@@ -28,12 +28,12 @@ namespace RTSEngine.Manager
 
         private void UpdateSelection()
         {
-            List<ISelectableObjectBehaviour> selection = GetOrderedSelection();
+            List<ISelectableObject> selection = GetOrderedSelection();
 
             UpdateSelectionWithNew(selection);
         }
 
-        private void UpdateSelectionWithNew(List<ISelectableObjectBehaviour> selection)
+        private void UpdateSelectionWithNew(List<ISelectableObject> selection)
         {
             for (var i = 0; i < miniatureList.Length; i++)
             {
@@ -66,9 +66,9 @@ namespace RTSEngine.Manager
             }
         }
 
-        private List<ISelectableObjectBehaviour> GetOrderedSelection()
+        private List<ISelectableObject> GetOrderedSelection()
         {
-            List<ISelectableObjectBehaviour> list = new List<ISelectableObjectBehaviour>();
+            List<ISelectableObject> list = new List<ISelectableObject>();
             var grouped = manager.GetCurrentSelection().GroupBy(x => x.SelectionOrder);
             var sorted = grouped.ToList();
             sorted.Sort(new ObjectComparer());
@@ -76,7 +76,7 @@ namespace RTSEngine.Manager
             {
                 list.AddRange(item);
             }
-            return new List<ISelectableObjectBehaviour>(list);
+            return new List<ISelectableObject>(list);
         }
 
         public bool ClickedOnGUI(Vector3 mousePosition)
@@ -85,9 +85,9 @@ namespace RTSEngine.Manager
             return Physics.Raycast(ray, 100, layerMask);
         }
 
-        private class ObjectComparer : IComparer<IGrouping<int, ISelectableObjectBehaviour>>
+        private class ObjectComparer : IComparer<IGrouping<int, ISelectableObject>>
         {
-            public int Compare(IGrouping<int, ISelectableObjectBehaviour> x, IGrouping<int, ISelectableObjectBehaviour> y)
+            public int Compare(IGrouping<int, ISelectableObject> x, IGrouping<int, ISelectableObject> y)
             {
                 int v = y.Key - x.Key;
                 if (v == 0)
