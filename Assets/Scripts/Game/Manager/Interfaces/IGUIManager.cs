@@ -7,5 +7,6 @@ namespace RTSEngine.Manager
     public interface IGUIManager
     {
         void OnSelectionChange();
+        bool ClickedOnGUI(Vector3 mousePosition);
     }
 }

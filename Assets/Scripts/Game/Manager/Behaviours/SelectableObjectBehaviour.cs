@@ -25,22 +25,18 @@ namespace RTSEngine.Manager
         [Space]
         [Header("Selectable Info")]
         [SerializeField] private Sprite picture;
+        
         [Space]
         [SerializeField] ObjectStatus life;
         [SerializeField] ObjectStatus mana;
+        
         [Space]
-
         [SerializeField] private string typeStr;  //TODO should be an Enum?
         [SerializeField] private int selectionOrder;
-
-
-
-
 
         private bool isSelected = false;
         private bool isPreSelected = false;
         private SignalBus _signalBus;
-
 
         public int Index { get; set; }
         public ObjectTypeEnum Type { get => type; set => type = value; }
