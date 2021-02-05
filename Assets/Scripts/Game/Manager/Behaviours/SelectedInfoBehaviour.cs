@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace RTSEngine.Manager
 {
-    public abstract class SelectedInfoBehaviour : MonoBehaviour, ISelectedInfo
+    public abstract class SelectedInfoBehaviour : MonoBehaviour, ISelectedInfo, IGUIClickableElement
     {
         [SerializeField] private Image selectionBorder;
         [SerializeField] private Image picture;
@@ -17,5 +17,7 @@ namespace RTSEngine.Manager
         public Image Picture { get => picture; set => picture = value; }
         public StatusBarBehaviour LifeBar { get => lifeBar; set => lifeBar = value; }
         public StatusBarBehaviour ManaBar { get => manaBar; set => manaBar = value; }
+        public abstract void DoAction();
+
     }
 }

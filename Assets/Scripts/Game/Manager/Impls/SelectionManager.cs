@@ -30,6 +30,12 @@ namespace RTSEngine.Manager
         private List<ISelectionModifier> mods;
         private SignalBus signalBus;
 
+        public void DoMiniatureClick(MiniatureClickSignal signal)
+        {
+            Debug.Log("Miniature Clicked: " + signal.Selectable.Index);
+            //TODO ajust
+        }
+
         public SelectionManager(SignalBus signalBus)
         {
             this.signalBus = signalBus;

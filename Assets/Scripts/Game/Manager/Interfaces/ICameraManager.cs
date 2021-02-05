@@ -10,6 +10,8 @@ namespace RTSEngine.Manager
         Vector3 Origin { get; set; }
         bool IsCentering { get; set; }
         bool IsPanning { get; set; }
+
+
         Vector3 DoAxisCameraMovement(float horizontal, float vertical, float deltaTime, UnityEngine.Camera mainCamera);
         Vector3 ClampCameraPos(UnityEngine.Camera mainCamera);
         Vector3 DoCameraCentering(UnityEngine.Camera mainCamera);
@@ -20,6 +22,7 @@ namespace RTSEngine.Manager
         float MoveCamera(float value, float yPos, float deltaTime);
         Vector3 GetMinScreenBoundries(UnityEngine.Camera mainCamera);
         Vector3 GetMaxScreenBoundries(UnityEngine.Camera mainCamera);
+        void DoProfileInfoClick(ProfileInfoClickSignal signal);
     }
 
 

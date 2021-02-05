@@ -10,11 +10,6 @@ namespace RTSEngine.Manager
     public class SelectableObjectBehaviour : MonoBehaviour, ISelectableObject
     {
 
-        [Inject]
-        public void Construct(SignalBus signalBus)
-        {
-            SignalBus = signalBus;
-        }
 
         [Space]
         [Header("Prefab Info")]
@@ -34,9 +29,6 @@ namespace RTSEngine.Manager
         [SerializeField] private int selectionOrder;
 
 
-
-
-
         private bool isSelected = false;
         private bool isPreSelected = false;
         private SignalBus _signalBus;
@@ -45,10 +37,13 @@ namespace RTSEngine.Manager
         public ObjectTypeEnum Type { get => type; set => type = value; }
         public SelectionMark SelectionMark { get => selectionMark; set => selectionMark = value; }
         public SelectionMark PreSelectionMark { get => preSelectionMark; set => preSelectionMark = value; }
-        public SignalBus SignalBus { get => _signalBus; set => _signalBus = value; }
         public Sprite Picture { get => picture; set => picture = value; }
         public string TypeStr { get => typeStr; set => typeStr = value; }
         public int SelectionOrder { get => selectionOrder; set => selectionOrder = value; }
+
+
+        public ObjectStatus Life { get => life; set => life = value; }
+        public ObjectStatus Mana { get => mana; set => mana = value; }
 
         public bool IsPreSelected
         {
@@ -79,8 +74,11 @@ namespace RTSEngine.Manager
             }
         }
 
-        public ObjectStatus Life { get => life; set => life = value; }
-        public ObjectStatus Mana { get => mana; set => mana = value; }
+        [Inject]
+        public void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+        }
 
         public void ChangeSelectionMarkStatus(bool value)
         {
@@ -100,12 +98,12 @@ namespace RTSEngine.Manager
 
         void OnDisable()
         {
-            SignalBus.Fire(new SelectableObjectDeletedSignal() { Selectable = this });
+            _signalBus.Fire(new SelectableObjectDeletedSignal() { Selectable = this });
         }
 
         void OnEnable()
         {
-            SignalBus.Fire(new SelectableObjectCreatedSignal() { Selectable = this });
+            _signalBus.Fire(new SelectableObjectCreatedSignal() { Selectable = this });
         }
 
         private void OnMouseEnter()

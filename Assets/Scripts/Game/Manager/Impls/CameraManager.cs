@@ -19,7 +19,11 @@ namespace RTSEngine.Manager
         public bool IsPanning { get => isPanning; set => isPanning = value; }
         public bool IsCentering { get => isCentering; set => isCentering = value; }
         public ICameraSettings CameraSettings { get => settings; set => settings = value; }
-
+        public void DoProfileInfoClick(ProfileInfoClickSignal signal)
+        {
+            Debug.Log("ProfileInfo Clicked: " + signal.Selectable.Index);
+            //TODO ajust
+        }
         public CameraManager(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;

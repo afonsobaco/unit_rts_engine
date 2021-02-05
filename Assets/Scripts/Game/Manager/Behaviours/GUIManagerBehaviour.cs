@@ -3,105 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using Zenject;
 
 namespace RTSEngine.Manager
 {
-    public class GUIManagerBehaviour : MonoBehaviour, IGUIManager
+    public class GUIManagerBehaviour : MonoBehaviour
     {
         [SerializeField] private SelectionGridBehaviour selectionGrid;
         [SerializeField] private ProfileInfoBehaviour profileInfo;
-        private SelectedMiniatureBehaviour[] miniatureList;
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> manager;
+
+        private IGUIManager manager;
+
 
         [Inject]
-        public void Construct(ISelectionManager<ISelectableObject, SelectionTypeEnum> manager)
+        public void Construct(IGUIManager manager)
         {
             this.manager = manager;
-            miniatureList = selectionGrid.transform.GetComponentsInChildren<SelectedMiniatureBehaviour>(true);
+            this.UpdateVariables();
         }
 
-        public void OnSelectionChange()
+        private void OnValidate()
         {
-            this.UpdateSelection();
-        }
-
-        private void UpdateSelection()
-        {
-            List<ISelectableObject> selection = GetOrderedSelection();
-
-            UpdateSelectionWithNew(selection);
-        }
-
-        private void UpdateSelectionWithNew(List<ISelectableObject> selection)
-        {
-            for (var i = 0; i < miniatureList.Length; i++)
+            if (this.manager != null)
             {
-                if (i < selection.Count)
-                {
-                    miniatureList[i].Selected = selection.ElementAt(i);
-                }
-                else
-                {
-                    miniatureList[i].Selected = null;
-                }
-                UpdateMiniature(miniatureList[i]);
+                UpdateVariables();
             }
+
         }
 
-        private void UpdateMiniature(SelectedMiniatureBehaviour miniature)
+        private void UpdateVariables()
         {
-            if (miniature.Selected != null)
-            {
-                miniature.gameObject.SetActive(true);
-                miniature.Picture.sprite = miniature.Selected.Picture;
-                miniature.LifeBar.gameObject.SetActive(miniature.Selected.Life.Enabled);
-                miniature.ManaBar.gameObject.SetActive(miniature.Selected.Mana.Enabled);
-                miniature.LifeBar.StatusBar.fillAmount = (float)miniature.Selected.Life.Value / (float)miniature.Selected.Life.MaxValue;
-                miniature.ManaBar.StatusBar.fillAmount = (float)miniature.Selected.Mana.Value / (float)miniature.Selected.Mana.MaxValue;
-            }
-            else
-            {
-                miniature.gameObject.SetActive(false);
-            }
-        }
-
-        private List<ISelectableObject> GetOrderedSelection()
-        {
-            List<ISelectableObject> list = new List<ISelectableObject>();
-            var grouped = manager.GetCurrentSelection().GroupBy(x => x.SelectionOrder);
-            var sorted = grouped.ToList();
-            sorted.Sort(new ObjectComparer());
-            foreach (var item in sorted)
-            {
-                list.AddRange(item);
-            }
-            return new List<ISelectableObject>(list);
-        }
-
-        public bool ClickedOnGUI(Vector3 mousePosition)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private class ObjectComparer : IComparer<IGrouping<int, ISelectableObject>>
-        {
-            public int Compare(IGrouping<int, ISelectableObject> x, IGrouping<int, ISelectableObject> y)
-            {
-                int v = y.Key - x.Key;
-                if (v == 0)
-                {
-                    if (y.First().Life.MaxValue > x.First().Life.MaxValue)
-                    {
-                        return 1;
-                    }
-                    else if (y.First().Life.MaxValue < x.First().Life.MaxValue)
-                    {
-                        return -1;
-                    }
-                }
-                return v;
-            }
+            this.manager.SetRaycaster(GetComponent<GraphicRaycaster>());
+            this.manager.SetSelectionGrid(selectionGrid.transform);
+            this.manager.SetProfileInfo(profileInfo.transform);
         }
     }
 

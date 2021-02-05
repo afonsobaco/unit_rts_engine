@@ -131,10 +131,6 @@ namespace RTSEngine.Manager
                 {
                     this._selectionManager.StartOfSelection(Input.mousePosition);
                 }
-                else
-                {
-                    Debug.Log("GUI");
-                }
             }
 
             if (Input.GetMouseButton(0))

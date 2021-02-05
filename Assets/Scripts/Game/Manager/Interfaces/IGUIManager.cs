@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RTSEngine.Manager
 {
@@ -8,5 +9,8 @@ namespace RTSEngine.Manager
     {
         bool ClickedOnGUI(Vector3 mousePosition);
         void OnSelectionChange();
+        void SetSelectionGrid(Transform selectionGridTransform);
+        void SetProfileInfo(Transform profileInfoTransform);
+        void SetRaycaster(GraphicRaycaster graphicRaycaster);
     }
 }
