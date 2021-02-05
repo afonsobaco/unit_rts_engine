@@ -10,9 +10,9 @@ namespace RTSEngine.Manager
     public class AdditiveSelectionModifier : AbstractSelectionModifier
     {
 
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
 
-        public AdditiveSelectionModifier(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager)
+        public AdditiveSelectionModifier(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }
@@ -28,7 +28,7 @@ namespace RTSEngine.Manager
 
         private void AddOrRemoveFromSelection(SelectionArgsXP args)
         {
-            HashSet<ISelectableObjectBehaviour> aux = new HashSet<ISelectableObjectBehaviour>(args.OldSelection);
+            HashSet<ISelectableObject> aux = new HashSet<ISelectableObject>(args.OldSelection);
             aux.UnionWith(args.ToBeAdded);
             if (ContainsAllSelected(args.OldSelection, args.NewSelection))
             {
@@ -37,10 +37,10 @@ namespace RTSEngine.Manager
             args.ToBeAdded = aux;
         }
 
-        private bool ContainsAllSelected(HashSet<ISelectableObjectBehaviour> oldSelection, HashSet<ISelectableObjectBehaviour> newSelection)
+        private bool ContainsAllSelected(HashSet<ISelectableObject> oldSelection, HashSet<ISelectableObject> newSelection)
         {
             bool oldContainsNew = newSelection.All(x => oldSelection.Contains(x));
-            HashSet<ISelectableObjectBehaviour> aux = new HashSet<ISelectableObjectBehaviour>(oldSelection);
+            HashSet<ISelectableObject> aux = new HashSet<ISelectableObject>(oldSelection);
             aux.RemoveWhere(x => newSelection.Contains(x));
             return oldContainsNew && aux.Count > 0;
         }

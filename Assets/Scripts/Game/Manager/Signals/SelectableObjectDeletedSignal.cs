@@ -2,10 +2,10 @@
 
 namespace RTSEngine.Manager
 {
-    public class SelectableObjectDeletedSignal : ISelectableDeletedSignal<ISelectableObjectBehaviour>
+    public class SelectableObjectDeletedSignal : ISelectableSignal<ISelectableObject>
     {
-        private ISelectableObjectBehaviour selectable;
+        private ISelectableObject selectable;
 
-        public ISelectableObjectBehaviour Selectable { get => selectable; set => selectable = value; }
+        public ISelectableObject Selectable { get => selectable; set => selectable = value; }
     }
 }

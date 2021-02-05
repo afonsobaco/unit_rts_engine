@@ -27,19 +27,19 @@ namespace Tests.Manager
         }
 
 
-        public static ISelectableObjectBehaviour CreateATestableObject(int i)
+        public static ISelectableObject CreateATestableObject(int i)
         {
-            var obj = Substitute.For<ISelectableObjectBehaviour>();
+            var obj = Substitute.For<ISelectableObject>();
             obj.Position.Returns(GetDefaultTestListOfObjects().ElementAt(i).Pos);
             return obj;
         }
 
         public static SelectionArgsXP GetDefaultArgs()
         {
-            return GetDefaultArgs(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
+            return GetDefaultArgs(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
         }
 
-        public static SelectionArgsXP GetDefaultArgs(HashSet<ISelectableObjectBehaviour> oldSelection, HashSet<ISelectableObjectBehaviour> newSelection, HashSet<ISelectableObjectBehaviour> mainList)
+        public static SelectionArgsXP GetDefaultArgs(HashSet<ISelectableObject> oldSelection, HashSet<ISelectableObject> newSelection, HashSet<ISelectableObject> mainList)
         {
             SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
             return args;

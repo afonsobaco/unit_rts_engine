@@ -7,7 +7,7 @@ namespace RTSEngine.Manager
     public class CameraManager : ICameraManager
     {
 
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
         private ICameraSettings settings;
 
         private Vector3 origin;
@@ -20,7 +20,7 @@ namespace RTSEngine.Manager
         public bool IsCentering { get => isCentering; set => isCentering = value; }
         public ICameraSettings CameraSettings { get => settings; set => settings = value; }
 
-        public CameraManager(ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager)
+        public CameraManager(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
         {
             this.selectionManager = selectionManager;
         }
@@ -36,7 +36,7 @@ namespace RTSEngine.Manager
             return mainCamera.transform.position;
         }
 
-        private Vector3 GetSelectionMainPoint(UnityEngine.Camera mainCamera, HashSet<ISelectableObjectBehaviour> selectableObjectBehaviours)
+        private Vector3 GetSelectionMainPoint(UnityEngine.Camera mainCamera, HashSet<ISelectableObject> selectableObjectBehaviours)
         {
             if (selectableObjectBehaviours.Count == 0)
             {

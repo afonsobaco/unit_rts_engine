@@ -1,5 +1,4 @@
 using Zenject;
-using RTSEngine.Core;
 namespace RTSEngine.Manager.Installers
 {
     public class SelectionManagerInstaller : MonoInstaller
@@ -8,14 +7,21 @@ namespace RTSEngine.Manager.Installers
         {
             SignalBusInstaller.Install(Container);
             Container.BindInterfacesAndSelfTo<SelectionManager>().AsSingle();
-            Container.Bind<ICameraManager>().To<CameraManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerInputManager>().AsSingle();
+            Container.Bind<ICameraManager>().To<CameraManager>().AsSingle();
+            DeclareSignals();
+        }
 
+
+        private void DeclareSignals()
+        {
             Container.DeclareSignal<SelectableObjectCreatedSignal>();
             Container.DeclareSignal<SelectableObjectDeletedSignal>();
+            Container.DeclareSignal<UpdateGUISignal>();
 
             Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionManager>(x => x.AddSelectableObject).FromResolve();
             Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionManager>(x => x.RemoveSelectableObject).FromResolve();
+            Container.BindSignal<UpdateGUISignal>().ToMethod<GUIManagerBehaviour>(x => x.OnSelectionChange).FromResolve();
         }
     }
 }

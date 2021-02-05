@@ -13,17 +13,24 @@ namespace Tests
     public class OrderOfSelectionModifierTest
     {
         private OrderOfSelectionModifier modifier;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private ISelectionSettings settings;
 
         [SetUp]
         public void SetUp()
         {
-            modifier = Substitute.ForPartsOf<OrderOfSelectionModifier>();
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
+            settings = Substitute.For<ISelectionSettings>();
+            settings.Primary.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT });
+            settings.Secondary.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.BUILDING });
+            selectionManager.GetSettings().Returns(settings);
+            modifier = Substitute.ForPartsOf<OrderOfSelectionModifier>(new object[] { selectionManager });
         }
 
         [Test]
         public void OrderOfSelectionTestSimplePasses()
         {
-            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
+            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
             var result = modifier.Apply(args);
             Assert.AreEqual(args, result);
         }
@@ -32,18 +39,18 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldApplyModifier(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct)
         {
-            HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(selectionStruct.mainListAmount);
-            HashSet<ISelectableObjectBehaviour> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
-            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
-            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(selectionStruct.mainListAmount);
+            HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
+            HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
+            HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
 
             SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
 
             mainList.ToList().ForEach(x =>
             {
-                if (x is ISelectableObjectBehaviour)
+                if (x is ISelectableObject)
                 {
-                    var b = x as ISelectableObjectBehaviour;
+                    var b = x as ISelectableObject;
                     if (b.Index < 4) b.Type = ObjectTypeEnum.UNIT;
                     else if (b.Index < 7) b.Type = ObjectTypeEnum.BUILDING;
                     else if (b.Index < 9) b.Type = ObjectTypeEnum.CONSUMABLE;

@@ -14,20 +14,24 @@ namespace Tests
     public class SameTypeModifierTest
     {
         private SameTypeSelectionModifier modifier;
-
-        private ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum> selectionManager;
+        private ISelectionSettings settings;
+        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObjectBehaviour, SelectionTypeEnum>>();
+            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
+            settings = Substitute.For<ISelectionSettings>();
+            selectionManager.GetSettings().Returns(settings);
+            settings.CanGroup.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
+
             modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>(new object[] { selectionManager });
         }
 
         [Test]
         public void SameTypeModifierTestSimplePasses()
         {
-            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>(), new HashSet<ISelectableObjectBehaviour>());
+            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
 
             var result = modifier.Apply(args);
             Assert.AreEqual(args, result);
@@ -39,12 +43,12 @@ namespace Tests
         {
             selectionManager.IsSameType().Returns(modifierStruct.isSameType);
 
-            HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(selectionStruct.mainListAmount);
-            HashSet<ISelectableObjectBehaviour> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
-            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
-            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(selectionStruct.mainListAmount);
+            HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
+            HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
+            HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
 
-            HashSet<ISelectableObjectBehaviour> sameTypeList = new HashSet<ISelectableObjectBehaviour>();
+            HashSet<ISelectableObject> sameTypeList = new HashSet<ISelectableObject>();
             if (modifierStruct.isSameType && selectionStruct.newSelection.Length > 0)
             {
                 if (selectionStruct.additionalInfo.group_evens.Contains(selectionStruct.newSelection[0])) //TODO should not work with newSelection
@@ -70,9 +74,9 @@ namespace Tests
         [TestCase(new int[] { 9 }, new int[] { 9 }, TestName = "Should Get Empty")]
         public void ShouldGetAllFromSameTypeThatCanGroup(int[] selectedIndex, int[] expectedResult)
         {
-            HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(10);
-            HashSet<ISelectableObjectBehaviour> newSelection = TestUtils.GetListByIndex(selectedIndex, mainList);
-            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(expectedResult, mainList);
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
+            HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectedIndex, mainList);
+            HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(expectedResult, mainList);
             SetObjectSelectableTypes(mainList);
 
             modifier.WhenForAnyArgs(x => x.GetAllFromSameType(default, default, default, default, default)).DoNotCallBase();
@@ -87,9 +91,9 @@ namespace Tests
         [Test]
         public void ShouldGetAllFromSameType()
         {
-            HashSet<ISelectableObjectBehaviour> mainList = TestUtils.GetSomeObjects<ISelectableObjectBehaviour>(10);
-            HashSet<ISelectableObjectBehaviour> expected = TestUtils.GetListByIndex(new int[] { 0, 1, 2, 3 }, mainList);
-            ISelectableObjectBehaviour selected = TestUtils.GetListByIndex(new int[] { 0 }, mainList).First();
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
+            HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(new int[] { 0, 1, 2, 3 }, mainList);
+            ISelectableObject selected = TestUtils.GetListByIndex(new int[] { 0 }, mainList).First();
 
             SetObjectSelectableTypes(mainList);
 
@@ -101,7 +105,7 @@ namespace Tests
             CollectionAssert.AreEquivalent(expected, result);
         }
 
-        private static void SetObjectSelectableTypes(HashSet<ISelectableObjectBehaviour> mainList)
+        private static void SetObjectSelectableTypes(HashSet<ISelectableObject> mainList)
         {
             mainList.ToList().ForEach(x =>
             {

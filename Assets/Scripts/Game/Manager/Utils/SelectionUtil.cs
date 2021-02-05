@@ -6,16 +6,16 @@ namespace RTSEngine.Manager
 {
     public class SelectionUtil
     {
-        public static HashSet<ISelectableObjectBehaviour> GetAllObjectsInsideSelectionArea(HashSet<ISelectableObjectBehaviour> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
+        public static HashSet<ISelectableObject> GetAllObjectsInsideSelectionArea(HashSet<ISelectableObject> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
         {
-            HashSet<ISelectableObjectBehaviour> list = new HashSet<ISelectableObjectBehaviour>();
+            HashSet<ISelectableObject> list = new HashSet<ISelectableObject>();
             if (allObjects == null)
             {
                 return list;
             }
             for (int i = 0; i < allObjects.Count; i++)
             {
-                ISelectableObjectBehaviour obj = (ISelectableObjectBehaviour)allObjects.ElementAt(i);
+                ISelectableObject obj = (ISelectableObject)allObjects.ElementAt(i);
                 var screenPos = Camera.main.WorldToScreenPoint(obj.Position);
                 if (IsPositionInsideArea(screenPos, initialScreenPosition, finalScreenPosition))
                 {
@@ -25,7 +25,7 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public static ISelectableObjectBehaviour GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
+        public static ISelectableObject GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
         {
             var initialObject = GetObjectInScreenPoint(initialScreenPosition, Camera.main);
             var finalObject = GetObjectInScreenPoint(finalScreenPosition, Camera.main);
@@ -57,13 +57,13 @@ namespace RTSEngine.Manager
             return new Vector2(center.x - (size.x / 2), center.y - (size.y / 2));
         }
 
-        public static ISelectableObjectBehaviour GetObjectInScreenPoint(Vector3 mousePosition, Camera camera)
+        public static ISelectableObject GetObjectInScreenPoint(Vector3 mousePosition, Camera camera)
         {
             Ray ray = camera.ScreenPointToRay(mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100))
             {
-                return hit.transform.gameObject.GetComponent<ISelectableObjectBehaviour>();
+                return hit.transform.gameObject.GetComponent<ISelectableObject>();
             }
             return null;
         }

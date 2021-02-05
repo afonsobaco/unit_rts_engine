@@ -7,42 +7,42 @@ namespace RTSEngine.Manager
     public class SameTypeUtil
     {
 
-        public static HashSet<ISelectableObjectBehaviour> GetFromSameTypeInScreen(ISelectableObjectBehaviour selected, HashSet<ISelectableObjectBehaviour> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
+        public static HashSet<ISelectableObject> GetFromSameTypeInScreen(ISelectableObject selected, HashSet<ISelectableObject> mainList, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
         {
             if (selected == null)
             {
-                return new HashSet<ISelectableObjectBehaviour>();
+                return new HashSet<ISelectableObject>();
             }
-            HashSet<ISelectableObjectBehaviour> list = SelectionUtil.GetAllObjectsInsideSelectionArea(mainList, initialScreenPosition, finalScreenPosition);
-            return new HashSet<ISelectableObjectBehaviour>(list.ToList().FindAll(a => selected.IsCompatible(a)));
+            HashSet<ISelectableObject> list = SelectionUtil.GetAllObjectsInsideSelectionArea(mainList, initialScreenPosition, finalScreenPosition);
+            return new HashSet<ISelectableObject>(list.ToList().FindAll(a => selected.IsCompatible(a)));
         }
 
-        public static HashSet<ISelectableObjectBehaviour> SortListByDistance(HashSet<ISelectableObjectBehaviour> list, Vector3 initialPosittion)
+        public static HashSet<ISelectableObject> SortListByDistance(HashSet<ISelectableObject> list, Vector3 initialPosittion)
         {
-            var sorted = new List<ISelectableObjectBehaviour>(list);
+            var sorted = new List<ISelectableObject>(list);
             sorted.Sort(new SameTypeComparer(initialPosittion));
-            return new HashSet<ISelectableObjectBehaviour>(sorted);
+            return new HashSet<ISelectableObject>(sorted);
         }
 
-        public static HashSet<ISelectableObjectBehaviour> Shuffle(HashSet<ISelectableObjectBehaviour> collection)
+        public static HashSet<ISelectableObject> Shuffle(HashSet<ISelectableObject> collection)
         {
-            ISelectableObjectBehaviour[] list = collection.ToArray();
+            ISelectableObject[] list = collection.ToArray();
             System.Random rng = new System.Random();
             int n = list.Length;
             while (n > 1)
             {
                 n--;
                 int k = rng.Next(n + 1);
-                ISelectableObjectBehaviour value = list[k];
+                ISelectableObject value = list[k];
                 list[k] = list[n];
                 list[n] = value;
             }
-            return new HashSet<ISelectableObjectBehaviour>(list);
+            return new HashSet<ISelectableObject>(list);
         }
 
     }
 
-    public class SameTypeComparer : IComparer<ISelectableObjectBehaviour>
+    public class SameTypeComparer : IComparer<ISelectableObject>
     {
         private Vector3 initialPosittion;
 
@@ -51,7 +51,7 @@ namespace RTSEngine.Manager
             this.initialPosittion = initialPosittion;
         }
 
-        public int Compare(ISelectableObjectBehaviour v1, ISelectableObjectBehaviour v2)
+        public int Compare(ISelectableObject v1, ISelectableObject v2)
         {
             return (v1.Position - initialPosittion).sqrMagnitude.CompareTo((v2.Position - initialPosittion).sqrMagnitude);
         }
