@@ -77,11 +77,12 @@ namespace RTSEngine.Manager
             if (miniature.Selected != null)
             {
                 miniature.gameObject.SetActive(true);
-                miniature.Picture.sprite = miniature.Selected.Picture;
-                miniature.LifeBar.gameObject.SetActive(miniature.Selected.Life.Enabled);
-                miniature.ManaBar.gameObject.SetActive(miniature.Selected.Mana.Enabled);
-                UpdateMiniatureStatusBar(miniature.ManaBar, miniature.Selected.Mana);
-                UpdateMiniatureStatusBar(miniature.LifeBar, miniature.Selected.Life);
+                ISelectableObjectInfo selectableObjectInfo = miniature.Selected.SelectableObjectInfo;
+                miniature.Picture.sprite = selectableObjectInfo.Picture;
+                miniature.LifeBar.gameObject.SetActive(selectableObjectInfo.Life.Enabled);
+                miniature.ManaBar.gameObject.SetActive(selectableObjectInfo.Mana.Enabled);
+                UpdateMiniatureStatusBar(miniature.ManaBar, selectableObjectInfo.Mana);
+                UpdateMiniatureStatusBar(miniature.LifeBar, selectableObjectInfo.Life);
             }
             else
             {
@@ -101,7 +102,7 @@ namespace RTSEngine.Manager
         private List<ISelectableObject> GetOrderedSelection()
         {
             List<ISelectableObject> list = new List<ISelectableObject>();
-            var grouped = selectionManager.GetCurrentSelection().GroupBy(x => x.SelectionOrder);
+            var grouped = selectionManager.GetCurrentSelection().GroupBy(x => x, new EqualityComparer());
             var sorted = grouped.ToList();
             sorted.Sort(new ObjectComparer());
             foreach (var item in sorted)
@@ -153,23 +154,37 @@ namespace RTSEngine.Manager
             this.raycaster = raycaster;
         }
 
-        private class ObjectComparer : IComparer<IGrouping<int, ISelectableObject>>
+        private class ObjectComparer : IComparer<IGrouping<ISelectableObject, ISelectableObject>>
         {
-            public int Compare(IGrouping<int, ISelectableObject> x, IGrouping<int, ISelectableObject> y)
+            public int Compare(IGrouping<ISelectableObject, ISelectableObject> x, IGrouping<ISelectableObject, ISelectableObject> y)
             {
-                int v = y.Key - x.Key;
+                int v = y.Key.SelectableObjectInfo.SelectionOrder - x.Key.SelectableObjectInfo.SelectionOrder;
                 if (v == 0)
                 {
-                    if (y.First().Life.MaxValue > x.First().Life.MaxValue)
+                    if (y.Key.SelectableObjectInfo.Life.MaxValue > x.Key.SelectableObjectInfo.Life.MaxValue)
                     {
                         return 1;
                     }
-                    else if (y.First().Life.MaxValue < x.First().Life.MaxValue)
+                    else if (y.Key.SelectableObjectInfo.Life.MaxValue < x.Key.SelectableObjectInfo.Life.MaxValue)
                     {
                         return -1;
                     }
                 }
                 return v;
+            }
+        }
+
+        private class EqualityComparer : IEqualityComparer<ISelectableObject>
+        {
+            public bool Equals(ISelectableObject x, ISelectableObject y)
+            {
+                return x.SelectableObjectInfo.Type == y.SelectableObjectInfo.Type && x.SelectableObjectInfo.TypeStr == y.SelectableObjectInfo.TypeStr;
+            }
+
+            public int GetHashCode(ISelectableObject obj)
+            {
+                int hCode = obj.SelectableObjectInfo.Type.GetHashCode() + obj.SelectableObjectInfo.TypeStr.GetHashCode();
+                return hCode;
             }
         }
     }

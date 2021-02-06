@@ -13,14 +13,14 @@ namespace Tests
     public class ModifiersIntegrationTest
     {
 
-        HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
+        HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(10);
         private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
         private ISelectionSettings settings;
 
         [SetUp]
         public void SetUp()
         {
-            mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
+            mainList = TestUtils.GetSomeObjects(10);
             selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
             settings = Substitute.For<ISelectionSettings>();
             settings.Restricted.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
@@ -33,15 +33,15 @@ namespace Tests
             {
                 if (x.Index < 4)
                 {
-                    x.Type = ObjectTypeEnum.UNIT;
+                    x.SelectableObjectInfo.Type = ObjectTypeEnum.UNIT;
                 }
                 else if (x.Index < 7)
                 {
-                    x.Type = ObjectTypeEnum.BUILDING;
+                    x.SelectableObjectInfo.Type = ObjectTypeEnum.BUILDING;
                 }
                 else
                 {
-                    x.Type = ObjectTypeEnum.CONSUMABLE;
+                    x.SelectableObjectInfo.Type = ObjectTypeEnum.CONSUMABLE;
                 }
             });
         }

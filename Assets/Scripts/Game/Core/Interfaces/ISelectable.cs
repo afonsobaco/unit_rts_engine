@@ -9,7 +9,6 @@ namespace RTSEngine.Core
         Vector3 Position { get; set; }
         void ChangePreSelectionMarkStatus(bool value);
         void ChangeSelectionMarkStatus(bool value);
-        bool IsCompatible(ISelectable other);
 
 
     }

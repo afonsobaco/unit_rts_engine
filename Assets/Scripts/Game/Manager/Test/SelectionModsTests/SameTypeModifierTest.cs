@@ -1,7 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using UnityEngine;
-using NUnit.Framework;
-using RTSEngine.Core;
+﻿using NUnit.Framework;
 using RTSEngine.Manager;
 using System.Collections.Generic;
 using NSubstitute;
@@ -43,7 +40,7 @@ namespace Tests
         {
             selectionManager.IsSameType().Returns(modifierStruct.isSameType);
 
-            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(selectionStruct.mainListAmount);
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
             HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
             HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
             HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
@@ -74,7 +71,7 @@ namespace Tests
         [TestCase(new int[] { 9 }, new int[] { 9 }, TestName = "Should Get Empty")]
         public void ShouldGetAllFromSameTypeThatCanGroup(int[] selectedIndex, int[] expectedResult)
         {
-            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(10);
             HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectedIndex, mainList);
             HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(expectedResult, mainList);
             SetObjectSelectableTypes(mainList);
@@ -91,7 +88,7 @@ namespace Tests
         [Test]
         public void ShouldGetAllFromSameType()
         {
-            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(10);
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(10);
             HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(new int[] { 0, 1, 2, 3 }, mainList);
             ISelectableObject selected = TestUtils.GetListByIndex(new int[] { 0 }, mainList).First();
 
@@ -111,15 +108,15 @@ namespace Tests
             {
                 if (x.Index < 4)
                 {
-                    x.Type = ObjectTypeEnum.UNIT;
+                    x.SelectableObjectInfo.Type = ObjectTypeEnum.UNIT;
                 }
                 else if (x.Index < 7)
                 {
-                    x.Type = ObjectTypeEnum.BUILDING;
+                    x.SelectableObjectInfo.Type = ObjectTypeEnum.BUILDING;
                 }
                 else
                 {
-                    x.Type = ObjectTypeEnum.ENVIRONMENT;
+                    x.SelectableObjectInfo.Type = ObjectTypeEnum.ENVIRONMENT;
                 }
             }); ;
         }

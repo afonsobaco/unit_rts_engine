@@ -36,7 +36,7 @@ namespace Tests
         {
             selectionManager.IsAdditive().Returns(modifiersStruct.isAdditive);
 
-            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(selectionStruct.mainListAmount);
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
             HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
             HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
 

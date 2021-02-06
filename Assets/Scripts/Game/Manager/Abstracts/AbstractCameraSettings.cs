@@ -17,6 +17,8 @@ namespace RTSEngine.Manager
         [SerializeField] private float maxZoom = 20;
         [SerializeField] private float axisPressure = 0.1f;
 
+
+        //TODO remove to scriptableObject
         [Space]
         [Header("Map Configs(REMOVE)")]
 

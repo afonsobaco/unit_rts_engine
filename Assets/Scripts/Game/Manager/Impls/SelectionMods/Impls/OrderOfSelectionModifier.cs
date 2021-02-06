@@ -45,7 +45,7 @@ namespace RTSEngine.Manager
                     if (x is ISelectableObject)
                     {
                         var b = x as ISelectableObject;
-                        return b.Type == type;
+                        return b.SelectableObjectInfo.Type == type;
                     }
                     return false;
                 }));

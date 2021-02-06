@@ -39,7 +39,7 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldApplyModifier(SelectionStruct selectionStruct, ModifiersStruct modifiersStruct, ResultStruct resultStruct)
         {
-            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects<ISelectableObject>(selectionStruct.mainListAmount);
+            HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
             HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
             HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
             HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
@@ -51,10 +51,10 @@ namespace Tests
                 if (x is ISelectableObject)
                 {
                     var b = x as ISelectableObject;
-                    if (b.Index < 4) b.Type = ObjectTypeEnum.UNIT;
-                    else if (b.Index < 7) b.Type = ObjectTypeEnum.BUILDING;
-                    else if (b.Index < 9) b.Type = ObjectTypeEnum.CONSUMABLE;
-                    else b.Type = ObjectTypeEnum.ENVIRONMENT;
+                    if (b.Index < 4) b.SelectableObjectInfo.Type = ObjectTypeEnum.UNIT;
+                    else if (b.Index < 7) b.SelectableObjectInfo.Type = ObjectTypeEnum.BUILDING;
+                    else if (b.Index < 9) b.SelectableObjectInfo.Type = ObjectTypeEnum.CONSUMABLE;
+                    else b.SelectableObjectInfo.Type = ObjectTypeEnum.ENVIRONMENT;
                 }
             });
 

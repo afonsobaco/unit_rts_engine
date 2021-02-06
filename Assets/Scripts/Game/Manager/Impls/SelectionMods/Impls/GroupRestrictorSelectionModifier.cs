@@ -25,12 +25,12 @@ namespace RTSEngine.Manager
             ObjectTypeEnum[] canGroup = this._selectionManager.GetSettings().Restricted;
             var onlyRestrictedObject = args.ToBeAdded.ToList().TrueForAll(x =>
             {
-                return !canGroup.Contains(x.Type);
+                return !canGroup.Contains(x.SelectableObjectInfo.Type);
             });
 
             if (!onlyRestrictedObject)
             {
-                args.ToBeAdded.RemoveWhere(x => !canGroup.Contains(x.Type));
+                args.ToBeAdded.RemoveWhere(x => !canGroup.Contains(x.SelectableObjectInfo.Type));
             }
 
             return args;

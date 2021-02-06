@@ -6255,6 +6255,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f5eaff3f68b03047baeb1383fcc168b, type: 3}
+--- !u!114 &1280131230 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 561590880, guid: b575df68deca71e4486ebb84832aeff8,
+    type: 3}
+  m_PrefabInstance: {fileID: 8171643307709289422}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1283682070
 GameObject:
   m_ObjectHideFlags: 0
@@ -6779,6 +6791,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1120928241}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1384312030 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 728064136400272506, guid: b575df68deca71e4486ebb84832aeff8,
+    type: 3}
+  m_PrefabInstance: {fileID: 8171643307709289422}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8bc4099d417ec4f99691d3457a1c40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1402140586
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8875,6 +8899,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ecc3ca6f0aae164ea7cb2a82946e7d0, type: 3}
+--- !u!114 &1844080381 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 728064134413460337, guid: b575df68deca71e4486ebb84832aeff8,
+    type: 3}
+  m_PrefabInstance: {fileID: 8171643307709289422}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8bc4099d417ec4f99691d3457a1c40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1848063749
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10135,6 +10171,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1581636078}
     m_Modifications:
+    - target: {fileID: 561590880, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1711623910, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: lifeBar
+      value: 
+      objectReference: {fileID: 1844080381}
+    - target: {fileID: 1711623910, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: manaBar
+      value: 
+      objectReference: {fileID: 1384312030}
+    - target: {fileID: 1711623910, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: picture
+      value: 
+      objectReference: {fileID: 1280131230}
     - target: {fileID: 8171643307655992858, guid: b575df68deca71e4486ebb84832aeff8,
         type: 3}
       propertyPath: m_Name

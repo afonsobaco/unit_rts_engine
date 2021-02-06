@@ -28,7 +28,7 @@ namespace RTSEngine.Manager
         {
             ISelectableObject selected = args.ToBeAdded.First();
             HashSet<ISelectableObject> allFromSameType = new HashSet<ISelectableObject>();
-            if (selectionManager.GetSettings().CanGroup.Contains(selected.Type))
+            if (selectionManager.GetSettings().CanGroup.Contains(selected.SelectableObjectInfo.Type))
             {
                 allFromSameType = GetAllFromSameType(selected, args.MainList, selectionManager.GetInitialScreenPosition(), selectionManager.GetFinalScreenPosition(), selectionManager.GetSettings().Mode);
             }

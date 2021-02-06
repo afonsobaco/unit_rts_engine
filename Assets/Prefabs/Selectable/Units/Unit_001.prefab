@@ -423,20 +423,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 804b92ea658ce284f9bae1ed480648d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
   selectionMark: {fileID: 4782704107103593911}
   preSelectionMark: {fileID: 3350248310140437384}
-  picture: {fileID: -903730026294837061, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
-  life:
-    value: 500
-    maxValue: 500
-    enabled: 1
-  mana:
-    value: 0
-    maxValue: 0
-    enabled: 0
-  typeStr: Unit
-  selectionOrder: 1
+  selectableObjectInfo: {fileID: 11400000, guid: 47ef24c4665fd3b409215600f7fcd762,
+    type: 2}
 --- !u!136 &3946025015106541936
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -463,6 +453,10 @@ PrefabInstance:
       value: Meshtint Free Knight
       objectReference: {fileID: 0}
     - target: {fileID: 4079118292684216, guid: 5b5b1958cdf88ce49989e326859b9572, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079118292684216, guid: 5b5b1958cdf88ce49989e326859b9572, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -475,6 +469,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4079118292684216, guid: 5b5b1958cdf88ce49989e326859b9572, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079118292684216, guid: 5b5b1958cdf88ce49989e326859b9572, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -484,14 +482,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4079118292684216, guid: 5b5b1958cdf88ce49989e326859b9572, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4079118292684216, guid: 5b5b1958cdf88ce49989e326859b9572, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4079118292684216, guid: 5b5b1958cdf88ce49989e326859b9572, type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4079118292684216, guid: 5b5b1958cdf88ce49989e326859b9572, type: 3}

@@ -22,17 +22,17 @@ namespace Tests.Utils
             return list;
         }
 
-        public static HashSet<T> GetSomeObjects<T>(int qtt) where T : class
+        public static HashSet<ISelectableObject> GetSomeObjects(int qtt)
         {
-            var list = new HashSet<T>();
+            var list = new HashSet<ISelectableObject>();
             for (var i = 0; i < qtt; i++)
             {
-                T item = Substitute.For<T>();
-                ISelectable selectable = (ISelectable)item;
-                selectable.Index = i;
-                selectable.IsCompatible(Arg.Any<ISelectableObject>()).Returns((x) =>
+                ISelectableObject item = Substitute.For<ISelectableObject>();
+                item.SelectableObjectInfo = Substitute.ForPartsOf<SelectableObjectInfoSO>();
+                item.Index = i;
+                item.IsCompatible(Arg.Any<ISelectableObject>()).Returns((x) =>
                 {
-                    return ((ISelectable)x[0]).Index % 2 == 0;
+                    return ((ISelectableObject)x[0]).Index % 2 == 0;
                 });
                 list.Add(item);
             }
