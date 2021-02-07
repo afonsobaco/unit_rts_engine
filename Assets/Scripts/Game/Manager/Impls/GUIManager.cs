@@ -17,28 +17,84 @@ namespace RTSEngine.Manager
         private GraphicRaycaster raycaster;
         private EventSystem eventSystem;
         private PointerEventData pointerEventData;
+        private ISelectableObject _highlighted;
+        private ISelectableObject[] _selection;
 
         public void OnSelectionChange(SelectionChangeSignal signal)
         {
-            this.UpdateSelection(signal.Selection);
+            this._selection = signal.Selection;
+            this.UpdateSelection();
         }
 
-        private void UpdateSelection(ISelectableObject[] selection)
+        private void UpdateSelection()
         {
-            List<ISelectableObject> orderedSelection = GetOrderedSelection(selection);
+            List<ISelectableObject> orderedSelection = GetOrderedSelection();
+            _highlighted = null;
+            SetMainFromHighlightedGroup(orderedSelection, false);
             UpdateMiniatureGrid(orderedSelection);
-            UpdatePortrait(orderedSelection);
+            UpdateHighlightedGroupMiniatures();
         }
 
-        private void UpdatePortrait(List<ISelectableObject> selection)
+        public void ChangeGroup(bool back)
         {
-            //TODO get from TAB
-            ISelectableObject selected = null;
-            if (selection.Count > 0)
+            List<ISelectableObject> orderedSelection = GetOrderedSelection();
+            SetMainFromHighlightedGroup(orderedSelection, back);
+            UpdateHighlightedGroupMiniatures();
+        }
+
+        private void UpdateHighlightedGroupMiniatures()
+        {
+            var gridList = _selectionGridPlaceholder.GetComponentsInChildren<GUISelectedMiniatureBehaviour>();
+            foreach (var item in gridList)
             {
-                selected = selection.First();
+                item.SelectionBorder.enabled = item.Selected.IsCompatible(_highlighted);
             }
-            GetPortrait(selected);
+            UpdatePortrait();
+        }
+
+        private void SetMainFromHighlightedGroup(List<ISelectableObject> orderedSelection, bool back)
+        {
+            if (orderedSelection.Count > 0)
+            {
+                if (back)
+                {
+                    _highlighted = orderedSelection.ElementAt(GetPreviousGroup(orderedSelection));
+                }
+                else
+                {
+                    _highlighted = orderedSelection.ElementAt(GetNextGroup(orderedSelection));
+                }
+            }
+            else
+            {
+                _highlighted = null;
+            }
+        }
+
+        private int GetPreviousGroup(List<ISelectableObject> orderedSelection)
+        {
+            if (_highlighted != null)
+            {
+                var index = orderedSelection.IndexOf(_highlighted);
+                if (index != 0)
+                {
+                    return orderedSelection.IndexOf(orderedSelection.ElementAt(index - 1));
+                }
+            }
+            return orderedSelection.Count - 1;
+        }
+
+        private int GetNextGroup(List<ISelectableObject> orderedSelection)
+        {
+            if (_highlighted != null)
+            {
+                var index = orderedSelection.LastIndexOf(_highlighted);
+                if (index < orderedSelection.Count - 2)
+                {
+                    return index + 1;
+                }
+            }
+            return 0;
         }
 
         private void UpdateMiniatureGrid(List<ISelectableObject> selection)
@@ -59,9 +115,9 @@ namespace RTSEngine.Manager
 
         }
 
-        private void GetPortrait(ISelectableObject selected)
+        private void UpdatePortrait()
         {
-            if (selected != null)
+            if (_highlighted != null)
             {
                 _portraitPlaceholder.gameObject.SetActive(true);
                 var selectedGUIPortrait = _portraitPlaceholder.gameObject.GetComponentInChildren<GUISelectedPortraitBehaviour>();
@@ -69,7 +125,7 @@ namespace RTSEngine.Manager
                 {
                     selectedGUIPortrait = CreatePortrait();
                 }
-                AdjustSelected(selected, selectedGUIPortrait);
+                AdjustSelected(_highlighted, selectedGUIPortrait);
             }
             else
             {
@@ -109,15 +165,15 @@ namespace RTSEngine.Manager
             AdjustSelected(selected, selectedGUIMiniature);
         }
 
-        private void AdjustSelected(ISelectableObject selected, AbstractGUISelectedInfoBehaviour selectedGUIMiniature)
+        private void AdjustSelected(ISelectableObject selected, AbstractGUISelectedInfoBehaviour selectedGUI)
         {
-            selectedGUIMiniature.Selected = selected;
+            selectedGUI.Selected = selected;
             var selectableObjectInfo = selected.SelectableObjectInfo;
-            selectedGUIMiniature.Picture.sprite = selectableObjectInfo.Picture;
-            selectedGUIMiniature.LifeBar.gameObject.SetActive(selectableObjectInfo.Life.Enabled);
-            selectedGUIMiniature.ManaBar.gameObject.SetActive(selectableObjectInfo.Mana.Enabled);
-            UpdateMiniatureStatusBar(selectedGUIMiniature.ManaBar, selectableObjectInfo.Mana);
-            UpdateMiniatureStatusBar(selectedGUIMiniature.LifeBar, selectableObjectInfo.Life);
+            selectedGUI.Picture.sprite = selectableObjectInfo.Picture;
+            selectedGUI.LifeBar.gameObject.SetActive(selectableObjectInfo.Life.Enabled);
+            selectedGUI.ManaBar.gameObject.SetActive(selectableObjectInfo.Mana.Enabled);
+            UpdateMiniatureStatusBar(selectedGUI.ManaBar, selectableObjectInfo.Mana);
+            UpdateMiniatureStatusBar(selectedGUI.LifeBar, selectableObjectInfo.Life);
         }
 
         private void UpdateMiniatureStatusBar(GUIStatusBarBehaviour statusBar, ObjectStatus objectStatus)
@@ -129,10 +185,10 @@ namespace RTSEngine.Manager
             }
         }
 
-        private List<ISelectableObject> GetOrderedSelection(ISelectableObject[] selection)
+        private List<ISelectableObject> GetOrderedSelection()
         {
             List<ISelectableObject> list = new List<ISelectableObject>();
-            var grouped = selection.GroupBy(x => x, new EqualityComparer());
+            var grouped = _selection.GroupBy(x => x, new EqualityComparer());
             var sorted = grouped.ToList();
             sorted.Sort(new ObjectComparer());
             foreach (var item in sorted)

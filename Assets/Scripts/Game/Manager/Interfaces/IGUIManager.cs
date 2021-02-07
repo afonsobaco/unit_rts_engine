@@ -14,5 +14,7 @@ namespace RTSEngine.Manager
         void SetRaycaster(GraphicRaycaster graphicRaycaster);
         void SetSelectedMiniaturePrefab(GameObject selectedMiniaturePrefab);
         void SetSelectedPortraitPrefab(GameObject selectedPortraitPrefab);
+        void ChangeGroup(bool back);
+
     }
 }

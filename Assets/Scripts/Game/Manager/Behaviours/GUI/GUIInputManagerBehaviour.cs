@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Zenject;
+using System;
 
 namespace RTSEngine.Manager
 {
@@ -23,6 +24,15 @@ namespace RTSEngine.Manager
         private void Update()
         {
             this.SetMouseClick();
+            this.SetUserInterfaceKeys();
+        }
+
+        private void SetUserInterfaceKeys()
+        {
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                _manager.ChangeGroup(Input.GetKey(KeyCode.LeftShift));
+            }
         }
 
         public void SetMouseClick()
