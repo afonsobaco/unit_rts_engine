@@ -5,7 +5,9 @@
         "UnityEditor.TestRunner",
         "Core",
         "Manager",
-        "TestUtils"
+        "TestUtils",
+        "Zenject",
+        "Zenject-Editor"
     ],
     "includePlatforms": [
         "Editor"

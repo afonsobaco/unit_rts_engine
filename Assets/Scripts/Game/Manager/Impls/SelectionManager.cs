@@ -1,11 +1,60 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-
+using System.Linq;
 
 namespace RTSEngine.Manager
 {
-    public class SelectionManager : ISelectionManager<ISelectableObject, SelectionTypeEnum>
+    public interface ISelectionManager
+    {
+        void AddSelectableObject(SelectableObjectCreatedSignal signal);
+        SelectionArguments ApplyModifiers(SelectionArguments args);
+        void Construct(SignalBus signalBus);
+        void CreateGroupSet(int number);
+        void Dispose();
+        void DoMiniatureClick(SelectedMiniatureClickSignal signal);
+        void DoPreSelection(Vector2 finalPos);
+        void DoSelection(Vector2 finalPos);
+        Dictionary<int, HashSet<ISelectableObject>> GetAllGroupSets();
+        HashSet<ISelectableObject> GetCurrentSelection();
+        HashSet<ISelectableObject> GetDragSelection();
+        Vector2 GetFinalScreenPosition();
+        HashSet<ISelectableObject> GetFinalSelection(SelectionArguments args);
+        HashSet<ISelectableObject> GetGroupSet(int number);
+        int GetGroupSetNumberPressed();
+        Vector2 GetInitialScreenPosition();
+        List<ISelectionModifier> GetModifiersToBeApplied(SelectionTypeEnum type);
+        ISelectableObject GetObjectClicked();
+        IEnumerable<ISelectableObject> GetPreSelection();
+        HashSet<ISelectableObject> GetSelection(HashSet<ISelectableObject> newSelection);
+        SelectionArguments GetSelectionArgs(HashSet<ISelectableObject> newSelection);
+        HashSet<ISelectableObject> GetSelectionBySelectionType();
+        SelectionTypeEnum GetSelectionType();
+        ISelectionSettings GetSettings();
+        HashSet<ISelectableObject> GetUpdatedCurrentSelection(HashSet<ISelectableObject> newSelection);
+        HashSet<ISelectableObject> GetUpdatedPreSelection(HashSet<ISelectableObject> newSelection);
+        bool IsAdditive();
+        bool IsSameType();
+        bool IsSelecting();
+        HashSet<ISelectableObject> OrderSelection(HashSet<ISelectableObject> newSelection);
+        HashSet<ISelectableObject> PerformSelection(Vector2 finalPos);
+        void RemoveSelectableObject(SelectableObjectDeletedSignal signal);
+        void SetClicked(ISelectableObject selected);
+        void SetCurrentSelection(HashSet<ISelectableObject> selection);
+        void SetDoubleClick(bool doubleClick);
+        void SetGroupNumperPressed(int groupNumber);
+        void SetIsPreSelection(bool value);
+        void SetKeysPressed(bool additiveKeyPressed, bool sameTypeKeyPressed);
+        void SetLastClicked(ISelectableObject selected);
+        void SetMainList(HashSet<ISelectableObject> list);
+        void SetPreSelection(HashSet<ISelectableObject> preSelection);
+        void SetSelectionModifiers(List<ISelectionModifier> list);
+        void SetSelectionType(SelectionTypeEnum type);
+        void SetSettings(ISelectionSettings value);
+        void StartOfSelection(Vector2 initialPos);
+    }
+
+    public class SelectionManager : ISelectionManager, IInitializable
     {
         private ISelectionSettings settings;
 
@@ -22,23 +71,27 @@ namespace RTSEngine.Manager
         private bool isSameTypeSelection;
         private bool isSelecting;
         private bool isPreSelection;
-        private Vector3 finalScreenPosition;
-        private Vector3 initialScreenPosition;
-        private Vector3 minScreenPos;
-        private Vector3 maxScreenPos;
+        private Vector2 finalScreenPosition;
+        private Vector2 initialScreenPosition;
         private SelectionTypeEnum selectionType;
         private List<ISelectionModifier> mods;
-        private SignalBus signalBus;
 
-        public void DoMiniatureClick(MiniatureClickSignal signal)
+        private SignalBus _signalBus;
+
+        public void DoMiniatureClick(SelectedMiniatureClickSignal signal)
         {
             Debug.Log("Miniature Clicked: " + signal.Selectable.Index);
             //TODO ajust
         }
 
-        public SelectionManager(SignalBus signalBus)
+        [Inject]
+        public void Construct(SignalBus signalBus)
         {
-            this.signalBus = signalBus;
+            this._signalBus = signalBus;
+        }
+
+        public void Initialize()
+        {
             mods = new List<ISelectionModifier>()
             {
                 new SameTypeSelectionModifier(this),
@@ -67,12 +120,6 @@ namespace RTSEngine.Manager
         public void SetSelectionModifiers(List<ISelectionModifier> list)
         {
             this.mods = list;
-        }
-
-        public void SetScreenBoundries(Vector2 minScreenPoint, Vector2 maxScreenPoint)
-        {
-            this.minScreenPos = minScreenPoint;
-            this.maxScreenPos = maxScreenPoint;
         }
 
         public void SetKeysPressed(bool additiveKeyPressed, bool sameTypeKeyPressed)
@@ -137,13 +184,13 @@ namespace RTSEngine.Manager
 
         public Vector2 GetInitialScreenPosition()
         {
-            Vector3 initialSelectionPos = this.isSameTypeSelection && !this.isPreSelection ? this.minScreenPos : this.initialScreenPosition;
+            Vector2 initialSelectionPos = this.isSameTypeSelection && !this.isPreSelection ? (Vector2)Camera.main.ViewportToScreenPoint(this.GetSettings().MinViewport) : this.initialScreenPosition;
             return initialSelectionPos;
         }
 
         public Vector2 GetFinalScreenPosition()
         {
-            Vector3 finalSelectionPos = this.isSameTypeSelection && !this.isPreSelection ? this.maxScreenPos : this.finalScreenPosition;
+            Vector2 finalSelectionPos = this.isSameTypeSelection && !this.isPreSelection ? (Vector2)Camera.main.ViewportToScreenPoint(this.GetSettings().MaxViewport) : this.finalScreenPosition;
             return finalSelectionPos;
 
         }
@@ -275,16 +322,16 @@ namespace RTSEngine.Manager
             }
         }
 
-        public SelectionArgsXP GetSelectionArgs(HashSet<ISelectableObject> newSelection)
+        public SelectionArguments GetSelectionArgs(HashSet<ISelectableObject> newSelection)
         {
             if (this.isDoubleClick)
             {
                 AdjustSameTypeIfDoubleClick(newSelection);
             }
-            return new SelectionArgsXP(this.currentSelection, newSelection, this.mainList);
+            return new SelectionArguments(this.currentSelection, newSelection, this.mainList);
         }
 
-        public SelectionArgsXP ApplyModifiers(SelectionArgsXP args)
+        public SelectionArguments ApplyModifiers(SelectionArguments args)
         {
             var collection = GetModifiersToBeApplied(this.selectionType);
             foreach (var item in collection)
@@ -320,7 +367,7 @@ namespace RTSEngine.Manager
             }
         }
 
-        public HashSet<ISelectableObject> GetFinalSelection(SelectionArgsXP args)
+        public HashSet<ISelectableObject> GetFinalSelection(SelectionArguments args)
         {
             if (this.isPreSelection)
             {
@@ -382,7 +429,7 @@ namespace RTSEngine.Manager
             this.preSelection = new HashSet<ISelectableObject>();
         }
 
-        public virtual HashSet<ISelectableObject> PerformSelection(Vector3 finalPos)
+        public virtual HashSet<ISelectableObject> PerformSelection(Vector2 finalPos)
         {
             this.finalScreenPosition = finalPos;
             this.selectionType = GetSelectionType();
@@ -390,31 +437,30 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public void DoPreSelection(Vector3 finalPos)
+        public void DoPreSelection(Vector2 finalPos)
         {
             this.isPreSelection = true;
             HashSet<ISelectableObject> list = PerformSelection(finalPos);
             this.preSelection = GetUpdatedPreSelection(list);
         }
 
-        public void DoSelection(Vector3 finalPos)
+        public void DoSelection(Vector2 finalPos)
         {
             this.isPreSelection = false;
             UpdatePreSelectionStatus(this.preSelection, false);
 
             HashSet<ISelectableObject> list = PerformSelection(finalPos);
             this.currentSelection = GetUpdatedCurrentSelection(list);
-            signalBus.Fire<UpdateGUISignal>();
+            _signalBus.Fire(new SelectionChangeSignal() { Selection = this.currentSelection.ToArray() });
             RestartVariables();
         }
 
-        public void StartOfSelection(Vector3 initialPos)
+        public void StartOfSelection(Vector2 initialPos)
         {
             this.initialScreenPosition = initialPos;
             this.isSelecting = true;
         }
 
-
-
     }
+
 }

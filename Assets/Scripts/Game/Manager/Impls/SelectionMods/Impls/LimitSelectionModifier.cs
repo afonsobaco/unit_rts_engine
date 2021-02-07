@@ -5,13 +5,13 @@ namespace RTSEngine.Manager
 {
     public class LimitSelectionModifier : AbstractSelectionModifier
     {
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private ISelectionManager selectionManager;
 
-        public LimitSelectionModifier(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
+        public LimitSelectionModifier(ISelectionManager selectionManager)
         {
             this.selectionManager = selectionManager;
         }
-        public override SelectionArgsXP Apply(SelectionArgsXP args)
+        public override SelectionArguments Apply(SelectionArguments args)
         {
             args.ToBeAdded = new HashSet<ISelectableObject>(args.ToBeAdded.Take(selectionManager.GetSettings().Limit));
             return args;

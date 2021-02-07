@@ -8,16 +8,15 @@ namespace RTSEngine.Manager
     public class OrderOfSelectionModifier : AbstractDragSelectionModifier
     {
 
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private ISelectionManager selectionManager;
 
-        public OrderOfSelectionModifier(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
+        public OrderOfSelectionModifier(ISelectionManager selectionManager)
         {
             this.selectionManager = selectionManager;
         }
 
-        public override SelectionArgsXP Apply(SelectionArgsXP args)
+        public override SelectionArguments Apply(SelectionArguments args)
         {
-
             var aux = GetObjectsFromListOfPriority(args.ToBeAdded, selectionManager.GetSettings().Primary.ToList());
             if (aux.Count == 0)
             {
@@ -45,7 +44,10 @@ namespace RTSEngine.Manager
                     if (x is ISelectableObject)
                     {
                         var b = x as ISelectableObject;
-                        return b.SelectableObjectInfo.Type == type;
+                        if (b.SelectableObjectInfo)
+                        {
+                            return b.SelectableObjectInfo.Type == type;
+                        }
                     }
                     return false;
                 }));

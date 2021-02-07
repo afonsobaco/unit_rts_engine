@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace RTSEngine.Manager
@@ -8,9 +9,10 @@ namespace RTSEngine.Manager
     public interface IGUIManager
     {
         bool ClickedOnGUI(Vector3 mousePosition);
-        void OnSelectionChange();
-        void SetSelectionGrid(Transform selectionGridTransform);
-        void SetProfileInfo(Transform profileInfoTransform);
+        void SetSelectionGridPlaceholder(Transform selectionGridTransform);
+        void SetPortraitPlaceholder(Transform profileInfoTransform);
         void SetRaycaster(GraphicRaycaster graphicRaycaster);
+        void SetSelectedMiniaturePrefab(GameObject selectedMiniaturePrefab);
+        void SetSelectedPortraitPrefab(GameObject selectedPortraitPrefab);
     }
 }

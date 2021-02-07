@@ -13,12 +13,12 @@ namespace Tests
     public class AdditiveModifierTest
     {
         private AdditiveSelectionModifier modifier;
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private SelectionManager selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
+            selectionManager = Substitute.For<SelectionManager>();
             modifier = Substitute.ForPartsOf<AdditiveSelectionModifier>(new object[] { selectionManager });
 
         }
@@ -26,7 +26,7 @@ namespace Tests
         [Test]
         public void AdditiveModifierTestSimplePasses()
         {
-            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
+            SelectionArguments args = new SelectionArguments(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
             var result = modifier.Apply(args);
             Assert.AreEqual(args, result);
         }
@@ -40,7 +40,7 @@ namespace Tests
             HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
             HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
 
-            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
+            SelectionArguments args = new SelectionArguments(oldSelection, newSelection, mainList);
 
             args = modifier.Apply(args);
 

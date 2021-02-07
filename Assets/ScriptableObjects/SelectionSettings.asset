@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f44eaf53032f885459aff56a169d9b8d, type: 3}
   m_Name: SelectionSettings
   m_EditorClassIdentifier: 
+  minViewport: {x: 0, y: 0}
+  maxViewport: {x: 1, y: 1}
   primary: 00000000
   secondary: 01000000
   canGroup: 0000000001000000
   mode: 0
   limit: 20
+  restricted: 0000000001000000

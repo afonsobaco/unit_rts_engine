@@ -10,14 +10,14 @@ namespace RTSEngine.Manager
     public class AdditiveSelectionModifier : AbstractSelectionModifier
     {
 
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private ISelectionManager selectionManager;
 
-        public AdditiveSelectionModifier(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
+        public AdditiveSelectionModifier(ISelectionManager selectionManager)
         {
             this.selectionManager = selectionManager;
         }
 
-        public override SelectionArgsXP Apply(SelectionArgsXP args)
+        public override SelectionArguments Apply(SelectionArguments args)
         {
             if (selectionManager.IsAdditive())
             {
@@ -26,7 +26,7 @@ namespace RTSEngine.Manager
             return args;
         }
 
-        private void AddOrRemoveFromSelection(SelectionArgsXP args)
+        private void AddOrRemoveFromSelection(SelectionArguments args)
         {
             HashSet<ISelectableObject> aux = new HashSet<ISelectableObject>(args.OldSelection);
             aux.UnionWith(args.ToBeAdded);

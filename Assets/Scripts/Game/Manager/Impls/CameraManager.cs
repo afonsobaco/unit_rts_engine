@@ -1,86 +1,118 @@
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using Zenject;
 
 namespace RTSEngine.Manager
 {
-    public class CameraManager : ICameraManager
+    public class CameraManager : ICameraManager, IInitializable
     {
 
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
-        private ICameraSettings settings;
-
-        private Vector3 origin;
-        private bool isPanning;
+        private ICameraSettings _settings;
+        private Vector3 _origin;
+        private bool _isPanning;
         private float yPosMagicNumber = 7.08f;
-        private bool isCentering;
+        private bool _isCentering;
+        private Camera _mainCamera;
 
-        public Vector3 Origin { get => origin; set => origin = value; }
-        public bool IsPanning { get => isPanning; set => isPanning = value; }
-        public bool IsCentering { get => isCentering; set => isCentering = value; }
-        public ICameraSettings CameraSettings { get => settings; set => settings = value; }
-        public void DoProfileInfoClick(ProfileInfoClickSignal signal)
+        public Vector3 GetOrigin()
+        {
+            return _origin;
+        }
+
+        public void SetOrigin(Vector3 value)
+        {
+            _origin = value;
+        }
+
+        public bool IsPanning()
+        {
+            return _isPanning;
+        }
+
+        public void SetIsPanning(bool value)
+        {
+            _isPanning = value;
+        }
+
+        public bool IsCentering()
+        {
+            return _isCentering;
+        }
+
+        public void SetIsCentering(bool value)
+        {
+            _isCentering = value;
+        }
+
+        public ICameraSettings GetCameraSettings()
+        {
+            return _settings;
+        }
+
+        public void SetCameraSettings(ICameraSettings value)
+        {
+            _settings = value;
+        }
+
+        public void Initialize()
+        {
+            this._mainCamera = Camera.main;
+        }
+
+        public void DoProfileInfoClick(SelectedPortraitClickSignal signal)
         {
             Debug.Log("ProfileInfo Clicked: " + signal.Selectable.Index);
             //TODO ajust
         }
-        public CameraManager(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
+
+        public Vector3 DoCameraCentering(Vector3 position)
         {
-            this.selectionManager = selectionManager;
+            float z = position.z - GetCameraZDistance();
+            return new Vector3(position.x, _mainCamera.transform.position.y, (float)z);
         }
 
-        public Vector3 DoCameraCentering(UnityEngine.Camera mainCamera)
-        {
-            if (selectionManager.GetCurrentSelection().Count != 0)
-            {
-                Vector3 midPoint = GetSelectionMainPoint(mainCamera, selectionManager.GetCurrentSelection());
-                float z = midPoint.z - GetCameraZDistance(mainCamera);
-                return new Vector3(midPoint.x, mainCamera.transform.position.y, (float)z);
-            }
-            return mainCamera.transform.position;
-        }
-
-        private Vector3 GetSelectionMainPoint(UnityEngine.Camera mainCamera, HashSet<ISelectableObject> selectableObjectBehaviours)
+        private Vector3 GetSelectionMainPoint(HashSet<ISelectableObject> selectableObjectBehaviours)
         {
             if (selectableObjectBehaviours.Count == 0)
             {
-                return new Vector3(mainCamera.transform.position.x, 0, mainCamera.transform.position.z);
+                return new Vector3(_mainCamera.transform.position.x, 0, _mainCamera.transform.position.z);
             }
             return selectableObjectBehaviours.First().Position;
         }
 
-        public Vector3 DoCameraInputMovement(float horizontal, float vertical, Vector3 mousePosition, float deltaTime, UnityEngine.Camera mainCamera)
+        public Vector3 DoCameraInputMovement(float horizontal, float vertical, Vector3 mousePosition, float deltaTime)
         {
-            if ((Mathf.Abs(horizontal) > CameraSettings.AxisPressure || Mathf.Abs(vertical) > CameraSettings.AxisPressure))
+            if ((Mathf.Abs(horizontal) > GetCameraSettings().AxisPressure || Mathf.Abs(vertical) > GetCameraSettings().AxisPressure))
             {
-                return DoAxisCameraMovement(horizontal, vertical, deltaTime, mainCamera);
+                return DoAxisCameraMovement(horizontal, vertical, deltaTime);
             }
             else
             {
-                return DoMouseCameraMovement(mousePosition, deltaTime, mainCamera);
+                return DoMouseCameraMovement(mousePosition, deltaTime);
             }
         }
 
-        public Vector3 DoCameraPanning(Vector2 mouseAxis, float deltaTime, UnityEngine.Camera mainCamera)
+        public Vector3 DoCameraPanning(Vector2 mouseAxis, float deltaTime)
         {
             Vector3 desiredMove = new Vector3(-mouseAxis.x, 0, -mouseAxis.y);
-            desiredMove *= CameraSettings.PanSpeed * mainCamera.transform.position.y;
+            desiredMove *= GetCameraSettings().PanSpeed * _mainCamera.transform.position.y;
             desiredMove *= deltaTime;
-            desiredMove = Quaternion.Euler(new Vector3(0f, mainCamera.transform.eulerAngles.y, 0f)) * desiredMove;
-            desiredMove = mainCamera.transform.InverseTransformDirection(desiredMove);
+            desiredMove = Quaternion.Euler(new Vector3(0f, _mainCamera.transform.eulerAngles.y, 0f)) * desiredMove;
+            desiredMove = _mainCamera.transform.InverseTransformDirection(desiredMove);
             return desiredMove;
         }
 
-        public Vector3 DoCameraZooming(float y, float deltaTime, UnityEngine.Camera mainCamera)
+        public Vector3 DoCameraZooming(float y, float deltaTime)
         {
-            Vector3 vZoom = CalcVZoom(mainCamera.transform.position, mainCamera.transform.forward, CameraSettings.ZoomScale * deltaTime * y);
-            if (vZoom.y < CameraSettings.MinZoom)
+            Vector3 vZoom = CalcVZoom(_mainCamera.transform.position, _mainCamera.transform.forward, GetCameraSettings().ZoomScale * deltaTime * y);
+            if (vZoom.y < GetCameraSettings().MinZoom)
             {
-                vZoom = clampZoomOnY(mainCamera.transform.position, mainCamera.transform.forward, CameraSettings.MinZoom);
+                vZoom = clampZoomOnY(_mainCamera.transform.position, _mainCamera.transform.forward, GetCameraSettings().MinZoom);
             }
-            else if (vZoom.y > CameraSettings.MaxZoom)
+            else if (vZoom.y > GetCameraSettings().MaxZoom)
             {
-                vZoom = clampZoomOnY(mainCamera.transform.position, mainCamera.transform.forward, CameraSettings.MaxZoom);
+                vZoom = clampZoomOnY(_mainCamera.transform.position, _mainCamera.transform.forward, GetCameraSettings().MaxZoom);
             }
             return vZoom;
         }
@@ -96,48 +128,49 @@ namespace RTSEngine.Manager
             return CalcVZoom(position, forward, k);
         }
 
-        public Vector3 DoAxisCameraMovement(float horizontal, float vertical, float deltaTime, UnityEngine.Camera mainCamera)
+        public Vector3 DoAxisCameraMovement(float horizontal, float vertical, float deltaTime)
         {
-            float horizontalMovement = MoveCamera(horizontal, mainCamera.transform.position.y, deltaTime);
-            float verticalMovement = MoveCamera(vertical, mainCamera.transform.position.y, deltaTime);
+            float horizontalMovement = MoveCamera(horizontal, _mainCamera.transform.position.y, deltaTime);
+            float verticalMovement = MoveCamera(vertical, _mainCamera.transform.position.y, deltaTime);
 
             return new Vector3(horizontalMovement, 0, verticalMovement);
         }
 
-        public Vector3 ClampCameraPos(Camera mainCamera)
+        public Vector3 ClampCameraPos()
         {
-            float zDistance = GetCameraZDistance(mainCamera);
-            if (zDistance > CameraSettings.SizeFromMidPoint / 2)
+            float zDistance = GetCameraZDistance();
+            if (zDistance > GetCameraSettings().SizeFromMidPoint / 2)
             {
                 zDistance = 0;
             }
-            float clampedX = Mathf.Clamp(mainCamera.transform.position.x, -CameraSettings.SizeFromMidPoint + (zDistance), CameraSettings.SizeFromMidPoint - (zDistance));
-            float clampedZ = Mathf.Clamp(mainCamera.transform.position.z, -CameraSettings.SizeFromMidPoint - (zDistance / 2), CameraSettings.SizeFromMidPoint - zDistance);
-            return new Vector3(clampedX, mainCamera.transform.position.y, clampedZ);
+            float clampedX = Mathf.Clamp(_mainCamera.transform.position.x, -GetCameraSettings().SizeFromMidPoint + (zDistance), GetCameraSettings().SizeFromMidPoint - (zDistance));
+            float clampedZ = Mathf.Clamp(_mainCamera.transform.position.z, -GetCameraSettings().SizeFromMidPoint - (zDistance / 2), GetCameraSettings().SizeFromMidPoint - zDistance);
+            return new Vector3(clampedX, _mainCamera.transform.position.y, clampedZ);
         }
 
-        private Vector3 DoMouseCameraMovement(Vector3 mousePosition, float deltaTime, UnityEngine.Camera mainCamera)
+        private Vector3 DoMouseCameraMovement(Vector3 mousePosition, float deltaTime)
         {
-            if (!selectionManager.IsSelecting())
-            {
-                var mousePos = mainCamera.ScreenToViewportPoint(mousePosition);
-                if (mousePos.x >= 0 && mousePos.x <= 1 && mousePos.y >= 0 && mousePos.y <= 1)
-                {
-                    float x = DoMouseMovement(mousePos.x, mainCamera.transform.position.y, deltaTime);
-                    float z = DoMouseMovement(mousePos.y, mainCamera.transform.position.y, deltaTime);
-                    return new Vector3(x, 0f, z);
-                }
-            }
+            //TODO adjust
+            // if (!selectionManager.IsSelecting())
+            // {
+            //     var mousePos = _mainCamera.ScreenToViewportPoint(mousePosition);
+            //     if (mousePos.x >= 0 && mousePos.x <= 1 && mousePos.y >= 0 && mousePos.y <= 1)
+            //     {
+            //         float x = DoMouseMovement(mousePos.x, _mainCamera.transform.position.y, deltaTime);
+            //         float z = DoMouseMovement(mousePos.y, _mainCamera.transform.position.y, deltaTime);
+            //         return new Vector3(x, 0f, z);
+            //     }
+            // }
             return Vector3.zero;
         }
 
         private float DoMouseMovement(float position, float yPos, float deltaTime)
         {
-            if (position >= 0 && position < (CameraSettings.BoundriesOffset))
+            if (position >= 0 && position < (GetCameraSettings().BoundriesOffset))
             {
                 return MoveCamera(-1, yPos, deltaTime);
             }
-            else if (position <= 1 && position > (1 - CameraSettings.BoundriesOffset))
+            else if (position <= 1 && position > (1 - GetCameraSettings().BoundriesOffset))
             {
                 return MoveCamera(1, yPos, deltaTime);
             }
@@ -146,25 +179,25 @@ namespace RTSEngine.Manager
 
         public float MoveCamera(float value, float yPos, float deltaTime)
         {
-            var speed = (yPos * CameraSettings.CameraSpeed) + yPosMagicNumber; //magic number!
+            var speed = (yPos * GetCameraSettings().CameraSpeed) + yPosMagicNumber; //magic number!
             return value * speed * deltaTime;
         }
 
-        public float GetCameraZDistance(UnityEngine.Camera mainCamera)
+        public float GetCameraZDistance()
         {
-            float angle = 90 - mainCamera.transform.rotation.eulerAngles.x;
+            float angle = 90 - _mainCamera.transform.rotation.eulerAngles.x;
             angle = Mathf.Clamp(angle, 0, 80); // prevent weird angles
-            return (mainCamera.transform.position.y * Mathf.Tan(angle * Mathf.Deg2Rad));
+            return (_mainCamera.transform.position.y * Mathf.Tan(angle * Mathf.Deg2Rad));
         }
 
-        public Vector3 GetMinScreenBoundries(UnityEngine.Camera mainCamera)
+        public Vector3 GetMinScreenBoundries()
         {
-            return mainCamera.ViewportToScreenPoint(CameraSettings.MinViewportPoint);
+            return _mainCamera.ViewportToScreenPoint(GetCameraSettings().MinViewportPoint);
         }
 
-        public Vector3 GetMaxScreenBoundries(UnityEngine.Camera mainCamera)
+        public Vector3 GetMaxScreenBoundries()
         {
-            return mainCamera.ViewportToScreenPoint(CameraSettings.MaxViewportPoint);
+            return _mainCamera.ViewportToScreenPoint(GetCameraSettings().MaxViewportPoint);
         }
 
     }

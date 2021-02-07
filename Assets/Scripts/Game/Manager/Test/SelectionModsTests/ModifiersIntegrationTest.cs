@@ -8,20 +8,18 @@ using NSubstitute;
 
 namespace Tests
 {
-
     [TestFixture]
     public class ModifiersIntegrationTest
     {
-
         HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(10);
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private SelectionManager selectionManager;
         private ISelectionSettings settings;
 
         [SetUp]
         public void SetUp()
         {
             mainList = TestUtils.GetSomeObjects(10);
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
+            selectionManager = Substitute.For<SelectionManager>();
             settings = Substitute.For<ISelectionSettings>();
             settings.Restricted.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
             settings.Limit.Returns(10);
@@ -55,13 +53,11 @@ namespace Tests
             selectionManager.IsAdditive().Returns(isAdditive);
             selectionManager.IsSameType().Returns(isSameType);
 
-            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
+            SelectionArguments args = new SelectionArguments(oldSelection, newSelection, mainList);
 
             foreach (var item in GetModifiersBySelectionType(type, new HashSet<int[]> { new int[] { 0, 1 }, new int[] { 2, 3 }, new int[] { 4, 5, 6 } }))
             {
-                Debug.Log(item.GetType().Name);
                 args = item.Apply(args);
-                args.ToBeAdded.ToList().ForEach(x => Debug.Log(x.Index));
             }
             CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
         }
@@ -93,10 +89,10 @@ namespace Tests
         {
             SameTypeSelectionModifier modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>(new object[] { selectionManager });
 
-            modifier.When(x => x.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>())).DoNotCallBase();
-            modifier.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>()).Returns(args =>
+            modifier.When(x => x.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArguments>())).DoNotCallBase();
+            modifier.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArguments>()).Returns(args =>
                 {
-                    var index = (args[0] as SelectionArgsXP).NewSelection.First().Index;
+                    var index = (args[0] as SelectionArguments).NewSelection.First().Index;
                     foreach (var item in sameType)
                     {
                         if (item.Contains(index))

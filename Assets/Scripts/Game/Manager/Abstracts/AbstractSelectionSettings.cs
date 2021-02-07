@@ -6,6 +6,12 @@ namespace RTSEngine.Manager
     public abstract class AbstractSelectionSettings : ScriptableObject, ISelectionSettings
     {
 
+
+        [Space]
+        [Header("Screen boundries")]
+        [SerializeField] private Vector2 minViewport;
+        [SerializeField] private Vector2 maxViewport;
+
         [Space]
         [Header("Order of selection")]
         [SerializeField] private ObjectTypeEnum[] primary;
@@ -30,6 +36,9 @@ namespace RTSEngine.Manager
         public ObjectTypeEnum[] Secondary => secondary;
         public SameTypeSelectionModeEnum Mode => mode;
         public ObjectTypeEnum[] Restricted => restricted;
+        public Vector2 MinViewport => minViewport;
+        public Vector2 MaxViewport => maxViewport;
+
     }
 
 }

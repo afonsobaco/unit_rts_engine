@@ -10,87 +10,117 @@ namespace RTSEngine.Manager
 {
     public class GUIManager : IGUIManager
     {
-        private Transform _selectionGridTransform;
-        private Transform _profileInfoTransform;
-        private SelectedInfoBehaviour[] miniatureList;
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private Transform _selectionGridPlaceholder;
+        private Transform _portraitPlaceholder;
+        private GameObject _selectedMiniaturePrefab;
+        private GameObject _selectedPortraitPrefab;
         private GraphicRaycaster raycaster;
         private EventSystem eventSystem;
         private PointerEventData pointerEventData;
 
-        //TODO remover selection manager (create a GUI installer)
-        public GUIManager(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
+        public void OnSelectionChange(SelectionChangeSignal signal)
         {
-            this.selectionManager = selectionManager;
+            this.UpdateSelection(signal.Selection);
         }
 
-        public void OnSelectionChange()
+        private void UpdateSelection(ISelectableObject[] selection)
         {
-            this.UpdateSelection();
+            List<ISelectableObject> orderedSelection = GetOrderedSelection(selection);
+            UpdateMiniatureGrid(orderedSelection);
+            UpdatePortrait(orderedSelection);
         }
 
-        private void UpdateSelection()
+        private void UpdatePortrait(List<ISelectableObject> selection)
         {
-            List<ISelectableObject> selection = GetOrderedSelection();
-
-            UpdateSelectionWithNew(selection);
-        }
-
-        private void UpdateSelectionWithNew(List<ISelectableObject> selection)
-        {
-            UpdateMiniatureList(selection);
-            UpdateProfileInfo();
-
-        }
-
-        private void UpdateProfileInfo()
-        {
-            //TODO get From "tab" selection
-            SelectedInfoBehaviour profileInfo = null;
-            if (miniatureList.Length > 0)
+            //TODO get from TAB
+            ISelectableObject selected = null;
+            if (selection.Count > 0)
             {
-                var primary = miniatureList.First().Selected;
-                profileInfo = this._profileInfoTransform.GetComponent<SelectedInfoBehaviour>();
-                profileInfo.Selected = primary;
+                selected = selection.First();
             }
-            UpdateMiniature(profileInfo);
+            GetPortrait(selected);
         }
 
-        private void UpdateMiniatureList(List<ISelectableObject> selection)
+        private void UpdateMiniatureGrid(List<ISelectableObject> selection)
         {
-            for (var i = 0; i < miniatureList.Length; i++)
+            ClearGrid();
+            if (selection.Count > 1)
             {
-                if (i < selection.Count)
+                _selectionGridPlaceholder.gameObject.SetActive(true);
+                for (var i = 0; i < selection.Count; i++)
                 {
-                    miniatureList[i].Selected = selection.ElementAt(i);
+                    AddToGrid(selection.ElementAt(i));
                 }
-                else
-                {
-                    miniatureList[i].Selected = null;
-                }
-                UpdateMiniature(miniatureList[i]);
-            }
-        }
-
-        private void UpdateMiniature(SelectedInfoBehaviour miniature)
-        {
-            if (miniature.Selected != null)
-            {
-                miniature.gameObject.SetActive(true);
-                ISelectableObjectInfo selectableObjectInfo = miniature.Selected.SelectableObjectInfo;
-                miniature.Picture.sprite = selectableObjectInfo.Picture;
-                miniature.LifeBar.gameObject.SetActive(selectableObjectInfo.Life.Enabled);
-                miniature.ManaBar.gameObject.SetActive(selectableObjectInfo.Mana.Enabled);
-                UpdateMiniatureStatusBar(miniature.ManaBar, selectableObjectInfo.Mana);
-                UpdateMiniatureStatusBar(miniature.LifeBar, selectableObjectInfo.Life);
             }
             else
             {
-                miniature.gameObject.SetActive(false);
+                _selectionGridPlaceholder.gameObject.SetActive(false);
+            }
+
+        }
+
+        private void GetPortrait(ISelectableObject selected)
+        {
+            if (selected != null)
+            {
+                _portraitPlaceholder.gameObject.SetActive(true);
+                var selectedGUIPortrait = _portraitPlaceholder.gameObject.GetComponentInChildren<GUISelectedPortraitBehaviour>();
+                if (!selectedGUIPortrait)
+                {
+                    selectedGUIPortrait = CreatePortrait();
+                }
+                AdjustSelected(selected, selectedGUIPortrait);
+            }
+            else
+            {
+                _portraitPlaceholder.gameObject.SetActive(false);
             }
         }
 
-        private void UpdateMiniatureStatusBar(StatusBarBehaviour statusBar, ObjectStatus objectStatus)
+        private GUISelectedPortraitBehaviour CreatePortrait()
+        {
+            GameObject miniature = GameObject.Instantiate(_selectedPortraitPrefab);
+            miniature.transform.SetParent(_portraitPlaceholder, false);
+            var selectedGUIPortrait = miniature.GetComponent<GUISelectedPortraitBehaviour>();
+            selectedGUIPortrait.gameObject.SetActive(true);
+            return selectedGUIPortrait;
+        }
+
+        private GUISelectedMiniatureBehaviour CreateMiniature()
+        {
+            GameObject miniature = GameObject.Instantiate(_selectedMiniaturePrefab);
+            miniature.transform.SetParent(_selectionGridPlaceholder, false);
+            var selectedGUIMiniature = miniature.GetComponent<GUISelectedMiniatureBehaviour>();
+            selectedGUIMiniature.gameObject.SetActive(true);
+            return selectedGUIMiniature;
+        }
+
+        private void ClearGrid()
+        {
+            foreach (Transform child in _selectionGridPlaceholder)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
+
+        private void AddToGrid(ISelectableObject selected)
+        {
+            GUISelectedMiniatureBehaviour selectedGUIMiniature = CreateMiniature();
+            AdjustSelected(selected, selectedGUIMiniature);
+        }
+
+        private void AdjustSelected(ISelectableObject selected, AbstractGUISelectedInfoBehaviour selectedGUIMiniature)
+        {
+            selectedGUIMiniature.Selected = selected;
+            var selectableObjectInfo = selected.SelectableObjectInfo;
+            selectedGUIMiniature.Picture.sprite = selectableObjectInfo.Picture;
+            selectedGUIMiniature.LifeBar.gameObject.SetActive(selectableObjectInfo.Life.Enabled);
+            selectedGUIMiniature.ManaBar.gameObject.SetActive(selectableObjectInfo.Mana.Enabled);
+            UpdateMiniatureStatusBar(selectedGUIMiniature.ManaBar, selectableObjectInfo.Mana);
+            UpdateMiniatureStatusBar(selectedGUIMiniature.LifeBar, selectableObjectInfo.Life);
+        }
+
+        private void UpdateMiniatureStatusBar(GUIStatusBarBehaviour statusBar, ObjectStatus objectStatus)
         {
             if (statusBar.enabled)
             {
@@ -99,10 +129,10 @@ namespace RTSEngine.Manager
             }
         }
 
-        private List<ISelectableObject> GetOrderedSelection()
+        private List<ISelectableObject> GetOrderedSelection(ISelectableObject[] selection)
         {
             List<ISelectableObject> list = new List<ISelectableObject>();
-            var grouped = selectionManager.GetCurrentSelection().GroupBy(x => x, new EqualityComparer());
+            var grouped = selection.GroupBy(x => x, new EqualityComparer());
             var sorted = grouped.ToList();
             sorted.Sort(new ObjectComparer());
             foreach (var item in sorted)
@@ -138,20 +168,29 @@ namespace RTSEngine.Manager
             }
         }
 
-        public void SetSelectionGrid(Transform selectionGridTransform)
+        public void SetSelectionGridPlaceholder(Transform selectionGridTransform)
         {
-            this._selectionGridTransform = selectionGridTransform;
-            this.miniatureList = this._selectionGridTransform.GetComponentsInChildren<SelectedInfoBehaviour>(true);
+            this._selectionGridPlaceholder = selectionGridTransform;
         }
 
-        public void SetProfileInfo(Transform profileInfoTransform)
+        public void SetPortraitPlaceholder(Transform profileInfoTransform)
         {
-            this._profileInfoTransform = profileInfoTransform;
+            this._portraitPlaceholder = profileInfoTransform;
         }
 
         public void SetRaycaster(GraphicRaycaster raycaster)
         {
             this.raycaster = raycaster;
+        }
+
+        public void SetSelectedMiniaturePrefab(GameObject selectedMiniaturePrefab)
+        {
+            this._selectedMiniaturePrefab = selectedMiniaturePrefab;
+        }
+
+        public void SetSelectedPortraitPrefab(GameObject selectedPortraitPrefab)
+        {
+            this._selectedPortraitPrefab = selectedPortraitPrefab;
         }
 
         private class ObjectComparer : IComparer<IGrouping<ISelectableObject, ISelectableObject>>

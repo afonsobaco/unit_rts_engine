@@ -8,13 +8,13 @@ namespace RTSEngine.Manager
     public class SameTypeSelectionModifier : AbstractClickSelectionModifier
     {
 
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
-        public SameTypeSelectionModifier(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
+        private ISelectionManager selectionManager;
+        public SameTypeSelectionModifier(ISelectionManager selectionManager)
         {
             this.selectionManager = selectionManager;
         }
 
-        public override SelectionArgsXP Apply(SelectionArgsXP args)
+        public override SelectionArguments Apply(SelectionArguments args)
         {
             if (selectionManager.IsSameType() && args.ToBeAdded.Count == 1)
             {
@@ -24,7 +24,7 @@ namespace RTSEngine.Manager
             return args;
         }
 
-        public virtual HashSet<ISelectableObject> GetAllFromSameTypeThatCanGroup(SelectionArgsXP args)
+        public virtual HashSet<ISelectableObject> GetAllFromSameTypeThatCanGroup(SelectionArguments args)
         {
             ISelectableObject selected = args.ToBeAdded.First();
             HashSet<ISelectableObject> allFromSameType = new HashSet<ISelectableObject>();

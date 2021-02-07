@@ -9,28 +9,36 @@ namespace RTSEngine.Manager
 {
     public class GroupRestrictorSelectionModifier : AbstractSelectionModifier
     {
-        private readonly ISelectionManager<ISelectableObject, SelectionTypeEnum> _selectionManager;
-        public GroupRestrictorSelectionModifier(ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager)
+        private SelectionManager _selectionManager;
+        public GroupRestrictorSelectionModifier(SelectionManager selectionManager)
         {
             this._selectionManager = selectionManager;
         }
 
-        public override SelectionArgsXP Apply(SelectionArgsXP args)
+        public override SelectionArguments Apply(SelectionArguments args)
         {
             return GroupRestrictorSelection(args);
         }
 
-        public SelectionArgsXP GroupRestrictorSelection(SelectionArgsXP args)
+        public SelectionArguments GroupRestrictorSelection(SelectionArguments args)
         {
             ObjectTypeEnum[] canGroup = this._selectionManager.GetSettings().Restricted;
             var onlyRestrictedObject = args.ToBeAdded.ToList().TrueForAll(x =>
             {
-                return !canGroup.Contains(x.SelectableObjectInfo.Type);
+                if (x.SelectableObjectInfo)
+                    return !canGroup.Contains(x.SelectableObjectInfo.Type);
+                return false;
             });
 
             if (!onlyRestrictedObject)
             {
-                args.ToBeAdded.RemoveWhere(x => !canGroup.Contains(x.SelectableObjectInfo.Type));
+
+                args.ToBeAdded.RemoveWhere(x =>
+                {
+                    if (x.SelectableObjectInfo)
+                        return !canGroup.Contains(x.SelectableObjectInfo.Type);
+                    return false;
+                });
             }
 
             return args;

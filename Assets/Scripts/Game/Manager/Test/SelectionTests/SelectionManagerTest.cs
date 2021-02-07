@@ -1,13 +1,10 @@
-﻿using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
+﻿using NSubstitute;
 using NUnit.Framework;
-using UnityEngine;
-using RTSEngine.Manager;
 using RTSEngine.Core;
-using NSubstitute;
-using Tests.Utils;
-using System;
+using RTSEngine.Manager;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Tests.Manager
 {
@@ -60,7 +57,7 @@ namespace Tests.Manager
             return result;
         }
 
-        private void AssertArgs(SelectionArgsXP expected, SelectionArgsXP actual)
+        private void AssertArgs(SelectionArguments expected, SelectionArguments actual)
         {
             CollectionAssert.AreEquivalent(expected.OldSelection, actual.OldSelection);
             CollectionAssert.AreEquivalent(expected.NewSelection, actual.NewSelection);
@@ -196,7 +193,7 @@ namespace Tests.Manager
 
             var args = manager.GetSelectionArgs(newSelection);
 
-            SelectionArgsXP expected = new SelectionArgsXP(currentSelection, newSelection, mainList);
+            SelectionArguments expected = new SelectionArguments(currentSelection, newSelection, mainList);
             AssertArgs(args, expected);
         }
 
@@ -214,7 +211,7 @@ namespace Tests.Manager
 
             var args = manager.GetSelectionArgs(newSelection);
 
-            SelectionArgsXP expected = new SelectionArgsXP(new HashSet<ISelectableObject>(), newSelection, mainList);
+            SelectionArguments expected = new SelectionArguments(new HashSet<ISelectableObject>(), newSelection, mainList);
             AssertArgs(args, expected);
             Assert.True(manager.IsSameType());
         }
@@ -234,7 +231,7 @@ namespace Tests.Manager
             var args = manager.GetSelectionArgs(newSelection);
 
             HashSet<ISelectableObject> expectedCurrent = GetSelectionListFromMainList(mainList, 0);
-            SelectionArgsXP expected = new SelectionArgsXP(expectedCurrent, newSelection, mainList);
+            SelectionArguments expected = new SelectionArguments(expectedCurrent, newSelection, mainList);
             AssertArgs(args, expected);
             Assert.True(manager.IsSameType());
         }
@@ -292,7 +289,7 @@ namespace Tests.Manager
             GetModsToTest(selectionType, howManyAll, howManyClick, howManyDrag, howManyKey, mods, expectedMods);
             manager.When(x => x.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>())).DoNotCallBase();
             manager.GetModifiersToBeApplied(Arg.Any<SelectionTypeEnum>()).Returns(expectedMods);
-            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
+            SelectionArguments args = new SelectionArguments(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
 
             var result = manager.ApplyModifiers(args);
 
@@ -321,7 +318,7 @@ namespace Tests.Manager
                 item.IsSelected = true;
             }
 
-            SelectionArgsXP args = new SelectionArgsXP(currentSelection, newSelection, mainList);
+            SelectionArguments args = new SelectionArguments(currentSelection, newSelection, mainList);
             var result = manager.GetFinalSelection(args);
 
             CollectionAssert.AreEquivalent(args.ToBeAdded, result);
@@ -351,7 +348,7 @@ namespace Tests.Manager
                 item.IsSelected = true;
             }
 
-            SelectionArgsXP args = new SelectionArgsXP(currentSelection, newSelection, mainList);
+            SelectionArguments args = new SelectionArguments(currentSelection, newSelection, mainList);
             var result = manager.GetFinalSelection(args);
 
             CollectionAssert.AreEquivalent(args.ToBeAdded, result);

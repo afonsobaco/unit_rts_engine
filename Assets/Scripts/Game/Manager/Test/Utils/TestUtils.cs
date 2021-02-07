@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using NSubstitute;
-using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Manager;
 
@@ -28,7 +26,7 @@ namespace Tests.Utils
             for (var i = 0; i < qtt; i++)
             {
                 ISelectableObject item = Substitute.For<ISelectableObject>();
-                item.SelectableObjectInfo = Substitute.ForPartsOf<SelectableObjectInfoSO>();
+                item.SelectableObjectInfo = Substitute.ForPartsOf<GUISelectableObjectInfoSO>();
                 item.Index = i;
                 item.IsCompatible(Arg.Any<ISelectableObject>()).Returns((x) =>
                 {

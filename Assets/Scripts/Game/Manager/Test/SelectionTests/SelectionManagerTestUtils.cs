@@ -34,14 +34,14 @@ namespace Tests.Manager
             return obj;
         }
 
-        public static SelectionArgsXP GetDefaultArgs()
+        public static SelectionArguments GetDefaultArgs()
         {
             return GetDefaultArgs(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
         }
 
-        public static SelectionArgsXP GetDefaultArgs(HashSet<ISelectableObject> oldSelection, HashSet<ISelectableObject> newSelection, HashSet<ISelectableObject> mainList)
+        public static SelectionArguments GetDefaultArgs(HashSet<ISelectableObject> oldSelection, HashSet<ISelectableObject> newSelection, HashSet<ISelectableObject> mainList)
         {
-            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
+            SelectionArguments args = new SelectionArguments(oldSelection, newSelection, mainList);
             return args;
         }
 
@@ -52,7 +52,7 @@ namespace Tests.Manager
             {
                 ISelectionModifier mod = Substitute.For<ISelectionModifier>();
                 mod.Type.Returns(type);
-                mod.Apply(Arg.Any<SelectionArgsXP>()).Returns(x => x[0]);
+                mod.Apply(Arg.Any<SelectionArguments>()).Returns(x => x[0]);
                 list.Add(mod);
             }
             return list;

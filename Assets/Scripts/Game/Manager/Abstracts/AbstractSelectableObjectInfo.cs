@@ -6,7 +6,7 @@ using UnityEngine;
 namespace RTSEngine.Manager
 {
 
-    public class AbstractSelectableObjectInfo : ScriptableObject, ISelectableObjectInfo
+    public class AbstractSelectableObjectInfo : ScriptableObject, IGUISelectableObjectInfo
     {
 
         [Space]

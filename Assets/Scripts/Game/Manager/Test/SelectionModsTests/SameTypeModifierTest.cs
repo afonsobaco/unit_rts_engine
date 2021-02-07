@@ -12,12 +12,12 @@ namespace Tests
     {
         private SameTypeSelectionModifier modifier;
         private ISelectionSettings settings;
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private SelectionManager selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
+            selectionManager = Substitute.For<SelectionManager>();
             settings = Substitute.For<ISelectionSettings>();
             selectionManager.GetSettings().Returns(settings);
             settings.CanGroup.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
@@ -28,7 +28,7 @@ namespace Tests
         [Test]
         public void SameTypeModifierTestSimplePasses()
         {
-            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
+            SelectionArguments args = new SelectionArguments(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
 
             var result = modifier.Apply(args);
             Assert.AreEqual(args, result);
@@ -57,9 +57,9 @@ namespace Tests
                     sameTypeList = TestUtils.GetListByIndex(selectionStruct.additionalInfo.group_odds, mainList); ;
                 }
             }
-            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
-            modifier.When(x => x.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>())).DoNotCallBase();
-            modifier.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArgsXP>()).Returns(sameTypeList);
+            SelectionArguments args = new SelectionArguments(oldSelection, newSelection, mainList);
+            modifier.When(x => x.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArguments>())).DoNotCallBase();
+            modifier.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArguments>()).Returns(sameTypeList);
 
             args = modifier.Apply(args);
 
@@ -79,7 +79,7 @@ namespace Tests
             modifier.WhenForAnyArgs(x => x.GetAllFromSameType(default, default, default, default, default)).DoNotCallBase();
             modifier.GetAllFromSameType(default, default, default, default, default).ReturnsForAnyArgs(expected);
 
-            SelectionArgsXP args = new SelectionArgsXP(default, newSelection, mainList);
+            SelectionArguments args = new SelectionArguments(default, newSelection, mainList);
             var result = modifier.GetAllFromSameTypeThatCanGroup(args);
 
             CollectionAssert.AreEquivalent(expected, result);

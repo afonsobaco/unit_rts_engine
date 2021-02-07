@@ -13,13 +13,13 @@ namespace Tests
     public class OrderOfSelectionModifierTest
     {
         private OrderOfSelectionModifier modifier;
-        private ISelectionManager<ISelectableObject, SelectionTypeEnum> selectionManager;
+        private SelectionManager selectionManager;
         private ISelectionSettings settings;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<ISelectionManager<ISelectableObject, SelectionTypeEnum>>();
+            selectionManager = Substitute.For<SelectionManager>();
             settings = Substitute.For<ISelectionSettings>();
             settings.Primary.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT });
             settings.Secondary.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.BUILDING });
@@ -30,7 +30,7 @@ namespace Tests
         [Test]
         public void OrderOfSelectionTestSimplePasses()
         {
-            SelectionArgsXP args = new SelectionArgsXP(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
+            SelectionArguments args = new SelectionArguments(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
             var result = modifier.Apply(args);
             Assert.AreEqual(args, result);
         }
@@ -44,7 +44,7 @@ namespace Tests
             HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
             HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
 
-            SelectionArgsXP args = new SelectionArgsXP(oldSelection, newSelection, mainList);
+            SelectionArguments args = new SelectionArguments(oldSelection, newSelection, mainList);
 
             mainList.ToList().ForEach(x =>
             {
