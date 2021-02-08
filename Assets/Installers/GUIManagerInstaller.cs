@@ -15,6 +15,7 @@ namespace RTSEngine.Installers
         [SerializeField] private GameObject selectedMiniaturePrefab;
         [SerializeField] private GameObject selectedPortraitPrefab;
         [SerializeField] private GraphicRaycaster raycaster;
+        [SerializeField] private ObjectTypeEnum[] canShowStatus;
         private IGUIManager _GUIManager;
 
         public override void InstallBindings()
@@ -54,6 +55,7 @@ namespace RTSEngine.Installers
                 this._GUIManager.SetPortraitPlaceholder(portraitPlaceHolder.transform);
                 this._GUIManager.SetSelectedMiniaturePrefab(selectedMiniaturePrefab);
                 this._GUIManager.SetSelectedPortraitPrefab(selectedPortraitPrefab);
+                this._GUIManager.SetCanShowStatus(canShowStatus);
             }
         }
     }

@@ -150,6 +150,7 @@ MonoBehaviour:
   selectedPortraitPrefab: {fileID: 8799585437329364735, guid: ca00920f095514b40ac419ff72d52757,
     type: 3}
   raycaster: {fileID: 294914220309777143}
+  canShowStatus: 0000000001000000
 --- !u!1001 &294914219997464467
 PrefabInstance:
   m_ObjectHideFlags: 0

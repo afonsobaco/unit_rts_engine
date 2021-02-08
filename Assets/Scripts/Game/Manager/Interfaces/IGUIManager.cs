@@ -16,5 +16,6 @@ namespace RTSEngine.Manager
         void ChangeGroup(bool back);
         void DoClickOnElement(List<RaycastResult> results, KeyButtonType type);
         List<RaycastResult> GetGUIElementsClicked(Vector3 mousePosition);
+        void SetCanShowStatus(ObjectTypeEnum[] canShowStatus);
     }
 }

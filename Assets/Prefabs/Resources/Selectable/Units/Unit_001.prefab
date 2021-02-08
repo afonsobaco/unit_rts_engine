@@ -423,14 +423,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 804b92ea658ce284f9bae1ed480648d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionMark: {fileID: 4782704107103593911}
-  preSelectionMark: {fileID: 3350248310140437384}
-  lifeStatus:
-    value: 75
-  manaStatus:
-    value: 0
-  selectableObjectInfo: {fileID: 11400000, guid: 47ef24c4665fd3b409215600f7fcd762,
+  _selectionMark: {fileID: 4782704107103593911}
+  _preSelectionMark: {fileID: 3350248310140437384}
+  _selectableObjectInfo: {fileID: 11400000, guid: 47ef24c4665fd3b409215600f7fcd762,
     type: 2}
+  _isImortal: 0
 --- !u!136 &3946025015106541936
 CapsuleCollider:
   m_ObjectHideFlags: 0

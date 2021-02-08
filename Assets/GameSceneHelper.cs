@@ -23,7 +23,7 @@ public class GameSceneHelper : MonoBehaviour
             if (a.Count > 0)
             {
                 Debug.Log("Damage!");
-                a.ToList().ForEach(x => x.LifeStatus.CurrentValue -= 5);
+                a.ToList().ForEach(x => x.LifeStatus.CurrentValue -= 15);
             }
         }
     }

@@ -10,10 +10,7 @@ namespace RTSEngine.Manager
         GUISelectableObjectInfoSO SelectableObjectInfo { get; set; }
         ObjectStatus LifeStatus { get; set; }
         ObjectStatus ManaStatus { get; set; }
-
         bool IsCompatible(ISelectable other);
-
-
     }
 
 

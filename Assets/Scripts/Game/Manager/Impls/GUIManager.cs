@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Zenject;
 
+//TODO Clean code this
 namespace RTSEngine.Manager
 {
     //TODO tests
@@ -24,6 +25,7 @@ namespace RTSEngine.Manager
         private bool _additive;
         private bool _tabbed;
         private SignalBus _signalBus;
+        private ObjectTypeEnum[] _canShowStatus;
 
         [Inject]
         public void Construct(SignalBus signalBus)
@@ -120,15 +122,26 @@ namespace RTSEngine.Manager
 
         private void UpdateItem(AbstractGUISelectedInfoBehaviour item)
         {
-            if (item is GUISelectedMiniatureBehaviour)
+            SelectableObjectBehaviour selected = item.Selected as SelectableObjectBehaviour;
+            if (selected == null || selected.IsDestroyed)
             {
-                ((GUISelectedMiniatureBehaviour)item).SelectionBorder.enabled = item.Selected.IsCompatible(_highlighted);
+                GameObject.Destroy(item.gameObject);
             }
-            item.Picture.sprite = item.Selected.SelectableObjectInfo.Picture;
-            item.LifeBar.gameObject.SetActive(item.Selected.LifeStatus.Enabled);
-            item.ManaBar.gameObject.SetActive(item.Selected.ManaStatus.Enabled);
-            UpdateMiniatureStatusBar(item.ManaBar, item.Selected.ManaStatus);
-            UpdateMiniatureStatusBar(item.LifeBar, item.Selected.LifeStatus);
+            else
+            {
+                if (item is GUISelectedMiniatureBehaviour)
+                {
+                    ((GUISelectedMiniatureBehaviour)item).SelectionBorder.enabled = selected.IsCompatible(_highlighted);
+                }
+                item.Picture.sprite = selected.SelectableObjectInfo.Picture;
+                if (!this._canShowStatus.ToList().Contains(item.Selected.SelectableObjectInfo.Type))
+                {
+                    selected.ManaStatus.Enabled = false;
+                    selected.LifeStatus.Enabled = false;
+                }
+                UpdateMiniatureStatusBar(item.ManaBar, selected.ManaStatus);
+                UpdateMiniatureStatusBar(item.LifeBar, selected.LifeStatus);
+            }
         }
 
         private ISelectableObject GetPreviousNextHighlightedGroup(List<ISelectableObject> selectionAsList, bool back)
@@ -264,6 +277,7 @@ namespace RTSEngine.Manager
 
         private void UpdateMiniatureStatusBar(GUIStatusBarBehaviour statusBar, ObjectStatus objectStatus)
         {
+            statusBar.gameObject.SetActive(objectStatus.Enabled);
             if (statusBar.enabled)
             {
                 statusBar.StatusText.text = String.Format("{0}/{1}", objectStatus.CurrentValue, objectStatus.MaxValue);
@@ -325,6 +339,11 @@ namespace RTSEngine.Manager
         private GUISelectedMiniatureBehaviour[] GetGridList()
         {
             return _selectionGridPlaceholder.GetComponentsInChildren<GUISelectedMiniatureBehaviour>();
+        }
+
+        public void SetCanShowStatus(ObjectTypeEnum[] canShowStatus)
+        {
+            this._canShowStatus = canShowStatus;
         }
     }
 

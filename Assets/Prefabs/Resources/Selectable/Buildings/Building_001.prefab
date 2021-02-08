@@ -78,10 +78,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 804b92ea658ce284f9bae1ed480648d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionMark: {fileID: 2272579343685930454}
-  preSelectionMark: {fileID: 8333981215098563561}
-  selectableObjectInfo: {fileID: 11400000, guid: a879d128f7bb04b4e9a62c0ef27cfc4c,
+  _selectionMark: {fileID: 2272579343685930454}
+  _preSelectionMark: {fileID: 8333981215098563561}
+  _selectableObjectInfo: {fileID: 11400000, guid: a879d128f7bb04b4e9a62c0ef27cfc4c,
     type: 2}
+  _isImortal: 0
 --- !u!136 &6880706898765923159
 CapsuleCollider:
   m_ObjectHideFlags: 0
