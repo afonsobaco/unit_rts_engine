@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NSubstitute;
 using RTSEngine.Core;
+using UnityEngine;
 using RTSEngine.Manager;
 
 namespace Tests.Utils
@@ -26,7 +27,8 @@ namespace Tests.Utils
             for (var i = 0; i < qtt; i++)
             {
                 ISelectableObject item = Substitute.For<ISelectableObject>();
-                item.SelectableObjectInfo = Substitute.ForPartsOf<GUISelectableObjectInfoSO>();
+                item.SelectableObjectInfo = ScriptableObject.CreateInstance<GUISelectableObjectInfoSO>();
+                item.SelectableObjectInfo.TypeStr = "";
                 item.Index = i;
                 item.IsCompatible(Arg.Any<ISelectableObject>()).Returns((x) =>
                 {

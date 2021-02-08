@@ -12,14 +12,14 @@ namespace Tests
     public class ModifiersIntegrationTest
     {
         HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(10);
-        private SelectionManager selectionManager;
+        private ISelectionManager selectionManager;
         private ISelectionSettings settings;
 
         [SetUp]
         public void SetUp()
         {
             mainList = TestUtils.GetSomeObjects(10);
-            selectionManager = Substitute.For<SelectionManager>();
+            selectionManager = Substitute.For<ISelectionManager>();
             settings = Substitute.For<ISelectionSettings>();
             settings.Restricted.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
             settings.Limit.Returns(10);
@@ -41,6 +41,7 @@ namespace Tests
                 {
                     x.SelectableObjectInfo.Type = ObjectTypeEnum.CONSUMABLE;
                 }
+                x.LifeStatus = new ObjectStatus();
             });
         }
 
@@ -70,6 +71,7 @@ namespace Tests
             modifiers.Add(GetDefaultAdditiveMod());
             modifiers.Add(GetDefaultGroupRestrictorMod());
             modifiers.Add(GetDefaultLimitMod());
+            modifiers.Add(GetDefaultGroupMod());
             return modifiers.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
         }
 
@@ -116,6 +118,12 @@ namespace Tests
         private ISelectionModifier GetDefaultLimitMod()
         {
             LimitSelectionModifier modifier = Substitute.ForPartsOf<LimitSelectionModifier>(new object[] { selectionManager });
+            return modifier;
+        }
+
+        private ISelectionModifier GetDefaultGroupMod()
+        {
+            GroupSelectionModifier modifier = Substitute.ForPartsOf<GroupSelectionModifier>(new object[] { selectionManager });
             return modifier;
         }
 

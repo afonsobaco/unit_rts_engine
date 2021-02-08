@@ -13,12 +13,12 @@ namespace Tests
     public class AdditiveModifierTest
     {
         private AdditiveSelectionModifier modifier;
-        private SelectionManager selectionManager;
+        private ISelectionManager selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<SelectionManager>();
+            selectionManager = Substitute.For<ISelectionManager>();
             modifier = Substitute.ForPartsOf<AdditiveSelectionModifier>(new object[] { selectionManager });
 
         }

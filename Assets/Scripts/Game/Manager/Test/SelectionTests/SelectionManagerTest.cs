@@ -17,7 +17,7 @@ namespace Tests.Manager
         [SetUp]
         public void SetUp()
         {
-            manager = Substitute.ForPartsOf<SelectionManager>(new object[] { null });
+            manager = Substitute.ForPartsOf<SelectionManager>();
             var so = Substitute.For<IRuntimeSet<ISelectableObject>>();
             manager.SetMainList(so.GetList());
             manager.SetGroupNumperPressed(0);
@@ -434,10 +434,10 @@ namespace Tests.Manager
             {
                 item.IsPreSelected = true;
             }
-            manager.When(x => x.PerformSelection(Arg.Any<Vector3>())).DoNotCallBase();
-            manager.PerformSelection(Arg.Any<Vector3>()).Returns(newSelection);
+            manager.When(x => x.PerformSelection(Arg.Any<Vector2>())).DoNotCallBase();
+            manager.PerformSelection(Arg.Any<Vector2>()).Returns(newSelection);
 
-            manager.DoPreSelection(new Vector3(0, 1, 2));
+            manager.DoPreSelection(new Vector2(0, 1));
 
             CollectionAssert.AreEquivalent(manager.GetPreSelection(), newSelection);
 
@@ -465,10 +465,10 @@ namespace Tests.Manager
             {
                 item.IsPreSelected = true;
             }
-            manager.When(x => x.PerformSelection(Arg.Any<Vector3>())).DoNotCallBase();
-            manager.PerformSelection(Arg.Any<Vector3>()).Returns(newSelection);
+            manager.When(x => x.PerformSelection(Arg.Any<Vector2>())).DoNotCallBase();
+            manager.PerformSelection(Arg.Any<Vector2>()).Returns(newSelection);
 
-            manager.DoPreSelection(new Vector3(0, 1, 2));
+            manager.DoPreSelection(new Vector2(0, 1));
 
             CollectionAssert.AreEquivalent(manager.GetPreSelection(), newSelection);
 

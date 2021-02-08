@@ -13,12 +13,12 @@ namespace Tests
     public class LimitModifierTest
     {
         private LimitSelectionModifier modifier;
-        private SelectionManager selectionManager;
+        private ISelectionManager selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<SelectionManager>();
+            selectionManager = Substitute.For<ISelectionManager>();
             modifier = Substitute.ForPartsOf<LimitSelectionModifier>(new object[] { selectionManager });
 
         }

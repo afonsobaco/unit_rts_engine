@@ -12,12 +12,12 @@ namespace Tests
     {
         private SameTypeSelectionModifier modifier;
         private ISelectionSettings settings;
-        private SelectionManager selectionManager;
+        private ISelectionManager selectionManager;
 
         [SetUp]
         public void SetUp()
         {
-            selectionManager = Substitute.For<SelectionManager>();
+            selectionManager = Substitute.For<ISelectionManager>();
             settings = Substitute.For<ISelectionSettings>();
             selectionManager.GetSettings().Returns(settings);
             settings.CanGroup.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
