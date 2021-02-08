@@ -17,5 +17,7 @@ namespace RTSEngine.Manager
         void DoClickOnElement(List<RaycastResult> results, KeyButtonType type);
         List<RaycastResult> GetGUIElementsClicked(Vector3 mousePosition);
         void SetCanShowStatus(ObjectTypeEnum[] canShowStatus);
+        void SetSelectionStatusPlaceholder(Transform transform);
+        void SetSelectionWorkInProgressPlaceholder(Transform transform);
     }
 }

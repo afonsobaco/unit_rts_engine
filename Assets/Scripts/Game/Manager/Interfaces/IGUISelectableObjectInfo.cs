@@ -11,6 +11,6 @@ namespace RTSEngine.Manager
         ObjectTypeEnum Type { get; set; }
         int Life { get; set; }
         int Mana { get; set; }
-        string TypeStr { get; set; }
+        string ObjectName { get; set; }
     }
 }

@@ -13,8 +13,10 @@ namespace RTSEngine.Manager
     //TODO tests
     public class GUIManager : IGUIManager, ILateTickable
     {
-        private Transform _selectionGridPlaceholder;
         private Transform _portraitPlaceholder;
+        private Transform _selectionGridPlaceholder;
+        private Transform _selectionStatusPlaceholder;
+        private Transform _selectionWorkInProgressPlaceholder;
         private GameObject _selectedMiniaturePrefab;
         private GameObject _selectedPortraitPrefab;
         private GraphicRaycaster raycaster;
@@ -131,7 +133,7 @@ namespace RTSEngine.Manager
             {
                 if (item is GUISelectedMiniatureBehaviour)
                 {
-                    ((GUISelectedMiniatureBehaviour)item).SelectionBorder.enabled = selected.IsCompatible(_highlighted);
+                    ((GUISelectedMiniatureBehaviour)item).SelectionBorder.ToList().ForEach(x => x.gameObject.SetActive(selected.IsCompatible(_highlighted)));
                 }
                 item.Picture.sprite = selected.SelectableObjectInfo.Picture;
                 if (!this._canShowStatus.ToList().Contains(item.Selected.SelectableObjectInfo.Type))
@@ -209,9 +211,14 @@ namespace RTSEngine.Manager
         private void UpdateMiniatureGrid(List<ISelectableObject> selection)
         {
             ClearGrid();
-            if (selection.Count > 0)
+            if (selection.Count == 1)
             {
-                _selectionGridPlaceholder.gameObject.SetActive(true);
+                ActivateThisAndDeactivateOtherPlaceholders(_selectionStatusPlaceholder);
+
+            }
+            else if (selection.Count > 1)
+            {
+                ActivateThisAndDeactivateOtherPlaceholders(_selectionGridPlaceholder);
                 for (var i = 0; i < selection.Count; i++)
                 {
                     AddToGrid(selection.ElementAt(i));
@@ -222,6 +229,13 @@ namespace RTSEngine.Manager
                 _selectionGridPlaceholder.gameObject.SetActive(false);
             }
 
+        }
+
+        private void ActivateThisAndDeactivateOtherPlaceholders(Transform placeholder)
+        {
+            _selectionGridPlaceholder.gameObject.SetActive(_selectionGridPlaceholder.Equals(placeholder));
+            _selectionStatusPlaceholder.gameObject.SetActive(_selectionStatusPlaceholder.Equals(placeholder));
+            _selectionWorkInProgressPlaceholder.gameObject.SetActive(_selectionWorkInProgressPlaceholder.Equals(placeholder));
         }
 
         private void UpdatePortrait()
@@ -344,6 +358,16 @@ namespace RTSEngine.Manager
         public void SetCanShowStatus(ObjectTypeEnum[] canShowStatus)
         {
             this._canShowStatus = canShowStatus;
+        }
+
+        public void SetSelectionStatusPlaceholder(Transform transform)
+        {
+            this._selectionStatusPlaceholder = transform;
+        }
+
+        public void SetSelectionWorkInProgressPlaceholder(Transform transform)
+        {
+            this._selectionWorkInProgressPlaceholder = transform;
         }
     }
 

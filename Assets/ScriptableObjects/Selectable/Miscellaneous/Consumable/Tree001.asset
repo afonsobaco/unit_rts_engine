@@ -16,5 +16,5 @@ MonoBehaviour:
   picture: {fileID: 5063466513527928634, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
   life: 120
   mana: 0
-  typeStr: Tree_001
+  objectName: Tree 001
   selectionOrder: -1

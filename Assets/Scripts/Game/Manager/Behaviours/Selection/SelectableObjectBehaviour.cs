@@ -131,10 +131,11 @@ namespace RTSEngine.Manager
 
         public bool IsCompatible(ISelectable other)
         {
+            //TODO should verify other things eg.: [Human, Wizzard, Level2, etc...]
             if (other != null && other is SelectableObjectBehaviour)
             {
                 var second = other as SelectableObjectBehaviour;
-                return second.SelectableObjectInfo.Type == this.SelectableObjectInfo.Type && second.SelectableObjectInfo.TypeStr.Equals(this.SelectableObjectInfo.TypeStr);
+                return second.SelectableObjectInfo.Type == this.SelectableObjectInfo.Type && second.SelectableObjectInfo.ObjectName.Equals(this.SelectableObjectInfo.ObjectName);
             }
             return false;
         }

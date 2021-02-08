@@ -15,13 +15,7 @@ MonoBehaviour:
   type: 3
   picture: {fileID: -5904420342645070368, guid: 40a8632ee625c4248b0f985ec2a0be94,
     type: 3}
-  life:
-    value: 500
-    maxValue: 0
-    enabled: 0
-  mana:
-    value: 500
-    maxValue: 500
-    enabled: 0
-  typeStr: 
+  life: 0
+  mana: 0
+  objectName: Rock 001
   selectionOrder: -999

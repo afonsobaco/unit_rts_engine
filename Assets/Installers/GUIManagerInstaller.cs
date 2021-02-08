@@ -9,8 +9,10 @@ namespace RTSEngine.Installers
 {
     public class GUIManagerInstaller : MonoInstaller
     {
-        [SerializeField] private RectTransform selectionGridPlaceholder;
         [SerializeField] private RectTransform portraitPlaceHolder;
+        [SerializeField] private RectTransform selectionGridPlaceholder;
+        [SerializeField] private RectTransform selectionStatusPlaceholder;
+        [SerializeField] private RectTransform selectionWorkInProgressPlaceholder;
 
         [SerializeField] private GameObject selectedMiniaturePrefab;
         [SerializeField] private GameObject selectedPortraitPrefab;
@@ -52,6 +54,8 @@ namespace RTSEngine.Installers
             {
                 this._GUIManager.SetRaycaster(raycaster);
                 this._GUIManager.SetSelectionGridPlaceholder(selectionGridPlaceholder.transform);
+                this._GUIManager.SetSelectionStatusPlaceholder(selectionStatusPlaceholder.transform);
+                this._GUIManager.SetSelectionWorkInProgressPlaceholder(selectionWorkInProgressPlaceholder.transform);
                 this._GUIManager.SetPortraitPlaceholder(portraitPlaceHolder.transform);
                 this._GUIManager.SetSelectedMiniaturePrefab(selectedMiniaturePrefab);
                 this._GUIManager.SetSelectedPortraitPrefab(selectedPortraitPrefab);

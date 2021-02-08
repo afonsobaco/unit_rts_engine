@@ -51,7 +51,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 1
+  m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -143,8 +143,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 831f6b8a70ced35478b89a664d5396c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionGridPlaceholder: {fileID: 294914219994562833}
   portraitPlaceHolder: {fileID: 92195843991370390}
+  selectionGridPlaceholder: {fileID: 294914219994562833}
+  selectionStatusPlaceholder: {fileID: 1560337100617948252}
+  selectionWorkInProgressPlaceholder: {fileID: 8764387077257043459}
   selectedMiniaturePrefab: {fileID: 8799585437329364735, guid: bebed3e62420a0444ae617eafef25bf3,
     type: 3}
   selectedPortraitPrefab: {fileID: 8799585437329364735, guid: ca00920f095514b40ac419ff72d52757,
@@ -158,38 +160,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1581636078}
     m_Modifications:
-    - target: {fileID: 64341634, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -64
-      objectReference: {fileID: 0}
-    - target: {fileID: 64341634, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -64
-      objectReference: {fileID: 0}
-    - target: {fileID: 64341634, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 64341634, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 64341635, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
-      propertyPath: m_Spacing.x
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 64341635, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
-      propertyPath: m_Spacing.y
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 64341635, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
-      propertyPath: m_CellSize.x
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 64341635, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
-      propertyPath: m_CellSize.y
-      value: 56
-      objectReference: {fileID: 0}
     - target: {fileID: 8171643307655992858, guid: b575df68deca71e4486ebb84832aeff8,
         type: 3}
       propertyPath: m_Name
@@ -329,6 +299,18 @@ RectTransform:
 --- !u!224 &294914219994562833 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 64341634, guid: b575df68deca71e4486ebb84832aeff8,
+    type: 3}
+  m_PrefabInstance: {fileID: 294914219997464467}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1560337100617948252 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1274748186964728783, guid: b575df68deca71e4486ebb84832aeff8,
+    type: 3}
+  m_PrefabInstance: {fileID: 294914219997464467}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &8764387077257043459 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 9058680003117914512, guid: b575df68deca71e4486ebb84832aeff8,
     type: 3}
   m_PrefabInstance: {fileID: 294914219997464467}
   m_PrefabAsset: {fileID: 0}

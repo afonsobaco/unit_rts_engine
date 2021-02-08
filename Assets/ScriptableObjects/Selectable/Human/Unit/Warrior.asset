@@ -16,5 +16,5 @@ MonoBehaviour:
   picture: {fileID: -903730026294837061, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
   life: 75
   mana: 0
-  typeStr: Human_Warrior
+  objectName: Human Warrior
   selectionOrder: 10

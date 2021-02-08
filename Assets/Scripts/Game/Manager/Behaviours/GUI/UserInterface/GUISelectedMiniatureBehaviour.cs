@@ -8,8 +8,8 @@ namespace RTSEngine.Manager
     {
 
 
-        [SerializeField] private Image selectionBorder;
-        public Image SelectionBorder { get => selectionBorder; set => selectionBorder = value; }
+        [SerializeField] private Image[] selectionBorder;
+        public Image[] SelectionBorder { get => selectionBorder; set => selectionBorder = value; }
 
         public override void DoAction(params object[] parameters)
         {

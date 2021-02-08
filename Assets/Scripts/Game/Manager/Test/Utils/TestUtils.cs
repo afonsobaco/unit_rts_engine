@@ -28,7 +28,7 @@ namespace Tests.Utils
             {
                 ISelectableObject item = Substitute.For<ISelectableObject>();
                 item.SelectableObjectInfo = ScriptableObject.CreateInstance<GUISelectableObjectInfoSO>();
-                item.SelectableObjectInfo.TypeStr = "";
+                item.SelectableObjectInfo.ObjectName = "";
                 item.Index = i;
                 item.IsCompatible(Arg.Any<ISelectableObject>()).Returns((x) =>
                 {

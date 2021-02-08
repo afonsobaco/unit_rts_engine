@@ -58,12 +58,12 @@ namespace RTSEngine.Manager
         {
             public bool Equals(ISelectableObject x, ISelectableObject y)
             {
-                return x.SelectableObjectInfo.Type == y.SelectableObjectInfo.Type && x.SelectableObjectInfo.TypeStr == y.SelectableObjectInfo.TypeStr;
+                return x.SelectableObjectInfo.Type == y.SelectableObjectInfo.Type && x.SelectableObjectInfo.ObjectName == y.SelectableObjectInfo.ObjectName;
             }
 
             public int GetHashCode(ISelectableObject obj)
             {
-                int hCode = obj.SelectableObjectInfo.Type.GetHashCode() + obj.SelectableObjectInfo.TypeStr.GetHashCode();
+                int hCode = obj.SelectableObjectInfo.Type.GetHashCode() + obj.SelectableObjectInfo.ObjectName.GetHashCode();
                 return hCode;
             }
         }

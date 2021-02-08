@@ -16,5 +16,5 @@ MonoBehaviour:
   picture: {fileID: 4956942758328581113, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
   life: 25
   mana: 50
-  typeStr: Human_Wizard
+  objectName: Human Wizzard
   selectionOrder: 10

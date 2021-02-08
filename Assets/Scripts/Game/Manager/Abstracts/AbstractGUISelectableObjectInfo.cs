@@ -18,12 +18,12 @@ namespace RTSEngine.Manager
         [SerializeField] int mana;
 
         [Space]
-        [SerializeField] private string typeStr;  //TODO should be an array of types eg.: [Human, Wizzard, Level2, etc...]
+        [SerializeField] private string objectName;  //TODO should be an array of types eg.: [Human, Wizzard, Level2, etc...]
         [SerializeField] private int selectionOrder;
 
         public ObjectTypeEnum Type { get => type; set => type = value; }
         public Sprite Picture { get => picture; set => picture = value; }
-        public string TypeStr { get => typeStr; set => typeStr = value; }
+        public string ObjectName { get => objectName; set => objectName = value; }
         public int SelectionOrder { get => selectionOrder; set => selectionOrder = value; }
 
         public int Life { get => life; set => life = value; }
