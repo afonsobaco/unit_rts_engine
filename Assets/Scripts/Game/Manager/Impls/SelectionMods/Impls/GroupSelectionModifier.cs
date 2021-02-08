@@ -40,11 +40,11 @@ namespace RTSEngine.Manager
                 int v = y.Key.SelectableObjectInfo.SelectionOrder - x.Key.SelectableObjectInfo.SelectionOrder;
                 if (v == 0)
                 {
-                    if (y.Key.SelectableObjectInfo.Life.MaxValue > x.Key.SelectableObjectInfo.Life.MaxValue)
+                    if (y.Key.LifeStatus.MaxValue > x.Key.LifeStatus.MaxValue)
                     {
                         return 1;
                     }
-                    else if (y.Key.SelectableObjectInfo.Life.MaxValue < x.Key.SelectableObjectInfo.Life.MaxValue)
+                    else if (y.Key.LifeStatus.MaxValue < x.Key.LifeStatus.MaxValue)
                     {
                         return -1;
                     }

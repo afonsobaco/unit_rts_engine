@@ -9,8 +9,8 @@ namespace RTSEngine.Manager
         int SelectionOrder { get; set; }
         Sprite Picture { get; set; }
         ObjectTypeEnum Type { get; set; }
-        ObjectStatus Life { get; set; }
-        ObjectStatus Mana { get; set; }
+        int Life { get; set; }
+        int Mana { get; set; }
         string TypeStr { get; set; }
     }
 }

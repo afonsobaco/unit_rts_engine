@@ -3,37 +3,49 @@ using System;
 
 namespace RTSEngine.Manager
 {
-    [Serializable]
     public class ObjectStatus
     {
-        [Space]
-        [SerializeField] private int value = 1;
-        [SerializeField] private int maxValue = 1;
-        [SerializeField] private bool enabled = true;
+        private int currentValue;
+        private int maxValue;
+        private bool enabled = true;
 
-        public int Value
+        public int CurrentValue
         {
-            get => value; set
+            get => currentValue;
+            set
             {
-                if (value > maxValue)
-                {
-                    this.value = maxValue;
-                }
-                else
-                {
-                    this.value = value;
-                }
+                this.currentValue = Mathf.Clamp(value, 0, this.maxValue);
             }
         }
         public int MaxValue
         {
             get
             {
-                if (maxValue <= 0) return 1; else return maxValue;
+                if (this.maxValue <= 0) return 1; else return this.maxValue;
             }
-            set => maxValue = value;
+            set
+            {
+                if (value == 0)
+                {
+                    this.enabled = false;
+                    this.currentValue = 0;
+                }
+                else
+                {
+                    if (this.currentValue <= 0 || this.maxValue > value)
+                    {
+                        this.currentValue = value;
+                    }
+                    else
+                    {
+                        this.currentValue = (int)(value * (this.currentValue / this.maxValue));
+                    }
+                }
+                this.maxValue = value;
+
+            }
         }
-        public bool Enabled { get => enabled; set => enabled = value; }
+        public bool Enabled { get => this.enabled; set => this.enabled = value; }
     }
 
 

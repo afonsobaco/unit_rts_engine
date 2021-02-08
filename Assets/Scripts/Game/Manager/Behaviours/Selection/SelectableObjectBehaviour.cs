@@ -9,14 +9,14 @@ namespace RTSEngine.Manager
 
     public class SelectableObjectBehaviour : MonoBehaviour, ISelectableObject
     {
-
-
         [Space]
         [Header("Prefab Info")]
         [SerializeField] private SelectionMark selectionMark;
         [SerializeField] private SelectionMark preSelectionMark;
         [SerializeField] private GUISelectableObjectInfoSO selectableObjectInfo;
 
+        private ObjectStatus lifeStatus = new ObjectStatus();
+        private ObjectStatus manaStatus = new ObjectStatus();
         private bool isSelected = false;
         private bool isPreSelected = false;
         private SignalBus _signalBus;
@@ -56,6 +56,8 @@ namespace RTSEngine.Manager
         }
 
         public GUISelectableObjectInfoSO SelectableObjectInfo { get => selectableObjectInfo; set => selectableObjectInfo = value; }
+        public ObjectStatus LifeStatus { get => lifeStatus; set => lifeStatus = value; }
+        public ObjectStatus ManaStatus { get => manaStatus; set => manaStatus = value; }
 
         [Inject]
         public void Construct(SignalBus signalBus)
@@ -77,6 +79,21 @@ namespace RTSEngine.Manager
             {
                 PreSelectionMark.gameObject.SetActive(value);
             }
+        }
+
+        private void Start()
+        {
+            UpdateVariables();
+        }
+        private void OnValidate()
+        {
+            UpdateVariables();
+        }
+
+        private void UpdateVariables()
+        {
+            lifeStatus.MaxValue = selectableObjectInfo.Life;
+            manaStatus.MaxValue = selectableObjectInfo.Mana;
         }
 
         void OnDisable()
@@ -110,7 +127,5 @@ namespace RTSEngine.Manager
         }
 
     }
-
-
 
 }

@@ -425,6 +425,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionMark: {fileID: 4782704107103593911}
   preSelectionMark: {fileID: 3350248310140437384}
+  lifeStatus:
+    value: 20
+  manaStatus:
+    value: 50
   selectableObjectInfo: {fileID: 11400000, guid: 72236715b49348249a932b2138c1cd78,
     type: 2}
 --- !u!136 &1759904571232850837

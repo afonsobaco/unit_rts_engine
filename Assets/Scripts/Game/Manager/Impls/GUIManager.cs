@@ -10,7 +10,7 @@ using Zenject;
 namespace RTSEngine.Manager
 {
     //TODO tests
-    public class GUIManager : IGUIManager
+    public class GUIManager : IGUIManager, ILateTickable
     {
         private Transform _selectionGridPlaceholder;
         private Transform _portraitPlaceholder;
@@ -43,7 +43,7 @@ namespace RTSEngine.Manager
             var selectionAsList = new List<ISelectableObject>(_selection);
             _highlighted = UpdateActualHighlighted(selectionAsList);
             UpdateMiniatureGrid(selectionAsList);
-            UpdateHighlightedGroupMiniatures();
+            UpdateSelectionBoard();
         }
 
         private ISelectableObject UpdateActualHighlighted(List<ISelectableObject> selectionAsList)
@@ -78,7 +78,7 @@ namespace RTSEngine.Manager
             {
                 return false;
             }
-            var oldSelection = _selectionGridPlaceholder.GetComponentsInChildren<GUISelectedMiniatureBehaviour>().ToList().Select(x => x.Selected);
+            var oldSelection = GetGridList().ToList().Select(x => x.Selected);
             HashSet<ISelectableObject> data = GetDifferenceOnSelections(oldSelection);
             bool highlightedWasRemoved = data.Contains(_highlighted);
             bool hasBeenAddedOrRemoved = data.Count > 0;
@@ -103,18 +103,32 @@ namespace RTSEngine.Manager
             this._tabbed = true;
             var selectionAsList = new List<ISelectableObject>(_selection);
             _highlighted = GetPreviousNextHighlightedGroup(selectionAsList, back);
-            UpdateHighlightedGroupMiniatures();
+            UpdateSelectionBoard();
             _signalBus.Fire(new PrimaryObjectSelectedSignal() { Selectable = _highlighted });
         }
 
-        private void UpdateHighlightedGroupMiniatures()
+        private void UpdateSelectionBoard()
         {
-            var gridList = _selectionGridPlaceholder.GetComponentsInChildren<GUISelectedMiniatureBehaviour>();
+            var gridList = GetGridList();
             foreach (var item in gridList)
             {
-                item.SelectionBorder.enabled = item.Selected.IsCompatible(_highlighted);
+                UpdateItem(item);
             }
             UpdatePortrait();
+
+        }
+
+        private void UpdateItem(AbstractGUISelectedInfoBehaviour item)
+        {
+            if (item is GUISelectedMiniatureBehaviour)
+            {
+                ((GUISelectedMiniatureBehaviour)item).SelectionBorder.enabled = item.Selected.IsCompatible(_highlighted);
+            }
+            item.Picture.sprite = item.Selected.SelectableObjectInfo.Picture;
+            item.LifeBar.gameObject.SetActive(item.Selected.LifeStatus.Enabled);
+            item.ManaBar.gameObject.SetActive(item.Selected.ManaStatus.Enabled);
+            UpdateMiniatureStatusBar(item.ManaBar, item.Selected.ManaStatus);
+            UpdateMiniatureStatusBar(item.LifeBar, item.Selected.LifeStatus);
         }
 
         private ISelectableObject GetPreviousNextHighlightedGroup(List<ISelectableObject> selectionAsList, bool back)
@@ -207,7 +221,8 @@ namespace RTSEngine.Manager
                 {
                     selectedGUIPortrait = CreatePortrait();
                 }
-                AdjustSelected(_highlighted, selectedGUIPortrait);
+                selectedGUIPortrait.Selected = _highlighted;
+                UpdateItem(selectedGUIPortrait);
             }
             else
             {
@@ -244,26 +259,15 @@ namespace RTSEngine.Manager
         private void AddToGrid(ISelectableObject selected)
         {
             GUISelectedMiniatureBehaviour selectedGUIMiniature = CreateMiniature();
-            AdjustSelected(selected, selectedGUIMiniature);
-        }
-
-        private void AdjustSelected(ISelectableObject selected, AbstractGUISelectedInfoBehaviour selectedGUI)
-        {
-            selectedGUI.Selected = selected;
-            var selectableObjectInfo = selected.SelectableObjectInfo;
-            selectedGUI.Picture.sprite = selectableObjectInfo.Picture;
-            selectedGUI.LifeBar.gameObject.SetActive(selectableObjectInfo.Life.Enabled);
-            selectedGUI.ManaBar.gameObject.SetActive(selectableObjectInfo.Mana.Enabled);
-            UpdateMiniatureStatusBar(selectedGUI.ManaBar, selectableObjectInfo.Mana);
-            UpdateMiniatureStatusBar(selectedGUI.LifeBar, selectableObjectInfo.Life);
+            selectedGUIMiniature.Selected = selected;
         }
 
         private void UpdateMiniatureStatusBar(GUIStatusBarBehaviour statusBar, ObjectStatus objectStatus)
         {
             if (statusBar.enabled)
             {
-                statusBar.StatusText.text = String.Format("{0}/{1}", objectStatus.Value, objectStatus.MaxValue);
-                statusBar.StatusBar.fillAmount = (float)objectStatus.Value / (float)objectStatus.MaxValue;
+                statusBar.StatusText.text = String.Format("{0}/{1}", objectStatus.CurrentValue, objectStatus.MaxValue);
+                statusBar.StatusBar.fillAmount = (float)objectStatus.CurrentValue / (float)objectStatus.MaxValue;
             }
         }
 
@@ -313,9 +317,15 @@ namespace RTSEngine.Manager
             this._selectedPortraitPrefab = selectedPortraitPrefab;
         }
 
+        public void LateTick()
+        {
+            UpdateSelectionBoard();
+        }
 
-
-
+        private GUISelectedMiniatureBehaviour[] GetGridList()
+        {
+            return _selectionGridPlaceholder.GetComponentsInChildren<GUISelectedMiniatureBehaviour>();
+        }
     }
 
 

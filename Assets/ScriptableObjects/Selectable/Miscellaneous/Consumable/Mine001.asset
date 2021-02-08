@@ -14,13 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   picture: {fileID: 5063466513527928634, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
-  life:
-    value: 3500
-    maxValue: 500
-    enabled: 0
-  mana:
-    value: 500
-    maxValue: 500
-    enabled: 0
+  life: 3500
+  mana: 0
   typeStr: Mine_001
   selectionOrder: -1

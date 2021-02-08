@@ -14,8 +14,8 @@ namespace RTSEngine.Manager
         [SerializeField] private ObjectTypeEnum type;
         [SerializeField] private Sprite picture;
         [Space]
-        [SerializeField] ObjectStatus life;
-        [SerializeField] ObjectStatus mana;
+        [SerializeField] int life;
+        [SerializeField] int mana;
 
         [Space]
         [SerializeField] private string typeStr;  //TODO should be an array of types eg.: [Human, Wizzard, Level2, etc...]
@@ -26,8 +26,7 @@ namespace RTSEngine.Manager
         public string TypeStr { get => typeStr; set => typeStr = value; }
         public int SelectionOrder { get => selectionOrder; set => selectionOrder = value; }
 
-
-        public ObjectStatus Life { get => life; set => life = value; }
-        public ObjectStatus Mana { get => mana; set => mana = value; }
+        public int Life { get => life; set => life = value; }
+        public int Mana { get => mana; set => mana = value; }
     }
 }
