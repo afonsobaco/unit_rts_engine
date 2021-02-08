@@ -25,7 +25,7 @@ namespace RTSEngine.Manager
         {
             this.SignalBus = signalBus;
         }
-        public abstract void DoAction();
+        public abstract void DoAction(params object[] parameters);
 
     }
 }

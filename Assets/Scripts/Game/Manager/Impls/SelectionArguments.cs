@@ -4,7 +4,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
-    public class SelectionArguments : ISelectionArgsXP<ISelectableObject>
+    public class SelectionArguments : ISelectionArguments<ISelectableObject>
     {
         public HashSet<ISelectableObject> OldSelection { get; }
         public HashSet<ISelectableObject> NewSelection { get; }

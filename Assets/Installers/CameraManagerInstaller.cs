@@ -14,6 +14,13 @@ namespace RTSEngine.Installers
         {
             Container.BindInterfacesAndSelfTo<CameraManager>().AsSingle().OnInstantiated<CameraManager>(Init);
             Container.Bind<CameraInputManagerBehaviour>().FromNewComponentOnNewGameObject().WithGameObjectName("Input Manager").AsSingle().NonLazy();
+
+            Container.DeclareSignal<CanMoveSignal>();
+            Container.DeclareSignal<PrimaryObjectSelectedSignal>();
+
+            Container.BindSignal<SelectedPortraitClickSignal>().ToMethod<CameraManager>(x => x.DoSelectedPortraitClick).FromResolve();
+            Container.BindSignal<PrimaryObjectSelectedSignal>().ToMethod<CameraManager>(x => x.OnSelectionChange).FromResolve();
+            Container.BindSignal<CanMoveSignal>().ToMethod<CameraManager>(x => x.CanMoveSignal).FromResolve();
         }
 
         private void Init(InjectContext arg1, CameraManager cameraManager)

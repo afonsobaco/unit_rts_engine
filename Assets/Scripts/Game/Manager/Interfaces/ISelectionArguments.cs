@@ -3,7 +3,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Manager
 {
-    public interface ISelectionArgsXP<T> where T : ISelectable
+    public interface ISelectionArguments<T> where T : ISelectable
     {
         HashSet<T> OldSelection { get; }
         HashSet<T> NewSelection { get; }

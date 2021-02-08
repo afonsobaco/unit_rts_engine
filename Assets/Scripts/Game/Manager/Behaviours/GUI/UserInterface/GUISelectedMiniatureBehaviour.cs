@@ -11,10 +11,12 @@ namespace RTSEngine.Manager
         [SerializeField] private Image selectionBorder;
         public Image SelectionBorder { get => selectionBorder; set => selectionBorder = value; }
 
-        public override void DoAction()
+        public override void DoAction(params object[] parameters)
         {
-            Debug.Log("Miniature!");
-            SignalBus.Fire(new SelectedMiniatureClickSignal() { Selectable = this.Selected });
+            if (parameters.Length > 0 && parameters[0] is KeyButtonType)
+            {
+                SignalBus.Fire(new SelectedMiniatureClickSignal() { Selectable = this.Selected, Type = (KeyButtonType)parameters[0] });
+            }
         }
 
     }

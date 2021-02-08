@@ -213,12 +213,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffcc75aaeb5691a46bb010425bd66122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selection:
-  - {fileID: 7573665321347929631, guid: 7f5eaff3f68b03047baeb1383fcc168b, type: 3}
-  - {fileID: 2978826091734082837, guid: b37319687c158e14e95fbddc02721bc9, type: 3}
+  _prefabs:
   - {fileID: 2978826091734082837, guid: b37319687c158e14e95fbddc02721bc9, type: 3}
   - {fileID: 7573665321347929631, guid: 7f5eaff3f68b03047baeb1383fcc168b, type: 3}
-  - {fileID: 2978826091734082837, guid: b37319687c158e14e95fbddc02721bc9, type: 3}
+  - {fileID: 3692519517711421506, guid: d7271eb91184df44faaf74480493c20c, type: 3}
+  - {fileID: 5463608622398839503, guid: 6ecc3ca6f0aae164ea7cb2a82946e7d0, type: 3}
+  - {fileID: 4215967368344550714, guid: 0511cb3e5df913a448c82c66bdd07d40, type: 3}
 --- !u!4 &2099593888
 Transform:
   m_ObjectHideFlags: 0

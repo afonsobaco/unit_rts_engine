@@ -23,4 +23,4 @@ MonoBehaviour:
     maxValue: 500
     enabled: 0
   typeStr: Tree_001
-  selectionOrder: 0
+  selectionOrder: -1

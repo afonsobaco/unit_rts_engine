@@ -23,4 +23,4 @@ MonoBehaviour:
     maxValue: 25
     enabled: 1
   typeStr: Human_Wizard
-  selectionOrder: 0
+  selectionOrder: 10

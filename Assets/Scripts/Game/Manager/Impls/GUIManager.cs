@@ -1,3 +1,4 @@
+using System.Net;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using Zenject;
 
 namespace RTSEngine.Manager
 {
+    //TODO tests
     public class GUIManager : IGUIManager
     {
         private Transform _selectionGridPlaceholder;
@@ -19,27 +21,90 @@ namespace RTSEngine.Manager
         private PointerEventData pointerEventData;
         private ISelectableObject _highlighted;
         private ISelectableObject[] _selection;
+        private bool _additive;
+        private bool _tabbed;
+        private SignalBus _signalBus;
+
+        [Inject]
+        public void Construct(SignalBus signalBus)
+        {
+            this._signalBus = signalBus;
+        }
 
         public void OnSelectionChange(SelectionChangeSignal signal)
         {
             this._selection = signal.Selection;
+            this._additive = signal.Additive;
             this.UpdateSelection();
         }
 
         private void UpdateSelection()
         {
-            List<ISelectableObject> orderedSelection = GetOrderedSelection();
-            _highlighted = null;
-            SetMainFromHighlightedGroup(orderedSelection, false);
-            UpdateMiniatureGrid(orderedSelection);
+            var selectionAsList = new List<ISelectableObject>(_selection);
+            _highlighted = UpdateActualHighlighted(selectionAsList);
+            UpdateMiniatureGrid(selectionAsList);
             UpdateHighlightedGroupMiniatures();
+        }
+
+        private ISelectableObject UpdateActualHighlighted(List<ISelectableObject> selectionAsList)
+        {
+            ISelectableObject result = null;
+            if (ShouldMaintainHighlight(selectionAsList))
+            {
+                var data = selectionAsList.FindAll(x => x.IsCompatible(_highlighted));
+                if (data.Contains(_highlighted))
+                {
+                    result = _highlighted;
+                }
+                else if (data.Count > 0)
+                {
+                    result = data.First();
+                }
+            }
+            else
+            {
+                this._tabbed = false;
+            }
+            if (result == null && selectionAsList.Count > 0)
+            {
+                result = selectionAsList.First();
+            }
+            return result;
+        }
+
+        private bool ShouldMaintainHighlight(List<ISelectableObject> selectionAsList)
+        {
+            if (selectionAsList.Count == 0 || !_additive || _highlighted == null || !this._tabbed)
+            {
+                return false;
+            }
+            var oldSelection = _selectionGridPlaceholder.GetComponentsInChildren<GUISelectedMiniatureBehaviour>().ToList().Select(x => x.Selected);
+            HashSet<ISelectableObject> data = GetDifferenceOnSelections(oldSelection);
+            bool highlightedWasRemoved = data.Contains(_highlighted);
+            bool hasBeenAddedOrRemoved = data.Count > 0;
+            bool areEqual = selectionAsList.SequenceEqual(oldSelection);
+            return hasBeenAddedOrRemoved || areEqual || !highlightedWasRemoved;
+        }
+
+        private HashSet<ISelectableObject> GetDifferenceOnSelections(IEnumerable<ISelectableObject> oldSelection)
+        {
+            HashSet<ISelectableObject> data = new HashSet<ISelectableObject>(oldSelection);
+            data.SymmetricExceptWith(_selection);
+            if (data.Count == 0)
+            {
+                data = new HashSet<ISelectableObject>(_selection);
+                data.SymmetricExceptWith(oldSelection);
+            }
+            return data;
         }
 
         public void ChangeGroup(bool back)
         {
-            List<ISelectableObject> orderedSelection = GetOrderedSelection();
-            SetMainFromHighlightedGroup(orderedSelection, back);
+            this._tabbed = true;
+            var selectionAsList = new List<ISelectableObject>(_selection);
+            _highlighted = GetPreviousNextHighlightedGroup(selectionAsList, back);
             UpdateHighlightedGroupMiniatures();
+            _signalBus.Fire(new PrimaryObjectSelectedSignal() { Selectable = _highlighted });
         }
 
         private void UpdateHighlightedGroupMiniatures()
@@ -52,44 +117,45 @@ namespace RTSEngine.Manager
             UpdatePortrait();
         }
 
-        private void SetMainFromHighlightedGroup(List<ISelectableObject> orderedSelection, bool back)
+        private ISelectableObject GetPreviousNextHighlightedGroup(List<ISelectableObject> selectionAsList, bool back)
         {
-            if (orderedSelection.Count > 0)
+            if (selectionAsList.Count > 0)
             {
+
                 if (back)
                 {
-                    _highlighted = orderedSelection.ElementAt(GetPreviousGroup(orderedSelection));
+                    return selectionAsList.ElementAt(GetPreviousGroup(selectionAsList));
                 }
                 else
                 {
-                    _highlighted = orderedSelection.ElementAt(GetNextGroup(orderedSelection));
+                    return selectionAsList.ElementAt(GetNextGroup(selectionAsList));
                 }
             }
             else
             {
-                _highlighted = null;
+                return null;
             }
         }
 
-        private int GetPreviousGroup(List<ISelectableObject> orderedSelection)
+        private int GetPreviousGroup(List<ISelectableObject> selectionAsList)
         {
             if (_highlighted != null)
             {
-                var index = orderedSelection.IndexOf(_highlighted);
+                var index = GetIndexOfFirst(selectionAsList, _highlighted);
                 if (index != 0)
                 {
-                    return orderedSelection.IndexOf(orderedSelection.ElementAt(index - 1));
+                    return selectionAsList.IndexOf(selectionAsList.ElementAt(index - 1));
                 }
             }
-            return orderedSelection.Count - 1;
+            return selectionAsList.Count - 1;
         }
 
-        private int GetNextGroup(List<ISelectableObject> orderedSelection)
+        private int GetNextGroup(List<ISelectableObject> selectionAsList)
         {
             if (_highlighted != null)
             {
-                var index = orderedSelection.LastIndexOf(_highlighted);
-                if (index < orderedSelection.Count - 2)
+                var index = GetIndexOfLast(selectionAsList, _highlighted);
+                if (index < selectionAsList.Count - 1)
                 {
                     return index + 1;
                 }
@@ -97,10 +163,26 @@ namespace RTSEngine.Manager
             return 0;
         }
 
+        private int GetIndexOfFirst(List<ISelectableObject> selectionAsList, ISelectableObject selected)
+        {
+            var compatibles = selectionAsList.FindAll(x => { return x.IsCompatible(selected); });
+            if (compatibles.Count > 0)
+                return selectionAsList.IndexOf(compatibles.First());
+            return 0;
+        }
+
+        private int GetIndexOfLast(List<ISelectableObject> selectionAsList, ISelectableObject selected)
+        {
+            var compatibles = selectionAsList.FindAll(x => { return x.IsCompatible(selected); });
+            if (compatibles.Count > 0)
+                return selectionAsList.IndexOf(compatibles.Last());
+            return 0;
+        }
+
         private void UpdateMiniatureGrid(List<ISelectableObject> selection)
         {
             ClearGrid();
-            if (selection.Count > 1)
+            if (selection.Count > 0)
             {
                 _selectionGridPlaceholder.gameObject.SetActive(true);
                 for (var i = 0; i < selection.Count; i++)
@@ -185,42 +267,24 @@ namespace RTSEngine.Manager
             }
         }
 
-        private List<ISelectableObject> GetOrderedSelection()
-        {
-            List<ISelectableObject> list = new List<ISelectableObject>();
-            var grouped = _selection.GroupBy(x => x, new EqualityComparer());
-            var sorted = grouped.ToList();
-            sorted.Sort(new ObjectComparer());
-            foreach (var item in sorted)
-            {
-                list.AddRange(item);
-            }
-            return new List<ISelectableObject>(list);
-        }
-
-        public bool ClickedOnGUI(Vector3 mousePosition)
+        public List<RaycastResult> GetGUIElementsClicked(Vector3 mousePosition)
         {
             List<RaycastResult> results = new List<RaycastResult>();
             raycaster.Raycast(new PointerEventData(null) { position = mousePosition }, results);
-            bool guiClicked = results.Count > 0;
-            if (guiClicked)
-            {
-                DoClickOnElement(results);
-            }
-            return guiClicked;
+            return results;
         }
 
-        private void DoClickOnElement(List<RaycastResult> results)
+        public void DoClickOnElement(List<RaycastResult> results, KeyButtonType type)
         {
             var found = results.Find(x =>
             {
-                var a = x.gameObject.transform.parent.GetComponentInChildren<IGUIClickableElement>();
+                var a = x.gameObject.transform.parent.GetComponent<IGUIClickableElement>();
                 return (a != null);
             });
             if (found.gameObject != null)
             {
-                var clickable = found.gameObject.transform.parent.GetComponentInChildren<IGUIClickableElement>();
-                clickable.DoAction();
+                var clickable = found.gameObject.transform.parent.GetComponent<IGUIClickableElement>();
+                clickable.DoAction(type);
             }
         }
 
@@ -249,39 +313,9 @@ namespace RTSEngine.Manager
             this._selectedPortraitPrefab = selectedPortraitPrefab;
         }
 
-        private class ObjectComparer : IComparer<IGrouping<ISelectableObject, ISelectableObject>>
-        {
-            public int Compare(IGrouping<ISelectableObject, ISelectableObject> x, IGrouping<ISelectableObject, ISelectableObject> y)
-            {
-                int v = y.Key.SelectableObjectInfo.SelectionOrder - x.Key.SelectableObjectInfo.SelectionOrder;
-                if (v == 0)
-                {
-                    if (y.Key.SelectableObjectInfo.Life.MaxValue > x.Key.SelectableObjectInfo.Life.MaxValue)
-                    {
-                        return 1;
-                    }
-                    else if (y.Key.SelectableObjectInfo.Life.MaxValue < x.Key.SelectableObjectInfo.Life.MaxValue)
-                    {
-                        return -1;
-                    }
-                }
-                return v;
-            }
-        }
 
-        private class EqualityComparer : IEqualityComparer<ISelectableObject>
-        {
-            public bool Equals(ISelectableObject x, ISelectableObject y)
-            {
-                return x.SelectableObjectInfo.Type == y.SelectableObjectInfo.Type && x.SelectableObjectInfo.TypeStr == y.SelectableObjectInfo.TypeStr;
-            }
 
-            public int GetHashCode(ISelectableObject obj)
-            {
-                int hCode = obj.SelectableObjectInfo.Type.GetHashCode() + obj.SelectableObjectInfo.TypeStr.GetHashCode();
-                return hCode;
-            }
-        }
+
     }
 
 

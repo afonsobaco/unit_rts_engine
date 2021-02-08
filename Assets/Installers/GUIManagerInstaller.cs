@@ -27,6 +27,8 @@ namespace RTSEngine.Installers
         private void DeclareSignals()
         {
             Container.DeclareSignal<SelectionChangeSignal>();
+            Container.DeclareSignal<PrimaryObjectSelectedSignal>();
+            Container.DeclareSignal<GUIClickedSignal>();
             Container.DeclareSignal<SelectedPortraitClickSignal>();
             Container.DeclareSignal<SelectedMiniatureClickSignal>();
             Container.BindSignal<SelectionChangeSignal>().ToMethod<GUIManager>(x => x.OnSelectionChange).FromResolve();

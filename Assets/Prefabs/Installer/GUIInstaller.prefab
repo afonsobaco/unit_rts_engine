@@ -58,7 +58,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &1581636076
 MonoBehaviour:
@@ -157,6 +157,38 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1581636078}
     m_Modifications:
+    - target: {fileID: 64341634, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -64
+      objectReference: {fileID: 0}
+    - target: {fileID: 64341634, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -64
+      objectReference: {fileID: 0}
+    - target: {fileID: 64341634, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64341634, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64341635, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: m_Spacing.x
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 64341635, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: m_Spacing.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 64341635, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: m_CellSize.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 64341635, guid: b575df68deca71e4486ebb84832aeff8, type: 3}
+      propertyPath: m_CellSize.y
+      value: 56
+      objectReference: {fileID: 0}
     - target: {fileID: 8171643307655992858, guid: b575df68deca71e4486ebb84832aeff8,
         type: 3}
       propertyPath: m_Name

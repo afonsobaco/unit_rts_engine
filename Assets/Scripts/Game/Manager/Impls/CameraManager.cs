@@ -9,20 +9,16 @@ namespace RTSEngine.Manager
     {
 
         private ICameraSettings _settings;
-        private Vector3 _origin;
         private bool _isPanning;
         private float yPosMagicNumber = 7.08f;
         private bool _isCentering;
+        private bool _canMove;
         private Camera _mainCamera;
+        private ISelectableObject _pointOfInterest;
 
-        public Vector3 GetOrigin()
+        public void OnSelectionChange(PrimaryObjectSelectedSignal signal)
         {
-            return _origin;
-        }
-
-        public void SetOrigin(Vector3 value)
-        {
-            _origin = value;
+            SetPointOfInterest(signal.Selectable);
         }
 
         public bool IsPanning()
@@ -45,11 +41,6 @@ namespace RTSEngine.Manager
             _isCentering = value;
         }
 
-        public ICameraSettings GetCameraSettings()
-        {
-            return _settings;
-        }
-
         public void SetCameraSettings(ICameraSettings value)
         {
             _settings = value;
@@ -60,16 +51,20 @@ namespace RTSEngine.Manager
             this._mainCamera = Camera.main;
         }
 
-        public void DoProfileInfoClick(SelectedPortraitClickSignal signal)
+        public void DoSelectedPortraitClick(SelectedPortraitClickSignal signal)
         {
-            Debug.Log("ProfileInfo Clicked: " + signal.Selectable.Index);
-            //TODO ajust
+            SetPointOfInterest(signal.Selectable);
+            SetIsCentering(signal.Type == KeyButtonType.PRESSED);
         }
 
-        public Vector3 DoCameraCentering(Vector3 position)
+        public Vector3 DoCameraCentering()
         {
-            float z = position.z - GetCameraZDistance();
-            return new Vector3(position.x, _mainCamera.transform.position.y, (float)z);
+            if (this._pointOfInterest == null)
+            {
+                return _mainCamera.transform.position;
+            }
+            float z = this._pointOfInterest.Position.z - GetCameraZDistance();
+            return new Vector3(this._pointOfInterest.Position.x, _mainCamera.transform.position.y, (float)z);
         }
 
         private Vector3 GetSelectionMainPoint(HashSet<ISelectableObject> selectableObjectBehaviours)
@@ -83,7 +78,7 @@ namespace RTSEngine.Manager
 
         public Vector3 DoCameraInputMovement(float horizontal, float vertical, Vector3 mousePosition, float deltaTime)
         {
-            if ((Mathf.Abs(horizontal) > GetCameraSettings().AxisPressure || Mathf.Abs(vertical) > GetCameraSettings().AxisPressure))
+            if ((Mathf.Abs(horizontal) > _settings.AxisPressure || Mathf.Abs(vertical) > _settings.AxisPressure))
             {
                 return DoAxisCameraMovement(horizontal, vertical, deltaTime);
             }
@@ -96,7 +91,7 @@ namespace RTSEngine.Manager
         public Vector3 DoCameraPanning(Vector2 mouseAxis, float deltaTime)
         {
             Vector3 desiredMove = new Vector3(-mouseAxis.x, 0, -mouseAxis.y);
-            desiredMove *= GetCameraSettings().PanSpeed * _mainCamera.transform.position.y;
+            desiredMove *= _settings.PanSpeed * _mainCamera.transform.position.y;
             desiredMove *= deltaTime;
             desiredMove = Quaternion.Euler(new Vector3(0f, _mainCamera.transform.eulerAngles.y, 0f)) * desiredMove;
             desiredMove = _mainCamera.transform.InverseTransformDirection(desiredMove);
@@ -105,14 +100,14 @@ namespace RTSEngine.Manager
 
         public Vector3 DoCameraZooming(float y, float deltaTime)
         {
-            Vector3 vZoom = CalcVZoom(_mainCamera.transform.position, _mainCamera.transform.forward, GetCameraSettings().ZoomScale * deltaTime * y);
-            if (vZoom.y < GetCameraSettings().MinZoom)
+            Vector3 vZoom = CalcVZoom(_mainCamera.transform.position, _mainCamera.transform.forward, _settings.ZoomScale * deltaTime * y);
+            if (vZoom.y < _settings.MinZoom)
             {
-                vZoom = clampZoomOnY(_mainCamera.transform.position, _mainCamera.transform.forward, GetCameraSettings().MinZoom);
+                vZoom = clampZoomOnY(_mainCamera.transform.position, _mainCamera.transform.forward, _settings.MinZoom);
             }
-            else if (vZoom.y > GetCameraSettings().MaxZoom)
+            else if (vZoom.y > _settings.MaxZoom)
             {
-                vZoom = clampZoomOnY(_mainCamera.transform.position, _mainCamera.transform.forward, GetCameraSettings().MaxZoom);
+                vZoom = clampZoomOnY(_mainCamera.transform.position, _mainCamera.transform.forward, _settings.MaxZoom);
             }
             return vZoom;
         }
@@ -139,38 +134,38 @@ namespace RTSEngine.Manager
         public Vector3 ClampCameraPos()
         {
             float zDistance = GetCameraZDistance();
-            if (zDistance > GetCameraSettings().SizeFromMidPoint / 2)
+            if (zDistance > _settings.SizeFromMidPoint / 2)
             {
                 zDistance = 0;
             }
-            float clampedX = Mathf.Clamp(_mainCamera.transform.position.x, -GetCameraSettings().SizeFromMidPoint + (zDistance), GetCameraSettings().SizeFromMidPoint - (zDistance));
-            float clampedZ = Mathf.Clamp(_mainCamera.transform.position.z, -GetCameraSettings().SizeFromMidPoint - (zDistance / 2), GetCameraSettings().SizeFromMidPoint - zDistance);
+            float clampedX = Mathf.Clamp(_mainCamera.transform.position.x, -_settings.SizeFromMidPoint + (zDistance), _settings.SizeFromMidPoint - (zDistance));
+            float clampedZ = Mathf.Clamp(_mainCamera.transform.position.z, -_settings.SizeFromMidPoint - (zDistance / 2), _settings.SizeFromMidPoint - zDistance);
             return new Vector3(clampedX, _mainCamera.transform.position.y, clampedZ);
         }
 
         private Vector3 DoMouseCameraMovement(Vector3 mousePosition, float deltaTime)
         {
             //TODO adjust
-            // if (!selectionManager.IsSelecting())
-            // {
-            //     var mousePos = _mainCamera.ScreenToViewportPoint(mousePosition);
-            //     if (mousePos.x >= 0 && mousePos.x <= 1 && mousePos.y >= 0 && mousePos.y <= 1)
-            //     {
-            //         float x = DoMouseMovement(mousePos.x, _mainCamera.transform.position.y, deltaTime);
-            //         float z = DoMouseMovement(mousePos.y, _mainCamera.transform.position.y, deltaTime);
-            //         return new Vector3(x, 0f, z);
-            //     }
-            // }
+            if (!_canMove)
+            {
+                var mousePos = _mainCamera.ScreenToViewportPoint(mousePosition);
+                if (mousePos.x >= 0 && mousePos.x <= 1 && mousePos.y >= 0 && mousePos.y <= 1)
+                {
+                    float x = DoMouseMovement(mousePos.x, _mainCamera.transform.position.y, deltaTime);
+                    float z = DoMouseMovement(mousePos.y, _mainCamera.transform.position.y, deltaTime);
+                    return new Vector3(x, 0f, z);
+                }
+            }
             return Vector3.zero;
         }
 
         private float DoMouseMovement(float position, float yPos, float deltaTime)
         {
-            if (position >= 0 && position < (GetCameraSettings().BoundriesOffset))
+            if (position >= 0 && position < (_settings.BoundriesOffset))
             {
                 return MoveCamera(-1, yPos, deltaTime);
             }
-            else if (position <= 1 && position > (1 - GetCameraSettings().BoundriesOffset))
+            else if (position <= 1 && position > (1 - _settings.BoundriesOffset))
             {
                 return MoveCamera(1, yPos, deltaTime);
             }
@@ -179,7 +174,7 @@ namespace RTSEngine.Manager
 
         public float MoveCamera(float value, float yPos, float deltaTime)
         {
-            var speed = (yPos * GetCameraSettings().CameraSpeed) + yPosMagicNumber; //magic number!
+            var speed = (yPos * _settings.CameraSpeed) + yPosMagicNumber; //magic number!
             return value * speed * deltaTime;
         }
 
@@ -192,14 +187,28 @@ namespace RTSEngine.Manager
 
         public Vector3 GetMinScreenBoundries()
         {
-            return _mainCamera.ViewportToScreenPoint(GetCameraSettings().MinViewportPoint);
+            return _mainCamera.ViewportToScreenPoint(_settings.MinViewportPoint);
         }
 
         public Vector3 GetMaxScreenBoundries()
         {
-            return _mainCamera.ViewportToScreenPoint(GetCameraSettings().MaxViewportPoint);
+            return _mainCamera.ViewportToScreenPoint(_settings.MaxViewportPoint);
         }
 
+        public void SetCanMove(bool value)
+        {
+            this._canMove = value;
+        }
+
+        public void CanMoveSignal(CanMoveSignal signal)
+        {
+            this._canMove = signal.Value;
+        }
+
+        public void SetPointOfInterest(ISelectableObject selected)
+        {
+            this._pointOfInterest = selected;
+        }
     }
 
 

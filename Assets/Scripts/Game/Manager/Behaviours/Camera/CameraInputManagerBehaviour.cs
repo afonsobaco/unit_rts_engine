@@ -42,8 +42,7 @@ namespace RTSEngine.Manager
         {
             if (cameraManager.IsCentering())
             {
-                //Get mainPoint
-                Camera.main.transform.position = cameraManager.DoCameraCentering(Vector3.zero);
+                Camera.main.transform.position = cameraManager.DoCameraCentering();
             }
             else
             {
@@ -65,7 +64,6 @@ namespace RTSEngine.Manager
             if (Input.GetMouseButtonDown(2))
             {
                 cameraManager.SetIsPanning(true);
-                cameraManager.SetOrigin(Input.mousePosition);
             }
             if (Input.GetMouseButtonUp(2))
             {

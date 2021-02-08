@@ -18,10 +18,10 @@ MonoBehaviour:
   life:
     value: 500
     maxValue: 0
-    enabled: 1
+    enabled: 0
   mana:
     value: 500
     maxValue: 500
-    enabled: 1
+    enabled: 0
   typeStr: 
-  selectionOrder: 0
+  selectionOrder: -999

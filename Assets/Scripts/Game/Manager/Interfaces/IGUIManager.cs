@@ -8,13 +8,13 @@ namespace RTSEngine.Manager
 {
     public interface IGUIManager
     {
-        bool ClickedOnGUI(Vector3 mousePosition);
         void SetSelectionGridPlaceholder(Transform selectionGridTransform);
         void SetPortraitPlaceholder(Transform profileInfoTransform);
         void SetRaycaster(GraphicRaycaster graphicRaycaster);
         void SetSelectedMiniaturePrefab(GameObject selectedMiniaturePrefab);
         void SetSelectedPortraitPrefab(GameObject selectedPortraitPrefab);
         void ChangeGroup(bool back);
-
+        void DoClickOnElement(List<RaycastResult> results, KeyButtonType type);
+        List<RaycastResult> GetGUIElementsClicked(Vector3 mousePosition);
     }
 }

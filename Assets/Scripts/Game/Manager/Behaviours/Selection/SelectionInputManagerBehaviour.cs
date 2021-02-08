@@ -11,7 +11,6 @@ namespace RTSEngine.Manager
         [SerializeField] private KeyCode _groupKeyCode = KeyCode.Z;
         [SerializeField] private float _doubleClickTime = 0.3f;
         private float _lastTimeClicked;
-        private bool _canSelect = true;
 
         private SelectionOptions _selectionOptions;
         private SelectionManager _selectionManager;
@@ -81,7 +80,7 @@ namespace RTSEngine.Manager
 
         public void SetMouseClick(float doubleClickTime)
         {
-            if (_canSelect)
+            if (_selectionManager.CanSelect())
             {
 
                 if (Input.GetMouseButtonDown(0))

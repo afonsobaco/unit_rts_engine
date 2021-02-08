@@ -13,12 +13,14 @@ namespace RTSEngine.Manager
     {
 
         private GUIManager _manager;
+        private SignalBus _signalBus;
         private bool _performingGUIAction;
 
         [Inject]
-        public void Constructor(GUIManager manager)
+        public void Constructor(GUIManager manager, SignalBus signalBus)
         {
             this._manager = manager;
+            this._signalBus = signalBus;
         }
 
         private void Update()
@@ -39,16 +41,29 @@ namespace RTSEngine.Manager
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (_manager.ClickedOnGUI(Input.mousePosition))
+                var results = _manager.GetGUIElementsClicked(Input.mousePosition);
+                if (results.Count > 0)
                 {
                     _performingGUIAction = true;
+                    _manager.DoClickOnElement(results, KeyButtonType.DOWN);
+                    this._signalBus.Fire(new GUIClickedSignal() { Value = true });
                 }
             }
-
+            if (Input.GetMouseButton(0))
+            {
+                var results = _manager.GetGUIElementsClicked(Input.mousePosition);
+                if (results.Count > 0 && _performingGUIAction)
+                {
+                    _manager.DoClickOnElement(results, KeyButtonType.PRESSED);
+                }
+            }
             if (Input.GetMouseButtonUp(0))
             {
                 if (_performingGUIAction)
                 {
+                    var results = _manager.GetGUIElementsClicked(Input.mousePosition);
+                    _manager.DoClickOnElement(results, KeyButtonType.UP);
+                    this._signalBus.Fire(new GUIClickedSignal() { Value = false });
                     _performingGUIAction = false;
                 }
             }

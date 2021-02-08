@@ -19,9 +19,17 @@ namespace RTSEngine.Installers
 
             Container.DeclareSignal<SelectableObjectCreatedSignal>();
             Container.DeclareSignal<SelectableObjectDeletedSignal>();
+            Container.DeclareSignal<GUIClickedSignal>();
             Container.DeclareSignal<SelectionChangeSignal>();
+            Container.DeclareSignal<CanMoveSignal>();
+            Container.DeclareSignal<PrimaryObjectSelectedSignal>();
+
+            Container.DeclareSignal<SelectedPortraitClickSignal>();
+            Container.DeclareSignal<SelectedMiniatureClickSignal>();
             Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionManager>(x => x.AddSelectableObject).FromResolve();
             Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionManager>(x => x.RemoveSelectableObject).FromResolve();
+            Container.BindSignal<SelectedMiniatureClickSignal>().ToMethod<SelectionManager>(x => x.DoSelectedMiniatureClick).FromResolve();
+            Container.BindSignal<GUIClickedSignal>().ToMethod<SelectionManager>(x => x.SetCanSelect).FromResolve();
         }
 
         private void Init(InjectContext arg1, SelectionManager selectionManager)

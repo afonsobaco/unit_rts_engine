@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace RTSEngine.Manager
 {
-
-    public interface IGUIClickableElement
+    public class CanMoveSignal
     {
-        void DoAction(params object[] parameters);
+        public bool Value { get; set; }
     }
 }
