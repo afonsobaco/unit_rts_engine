@@ -8,12 +8,13 @@ namespace RTSEngine.Refactoring
     public class Selection
     {
         private ModifiersInterface _modifiersInterface;
-        private HashSet<ISelectable> _mainList = new HashSet<ISelectable>();
+        private IRuntimeSet<ISelectable> _mainList;
         private ISelectable[] _current = new ISelectable[] { };
 
-        public Selection(ModifiersInterface modifiersInterface)
+        public Selection(ModifiersInterface modifiersInterface, IRuntimeSet<ISelectable> mainList)
         {
             _modifiersInterface = modifiersInterface;
+            _mainList = mainList;
         }
 
         public virtual void DoSelection(ISelectable[] selection, SelectionType type)
@@ -22,30 +23,14 @@ namespace RTSEngine.Refactoring
             FinalizeSelection(modified);
         }
 
+        public virtual IRuntimeSet<ISelectable> GetMainList()
+        {
+            return _mainList;
+        }
+
         private void FinalizeSelection(ISelectable[] expected)
         {
             this._current = expected;
-        }
-
-        public void AddToMainList(ISelectable selectable)
-        {
-            if (!_mainList.Contains(selectable))
-            {
-                _mainList.Add(selectable);
-            }
-        }
-
-        public void RemoveFromMainList(ISelectable selectable)
-        {
-            if (_mainList.Contains(selectable))
-            {
-                _mainList.Remove(selectable);
-            }
-        }
-
-        public virtual ISelectable[] GetMainList()
-        {
-            return _mainList.ToArray();
         }
 
         public virtual ISelectable[] GetCurrent()

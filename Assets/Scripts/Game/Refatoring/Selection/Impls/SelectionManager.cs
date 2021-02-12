@@ -19,30 +19,35 @@ namespace RTSEngine.Refactoring
 
         public void OnAreaSignal(AreaSelectionSignal signal)
         {
-            var result = _selectionInterface.GetAreaSelection(_selection.GetMainList(), signal.StartPoint, signal.EndPoint);
+            var result = _selectionInterface.GetAreaSelection(GetMainList(), signal.StartPoint, signal.EndPoint);
             _selection.DoSelection(result, SelectionType.AREA);
         }
 
         public void OnGroupSignal(GroupSelectionSignal signal)
         {
-            var selection = _selectionInterface.GetGroupSelection(_selection.GetMainList(), signal.GroupId);
+            var selection = _selectionInterface.GetGroupSelection(GetMainList(), signal.GroupId);
             _selection.DoSelection(selection, SelectionType.GROUP);
         }
 
         public void OnIndividualSignal(IndividualSelectionSignal signal)
         {
-            var selection = _selectionInterface.GetIndividualSelection(_selection.GetMainList(), signal.Clicked);
+            var selection = _selectionInterface.GetIndividualSelection(GetMainList(), signal.Clicked);
             _selection.DoSelection(selection, SelectionType.INDIVIDUAL);
         }
 
         public void OnSelectableObjectCreatedSignal(SelectableObjectCreatedSignal signal)
         {
-            _selection.AddToMainList(signal.Selectable);
+            _selection.GetMainList().AddToList(signal.Selectable);
         }
 
         public void OnSelectableObjectDeletedSignal(SelectableObjectDeletedSignal signal)
         {
-            _selection.RemoveFromMainList(signal.Selectable);
+            _selection.GetMainList().RemoveFromList(signal.Selectable);
+        }
+
+        public virtual ISelectable[] GetMainList()
+        {
+            return _selection.GetMainList().GetList().ToArray();
         }
     }
 }

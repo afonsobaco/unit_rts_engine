@@ -18,18 +18,19 @@ namespace Tests
         public void SetUp()
         {
             _selectionInterface = Substitute.ForPartsOf<SelectionInterface>(new object[] { default, default, default });
-            _selection = Substitute.ForPartsOf<Selection>(new object[] { default });
+            _selection = Substitute.ForPartsOf<Selection>(new object[] { default, default });
             _selectionManager = Substitute.ForPartsOf<SelectionManager>(new object[] { _selection, _selectionInterface });
 
             _selection.When(x => x.DoSelection(Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>())).DoNotCallBase();
-            _selection.When(x => x.GetMainList()).DoNotCallBase();
+            _selectionManager.When(x => x.GetMainList()).DoNotCallBase();
         }
 
         [Test]
         public void SelectionTestSimplePasses()
         {
-            Assert.NotNull(_selection);
+            Assert.NotNull(_selectionManager);
         }
+
 
         [Test]
         public void ShouldCallGetSelectionOnAreaSingal()
@@ -43,7 +44,7 @@ namespace Tests
             signal.StartPoint = startPoint;
             signal.EndPoint = endPoint;
             _selectionInterface.GetAreaSelection(Arg.Any<ISelectable[]>(), Arg.Any<Vector2>(), Arg.Any<Vector2>()).Returns(expected);
-            _selection.GetMainList().Returns(mainList);
+            _selectionManager.GetMainList().Returns(mainList);
 
             _selectionManager.OnAreaSignal(signal);
 
@@ -61,7 +62,7 @@ namespace Tests
             GroupSelectionSignal signal = new GroupSelectionSignal();
             signal.GroupId = groupId;
             _selectionInterface.GetGroupSelection(Arg.Any<ISelectable[]>(), Arg.Any<object>()).Returns(expected);
-            _selection.GetMainList().Returns(mainList);
+            _selectionManager.GetMainList().Returns(mainList);
 
             _selectionManager.OnGroupSignal(signal);
 
@@ -80,14 +81,13 @@ namespace Tests
             signal.Clicked = clicked;
 
             _selectionInterface.GetIndividualSelection(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable>()).Returns(expected);
-            _selection.GetMainList().Returns(mainList);
+            _selectionManager.GetMainList().Returns(mainList);
 
             _selectionManager.OnIndividualSignal(signal);
 
             _selectionInterface.Received().GetIndividualSelection(mainList, clicked);
             _selection.Received().DoSelection(expected, SelectionType.INDIVIDUAL);
         }
-
 
     }
 }

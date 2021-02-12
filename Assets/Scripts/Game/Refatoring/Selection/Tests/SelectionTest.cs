@@ -18,7 +18,7 @@ namespace Tests
         {
             _modifiersInterface = Substitute.For<ModifiersInterface>();
 
-            _selection = Substitute.ForPartsOf<Selection>(new object[] { _modifiersInterface });
+            _selection = Substitute.ForPartsOf<Selection>(new object[] { _modifiersInterface, default });
 
             _modifiersInterface.ApplyAll(Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>()).Returns(x => x[0]);
         }

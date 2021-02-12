@@ -5,9 +5,9 @@ namespace RTSEngine.Core
 {
     public interface IRuntimeSet<T>
     {
-        void AddToList(T item);
-        T GetItem(int index);
         HashSet<T> GetList();
+        T GetItem(int index);
+        void AddToList(T item);
         void RemoveFromList(T item);
     }
 }
