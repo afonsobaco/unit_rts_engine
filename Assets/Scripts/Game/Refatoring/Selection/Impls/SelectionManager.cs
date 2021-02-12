@@ -7,38 +7,42 @@ namespace RTSEngine.Refactoring
 {
     public class SelectionManager
     {
-        private HashSet<ISelectable> _mainList = new HashSet<ISelectable>();
-        private ISelectable[] _currentSelection = new ISelectable[] { };
 
-        public virtual ISelectable[] GetMainList()
+        private Selection _selection;
+        private SelectionInterface _selectionInterface;
+
+        public SelectionManager(Selection selection, SelectionInterface selectionInterface)
         {
-            return _mainList.ToArray();
+            this._selection = selection;
+            _selectionInterface = selectionInterface;
         }
 
-        public void AddToMainList(ISelectable selectable)
+        public void OnAreaSignal(AreaSelectionSignal signal)
         {
-            if (!_mainList.Contains(selectable))
-            {
-                _mainList.Add(selectable);
-            }
+            var result = _selectionInterface.GetAreaSelection(_selection.GetMainList(), signal.StartPoint, signal.EndPoint);
+            _selection.DoSelection(result, SelectionType.AREA);
         }
 
-        public void RemoveFromMainList(ISelectable selectable)
+        public void OnGroupSignal(GroupSelectionSignal signal)
         {
-            if (_mainList.Contains(selectable))
-            {
-                _mainList.Remove(selectable);
-            }
+            var selection = _selectionInterface.GetGroupSelection(_selection.GetMainList(), signal.GroupId);
+            _selection.DoSelection(selection, SelectionType.GROUP);
         }
 
-        public virtual void SetCurrentSelection(ISelectable[] selection)
+        public void OnIndividualSignal(IndividualSelectionSignal signal)
         {
-            this._currentSelection = selection;
+            var selection = _selectionInterface.GetIndividualSelection(_selection.GetMainList(), signal.Clicked);
+            _selection.DoSelection(selection, SelectionType.INDIVIDUAL);
         }
 
-        public virtual ISelectable[] GetCurrentSelection()
+        public void OnSelectableObjectCreatedSignal(SelectableObjectCreatedSignal signal)
         {
-            return this._currentSelection;
+            _selection.AddToMainList(signal.Selectable);
+        }
+
+        public void OnSelectableObjectDeletedSignal(SelectableObjectDeletedSignal signal)
+        {
+            _selection.RemoveFromMainList(signal.Selectable);
         }
     }
 }

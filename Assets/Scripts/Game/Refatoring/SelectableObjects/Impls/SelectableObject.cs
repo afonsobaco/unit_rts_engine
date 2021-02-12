@@ -1,19 +1,32 @@
 ﻿using UnityEngine;
 using RTSEngine.Core;
+using Zenject;
 
 namespace RTSEngine.Refactoring
 {
     public class SelectableObject : MonoBehaviour, ISelectable
     {
-        [SerializeField] private string objectName;
-        [SerializeField] private LayerMask layer;
-        [SerializeField] private Status[] statuses;
+        [SerializeField] private string _objectName;
+        [SerializeField] private Status[] _statuses;
 
         public int Index { get; set; }
         public bool IsSelected { get; set; }
         public bool IsPreSelected { get; set; }
         public Vector3 Position { get; set; }
-        public string ObjectName { get => objectName; set => objectName = value; }
-        public Status[] Statuses { get => statuses; set => statuses = value; }
+        public string ObjectName { get => _objectName; set => _objectName = value; }
+        public Status[] Statuses { get => _statuses; set => _statuses = value; }
+
+        [Inject]
+        private SignalBus _signalBus;
+
+        private void OnEnable()
+        {
+            _signalBus.Fire(new SelectableObjectCreatedSignal { Selectable = this });
+        }
+
+        private void OnDisable()
+        {
+            _signalBus.Fire(new SelectableObjectDeletedSignal { Selectable = this });
+        }
     }
 }

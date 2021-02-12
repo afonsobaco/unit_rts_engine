@@ -5,7 +5,7 @@ namespace RTSEngine.Refactoring
 {
     public class ModifiersInterface
     {
-        public virtual ISelectable[] ApplyAll(ISelectable[] expected, SelectionType type)
+        public virtual ISelectable[] ApplyAll(ISelectable[] selection, SelectionType type)
         {
             throw new NotImplementedException();
         }

@@ -7,41 +7,51 @@ namespace RTSEngine.Refactoring
 {
     public class Selection
     {
-        private SelectionInterface _selectionInterface;
         private ModifiersInterface _modifiersInterface;
-        private SelectionManager _selectionManager;
+        private HashSet<ISelectable> _mainList = new HashSet<ISelectable>();
+        private ISelectable[] _current = new ISelectable[] { };
 
-        public Selection(SelectionInterface selectionInterface, ModifiersInterface modifiersInterface, SelectionManager selectionManager)
+        public Selection(ModifiersInterface modifiersInterface)
         {
-            _selectionInterface = selectionInterface;
             _modifiersInterface = modifiersInterface;
-            _selectionManager = selectionManager;
         }
 
-        public void OnAreaSignal(AreaSelectionSignal signal)
+        public virtual void DoSelection(ISelectable[] selection, SelectionType type)
         {
-            var selection = _selectionInterface.GetAreaSelection(_selectionManager.GetMainList(), signal.StartPoint, signal.EndPoint);
-            var modified = _modifiersInterface.ApplyAll(selection, SelectionType.AREA);
+            var modified = _modifiersInterface.ApplyAll(selection, type);
             FinalizeSelection(modified);
         }
 
-        public void OnGroupSignal(GroupSelectionSignal signal)
+        private void FinalizeSelection(ISelectable[] expected)
         {
-            var selection = _selectionInterface.GetGroupSelection(_selectionManager.GetMainList(), signal.GroupId);
-            var modified = _modifiersInterface.ApplyAll(selection, SelectionType.GROUP);
-            FinalizeSelection(modified);
+            this._current = expected;
         }
 
-        public void OnIndividualSignal(IndividualSelectionSignal signal)
+        public void AddToMainList(ISelectable selectable)
         {
-            var selection = _selectionInterface.GetIndividualSelection(_selectionManager.GetMainList(), signal.Clicked);
-            var modified = _modifiersInterface.ApplyAll(selection, SelectionType.INDIVIDUAL);
-            FinalizeSelection(modified);
+            if (!_mainList.Contains(selectable))
+            {
+                _mainList.Add(selectable);
+            }
         }
 
-        public virtual void FinalizeSelection(ISelectable[] expected)
+        public void RemoveFromMainList(ISelectable selectable)
         {
-            _selectionManager.SetCurrentSelection(expected);
+            if (_mainList.Contains(selectable))
+            {
+                _mainList.Remove(selectable);
+            }
         }
+
+        public virtual ISelectable[] GetMainList()
+        {
+            return _mainList.ToArray();
+        }
+
+        public virtual ISelectable[] GetCurrent()
+        {
+            return this._current;
+        }
+
     }
 }
