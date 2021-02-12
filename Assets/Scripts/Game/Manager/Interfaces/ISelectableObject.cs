@@ -11,6 +11,8 @@ namespace RTSEngine.Manager
         ObjectStatus LifeStatus { get; set; }
         ObjectStatus ManaStatus { get; set; }
         bool IsCompatible(ISelectable other);
+        void ChangePreSelectionMarkStatus(bool value);
+        void ChangeSelectionMarkStatus(bool value);
     }
 
 

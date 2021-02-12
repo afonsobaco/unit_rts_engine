@@ -6,7 +6,7 @@ namespace RTSEngine.Manager
 {
     public class SelectionUtil
     {
-        public static HashSet<ISelectableObject> GetAllObjectsInsideSelectionArea(HashSet<ISelectableObject> allObjects, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
+        public static HashSet<ISelectableObject> GetAllObjectsInsideSelectionArea(HashSet<ISelectableObject> allObjects, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
         {
             HashSet<ISelectableObject> list = new HashSet<ISelectableObject>();
             if (allObjects == null)
@@ -25,7 +25,7 @@ namespace RTSEngine.Manager
             return list;
         }
 
-        public static ISelectableObject GetObjectClicked(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
+        public static ISelectableObject GetObjectClicked(Vector2 initialScreenPosition, Vector2 finalScreenPosition)
         {
             var initialObject = GetObjectInScreenPoint(initialScreenPosition, Camera.main);
             var finalObject = GetObjectInScreenPoint(finalScreenPosition, Camera.main);
@@ -36,28 +36,7 @@ namespace RTSEngine.Manager
             return null;
         }
 
-        private static bool IsPositionInsideArea(Vector3 screenPos, Vector3 initialScreenPosition, Vector3 finalScreenPosition)
-        {
-            var min = GetMinAreaPosition(initialScreenPosition, finalScreenPosition);
-            var max = GetMaxAreaPosition(initialScreenPosition, finalScreenPosition);
-            return screenPos.x > min.x && screenPos.x < max.x && screenPos.y > min.y && screenPos.y < max.y;
-        }
-
-        private static Vector2 GetMaxAreaPosition(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
-        {
-            Vector2 size = GetAreaSize(initialScreenPosition, finalScreenPosition);
-            Vector3 center = GetAreaCenter(initialScreenPosition, finalScreenPosition);
-            return new Vector2(center.x + (size.x / 2), center.y + (size.y / 2));
-        }
-
-        private static Vector2 GetMinAreaPosition(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
-        {
-            Vector2 size = GetAreaSize(initialScreenPosition, finalScreenPosition);
-            Vector3 center = GetAreaCenter(initialScreenPosition, finalScreenPosition);
-            return new Vector2(center.x - (size.x / 2), center.y - (size.y / 2));
-        }
-
-        public static ISelectableObject GetObjectInScreenPoint(Vector3 mousePosition, Camera camera)
+        public static ISelectableObject GetObjectInScreenPoint(Vector2 mousePosition, Camera camera)
         {
             Ray ray = camera.ScreenPointToRay(mousePosition);
             RaycastHit hit;
@@ -68,12 +47,33 @@ namespace RTSEngine.Manager
             return null;
         }
 
-        public static Vector2 GetAreaSize(Vector2 initialScreenPosition, Vector3 finalScreenPosition)
+        private static bool IsPositionInsideArea(Vector2 screenPos, Vector2 initialScreenPosition, Vector2 finalScreenPosition)
+        {
+            var min = GetMinAreaPosition(initialScreenPosition, finalScreenPosition);
+            var max = GetMaxAreaPosition(initialScreenPosition, finalScreenPosition);
+            return screenPos.x > min.x && screenPos.x < max.x && screenPos.y > min.y && screenPos.y < max.y;
+        }
+
+        private static Vector2 GetMaxAreaPosition(Vector2 initialScreenPosition, Vector2 finalScreenPosition)
+        {
+            Vector2 size = GetAreaSize(initialScreenPosition, finalScreenPosition);
+            Vector2 center = GetAreaCenter(initialScreenPosition, finalScreenPosition);
+            return new Vector2(center.x + (size.x / 2), center.y + (size.y / 2));
+        }
+
+        private static Vector2 GetMinAreaPosition(Vector2 initialScreenPosition, Vector2 finalScreenPosition)
+        {
+            Vector2 size = GetAreaSize(initialScreenPosition, finalScreenPosition);
+            Vector2 center = GetAreaCenter(initialScreenPosition, finalScreenPosition);
+            return new Vector2(center.x - (size.x / 2), center.y - (size.y / 2));
+        }
+
+        public static Vector2 GetAreaSize(Vector2 initialScreenPosition, Vector2 finalScreenPosition)
         {
             return new Vector2(Mathf.Abs(initialScreenPosition.x - finalScreenPosition.x), Mathf.Abs(initialScreenPosition.y - finalScreenPosition.y));
         }
 
-        public static Vector2 GetAreaCenter(Vector3 initialScreenPosition, Vector3 finalScreenPosition)
+        public static Vector2 GetAreaCenter(Vector2 initialScreenPosition, Vector2 finalScreenPosition)
         {
             return (initialScreenPosition + finalScreenPosition) / 2;
         }

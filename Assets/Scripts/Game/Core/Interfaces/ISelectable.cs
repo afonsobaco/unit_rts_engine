@@ -7,9 +7,6 @@ namespace RTSEngine.Core
         bool IsSelected { get; set; }
         bool IsPreSelected { get; set; }
         Vector3 Position { get; set; }
-        void ChangePreSelectionMarkStatus(bool value);
-        void ChangeSelectionMarkStatus(bool value);
-
 
     }
 

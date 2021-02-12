@@ -11,8 +11,6 @@ namespace RTSEngine.Manager
         private bool aditiveKeyPressed;
         private bool sameTypeKeyPressed;
         private bool groupKeyPressed;
-        //TODO to camera
-        // private bool centerKeyPressed;
 
         public bool IsSelectionDone { get => isSelectionDone; set => isSelectionDone = value; }
         public Vector2 InitialScreenPoint { get => initialScreenPoint; set => initialScreenPoint = value; }
@@ -21,8 +19,6 @@ namespace RTSEngine.Manager
         public bool AditiveKeyPressed { get => aditiveKeyPressed; set => aditiveKeyPressed = value; }
         public bool SameTypeKeyPressed { get => sameTypeKeyPressed; set => sameTypeKeyPressed = value; }
         public bool GroupKeyPressed { get => groupKeyPressed; set => groupKeyPressed = value; }
-        // public bool CenterKeyPressed { get => centerKeyPressed; set => centerKeyPressed = value; }
-
 
     }
 

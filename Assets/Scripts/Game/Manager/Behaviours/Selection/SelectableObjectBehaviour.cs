@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace RTSEngine.Manager
 {
 
-    public class SelectableObjectBehaviour : MonoBehaviour, ISelectableObject, IDestructable
+    public class SelectableObjectBehaviour : MonoBehaviour, ISelectableObject //, IDestructable
     {
         [Space]
         [Header("Prefab Info")]
