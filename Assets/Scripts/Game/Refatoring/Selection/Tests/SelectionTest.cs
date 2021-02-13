@@ -16,11 +16,11 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-            _modifiersInterface = Substitute.For<ModifiersInterface>();
+            _modifiersInterface = Substitute.For<ModifiersInterface>(new object[] { default });
 
             _selection = Substitute.ForPartsOf<Selection>(new object[] { _modifiersInterface, default });
 
-            _modifiersInterface.ApplyAll(Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>()).Returns(x => x[0]);
+            _modifiersInterface.ApplyAll(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>()).Returns(x => x[1]);
         }
 
         [Test]

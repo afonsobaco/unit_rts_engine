@@ -2,6 +2,7 @@
 using UnityEngine;
 using RTSEngine.Core;
 using RTSEngine.Utils;
+using System;
 
 namespace RTSEngine.Refactoring
 {
@@ -12,8 +13,6 @@ namespace RTSEngine.Refactoring
             Vector2[] area = Poly.GetDefaultQuadrilateral(startPoint, endPoint);
             Vector2 position = Camera.main.WorldToScreenPoint(selectable.Position);
             return Poly.ContainsPoint(area, position);
-
         }
-
     }
 }

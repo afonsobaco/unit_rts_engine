@@ -10,7 +10,7 @@ namespace RTSEngine.Core
 
         public HashSet<T> HashSet { get => _list; set => _list = value; }
 
-        public void AddToList(T item)
+        public void Add(T item)
         {
             if (item != null && !HashSet.Contains(item))
             {
@@ -18,7 +18,7 @@ namespace RTSEngine.Core
             }
         }
 
-        public void RemoveFromList(T item)
+        public void Remove(T item)
         {
             if (item != null && HashSet.Contains(item))
             {
@@ -26,7 +26,7 @@ namespace RTSEngine.Core
             }
         }
 
-        public HashSet<T> GetList()
+        public HashSet<T> GetAllItems()
         {
 
             return HashSet;

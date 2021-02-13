@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System;
+using UnityEngine;
 using System.Linq;
 using RTSEngine.Core;
 
@@ -37,17 +37,17 @@ namespace RTSEngine.Refactoring
 
         public void OnSelectableObjectCreatedSignal(SelectableObjectCreatedSignal signal)
         {
-            _selection.GetMainList().AddToList(signal.Selectable);
+            _selection.GetMainList().Add(signal.Selectable);
         }
 
         public void OnSelectableObjectDeletedSignal(SelectableObjectDeletedSignal signal)
         {
-            _selection.GetMainList().RemoveFromList(signal.Selectable);
+            _selection.GetMainList().Remove(signal.Selectable);
         }
 
         public virtual ISelectable[] GetMainList()
         {
-            return _selection.GetMainList().GetList().ToArray();
+            return _selection.GetMainList().GetAllItems().ToArray();
         }
     }
 }

@@ -47,7 +47,7 @@ namespace RTSEngine.Installers
         {
             if (this._selectionManager != null)
             {
-                this._selectionManager.SetMainList(this._selectableList.GetList());
+                this._selectionManager.SetMainList(this._selectableList.GetAllItems());
                 this._selectionManager.SetSettings(this._settings);
             }
         }

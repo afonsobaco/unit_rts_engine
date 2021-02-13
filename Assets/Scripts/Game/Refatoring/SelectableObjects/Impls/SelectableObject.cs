@@ -4,7 +4,7 @@ using Zenject;
 
 namespace RTSEngine.Refactoring
 {
-    public class SelectableObject : MonoBehaviour, ISelectable
+    public class SelectableObject : ZenAutoInjecter, ISelectable
     {
         [SerializeField] private string _objectName;
         [SerializeField] private Status[] _statuses;
@@ -16,8 +16,13 @@ namespace RTSEngine.Refactoring
         public string ObjectName { get => _objectName; set => _objectName = value; }
         public Status[] Statuses { get => _statuses; set => _statuses = value; }
 
-        [Inject]
         private SignalBus _signalBus;
+
+        [Inject]
+        public void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+        }
 
         private void OnEnable()
         {

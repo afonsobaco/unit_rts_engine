@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using RTSEngine.Core;
+﻿using RTSEngine.Core;
 using System.Linq;
-using System;
+using UnityEngine;
 
 namespace RTSEngine.Refactoring
 {
@@ -19,7 +18,7 @@ namespace RTSEngine.Refactoring
 
         public virtual void DoSelection(ISelectable[] selection, SelectionType type)
         {
-            var modified = _modifiersInterface.ApplyAll(selection, type);
+            var modified = _modifiersInterface.ApplyAll(_current, selection, type);
             FinalizeSelection(modified);
         }
 
@@ -28,9 +27,20 @@ namespace RTSEngine.Refactoring
             return _mainList;
         }
 
-        private void FinalizeSelection(ISelectable[] expected)
+        private void FinalizeSelection(ISelectable[] selection)
         {
-            this._current = expected;
+            for (var i = 0; i < _current.Length; i++)
+            {
+                if (!selection.Contains(_current[i]))
+                {
+                    _current[i].IsSelected = false;
+                }
+            }
+            for (var i = 0; i < selection.Length; i++)
+            {
+                selection[i].IsSelected = true;
+            }
+            this._current = selection;
         }
 
         public virtual ISelectable[] GetCurrent()
