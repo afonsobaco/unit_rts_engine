@@ -31,7 +31,6 @@ namespace Tests
             Assert.NotNull(_selectionManager);
         }
 
-
         [Test]
         public void ShouldCallGetSelectionOnAreaSingal()
         {
@@ -53,6 +52,25 @@ namespace Tests
         }
 
         [Test]
+        public void ShouldNotCallGetSelectionOnAreaSingalIfClickedIsNotNull()
+        {
+            int amount = 10;
+            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var expected = mainList.ToList().Take(3).ToArray();
+            var startPoint = Vector2.zero;
+            var endPoint = Vector2.zero;
+            AreaSelectionSignal signal = new AreaSelectionSignal();
+            signal.StartPoint = startPoint;
+            signal.EndPoint = endPoint;
+            _selectionManager.BlockAreaSelection = true;
+
+            _selectionManager.OnAreaSignal(signal);
+
+            _selection.DidNotReceiveWithAnyArgs().DoSelection(expected, SelectionType.AREA);
+            _selectionInterface.DidNotReceiveWithAnyArgs().GetAreaSelection(Arg.Any<ISelectable[]>(), Arg.Any<Vector2>(), Arg.Any<Vector2>());
+        }
+
+        [Test]
         public void ShouldCallGetSelectionOnGroupSingal()
         {
             int amount = 10;
@@ -61,6 +79,7 @@ namespace Tests
             var groupId = 1;
             GroupSelectionSignal signal = new GroupSelectionSignal();
             signal.GroupId = groupId;
+            signal.CreateNew = false;
             _selectionInterface.GetGroupSelection(Arg.Any<ISelectable[]>(), Arg.Any<object>()).Returns(expected);
             _selectionManager.GetMainList().Returns(mainList);
 
@@ -68,6 +87,25 @@ namespace Tests
 
             _selectionInterface.Received().GetGroupSelection(mainList, groupId);
             _selection.Received().DoSelection(expected, SelectionType.GROUP);
+        }
+
+        [Test]
+        public void ShouldCallChangeGroupOnGroupSingalWithCreateNewSignal()
+        {
+            int amount = 10;
+            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var expected = mainList.ToList().Take(3).ToArray();
+            var groupId = 1;
+            GroupSelectionSignal signal = new GroupSelectionSignal();
+            signal.GroupId = groupId;
+            signal.CreateNew = true;
+            _selectionInterface.WhenForAnyArgs(x => x.SetGroupSelection(default, default)).DoNotCallBase();
+            _selection.GetCurrent().Returns(expected);
+
+            _selectionManager.OnGroupSignal(signal);
+
+            _selectionInterface.Received().SetGroupSelection(expected, groupId);
+            _selection.DidNotReceiveWithAnyArgs().DoSelection(default, default);
         }
 
         [Test]

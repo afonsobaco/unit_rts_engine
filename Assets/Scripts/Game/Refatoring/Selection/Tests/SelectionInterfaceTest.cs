@@ -42,6 +42,7 @@ namespace Tests
         public void ShouldGetSelectionFromAreaSelectionType()
         {
             ISelectable[] result = _selectionInterface.GetAreaSelection(default, default, default);
+
             _areaSelection.ReceivedWithAnyArgs(1).GetSelection(default, default, default);
             _groupSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
             _individualSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
@@ -51,7 +52,19 @@ namespace Tests
         public void ShouldGetSelectionFromGroupSelectionType()
         {
             ISelectable[] result = _selectionInterface.GetGroupSelection(default, default);
+
             _groupSelection.ReceivedWithAnyArgs(1).GetSelection(default, default);
+            _areaSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default, default);
+            _individualSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
+        }
+
+        [Test]
+        public void ShouldSetSelectionFromGroupSelectionType()
+        {
+            _selectionInterface.SetGroupSelection(default, default);
+
+            _groupSelection.ReceivedWithAnyArgs(1).ChangeGroup(default, default);
+            _groupSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
             _areaSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default, default);
             _individualSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
         }
@@ -60,6 +73,7 @@ namespace Tests
         public void ShouldGetSelectionFromIndividualSelectionType()
         {
             ISelectable[] result = _selectionInterface.GetIndividualSelection(default, default);
+
             _individualSelection.ReceivedWithAnyArgs(1).GetSelection(default, default);
             _areaSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default, default);
             _groupSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);

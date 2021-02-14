@@ -6,5 +6,7 @@ namespace RTSEngine.Refactoring
     {
         public object GroupId;
 
+        public bool CreateNew;
+
     }
 }

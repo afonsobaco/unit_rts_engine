@@ -9,6 +9,7 @@ namespace RTSEngine.Refactoring
         private ModifiersInterface _modifiersInterface;
         private IRuntimeSet<ISelectable> _mainList;
         private ISelectable[] _current = new ISelectable[] { };
+        private bool isSelecting;
 
         public Selection(ModifiersInterface modifiersInterface, IRuntimeSet<ISelectable> mainList)
         {

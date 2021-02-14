@@ -10,6 +10,8 @@ namespace RTSEngine.Refactoring
 
         private Selection _selection;
         private SelectionInterface _selectionInterface;
+        private bool _blockAreaSelection;
+        public bool BlockAreaSelection { get => _blockAreaSelection; set => _blockAreaSelection = value; }
 
         public SelectionManager(Selection selection, SelectionInterface selectionInterface)
         {
@@ -19,18 +21,30 @@ namespace RTSEngine.Refactoring
 
         public void OnAreaSignal(AreaSelectionSignal signal)
         {
-            var result = _selectionInterface.GetAreaSelection(GetMainList(), signal.StartPoint, signal.EndPoint);
-            _selection.DoSelection(result, SelectionType.AREA);
+            if (!BlockAreaSelection)
+            {
+                var result = _selectionInterface.GetAreaSelection(GetMainList(), signal.StartPoint, signal.EndPoint);
+                _selection.DoSelection(result, SelectionType.AREA);
+            }
+            BlockAreaSelection = false;
         }
 
         public void OnGroupSignal(GroupSelectionSignal signal)
         {
-            var selection = _selectionInterface.GetGroupSelection(GetMainList(), signal.GroupId);
-            _selection.DoSelection(selection, SelectionType.GROUP);
+            if (signal.CreateNew)
+            {
+                _selectionInterface.SetGroupSelection(_selection.GetCurrent(), signal.GroupId);
+            }
+            else
+            {
+                var selection = _selectionInterface.GetGroupSelection(GetMainList(), signal.GroupId);
+                _selection.DoSelection(selection, SelectionType.GROUP);
+            }
         }
 
         public void OnIndividualSignal(IndividualSelectionSignal signal)
         {
+            this.BlockAreaSelection = signal.BlockAreaSelection;
             var selection = _selectionInterface.GetIndividualSelection(GetMainList(), signal.Clicked);
             _selection.DoSelection(selection, SelectionType.INDIVIDUAL);
         }

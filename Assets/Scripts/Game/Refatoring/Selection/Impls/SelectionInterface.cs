@@ -27,6 +27,11 @@ namespace RTSEngine.Refactoring
             return groupSelection.GetSelection(mainList, groupId);
         }
 
+        public virtual void SetGroupSelection(ISelectable[] selectables, object groupId)
+        {
+            groupSelection.ChangeGroup(groupId, selectables);
+        }
+
         public virtual ISelectable[] GetIndividualSelection(ISelectable[] mainList, ISelectable clicked)
         {
             return individualSelection.GetSelection(mainList, clicked);

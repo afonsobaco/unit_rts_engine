@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using RTSEngine.Core;
+using RTSEngine.Refactoring;
 using Zenject;
 
 public class SelectableObjectSelection : DefaultSelectable
@@ -30,5 +29,10 @@ public class SelectableObjectSelection : DefaultSelectable
         {
             this.transform.localScale = new Vector3(Mathf.PingPong(Time.time * 0.2f, 0.1f) + 1, Mathf.PingPong(Time.time * 0.2f, 0.1f) + 1, Mathf.PingPong(Time.time * 0.2f, 0.1f) + 1);
         }
+    }
+
+    private void OnMouseUpAsButton()
+    {
+        _signalBus.Fire(new IndividualSelectionSignal() { Clicked = this, BlockAreaSelection = true });
     }
 }
