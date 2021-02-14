@@ -46,19 +46,22 @@ namespace Tests
             var result = _areaSelection.GetSelection(mainList, startPoint, endPoint);
             Assert.IsNotEmpty(result);
             var _expected = mainList.ToList().FindAll(x => x.Position.x < amount / 2).ToArray();
-            CollectionAssert.AreEquivalent(_expected, result);
+            CollectionAssert.AreEqual(_expected, result);
         }
 
         private void MockSelectionInsideArea(Vector2 startPoint, Vector2 endPoint)
         {
+            var start = new Vector2(endPoint.x - startPoint.x >= 0 ? startPoint.x : endPoint.x, endPoint.y - startPoint.y >= 0 ? startPoint.y : endPoint.y);
+            var end = new Vector2(endPoint.x - startPoint.x >= 0 ? endPoint.x : startPoint.x, startPoint.y - endPoint.y > 0 ? endPoint.y : startPoint.y);
+
             _polyAreaSelection.IsInsideSelectionArea(
                             Arg.Any<Vector2>(),
                             Arg.Any<Vector2>(),
                             Arg.Is<ISelectable>(x =>
-                                x.Position.x >= startPoint.x &&
-                                x.Position.y >= startPoint.y &&
-                                x.Position.x <= endPoint.x &&
-                                x.Position.y <= endPoint.y
+                                x.Position.x >= start.x &&
+                                x.Position.y >= start.y &&
+                                x.Position.x <= end.x &&
+                                x.Position.y <= end.y
                             )).Returns(true);
         }
     }

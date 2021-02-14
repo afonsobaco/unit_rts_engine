@@ -5,6 +5,12 @@ using UnityEngine;
 using Zenject;
 using RTSEngine.Refactoring;
 
+/**
+*
+* This class is just for tests
+* It should be used only as a reference for real implementation
+*
+*/
 public class SceneHelper : MonoBehaviour
 {
     public GameObject prefab;
@@ -16,17 +22,28 @@ public class SceneHelper : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            var newObjet = GameObject.Instantiate(prefab);
-            newObjet.transform.position = new Vector3(Random.Range(-4.0f, 4.0f), 0, Random.Range(-4.0f, 4.0f));
-            newObjet.GetComponent<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                CreateSelectableObject(hit.point);
+            }
         }
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            var item = GetItem();
-            if (item != null)
-                GameObject.Destroy((item as SelectableObjectSelection).gameObject);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                SelectableObjectSelection item = hit.collider.GetComponent<SelectableObjectSelection>();
+                if (item != null)
+                {
+                    GameObject.Destroy((item as SelectableObjectSelection).gameObject);
+                }
+            }
         }
         if (Input.GetMouseButtonDown(0))
         {
@@ -48,6 +65,13 @@ public class SceneHelper : MonoBehaviour
             if (item != null)
                 signalBus.Fire(new IndividualSelectionSignal() { BlockAreaSelection = false, Clicked = item });
         }
+    }
+
+    private void CreateSelectableObject(Vector3 position)
+    {
+        var newObjet = GameObject.Instantiate(prefab);
+        newObjet.transform.position = position;
+        newObjet.GetComponent<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
     }
 
     private RTSEngine.Core.ISelectable GetItem()

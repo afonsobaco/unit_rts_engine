@@ -1,10 +1,11 @@
-﻿using RTSEngine.Core;
+﻿using System.Collections.Generic;
+using RTSEngine.Core;
 using System.Linq;
 using UnityEngine;
 
 namespace RTSEngine.Refactoring
 {
-    public class Selection
+    public partial class Selection
     {
         private ModifiersInterface _modifiersInterface;
         private IRuntimeSet<ISelectable> _mainList;
@@ -28,7 +29,13 @@ namespace RTSEngine.Refactoring
             return _mainList;
         }
 
-        private void FinalizeSelection(ISelectable[] selection)
+        public virtual void FinalizeSelection(ISelectable[] selection)
+        {
+            ChangeSelectionStatus(selection);
+            this._current = selection;
+        }
+
+        private void ChangeSelectionStatus(ISelectable[] selection)
         {
             for (var i = 0; i < _current.Length; i++)
             {
@@ -41,7 +48,6 @@ namespace RTSEngine.Refactoring
             {
                 selection[i].IsSelected = true;
             }
-            this._current = selection;
         }
 
         public virtual ISelectable[] GetCurrent()

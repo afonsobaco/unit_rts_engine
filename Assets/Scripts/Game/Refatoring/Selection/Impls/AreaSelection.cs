@@ -30,7 +30,7 @@ namespace RTSEngine.Refactoring
                     result.Add(mainList[i]);
                 }
             }
-            return result.ToArray();
+            return DistanceHelper.Sort(result, startPoint);
         }
     }
 }

@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-using System;
 using UnityEngine;
 using Zenject;
 using RTSEngine.Core;
@@ -9,6 +7,7 @@ namespace RTSEngine.Refactoring
     public class SelectionInstaller : MonoInstaller
     {
         [SerializeField] private RuntimeSetComponent runtimeSet;
+        [SerializeField] private ModifiersComponent modifiers;
 
         public override void InstallBindings()
         {
@@ -36,7 +35,7 @@ namespace RTSEngine.Refactoring
 
         private ISelectionModifier[] GetModifiers()
         {
-            return this.GetComponents<ISelectionModifier>();
+            return modifiers.GetComponents<ISelectionModifier>();
         }
 
         private IRuntimeSet<ISelectable> GetMainList()
