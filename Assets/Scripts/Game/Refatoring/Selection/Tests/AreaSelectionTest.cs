@@ -46,7 +46,14 @@ namespace Tests
             var result = _areaSelection.GetSelection(mainList, startPoint, endPoint);
             Assert.IsNotEmpty(result);
             var _expected = mainList.ToList().FindAll(x => x.Position.x < amount / 2).ToArray();
-            CollectionAssert.AreEqual(_expected, result);
+
+            CollectionAssert.AreEquivalent(_expected, result);
+            var lastDifference = 0f;
+            for (var i = 1; i < result.Length; i++)
+            {
+                float d = Vector3.Distance(result[i].Position, result[i - 1].Position);
+                Assert.True(d >= lastDifference);
+            }
         }
 
         private void MockSelectionInsideArea(Vector2 startPoint, Vector2 endPoint)
@@ -54,7 +61,7 @@ namespace Tests
             var start = new Vector2(endPoint.x - startPoint.x >= 0 ? startPoint.x : endPoint.x, endPoint.y - startPoint.y >= 0 ? startPoint.y : endPoint.y);
             var end = new Vector2(endPoint.x - startPoint.x >= 0 ? endPoint.x : startPoint.x, startPoint.y - endPoint.y > 0 ? endPoint.y : startPoint.y);
 
-            _polyAreaSelection.IsInsideSelectionArea(
+            _polyAreaSelection.IsInsideScreenPoints(
                             Arg.Any<Vector2>(),
                             Arg.Any<Vector2>(),
                             Arg.Is<ISelectable>(x =>

@@ -33,5 +33,10 @@ namespace RTSEngine.Refactoring
         {
             _signalBus.Fire(new SelectableObjectDeletedSignal { Selectable = this });
         }
+
+        public int CompareTo(object obj)
+        {
+            return 0;
+        }
     }
 }

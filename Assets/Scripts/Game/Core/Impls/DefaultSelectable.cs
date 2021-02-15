@@ -2,7 +2,7 @@
 
 namespace RTSEngine.Core
 {
-    public class DefaultSelectable : MonoBehaviour, ISelectable
+    public abstract class DefaultSelectable : MonoBehaviour, ISelectable
     {
         public int Index { get; set; }
         public bool IsSelected { get; set; }
@@ -16,6 +16,7 @@ namespace RTSEngine.Core
             }
         }
 
+        public abstract int CompareTo(object obj);
     }
 
 }

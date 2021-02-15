@@ -1,147 +1,133 @@
-﻿// using NUnit.Framework;
-// using RTSEngine.Manager;
-// using System.Collections.Generic;
-// using NSubstitute;
-// using Tests.Utils;
-// using System.Linq;
+﻿using UnityEngine;
+using NUnit.Framework;
+using RTSEngine.Core;
+using RTSEngine.Refactoring;
+using System.Collections.Generic;
+using NSubstitute;
+using Tests.Utils;
+using System.Linq;
 
-// namespace Tests
-// {
-//     [TestFixture]
-//     public class SameTypeModifierTest
-//     {
-//         private SameTypeSelectionModifier modifier;
-//         private ISelectionSettings settings;
-//         private ISelectionManager selectionManager;
+namespace Tests
+{
+    [TestFixture]
+    public class SameTypeModifierTest
+    {
+        private SameTypeSelectionModifier.Modifier modifier;
 
-//         [SetUp]
-//         public void SetUp()
-//         {
-//             selectionManager = Substitute.For<ISelectionManager>();
-//             settings = Substitute.For<ISelectionSettings>();
-//             selectionManager.GetSettings().Returns(settings);
-//             settings.CanGroup.Returns(new ObjectTypeEnum[] { ObjectTypeEnum.UNIT, ObjectTypeEnum.BUILDING });
+        [SetUp]
+        public void SetUp()
+        {
+            modifier = Substitute.ForPartsOf<SameTypeSelectionModifier.Modifier>();
+            modifier.Active = true;
+        }
 
-//             modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>(new object[] { selectionManager });
-//         }
-
-//         [Test]
-//         public void SameTypeModifierTestSimplePasses()
-//         {
-//             SelectionArguments args = new SelectionArguments(new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>(), new HashSet<ISelectableObject>());
-
-//             var result = modifier.Apply(args);
-//             Assert.AreEqual(args, result);
-//         }
+        [Test]
+        public void SameTypeModifierTestSimplePasses()
+        {
+            Assert.IsNotNull(modifier);
+        }
 
 
-//         [TestCaseSource(nameof(Scenarios))]
-//         public void ShouldApplyModifier(SelectionStruct selectionStruct, ModifiersStruct modifierStruct, ResultStruct resultStruct)
-//         {
-//             selectionManager.IsSameType().Returns(modifierStruct.isSameType);
+        [TestCaseSource(nameof(Scenarios))]
+        public void ShouldApplyModifier(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
+        {
+            ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount);
+            ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
+            ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
 
-//             HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(selectionStruct.mainListAmount);
-//             HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(selectionStruct.oldSelection, mainList);
-//             HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectionStruct.newSelection, mainList);
-//             HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(resultStruct.expected, mainList);
+            List<ISelectable> expected = new List<ISelectable>(newSelection);
+            if (newSelection.Length == 1)
+            {
+                expected = GetMockedSameType(mainList, newSelection.First());
+            }
+            modifier.WhenForAnyArgs(x => x.GetAllFromSameType(default)).DoNotCallBase();
+            modifier.GetAllFromSameType(default).ReturnsForAnyArgs(expected.ToList());
 
-//             HashSet<ISelectableObject> sameTypeList = new HashSet<ISelectableObject>();
-//             if (modifierStruct.isSameType && selectionStruct.newSelection.Length > 0)
-//             {
-//                 if (selectionStruct.additionalInfo.group_evens.Contains(selectionStruct.newSelection[0])) //TODO should not work with newSelection
-//                 {
-//                     sameTypeList = TestUtils.GetListByIndex(selectionStruct.additionalInfo.group_evens, mainList);
-//                 }
-//                 else
-//                 {
-//                     sameTypeList = TestUtils.GetListByIndex(selectionStruct.additionalInfo.group_odds, mainList); ;
-//                 }
-//             }
-//             SelectionArguments args = new SelectionArguments(oldSelection, newSelection, mainList);
-//             modifier.When(x => x.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArguments>())).DoNotCallBase();
-//             modifier.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArguments>()).Returns(sameTypeList);
+            var result = modifier.Apply(oldSelection, newSelection, newSelection, SelectionType.ANY);
 
-//             args = modifier.Apply(args);
+            CollectionAssert.AreEquivalent(expected.ToArray(), result);
+        }
 
-//             CollectionAssert.AreEquivalent(expected, args.ToBeAdded);
-//         }
+        private static List<ISelectable> GetMockedSameType(ISelectable[] mainList, ISelectable selectable)
+        {
+            var evens = new List<ISelectable>();
+            var odds = new List<ISelectable>();
+            foreach (var item in mainList)
+            {
+                if (item.Index % 2 == 0) evens.Add(item); else odds.Add(item);
+            }
+            return evens.Contains(selectable) ? evens : odds;
+        }
 
-//         [TestCase(new int[] { 0 }, new int[] { 0, 1, 2, 3 }, TestName = "Should Get All Units")]
-//         [TestCase(new int[] { 5 }, new int[] { 4, 5, 6 }, TestName = "Should Get All Buildings")]
-//         [TestCase(new int[] { 9 }, new int[] { 9 }, TestName = "Should Get Empty")]
-//         public void ShouldGetAllFromSameTypeThatCanGroup(int[] selectedIndex, int[] expectedResult)
-//         {
-//             HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(10);
-//             HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(selectedIndex, mainList);
-//             HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(expectedResult, mainList);
-//             SetObjectSelectableTypes(mainList);
+        [TestCase(10, new int[] { 0 }, new int[] { 0, 1, 2, 3 }, TestName = "Should Get All Units")]
+        [TestCase(10, new int[] { 5 }, new int[] { 4, 5, 6 }, TestName = "Should Get All Buildings")]
+        [TestCase(10, new int[] { 9 }, new int[] { }, TestName = "Should Get Empty")]
+        public void ShouldGetFromSameTypeInViewport(int amount, int[] newSelectionIndexes, int[] expectedIndexes)
+        {
+            ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount - 3);
+            ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
+            ISelectable[] expected = TestUtils.GetListByIndex(expectedIndexes, mainList);
 
-//             modifier.WhenForAnyArgs(x => x.GetAllFromSameType(default, default, default, default, default)).DoNotCallBase();
-//             modifier.GetAllFromSameType(default, default, default, default, default).ReturnsForAnyArgs(expected);
+            modifier.InitialViewportPoint = Vector2.zero;
+            modifier.FinalViewportPoint = Vector2.one;
 
-//             SelectionArguments args = new SelectionArguments(default, newSelection, mainList);
-//             var result = modifier.GetAllFromSameTypeThatCanGroup(args);
+            modifier.WhenForAnyArgs(x => x.GetMainList()).DoNotCallBase();
+            modifier.GetMainList().ReturnsForAnyArgs(new HashSet<ISelectable>(mainList));
+            modifier.WhenForAnyArgs(x => x.GetAllInsideViewportPoints(default)).DoNotCallBase();
+            modifier.GetAllInsideViewportPoints(Arg.Any<ISelectable>()).Returns(mainList.ToList());
 
-//             CollectionAssert.AreEquivalent(expected, result);
-//         }
+            foreach (var item in mainList)
+            {
+                if (item is IGroupable)
+                {
+                    IGroupable groupable = (item as IGroupable);
+                    groupable.IsCompatible(Arg.Any<ISelectable>()).Returns(x =>
+                    {
+                        ISelectable selectable = x[0] as ISelectable;
+                        if (selectable.Index < 4 && item.Index < 4)
+                        {
+                            return true;
+                        }
+                        else if (selectable.Index >= 4 && item.Index >= 4 && selectable.Index < 7 && item.Index < 7)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                    );
+                }
+            }
 
-//         [Test]
-//         public void ShouldGetAllFromSameType()
-//         {
-//             HashSet<ISelectableObject> mainList = TestUtils.GetSomeObjects(10);
-//             HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(new int[] { 0, 1, 2, 3 }, mainList);
-//             ISelectableObject selected = TestUtils.GetListByIndex(new int[] { 0 }, mainList).First();
+            var result = modifier.GetFromSameTypeInViewport(newSelection.First());
 
-//             SetObjectSelectableTypes(mainList);
+            CollectionAssert.AreEquivalent(expected, result);
+        }
 
-//             modifier.WhenForAnyArgs(x => x.GetFromSameTypeInScreen(default, default, default, default)).DoNotCallBase();
-//             modifier.GetFromSameTypeInScreen(default, default, default, default).ReturnsForAnyArgs(expected);
+        [Test]
+        public void ShouldGetAllFromSameType()
+        {
+            ISelectable[] mainList = TestUtils.GetSomeObjects(10, 10);
+            ISelectable[] expected = TestUtils.GetListByIndex(new int[] { 0, 1, 2, 3 }, mainList);
+            ISelectable selected = TestUtils.GetListByIndex(new int[] { 0 }, mainList).First();
 
-//             var result = modifier.GetAllFromSameType(selected, mainList, default, default, default);
+            modifier.WhenForAnyArgs(x => x.GetFromSameTypeInViewport(default)).DoNotCallBase();
+            modifier.GetFromSameTypeInViewport(default).ReturnsForAnyArgs(expected.ToList());
 
-//             CollectionAssert.AreEquivalent(expected, result);
-//         }
+            var result = modifier.GetAllFromSameType(selected);
 
-//         private static void SetObjectSelectableTypes(HashSet<ISelectableObject> mainList)
-//         {
-//             mainList.ToList().ForEach(x =>
-//             {
-//                 if (x.Index < 4)
-//                 {
-//                     x.SelectableObjectInfo.Type = ObjectTypeEnum.UNIT;
-//                 }
-//                 else if (x.Index < 7)
-//                 {
-//                     x.SelectableObjectInfo.Type = ObjectTypeEnum.BUILDING;
-//                 }
-//                 else
-//                 {
-//                     x.SelectableObjectInfo.Type = ObjectTypeEnum.ENVIRONMENT;
-//                 }
-//             }); ;
-//         }
+            CollectionAssert.AreEquivalent(expected, result);
+        }
 
-//         public static IEnumerable<TestCaseData> Scenarios
-//         {
-//             get
-//             {
-//                 foreach (var item in TestUtils.GetCustomCases(new ModifiersStruct(false, true), true))
-//                 {
-//                     int[] toBeAdded = item.selection.newSelection;
-//                     if (item.modifiers.isSameType && toBeAdded.Length == 1) //click
-//                     {
-//                         if (item.selection.additionalInfo.group_evens.Contains(item.selection.newSelection[0]))
-//                         {
-//                             toBeAdded = item.selection.additionalInfo.group_evens;
-//                         }
-//                         else
-//                         {
-//                             toBeAdded = item.selection.additionalInfo.group_odds;
-//                         }
-//                     }
-//                     yield return new TestCaseData(item.selection, item.modifiers, new ResultStruct { expected = toBeAdded }).SetName(item.name);
-//                 }
-//             }
-//         }
-//     }
-// }
+        public static IEnumerable<TestCaseData> Scenarios
+        {
+            get
+            {
+                foreach (var item in TestUtils.GetDefaultCases())
+                {
+
+                    yield return new TestCaseData(item.amount, item.oldSelection, item.newSelection).SetName(TestUtils.GetCaseName(item));
+                }
+            }
+        }
+    }
+}

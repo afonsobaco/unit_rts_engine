@@ -8,15 +8,17 @@ namespace RTSEngine.Refactoring
 
     public static class DistanceHelper
     {
-        public static ISelectable[] Sort(IEnumerable<ISelectable> selection, Vector2 startPoint)
+        public static ISelectable[] SortScreenSpace(IEnumerable<ISelectable> selection, Vector3 startPoint)
         {
             List<ISelectable> result = new List<ISelectable>(selection);
-            Ray ray = Camera.main.ScreenPointToRay(startPoint);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
-            {
-                result.Sort(new DistanceComparer(hit.point));
-            }
+            result.Sort(new DistanceComparerScreen(startPoint));
+            return result.ToArray();
+        }
+
+        public static ISelectable[] SortWorldSpace(IEnumerable<ISelectable> selection, Vector3 startPoint)
+        {
+            List<ISelectable> result = new List<ISelectable>(selection);
+            result.Sort(new DistanceComparerWorld(startPoint));
             return result.ToArray();
         }
     }

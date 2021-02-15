@@ -11,39 +11,55 @@ namespace RTSEngine.Refactoring
     {
         [SerializeField] private SelectionType type;
 
+        [Space]
+        [Header("Modifier attributes")]
+        [SerializeField] private KeyCode key = KeyCode.LeftShift;
+
+        private Modifier modifier = new Modifier();
         public SelectionType Type { get => type; set => type = value; }
+
+        private void Update()
+        {
+            modifier.Active = Input.GetKey(key);
+        }
+
         public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
         {
-            return actualSelection;
+            return this.modifier.Apply(oldSelection, newSelection, actualSelection, type);
         }
-        // public override SelectionArguments Apply(SelectionArguments args)
-        // {
-        //     if (selectionManager.IsAdditive())
-        //     {
-        //         AddOrRemoveFromSelection(args);
-        //     }
-        //     return args;
-        // }
 
+        public class Modifier
+        {
+            public int Limit { get; set; }
+            public bool Active { get; set; }
 
+            public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+            {
+                if (Active)
+                {
+                    return AddOrRemoveFromSelection(oldSelection, newSelection, actualSelection);
+                }
+                return actualSelection;
+            }
 
-        // private void AddOrRemoveFromSelection(SelectionArguments args)
-        // {
-        //     HashSet<ISelectableObject> aux = new HashSet<ISelectableObject>(args.OldSelection);
-        //     aux.UnionWith(args.ToBeAdded);
-        //     if (ContainsAllSelected(args.OldSelection, args.NewSelection))
-        //     {
-        //         aux.RemoveWhere(x => args.ToBeAdded.Contains(x));
-        //     }
-        //     args.ToBeAdded = aux;
-        // }
+            private ISelectable[] AddOrRemoveFromSelection(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
+            {
+                List<ISelectable> aux = new List<ISelectable>(oldSelection);
+                aux = aux.Union(actualSelection).ToList();
+                if (ContainsAllSelected(oldSelection, newSelection))
+                {
+                    aux.RemoveAll(x => actualSelection.Contains(x));
+                }
+                return aux.ToArray();
+            }
 
-        // private bool ContainsAllSelected(HashSet<ISelectableObject> oldSelection, HashSet<ISelectableObject> newSelection)
-        // {
-        //     bool oldContainsNew = newSelection.All(x => oldSelection.Contains(x));
-        //     HashSet<ISelectableObject> aux = new HashSet<ISelectableObject>(oldSelection);
-        //     aux.RemoveWhere(x => newSelection.Contains(x));
-        //     return oldContainsNew && aux.Count > 0;
-        // }
+            private bool ContainsAllSelected(ISelectable[] oldSelection, ISelectable[] newSelection)
+            {
+                bool oldContainsNew = newSelection.All(x => oldSelection.Contains(x));
+                List<ISelectable> aux = new List<ISelectable>(oldSelection);
+                aux.RemoveAll(x => newSelection.Contains(x));
+                return oldContainsNew && aux.Count > 0;
+            }
+        }
     }
 }

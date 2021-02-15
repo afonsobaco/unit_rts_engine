@@ -7,70 +7,75 @@ namespace RTSEngine.Refactoring
 {
     public class GroupSelectionModifier : MonoBehaviour, ISelectionModifier
     {
+
         [SerializeField] private SelectionType type;
 
+        [Space]
+        [Header("Modifier attributes")]
+
+        [SerializeField] private ModifierEqualityComparerComponent equalityComparer;
+
+
+        private Modifier modifier = new Modifier();
         public SelectionType Type { get => type; set => type = value; }
-        public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+
+        private void Start()
         {
-            return actualSelection;
+            StartVariables();
         }
 
+        private void OnValidate()
+        {
+            if (modifier != null)
+            {
+                StartVariables();
+            }
+        }
 
-        // public override SelectionArguments Apply(SelectionArguments args)
-        // {
-        //     args.ToBeAdded = GetOrderedSelection(args);
-        //     return args;
-        // }
+        private void StartVariables()
+        {
+            modifier.EqualityComparer = equalityComparer;
+        }
 
-        // private HashSet<ISelectableObject> GetOrderedSelection(SelectionArguments args)
-        // {
-        //     List<ISelectableObject> list = new List<ISelectableObject>();
-        //     if (args.ToBeAdded != null && args.ToBeAdded.Count > 0)
-        //     {
-        //         var grouped = args.ToBeAdded.GroupBy(x => x, new EqualityComparer());
-        //         var sorted = grouped.ToList();
-        //         sorted.Sort(new ObjectComparer());
-        //         foreach (var item in sorted)
-        //         {
-        //             list.AddRange(item);
-        //         }
-        //     }
-        //     return new HashSet<ISelectableObject>(list);
-        // }
+        public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+        {
+            return this.modifier.Apply(oldSelection, newSelection, actualSelection, type);
+        }
 
-        // private class ObjectComparer : IComparer<IGrouping<ISelectableObject, ISelectableObject>>
-        // {
-        //     public int Compare(IGrouping<ISelectableObject, ISelectableObject> x, IGrouping<ISelectableObject, ISelectableObject> y)
-        //     {
-        //         int v = y.Key.SelectableObjectInfo.SelectionOrder - x.Key.SelectableObjectInfo.SelectionOrder;
-        //         if (v == 0)
-        //         {
-        //             if (y.Key.LifeStatus.MaxValue > x.Key.LifeStatus.MaxValue)
-        //             {
-        //                 return 1;
-        //             }
-        //             else if (y.Key.LifeStatus.MaxValue < x.Key.LifeStatus.MaxValue)
-        //             {
-        //                 return -1;
-        //             }
-        //         }
-        //         return v;
-        //     }
-        // }
+        public class Modifier
+        {
+            public SelectionType Type { get; set; }
+            public int Limit { get; set; }
+            public IEqualityComparer<ISelectable> EqualityComparer { get; internal set; }
 
-        // private class EqualityComparer : IEqualityComparer<ISelectableObject>
-        // {
-        //     public bool Equals(ISelectableObject x, ISelectableObject y)
-        //     {
-        //         return x.SelectableObjectInfo.Type == y.SelectableObjectInfo.Type && x.SelectableObjectInfo.ObjectName == y.SelectableObjectInfo.ObjectName;
-        //     }
+            public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+            {
+                return GetOrderedSelection(oldSelection, newSelection, actualSelection);
+            }
 
-        //     public int GetHashCode(ISelectableObject obj)
-        //     {
-        //         int hCode = obj.SelectableObjectInfo.Type.GetHashCode() + obj.SelectableObjectInfo.ObjectName.GetHashCode();
-        //         return hCode;
-        //     }
-        // }
+            private ISelectable[] GetOrderedSelection(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
+            {
+                List<ISelectable> list = new List<ISelectable>();
+                if (actualSelection.Length > 0)
+                {
+                    var grouped = actualSelection.GroupBy(x => x, EqualityComparer);
+                    var sorted = grouped.ToList();
+                    sorted.Sort(new ObjectComparer());
+                    foreach (var item in sorted)
+                    {
+                        list.AddRange(item);
+                    }
+                }
+                return list.ToArray();
+            }
+        }
 
+        public class ObjectComparer : IComparer<IGrouping<ISelectable, ISelectable>>
+        {
+            public int Compare(IGrouping<ISelectable, ISelectable> x, IGrouping<ISelectable, ISelectable> y)
+            {
+                return x.Key.CompareTo(y.Key);
+            }
+        }
     }
 }

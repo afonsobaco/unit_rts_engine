@@ -133,7 +133,11 @@ GameObject:
   - component: {fileID: 574790115}
   - component: {fileID: 574790114}
   - component: {fileID: 574790113}
+  - component: {fileID: 574790119}
+  - component: {fileID: 574790112}
   - component: {fileID: 574790111}
+  - component: {fileID: 574790117}
+  - component: {fileID: 574790118}
   m_Layer: 0
   m_Name: SceneHelper
   m_TagString: Untagged
@@ -155,6 +159,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   limit: 3
+--- !u!114 &574790112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574790110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f1c9058bfee1240a5b366846f08466, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  key: 304
 --- !u!114 &574790113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +224,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &574790117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574790110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22adfdf2511669f47af235d07022c427, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  equalityComparer: {fileID: 574790118}
+--- !u!114 &574790118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574790110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3b1955ab622fe14b9a8eccab26078c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &574790119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574790110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd481a03254e832409bf28e77540af2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 2
+  key: 306
+  initialViewportPoint: {x: 0, y: 0}
+  finalViewportPoint: {x: 1, y: 1}
 --- !u!1 &638685779
 GameObject:
   m_ObjectHideFlags: 0

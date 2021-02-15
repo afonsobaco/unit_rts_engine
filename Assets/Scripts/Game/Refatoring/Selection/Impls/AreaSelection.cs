@@ -16,7 +16,7 @@ namespace RTSEngine.Refactoring
             this._areaSelection = areaSelection;
         }
 
-        public ISelectable[] GetSelection(ISelectable[] mainList, Vector2 startPoint, Vector2 endPoint)
+        public ISelectable[] GetSelection(ISelectable[] mainList, Vector2 startScreenPoint, Vector2 endPoint)
         {
             List<ISelectable> result = new List<ISelectable>();
             if (mainList == null)
@@ -25,12 +25,13 @@ namespace RTSEngine.Refactoring
             }
             for (int i = 0; i < mainList.Length; i++)
             {
-                if (_areaSelection.IsInsideSelectionArea(startPoint, endPoint, mainList[i]))
+                if (_areaSelection.IsInsideScreenPoints(startScreenPoint, endPoint, mainList[i]))
                 {
                     result.Add(mainList[i]);
                 }
             }
-            return DistanceHelper.Sort(result, startPoint);
+            ISelectable[] selectables = DistanceHelper.SortScreenSpace(result, startScreenPoint);
+            return selectables;
         }
     }
 }

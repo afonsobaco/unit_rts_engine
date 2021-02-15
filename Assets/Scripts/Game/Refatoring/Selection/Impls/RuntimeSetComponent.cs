@@ -9,10 +9,11 @@ namespace RTSEngine.Refactoring
     {
         public HashSet<ISelectable> Items = new HashSet<ISelectable>();
 
+        private int count = 0;
         public void Add(ISelectable thing)
         {
             if (!Items.Contains(thing))
-                Items.Add(thing);
+            { Items.Add(thing); thing.Index = count++; }
         }
 
         public void Remove(ISelectable thing)

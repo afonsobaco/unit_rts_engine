@@ -6,6 +6,8 @@ namespace RTSEngine.Refactoring
 {
     public interface IAreaSelectionType
     {
-        bool IsInsideSelectionArea(Vector2 startPoint, Vector2 endPoint, ISelectable selectable);
+        bool IsInsideScreenPoints(Vector2 startPoint, Vector2 endPoint, ISelectable selectable);
+        bool IsInsideViewportPoints(Vector2 startPoint, Vector2 endPoint, ISelectable selectable);
+
     }
 }

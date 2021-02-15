@@ -71,7 +71,29 @@ public class SceneHelper : MonoBehaviour
     {
         var newObjet = GameObject.Instantiate(prefab);
         newObjet.transform.position = position;
-        newObjet.GetComponent<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+        var selectable = newObjet.GetComponent<SelectableObjectSelection>();
+        int rnd = Random.Range(0, 3);
+        selectable.selectionOrder = rnd;
+        selectable.objectType = rnd.ToString();
+        Color color = new Color();
+
+        switch (rnd)
+        {
+            case 0:
+                color = Color.red;
+                break;
+            case 1:
+                color = Color.green;
+                break;
+            case 2:
+                color = Color.blue;
+                break;
+            default:
+                color = Color.gray;
+                break;
+        }
+
+        newObjet.GetComponent<Renderer>().material.color = color;// Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
     }
 
     private RTSEngine.Core.ISelectable GetItem()

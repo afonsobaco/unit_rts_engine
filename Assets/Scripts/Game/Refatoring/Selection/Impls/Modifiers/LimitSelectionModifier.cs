@@ -5,12 +5,16 @@ using UnityEngine;
 
 namespace RTSEngine.Refactoring
 {
-    public class LimitSelectionModifier : MonoBehaviour
+    public class LimitSelectionModifier : MonoBehaviour, ISelectionModifier
     {
         [SerializeField] private SelectionType type;
+
+        [Space]
+        [Header("Modifier attributes")]
         [SerializeField] [Range(1, 100)] private int limit = 20;
 
-        private Modifier modifier;
+        private Modifier modifier = new Modifier();
+        public SelectionType Type { get => type; set => type = value; }
 
         private void Start()
         {
@@ -28,12 +32,15 @@ namespace RTSEngine.Refactoring
         private void StartVariables()
         {
             modifier.Limit = limit;
-            modifier.Type = type;
         }
 
-        public class Modifier : ISelectionModifier
+        public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
         {
-            public SelectionType Type { get; set; }
+            return this.modifier.Apply(oldSelection, newSelection, actualSelection, type);
+        }
+
+        public class Modifier
+        {
             public int Limit { get; set; }
 
             public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)

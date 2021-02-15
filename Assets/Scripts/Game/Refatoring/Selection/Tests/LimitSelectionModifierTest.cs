@@ -10,7 +10,7 @@ using Tests.Utils;
 namespace Tests
 {
     [TestFixture]
-    public class LimitModifierTest
+    public class LimitSelectionModifierTest
     {
         private LimitSelectionModifier.Modifier modifier;
 
@@ -34,8 +34,8 @@ namespace Tests
             ISelectable[] mainList = TestUtils.GetSomeObjects(amount);
             ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
-            modifier.Limit = limit;
             ISelectable[] expected = TestUtils.GetListByIndex(actualSelection, mainList);
+            modifier.Limit = limit;
 
             var result = modifier.Apply(oldSelection, newSelection, newSelection, SelectionType.ANY);
 

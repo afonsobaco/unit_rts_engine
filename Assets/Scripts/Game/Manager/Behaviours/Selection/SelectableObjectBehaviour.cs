@@ -153,6 +153,11 @@ namespace RTSEngine.Manager
                 Destroy(this.gameObject);
             }
         }
+
+        public int CompareTo(object obj)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
 }

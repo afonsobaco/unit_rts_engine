@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NSubstitute;
 using UnityEngine;
 using RTSEngine.Core;
+using RTSEngine.Refactoring;
 
 namespace Tests.Utils
 {
@@ -22,16 +23,25 @@ namespace Tests.Utils
             return list.ToArray();
         }
 
-        public static ISelectable[] GetSomeObjects(int qtt)
+        public static ISelectable[] GetSomeObjects(int selectable, int groupable)
         {
             var list = new List<ISelectable>();
-            for (var i = 0; i < qtt; i++)
+            for (var i = 0; i < selectable; i++)
             {
-                ISelectable item = Substitute.For<ISelectable>();
+                ISelectable item = null;
+                if (i < groupable)
+                    item = Substitute.For<ISelectable, IGroupable>();
+                else
+                    item = Substitute.For<ISelectable>();
                 item.Index = i;
                 list.Add(item);
             }
             return list.ToArray();
+        }
+
+        public static ISelectable[] GetSomeObjects(int qtt)
+        {
+            return GetSomeObjects(qtt, qtt);
         }
 
         public static CaseStruct[] GetDefaultCases()
