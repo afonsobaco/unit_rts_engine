@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Zenject;
 using RTSEngine.Core;
+using System;
 
 namespace RTSEngine.Refactoring
 {
@@ -68,76 +69,54 @@ namespace RTSEngine.Refactoring
 
             public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
             {
-                if (Active && newSelection.Length == 1)
+                if (Active)
                 {
-                    return GetAllFromSameTypeThatCanGroup(oldSelection, newSelection, actualSelection);
+                    return GetAllGroupableFromSameType(oldSelection, newSelection, actualSelection);
                 }
 
                 return actualSelection;
             }
 
-            public virtual ISelectable[] GetAllFromSameTypeThatCanGroup(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
+            public virtual ISelectable[] GetAllGroupableFromSameType(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
             {
-                ISelectable selected = newSelection.First();
-                List<ISelectable> allFromSameType = new List<ISelectable>();
-                if (selected is IGroupable)
+                ISelectable[] allFromSameType = null;
+                if (newSelection.Length == 1)
                 {
-                    allFromSameType = GetAllFromSameType(selected);
+                    ISelectable selected = newSelection.First();
+                    allFromSameType = GetAllGroupableOnScreen(selected);
                 }
                 else
                 {
-                    allFromSameType.Add(selected);
+                    allFromSameType = actualSelection;
                 }
-                return allFromSameType.ToArray();
+                return allFromSameType;
             }
 
-            public virtual List<ISelectable> GetAllFromSameType(ISelectable selected)
+            public virtual ISelectable[] GetAllGroupableOnScreen(ISelectable selected)
             {
                 List<ISelectable> list = new List<ISelectable>();
                 if (selected != null)
                 {
                     list.Add(selected);
-                    List<ISelectable> allFromSameType = GetFromSameTypeInViewport(selected);
+                    List<ISelectable> allFromSameType = GetFromSameTypeOnScreen(selected);
                     list = list.Union(allFromSameType).ToList();
                 }
-                return list;
+                return list.ToArray();
             }
 
-            public virtual List<ISelectable> GetFromSameTypeInViewport(ISelectable selected)
+            public virtual List<ISelectable> GetFromSameTypeOnScreen(ISelectable selected)
             {
-                List<ISelectable> result = new List<ISelectable>();
-                foreach (var item in GetAllInsideViewportPoints(selected))
-                {
-                    if (item is IGroupable)
-                    {
-                        var obj = item as IGroupable;
-                        if (obj.IsCompatible(selected))
-                        {
-                            result.Add(item);
-                        }
-                    }
-                }
-                return result;
+                return GroupableUtil.GetFromSameTypeOnScreen(GetMainList(), selected, IsInsideViewportPoints);
             }
 
-            public virtual List<ISelectable> GetAllInsideViewportPoints(ISelectable selected)
+            public virtual bool IsInsideViewportPoints(ISelectable selected)
             {
-                List<ISelectable> result = new List<ISelectable>();
-                foreach (var item in GetMainList())
-                {
-                    if (AreaSelectionType.IsInsideViewportPoints(InitialViewportPoint, FinalViewportPoint, item))
-                    {
-                        result.Add(item);
-                    }
-                }
-
-                ISelectable[] selectables = DistanceHelper.SortWorldSpace(result, selected.Position);
-                return selectables.ToList();
+                return AreaSelectionType.IsInsideViewportPoints(InitialViewportPoint, FinalViewportPoint, selected);
             }
 
-            public virtual HashSet<ISelectable> GetMainList()
+            public virtual ISelectable[] GetMainList()
             {
-                return MainList.GetAllItems();
+                return MainList.GetAllItems().ToArray();
             }
         }
     }

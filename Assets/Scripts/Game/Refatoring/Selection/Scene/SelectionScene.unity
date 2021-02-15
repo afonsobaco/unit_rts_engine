@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  limit: 3
+  limit: 10
 --- !u!114 &574790112
 MonoBehaviour:
   m_ObjectHideFlags: 0
