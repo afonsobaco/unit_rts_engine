@@ -4,11 +4,12 @@ using RTSEngine.Core;
 using RTSEngine.Refactoring;
 using Zenject;
 
-public class SelectableObjectSelection : DefaultSelectable, IGroupable
+public class DefaultObject : DefaultSelectable
 {
-    private SignalBus _signalBus;
     public int selectionOrder;
     public string objectType;
+
+    private SignalBus _signalBus;
 
     [Inject]
     public void Construct(SignalBus signalBus)
@@ -46,20 +47,11 @@ public class SelectableObjectSelection : DefaultSelectable, IGroupable
             return -1;
         }
 
-        var other = obj as SelectableObjectSelection;
+        var other = obj as DefaultObject;
 
         int v = other.selectionOrder - this.selectionOrder;
 
         return v;
-    }
-
-    public bool IsCompatible(object other)
-    {
-        if (other == null || GetType() != other.GetType())
-        {
-            return false;
-        }
-        return this.objectType.Equals((other as SelectableObjectSelection).objectType);
     }
 
 }

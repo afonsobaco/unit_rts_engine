@@ -9,7 +9,6 @@ namespace RTSEngine.Refactoring
 {
     public class SameTypeSelectionModifier : MonoBehaviour, ISelectionModifier
     {
-
         [SerializeField] private SelectionType type;
 
         [Space]
@@ -17,7 +16,6 @@ namespace RTSEngine.Refactoring
         [SerializeField] private KeyCode key = KeyCode.LeftControl;
         [SerializeField] private Vector2 initialViewportPoint = Vector2.zero;
         [SerializeField] private Vector2 finalViewportPoint = Vector2.one;
-
 
         [Inject]
         private IRuntimeSet<ISelectable> mainList;
@@ -32,13 +30,13 @@ namespace RTSEngine.Refactoring
         {
             StartVariables();
         }
+
         private void OnValidate()
         {
             if (modifier != null)
-            {
                 StartVariables();
-            }
         }
+
         private void StartVariables()
         {
             modifier.InitialViewportPoint = initialViewportPoint;
@@ -57,8 +55,7 @@ namespace RTSEngine.Refactoring
             return this.modifier.Apply(oldSelection, newSelection, actualSelection, type);
         }
 
-
-        public class Modifier : ISelectionModifier
+        public class Modifier
         {
             public SelectionType Type { get; set; }
             public bool Active { get; set; }
@@ -70,10 +67,7 @@ namespace RTSEngine.Refactoring
             public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
             {
                 if (Active)
-                {
                     return GetAllGroupableFromSameType(oldSelection, newSelection, actualSelection);
-                }
-
                 return actualSelection;
             }
 

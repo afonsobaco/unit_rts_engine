@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using Zenject;
 
 namespace RTSEngine.Core
 {
-    public abstract class DefaultSelectable : MonoBehaviour, ISelectable
+    public class DefaultSelectable : ZenAutoInjecter, ISelectable
     {
         public int Index { get; set; }
         public bool IsSelected { get; set; }
@@ -16,7 +17,11 @@ namespace RTSEngine.Core
             }
         }
 
-        public abstract int CompareTo(object obj);
+        public virtual int CompareTo(object obj)
+        {
+            return 0;
+        }
+
     }
 
 }

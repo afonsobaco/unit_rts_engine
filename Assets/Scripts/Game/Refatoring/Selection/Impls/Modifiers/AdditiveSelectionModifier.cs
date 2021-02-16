@@ -30,7 +30,6 @@ namespace RTSEngine.Refactoring
 
         public class Modifier
         {
-            public int Limit { get; set; }
             public bool Active { get; set; }
 
             public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)

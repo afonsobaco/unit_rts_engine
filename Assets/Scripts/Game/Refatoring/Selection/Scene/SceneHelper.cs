@@ -38,10 +38,10 @@ public class SceneHelper : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100))
             {
-                SelectableObjectSelection item = hit.collider.GetComponent<SelectableObjectSelection>();
+                DefaultObject item = hit.collider.GetComponent<DefaultObject>();
                 if (item != null)
                 {
-                    GameObject.Destroy((item as SelectableObjectSelection).gameObject);
+                    GameObject.Destroy(item.gameObject);
                 }
             }
         }
@@ -71,8 +71,8 @@ public class SceneHelper : MonoBehaviour
     {
         var newObjet = GameObject.Instantiate(prefab);
         newObjet.transform.position = position;
-        var selectable = newObjet.GetComponent<SelectableObjectSelection>();
         int rnd = Random.Range(0, 3);
+        DefaultObject selectable = rnd < 2 ? newObjet.AddComponent<GroupableObject>() : newObjet.AddComponent<DefaultObject>();
         selectable.selectionOrder = rnd;
         selectable.objectType = rnd.ToString();
         Color color = new Color();

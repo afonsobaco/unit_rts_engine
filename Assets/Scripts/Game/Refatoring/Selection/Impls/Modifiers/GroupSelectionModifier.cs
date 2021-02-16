@@ -44,8 +44,7 @@ namespace RTSEngine.Refactoring
 
         public class Modifier
         {
-            public SelectionType Type { get; set; }
-            public int Limit { get; set; }
+
             public IEqualityComparer<ISelectable> EqualityComparer { get; internal set; }
 
             public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)

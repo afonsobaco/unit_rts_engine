@@ -69,15 +69,15 @@
 //             modifiers.Add(GetDefaultSameTypeMod(sameType));
 //             modifiers.Add(GetDefaultOrderOfSelectionModifier());
 //             modifiers.Add(GetDefaultAdditiveMod());
-//             modifiers.Add(GetDefaultGroupRestrictorMod());
+//             modifiers.Add(GetDefaultGroupRestrictionMod());
 //             modifiers.Add(GetDefaultLimitMod());
 //             modifiers.Add(GetDefaultGroupMod());
 //             return modifiers.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
 //         }
 
-//         private ISelectionModifier GetDefaultGroupRestrictorMod()
+//         private ISelectionModifier GetDefaultGroupRestrictionMod()
 //         {
-//             GroupRestrictorSelectionModifier modifier = Substitute.ForPartsOf<GroupRestrictorSelectionModifier>(new object[] { selectionManager });
+//             GroupRestrictionSelectionModifier modifier = Substitute.ForPartsOf<GroupRestrictionSelectionModifier>(new object[] { selectionManager });
 //             return modifier;
 //         }
 

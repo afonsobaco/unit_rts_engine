@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
@@ -6,14 +6,14 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public class OrderOfSelectionModifier : MonoBehaviour, ISelectionModifier
+    public class GroupRestrictionSelectionModifier : MonoBehaviour, ISelectionModifier
     {
 
         [SerializeField] private SelectionType type;
 
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] private AbstractModifierComponent orderOfSelection;
+        [SerializeField] private AbstractModifierComponent modifierComponent;
 
         private Modifier modifier = new Modifier();
         public SelectionType Type { get => type; set => type = value; }
@@ -33,7 +33,7 @@ namespace RTSEngine.Refactoring
 
         private void StartVariables()
         {
-            modifier.OrderOfSelection = orderOfSelection;
+            modifier.GroupRestriction = modifierComponent;
         }
 
         public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
@@ -43,12 +43,12 @@ namespace RTSEngine.Refactoring
 
         public class Modifier
         {
-            public IModifier OrderOfSelection { get; set; }
+            public IModifier GroupRestriction { get; set; }
 
             public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
             {
-                if (OrderOfSelection != null)
-                    return OrderOfSelection.Apply(actualSelection);
+                if (GroupRestriction != null)
+                    return GroupRestriction.Apply(actualSelection);
                 return actualSelection;
             }
 
