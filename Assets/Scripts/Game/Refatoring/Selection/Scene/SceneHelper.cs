@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using RTSEngine.Core;
 using RTSEngine.Refactoring;
 
 /**
@@ -15,8 +16,8 @@ public class SceneHelper : MonoBehaviour
 {
     public GameObject prefab;
 
-    [Inject] private Selection selection;
     [Inject] private SignalBus signalBus;
+    [Inject] private IRuntimeSet<ISelectable> _mainList;
 
     private Vector3 _starScreenPoint;
 
@@ -98,6 +99,6 @@ public class SceneHelper : MonoBehaviour
 
     private RTSEngine.Core.ISelectable GetItem()
     {
-        return selection.GetMainList().GetItem(Random.Range(0, selection.GetMainList().GetAllItems().Count));
+        return _mainList.GetItem(Random.Range(0, _mainList.GetAllItems().Count));
     }
 }

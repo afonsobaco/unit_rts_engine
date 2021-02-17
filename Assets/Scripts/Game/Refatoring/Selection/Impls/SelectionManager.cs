@@ -10,13 +10,15 @@ namespace RTSEngine.Refactoring
 
         private Selection _selection;
         private SelectionInterface _selectionInterface;
+        private IRuntimeSet<ISelectable> _mainList;
         private bool _blockAreaSelection;
         public bool BlockAreaSelection { get => _blockAreaSelection; set => _blockAreaSelection = value; }
 
-        public SelectionManager(Selection selection, SelectionInterface selectionInterface)
+        public SelectionManager(Selection selection, SelectionInterface selectionInterface, IRuntimeSet<ISelectable> mainList)
         {
             this._selection = selection;
             _selectionInterface = selectionInterface;
+            _mainList = mainList;
         }
 
         public void OnAreaSignal(AreaSelectionSignal signal)
@@ -51,17 +53,17 @@ namespace RTSEngine.Refactoring
 
         public void OnSelectableObjectCreatedSignal(SelectableObjectCreatedSignal signal)
         {
-            _selection.GetMainList().Add(signal.Selectable);
+            _mainList.Add(signal.Selectable);
         }
 
         public void OnSelectableObjectDeletedSignal(SelectableObjectDeletedSignal signal)
         {
-            _selection.GetMainList().Remove(signal.Selectable);
+            _mainList.Remove(signal.Selectable);
         }
 
         public virtual ISelectable[] GetMainList()
         {
-            return _selection.GetMainList().GetAllItems().ToArray();
+            return _mainList.GetAllItems().ToArray();
         }
     }
 }

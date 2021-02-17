@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace RTSEngine.Refactoring
 {
-    public partial class Selection
+    public class Selection
     {
         private ModifiersInterface _modifiersInterface;
         private IRuntimeSet<ISelectable> _mainList;
@@ -22,11 +22,6 @@ namespace RTSEngine.Refactoring
         {
             var modified = _modifiersInterface.ApplyAll(_current, selection, type);
             FinalizeSelection(modified);
-        }
-
-        public virtual IRuntimeSet<ISelectable> GetMainList()
-        {
-            return _mainList;
         }
 
         public virtual void FinalizeSelection(ISelectable[] selection)
