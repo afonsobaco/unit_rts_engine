@@ -11,8 +11,8 @@ namespace RTSEngine.Refactoring
 
         public override void InstallBindings()
         {
+            Container.Bind<SelectionSignalManager>().AsSingle();
             Container.Bind<SelectionManager>().AsSingle();
-            Container.Bind<SelectionInterface>().AsSingle();
             Container.Bind<Selection>().AsSingle();
             Container.Bind<ModifiersInterface>().AsSingle();
             Container.Bind<IAreaSelectionType>().To<PolyAreaSelectionType>().AsSingle();
@@ -26,11 +26,11 @@ namespace RTSEngine.Refactoring
             Container.DeclareSignal<AreaSelectionSignal>();
             Container.DeclareSignal<GroupSelectionSignal>();
             Container.DeclareSignal<IndividualSelectionSignal>();
-            Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionManager>(x => x.OnSelectableObjectCreatedSignal).FromResolve();
-            Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionManager>(x => x.OnSelectableObjectDeletedSignal).FromResolve();
-            Container.BindSignal<AreaSelectionSignal>().ToMethod<SelectionManager>(x => x.OnAreaSignal).FromResolve();
-            Container.BindSignal<GroupSelectionSignal>().ToMethod<SelectionManager>(x => x.OnGroupSignal).FromResolve();
-            Container.BindSignal<IndividualSelectionSignal>().ToMethod<SelectionManager>(x => x.OnIndividualSignal).FromResolve();
+            Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectCreatedSignal).FromResolve();
+            Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectDeletedSignal).FromResolve();
+            Container.BindSignal<AreaSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnAreaSignal).FromResolve();
+            Container.BindSignal<GroupSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnGroupSignal).FromResolve();
+            Container.BindSignal<IndividualSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnIndividualSignal).FromResolve();
         }
 
         private ISelectionModifier[] GetModifiers()

@@ -1,131 +1,82 @@
-﻿using UnityEngine;
-using System.Linq;
-using NSubstitute;
+﻿using System.ComponentModel.Design;
+using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 using RTSEngine.Core;
 using RTSEngine.Refactoring;
+using NSubstitute;
 
 namespace Tests
 {
     [TestFixture]
+
     public class SelectionManagerTest
     {
-        private Selection _selection;
-        private SelectionInterface _selectionInterface;
-        private SelectionManager _selectionManager;
+
+        private SelectionManager _selectionInterface;
+        private IAreaSelection _areaSelection;
+        private IGroupSelection _groupSelection;
+        private IIndividualSelection _individualSelection;
 
         [SetUp]
         public void SetUp()
         {
-            _selectionInterface = Substitute.ForPartsOf<SelectionInterface>(new object[] { default, default, default });
-            _selection = Substitute.ForPartsOf<Selection>(new object[] { default, default });
-            _selectionManager = Substitute.ForPartsOf<SelectionManager>(new object[] { _selection, _selectionInterface });
-
-            _selection.When(x => x.DoSelection(Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>())).DoNotCallBase();
-            _selectionManager.When(x => x.GetMainList()).DoNotCallBase();
+            _areaSelection = Substitute.For<IAreaSelection>();
+            _groupSelection = Substitute.For<IGroupSelection>();
+            _individualSelection = Substitute.For<IIndividualSelection>();
+            _selectionInterface = Substitute.ForPartsOf<SelectionManager>(new object[]{
+                _areaSelection, _groupSelection, _individualSelection
+            });
         }
 
         [Test]
-        public void SelectionTestSimplePasses()
+        public void SelectionManagerTestSimplePasses()
         {
-            Assert.NotNull(_selectionManager);
+            Assert.NotNull(_selectionInterface);
+        }
+
+
+        [Test]
+        public void ShouldGetSelectionFromAreaSelectionType()
+        {
+            ISelectable[] result = _selectionInterface.GetAreaSelection(default, default, default);
+
+            _areaSelection.ReceivedWithAnyArgs(1).GetSelection(default, default, default);
+            _groupSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
+            _individualSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
         }
 
         [Test]
-        public void ShouldCallGetSelectionOnAreaSingal()
+        public void ShouldGetSelectionFromGroupSelectionType()
         {
-            int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
-            var expected = mainList.ToList().Take(3).ToArray();
-            var startPoint = Vector2.zero;
-            var endPoint = Vector2.zero;
-            AreaSelectionSignal signal = new AreaSelectionSignal();
-            signal.StartPoint = startPoint;
-            signal.EndPoint = endPoint;
-            _selectionInterface.GetAreaSelection(Arg.Any<ISelectable[]>(), Arg.Any<Vector2>(), Arg.Any<Vector2>()).Returns(expected);
-            _selectionManager.GetMainList().Returns(mainList);
+            ISelectable[] result = _selectionInterface.GetGroupSelection(default, default);
 
-            _selectionManager.OnAreaSignal(signal);
-
-            _selectionInterface.Received().GetAreaSelection(mainList, startPoint, endPoint);
-            _selection.Received().DoSelection(expected, SelectionType.AREA);
+            _groupSelection.ReceivedWithAnyArgs(1).GetSelection(default, default);
+            _areaSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default, default);
+            _individualSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
         }
 
         [Test]
-        public void ShouldNotCallGetSelectionOnAreaSingalIfClickedIsNotNull()
+        public void ShouldSetSelectionFromGroupSelectionType()
         {
-            int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
-            var expected = mainList.ToList().Take(3).ToArray();
-            var startPoint = Vector2.zero;
-            var endPoint = Vector2.zero;
-            AreaSelectionSignal signal = new AreaSelectionSignal();
-            signal.StartPoint = startPoint;
-            signal.EndPoint = endPoint;
-            _selectionManager.BlockAreaSelection = true;
+            _selectionInterface.SetGroupSelection(default, default);
 
-            _selectionManager.OnAreaSignal(signal);
-
-            _selection.DidNotReceiveWithAnyArgs().DoSelection(expected, SelectionType.AREA);
-            _selectionInterface.DidNotReceiveWithAnyArgs().GetAreaSelection(Arg.Any<ISelectable[]>(), Arg.Any<Vector2>(), Arg.Any<Vector2>());
+            _groupSelection.ReceivedWithAnyArgs(1).ChangeGroup(default, default);
+            _groupSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
+            _areaSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default, default);
+            _individualSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
         }
 
         [Test]
-        public void ShouldCallGetSelectionOnGroupSingal()
+        public void ShouldGetSelectionFromIndividualSelectionType()
         {
-            int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
-            var expected = mainList.ToList().Take(3).ToArray();
-            var groupId = 1;
-            GroupSelectionSignal signal = new GroupSelectionSignal();
-            signal.GroupId = groupId;
-            signal.CreateNew = false;
-            _selectionInterface.GetGroupSelection(Arg.Any<ISelectable[]>(), Arg.Any<object>()).Returns(expected);
-            _selectionManager.GetMainList().Returns(mainList);
+            ISelectable[] result = _selectionInterface.GetIndividualSelection(default, default);
 
-            _selectionManager.OnGroupSignal(signal);
-
-            _selectionInterface.Received().GetGroupSelection(mainList, groupId);
-            _selection.Received().DoSelection(expected, SelectionType.GROUP);
+            _individualSelection.ReceivedWithAnyArgs(1).GetSelection(default, default);
+            _areaSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default, default);
+            _groupSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
         }
-
-        [Test]
-        public void ShouldCallChangeGroupOnGroupSingalWithCreateNewSignal()
-        {
-            int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
-            var expected = mainList.ToList().Take(3).ToArray();
-            var groupId = 1;
-            GroupSelectionSignal signal = new GroupSelectionSignal();
-            signal.GroupId = groupId;
-            signal.CreateNew = true;
-            _selectionInterface.WhenForAnyArgs(x => x.SetGroupSelection(default, default)).DoNotCallBase();
-            _selection.GetCurrent().Returns(expected);
-
-            _selectionManager.OnGroupSignal(signal);
-
-            _selectionInterface.Received().SetGroupSelection(expected, groupId);
-            _selection.DidNotReceiveWithAnyArgs().DoSelection(default, default);
-        }
-
-        [Test]
-        public void ShouldCallGetSelectionOnIndividualSingal()
-        {
-            int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
-            var clicked = mainList.ToList().ElementAt(Random.Range(0, amount));
-            var expected = new ISelectable[] { clicked };
-            IndividualSelectionSignal signal = new IndividualSelectionSignal();
-            signal.Clicked = clicked;
-
-            _selectionInterface.GetIndividualSelection(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable>()).Returns(expected);
-            _selectionManager.GetMainList().Returns(mainList);
-
-            _selectionManager.OnIndividualSignal(signal);
-
-            _selectionInterface.Received().GetIndividualSelection(mainList, clicked);
-            _selection.Received().DoSelection(expected, SelectionType.INDIVIDUAL);
-        }
-
     }
 }

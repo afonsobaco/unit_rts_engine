@@ -34,8 +34,8 @@ namespace Tests
         [TestCaseSource(nameof(CameraMovementScenarios))]
         public void ShouldGetCameraMovement(float horizontal, float vertical, Vector3 expected)
         {
-            camera.WhenForAnyArgs(x => x.GetCameraSpeedByHeight(default)).DoNotCallBase();
-            camera.GetCameraSpeedByHeight(default).ReturnsForAnyArgs(CAMERA_SPEED);
+            camera.WhenForAnyArgs(x => x.GetCameraMoveSpeedByHeight(default)).DoNotCallBase();
+            camera.GetCameraMoveSpeedByHeight(default).ReturnsForAnyArgs(CAMERA_SPEED);
             Vector3 result = camera.GetCameraMovement(horizontal, vertical, CAMERA_HEIGHT, DELTA_TIME);
             Assert.AreEqual(expected, result);
         }
@@ -44,7 +44,7 @@ namespace Tests
         public void ShouldGetCameraSpeed(float height, float speed)
         {
             camera.MoveSpeed = speed;
-            var result = camera.GetCameraSpeedByHeight(height);
+            var result = camera.GetCameraMoveSpeedByHeight(height);
             float expected = height * speed + RTSCamera.MAGIC_NUMBER;
             Assert.AreEqual(expected, result);
         }

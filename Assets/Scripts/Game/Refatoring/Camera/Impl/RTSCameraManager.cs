@@ -2,38 +2,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace RTSEngine.Refactoring
 {
     public class RTSCameraManager
     {
-        private RTSCameraInterface _cameraInterface;
-        private RTSCamera _camera;
+        private ICameraClamper _clamper;
 
-        public RTSCameraManager(RTSCameraInterface cameraInterface, RTSCamera camera)
+        public RTSCameraManager(ICameraClamper clamper)
         {
-            this._cameraInterface = cameraInterface;
-            this._camera = camera;
+            _clamper = clamper;
         }
 
-        public void OnCameraMoveSignal(CameraMoveSignal signal)
+        public Vector3 DoCameraMovement(Transform cameraTransform, Vector3 desiredMovement)
         {
-            Transform transform = Camera.main.transform;
-            var desiredMovement = _camera.GetCameraMovement(signal.Horizontal, signal.Vertical, transform.position.y, Time.deltaTime);
-            transform.position = _cameraInterface.DoCameraMovement(transform, desiredMovement);
-        }
-        public void OnCameraPanSignal(CameraPanSignal signal)
-        {
-            Transform transform = Camera.main.transform;
-            var desiredPan = _camera.GetCameraPan(signal.MouseAxis, transform.position.y, Time.deltaTime);
-            transform.position = _cameraInterface.DoCameraPan(transform, desiredPan);
-        }
-        public void OnCameraZoomSignal(CameraZoomSignal signal)
-        {
-            Transform transform = Camera.main.transform;
-            var desiredZoom = _camera.GetCameraZoom(signal.Zoom, transform.forward, Time.deltaTime);
-            transform.position = _cameraInterface.DoCameraZoom(transform, desiredZoom);
+            cameraTransform.position += desiredMovement;
+            return _clamper.ClampCameraPos(cameraTransform);
         }
 
+        public Vector3 DoCameraPan(Transform cameraTransform, Vector3 desiredPan)
+        {
+            desiredPan = Quaternion.Euler(new Vector3(0f, cameraTransform.rotation.eulerAngles.y, 0f)) * desiredPan;
+            desiredPan = cameraTransform.InverseTransformDirection(desiredPan);
+            cameraTransform.Translate(desiredPan, Space.Self);
+            return _clamper.ClampCameraPos(cameraTransform);
+        }
+
+        public Vector3 DoCameraZoom(Transform cameraTransform, Vector3 desiredZoom)
+        {
+            float deltaTime = Time.deltaTime;
+            cameraTransform.position += desiredZoom;
+            return _clamper.ClampCameraPos(cameraTransform);
+        }
     }
 }

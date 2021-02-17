@@ -36,8 +36,8 @@ public class CameraClamper : RTSCameraClamperComponent
 
     private Vector3 AdjustMovement(Vector3 position, float zDistance)
     {
-        float clampedX = Mathf.Clamp(position.x, -mapWidth + (zDistance), mapWidth - (zDistance));
-        float clampedZ = Mathf.Clamp(position.z, -mapHeight - (zDistance / 2), mapHeight - zDistance);
+        float clampedX = Mathf.Clamp(position.x, -mapWidth, mapWidth);
+        float clampedZ = Mathf.Clamp(position.z, -mapHeight - (zDistance), mapHeight - zDistance);
         return new Vector3(clampedX, position.y, clampedZ);
     }
 
@@ -46,10 +46,6 @@ public class CameraClamper : RTSCameraClamperComponent
         float angle = 90 - xRotation;
         angle = Mathf.Clamp(angle, 0, 80); // prevent weird angles
         float zDistance = cameraHeight * Mathf.Tan(angle * Mathf.Deg2Rad);
-        if (zDistance > mapWidth / 2 || zDistance > mapHeight / 2) //prevent lag camera
-        {
-            zDistance = 0;
-        }
         return zDistance;
     }
 

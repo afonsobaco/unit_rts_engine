@@ -1,69 +1,41 @@
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
+﻿using UnityEngine;
 using RTSEngine.Core;
+using System;
 
 namespace RTSEngine.Refactoring
 {
     public class SelectionManager
     {
+        private IAreaSelection areaSelection;
+        private IGroupSelection groupSelection;
+        private IIndividualSelection individualSelection;
 
-        private Selection _selection;
-        private SelectionInterface _selectionInterface;
-        private IRuntimeSet<ISelectable> _mainList;
-        private bool _blockAreaSelection;
-        public bool BlockAreaSelection { get => _blockAreaSelection; set => _blockAreaSelection = value; }
-
-        public SelectionManager(Selection selection, SelectionInterface selectionInterface, IRuntimeSet<ISelectable> mainList)
+        public SelectionManager(IAreaSelection areaSelection, IGroupSelection groupSelection, IIndividualSelection individualSelection)
         {
-            this._selection = selection;
-            _selectionInterface = selectionInterface;
-            _mainList = mainList;
+            this.areaSelection = areaSelection;
+            this.groupSelection = groupSelection;
+            this.individualSelection = individualSelection;
         }
 
-        public void OnAreaSignal(AreaSelectionSignal signal)
+        public virtual ISelectable[] GetAreaSelection(ISelectable[] mainList, Vector2 startPoint, Vector2 endPoint)
         {
-            if (!BlockAreaSelection)
-            {
-                var result = _selectionInterface.GetAreaSelection(GetMainList(), signal.StartPoint, signal.EndPoint);
-                _selection.DoSelection(result, SelectionType.AREA);
-            }
-            BlockAreaSelection = false;
+            return areaSelection.GetSelection(mainList, startPoint, endPoint);
         }
 
-        public void OnGroupSignal(GroupSelectionSignal signal)
+        public virtual ISelectable[] GetGroupSelection(ISelectable[] mainList, object groupId)
         {
-            if (signal.CreateNew)
-            {
-                _selectionInterface.SetGroupSelection(_selection.GetCurrent(), signal.GroupId);
-            }
-            else
-            {
-                var selection = _selectionInterface.GetGroupSelection(GetMainList(), signal.GroupId);
-                _selection.DoSelection(selection, SelectionType.GROUP);
-            }
+            return groupSelection.GetSelection(mainList, groupId);
         }
 
-        public void OnIndividualSignal(IndividualSelectionSignal signal)
+        public virtual void SetGroupSelection(ISelectable[] selectables, object groupId)
         {
-            this.BlockAreaSelection = signal.BlockAreaSelection;
-            var selection = _selectionInterface.GetIndividualSelection(GetMainList(), signal.Clicked);
-            _selection.DoSelection(selection, SelectionType.INDIVIDUAL);
+            groupSelection.ChangeGroup(groupId, selectables);
         }
 
-        public void OnSelectableObjectCreatedSignal(SelectableObjectCreatedSignal signal)
+        public virtual ISelectable[] GetIndividualSelection(ISelectable[] mainList, ISelectable clicked)
         {
-            _mainList.Add(signal.Selectable);
+            return individualSelection.GetSelection(mainList, clicked);
         }
 
-        public void OnSelectableObjectDeletedSignal(SelectableObjectDeletedSignal signal)
-        {
-            _mainList.Remove(signal.Selectable);
-        }
-
-        public virtual ISelectable[] GetMainList()
-        {
-            return _mainList.GetAllItems().ToArray();
-        }
     }
 }

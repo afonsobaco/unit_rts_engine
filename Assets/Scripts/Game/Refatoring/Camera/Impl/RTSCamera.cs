@@ -15,10 +15,10 @@ namespace RTSEngine.Refactoring
 
         public Vector3 GetCameraMovement(float horizontalAxis, float verticalAxis, float cameraHeight, float deltaTime)
         {
-            return new Vector3(horizontalAxis, 0f, verticalAxis) * GetCameraSpeedByHeight(cameraHeight) * deltaTime;
+            return new Vector3(horizontalAxis, 0f, verticalAxis) * GetCameraMoveSpeedByHeight(cameraHeight) * deltaTime;
         }
 
-        public virtual float GetCameraSpeedByHeight(float height)
+        public virtual float GetCameraMoveSpeedByHeight(float height)
         {
             return (height * MoveSpeed) + MAGIC_NUMBER;
         }
