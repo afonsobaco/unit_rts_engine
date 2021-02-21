@@ -3,17 +3,16 @@ using System.Linq;
 using UnityEngine;
 using RTSEngine.Core;
 using RTSEngine.Signal;
+using RTSEngine.Utils;
 using Zenject;
 
 namespace RTSEngine.Refactoring
 {
     public class UserInterfaceManager
     {
+        private GameSignalBus _signalBus;
 
-        private SignalBus _signalBus;
-
-        [Inject]
-        public void Construct(SignalBus signalBus)
+        public UserInterfaceManager(GameSignalBus signalBus)
         {
             _signalBus = signalBus;
         }
@@ -24,21 +23,15 @@ namespace RTSEngine.Refactoring
             List<ISelectable> group = new List<ISelectable>();
 
             if (asGroup)
-            {
                 group = GetAllFromSameSubGroup(selection, clicked);
-            }
             else
-            {
                 group.Add(clicked);
-            }
+
             if (toRemove)
-            {
                 newSelection.RemoveAll(x => group.Contains(x));
-            }
             else
-            {
                 newSelection = group;
-            }
+
             _signalBus.Fire(new ChangeSelectionSignal() { Selection = newSelection.ToArray() });
         }
 
@@ -56,13 +49,13 @@ namespace RTSEngine.Refactoring
             return selectables;
         }
 
-        public void DoPortraitClicked(ISelectable selection)
+        public void DoPortraitClicked(ISelectable clicked)
         {
-            if (selection != null)
+            if (clicked != null)
             {
                 //TODO test this intergated
-                Debug.Log("camera goes to position " + selection.Position);
-                _signalBus.Fire(new CameraGoToPositionSignal() { Position = selection.Position });
+                Debug.Log("camera goes to position " + clicked.Position);
+                _signalBus.Fire(new CameraGoToPositionSignal() { Position = clicked.Position });
             }
         }
 
@@ -70,7 +63,6 @@ namespace RTSEngine.Refactoring
         {
             if (group != null)
             {
-
                 List<ISelectable> newSelection = new List<ISelectable>(selection);
                 if (toRemove)
                 {
@@ -90,14 +82,13 @@ namespace RTSEngine.Refactoring
                 _signalBus.Fire(new ChangeSelectionSignal() { Selection = newSelection.ToArray() });
             }
         }
+
         public void DoMapClicked(ISelectable selection)
         {
-            //_signalBus.Fire(new MapClickedSignal() { });
         }
 
         public void DoActionClicked(ISelectable selection)
         {
-            //_signalBus.Fire(new ActionClickedSignal() { });
         }
     }
 }
