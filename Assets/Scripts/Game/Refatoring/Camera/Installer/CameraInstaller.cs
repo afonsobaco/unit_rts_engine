@@ -3,6 +3,7 @@ using Zenject;
 using RTSEngine.Core;
 using RTSEngine.Refactoring;
 using System;
+using RTSEngine.Signal;
 
 namespace RTSEngine.Refactoring
 {

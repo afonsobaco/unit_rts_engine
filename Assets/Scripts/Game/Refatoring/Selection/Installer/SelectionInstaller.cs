@@ -1,6 +1,7 @@
 using UnityEngine;
 using Zenject;
 using RTSEngine.Core;
+using RTSEngine.Signal;
 
 namespace RTSEngine.Refactoring
 {
@@ -26,6 +27,7 @@ namespace RTSEngine.Refactoring
             Container.DeclareSignal<AreaSelectionSignal>();
             Container.DeclareSignal<GroupSelectionSignal>();
             Container.DeclareSignal<IndividualSelectionSignal>();
+            Container.DeclareSignal<SelectionUpdateSignal>();
             Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectCreatedSignal).FromResolve();
             Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectDeletedSignal).FromResolve();
             Container.BindSignal<AreaSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnAreaSignal).FromResolve();

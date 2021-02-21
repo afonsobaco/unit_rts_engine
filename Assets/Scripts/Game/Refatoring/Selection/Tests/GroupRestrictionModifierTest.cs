@@ -25,7 +25,6 @@ namespace Tests
             {
                 List<ISelectable> selectables = new List<ISelectable>(args[0] as ISelectable[]);
                 selectables.RemoveAll(x => x.Index >= 7);
-                selectables.ForEach(x => Debug.Log(x.Index));
                 return selectables.ToArray();
             });
         }

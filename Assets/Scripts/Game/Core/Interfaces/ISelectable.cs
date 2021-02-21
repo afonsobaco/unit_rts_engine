@@ -9,7 +9,7 @@ namespace RTSEngine.Core
         [ObsoleteAttribute]
         bool IsPreSelected { get; set; }
         Vector3 Position { get; set; }
-
+        bool IsHighlighted { get; set; }
     }
 
 }

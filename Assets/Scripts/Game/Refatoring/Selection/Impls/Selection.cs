@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using RTSEngine.Core;
+using RTSEngine.Signal;
 using System.Linq;
-using UnityEngine;
+using Zenject;
 
 namespace RTSEngine.Refactoring
 {
@@ -18,16 +19,17 @@ namespace RTSEngine.Refactoring
             _mainList = mainList;
         }
 
-        public virtual void DoSelection(ISelectable[] selection, SelectionType type)
+        public virtual ISelectable[] DoSelection(ISelectable[] selection, SelectionType type)
         {
             var modified = _modifiersInterface.ApplyAll(_current, selection, type);
-            FinalizeSelection(modified);
+            return FinalizeSelection(modified);
         }
 
-        public virtual void FinalizeSelection(ISelectable[] selection)
+        public virtual ISelectable[] FinalizeSelection(ISelectable[] selection)
         {
             ChangeSelectionStatus(selection);
             this._current = selection;
+            return _current;
         }
 
         private void ChangeSelectionStatus(ISelectable[] selection)
@@ -38,6 +40,7 @@ namespace RTSEngine.Refactoring
                 {
                     _current[i].IsSelected = false;
                 }
+                _current[i].IsHighlighted = false;
             }
             for (var i = 0; i < selection.Length; i++)
             {

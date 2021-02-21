@@ -6,6 +6,7 @@ using Zenject;
 using RTSEngine.Core;
 using RTSEngine.Refactoring;
 using System;
+using RTSEngine.Signal;
 
 /**
 *
@@ -16,30 +17,30 @@ using System;
 public class SceneHelper : MonoBehaviour
 {
     [SerializeField] private float viewportOffset;
-    [Inject] private SignalBus signalBus;
+    [Inject] private SignalBus _signalBus;
 
     private void Update()
     {
 
         if (Input.mouseScrollDelta.y != 0)
         {
-            signalBus.Fire(new CameraZoomSignal() { Zoom = Input.mouseScrollDelta.y });
+            _signalBus.Fire(new CameraZoomSignal() { Zoom = Input.mouseScrollDelta.y });
         }
 
         if (Input.GetMouseButton(2))
         {
-            signalBus.Fire(new CameraPanSignal() { MouseAxis = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) });
+            _signalBus.Fire(new CameraPanSignal() { MouseAxis = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) });
         }
         else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
-            signalBus.Fire(new CameraMoveSignal() { Horizontal = Input.GetAxis("Horizontal"), Vertical = Input.GetAxis("Vertical") });
+            _signalBus.Fire(new CameraMoveSignal() { Horizontal = Input.GetAxis("Horizontal"), Vertical = Input.GetAxis("Vertical") });
         }
         else
         {
             Vector2 offset = MouseIsOnOffset(Input.mousePosition);
             if (!offset.Equals(Vector2.zero))
             {
-                signalBus.Fire(new CameraMoveSignal() { Horizontal = offset.x, Vertical = offset.y });
+                _signalBus.Fire(new CameraMoveSignal() { Horizontal = offset.x, Vertical = offset.y });
             }
         }
     }

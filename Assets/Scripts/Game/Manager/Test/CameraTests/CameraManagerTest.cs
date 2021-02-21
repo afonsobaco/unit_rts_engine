@@ -32,6 +32,7 @@ namespace Tests.Manager
             mainCamera.transform.eulerAngles = new Vector3(45f, 0f, 0f);
 
             manager.SetCameraSettings(cameraSettings);
+            manager.Initialize();
 
             cameraSettings.SizeFromMidPoint = 15f;
             cameraSettings.BoundriesOffset = 0.03f;

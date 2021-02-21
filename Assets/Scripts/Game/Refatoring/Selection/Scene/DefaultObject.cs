@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
-using RTSEngine.Refactoring;
+using RTSEngine.Signal;
 using Zenject;
 
 public class DefaultObject : DefaultSelectable

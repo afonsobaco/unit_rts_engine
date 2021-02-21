@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using RTSEngine.Core;
-using RTSEngine.Refactoring;
+using RTSEngine.Signal;
 
 /**
 *
@@ -16,7 +16,7 @@ public class SceneHelper : MonoBehaviour
 {
     public GameObject prefab;
 
-    [Inject] private SignalBus signalBus;
+    [Inject] private SignalBus _signalBus;
     [Inject] private IRuntimeSet<ISelectable> _mainList;
 
     private Vector3 _starScreenPoint;
@@ -52,19 +52,19 @@ public class SceneHelper : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
-            signalBus.Fire(new AreaSelectionSignal() { StartPoint = _starScreenPoint, EndPoint = Input.mousePosition });
+            _signalBus.Fire(new AreaSelectionSignal() { StartPoint = _starScreenPoint, EndPoint = Input.mousePosition });
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            signalBus.Fire(new GroupSelectionSignal() { GroupId = 1, CreateNew = Input.GetKey(KeyCode.Z) });
+            _signalBus.Fire(new GroupSelectionSignal() { GroupId = 1, CreateNew = Input.GetKey(KeyCode.Z) });
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
             var item = GetItem();
             if (item != null)
-                signalBus.Fire(new IndividualSelectionSignal() { BlockAreaSelection = false, Clicked = item });
+                _signalBus.Fire(new IndividualSelectionSignal() { BlockAreaSelection = false, Clicked = item });
         }
     }
 

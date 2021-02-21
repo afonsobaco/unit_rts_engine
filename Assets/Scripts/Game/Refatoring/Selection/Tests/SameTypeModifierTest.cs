@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Refactoring;
 using System.Collections.Generic;
@@ -31,7 +30,7 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldApplyModifier(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
         {
-            ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount);
+            ISelectable[] mainList = SelectionTestUtils.GetSomeSelectable(amount, amount);
             ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
 
@@ -56,7 +55,7 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldGetAllGroupableFromSameType(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
         {
-            ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount);
+            ISelectable[] mainList = SelectionTestUtils.GetSomeSelectable(amount, amount);
             ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
 
@@ -81,7 +80,7 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldGetAllGroupableOnScreen(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
         {
-            ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount);
+            ISelectable[] mainList = SelectionTestUtils.GetSomeSelectable(amount, amount);
             ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
 

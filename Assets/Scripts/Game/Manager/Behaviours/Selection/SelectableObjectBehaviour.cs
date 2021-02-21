@@ -62,6 +62,7 @@ namespace RTSEngine.Manager
         public ObjectStatus LifeStatus { get => lifeStatus; set => lifeStatus = value; }
         public ObjectStatus ManaStatus { get => manaStatus; set => manaStatus = value; }
         public bool IsDestroyed { get => _isDestroyed; set => _isDestroyed = value; }
+        public bool IsHighlighted { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         [Inject]
         public void Construct(SignalBus signalBus)

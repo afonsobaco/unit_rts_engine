@@ -4,7 +4,9 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Core",
-        "Selection"
+        "Selection",
+        "Commons",
+        "Zenject"
     ],
     "includePlatforms": [
         "Editor"

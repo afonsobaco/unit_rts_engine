@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using RTSEngine.Core;
 using Zenject;
+using RTSEngine.Signal;
 
 namespace RTSEngine.Refactoring
 {
@@ -15,6 +16,7 @@ namespace RTSEngine.Refactoring
         public Vector3 Position { get; set; }
         public string ObjectName { get => _objectName; set => _objectName = value; }
         public Status[] Statuses { get => _statuses; set => _statuses = value; }
+        public bool IsHighlighted { get; set; }
 
         private SignalBus _signalBus;
 

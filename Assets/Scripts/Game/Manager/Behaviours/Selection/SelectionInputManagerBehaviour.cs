@@ -24,6 +24,7 @@ namespace RTSEngine.Manager
             this.DoGroupSelection(_groupKeyCode);
         }
 
+        //TODO use gameutil
         private Dictionary<KeyCode, int> _groupKeys = new Dictionary<KeyCode, int>()
             {
                 {KeyCode.Alpha1, 1},

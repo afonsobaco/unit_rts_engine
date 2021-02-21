@@ -4,6 +4,10 @@ using NSubstitute;
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Refactoring;
+using RTSEngine.Signal;
+using RTSEngine.Utils;
+using System.Collections.Generic;
+
 
 namespace Tests
 {
@@ -12,14 +16,20 @@ namespace Tests
     {
         private Selection _selection;
         private SelectionManager _selectionManager;
+        private IRuntimeSet<ISelectable> _mainList;
         private SelectionSignalManager _selectionSignalManager;
+
+        private GameSignalBus _signalBus;
 
         [SetUp]
         public void SetUp()
         {
             _selectionManager = Substitute.ForPartsOf<SelectionManager>(new object[] { default, default, default });
             _selection = Substitute.ForPartsOf<Selection>(new object[] { default, default });
-            _selectionSignalManager = Substitute.ForPartsOf<SelectionSignalManager>(new object[] { _selection, _selectionManager });
+            _mainList = Substitute.For<IRuntimeSet<ISelectable>>();
+            _signalBus = Substitute.ForPartsOf<GameSignalBus>(new object[] { default });
+            _signalBus.WhenForAnyArgs(x => x.Fire(default)).DoNotCallBase();
+            _selectionSignalManager = Substitute.ForPartsOf<SelectionSignalManager>(new object[] { _selection, _selectionManager, _mainList, _signalBus });
 
             _selection.When(x => x.DoSelection(Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>())).DoNotCallBase();
             _selectionSignalManager.When(x => x.GetMainList()).DoNotCallBase();

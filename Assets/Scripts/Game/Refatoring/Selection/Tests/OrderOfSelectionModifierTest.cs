@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RTSEngine.Refactoring;
 using RTSEngine.Core;
 using Tests.Utils;

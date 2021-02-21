@@ -17,6 +17,8 @@ namespace RTSEngine.Core
             }
         }
 
+        public bool IsHighlighted { get; set; }
+
         public virtual int CompareTo(object obj)
         {
             return 0;

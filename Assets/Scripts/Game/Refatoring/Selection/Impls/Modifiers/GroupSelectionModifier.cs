@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using RTSEngine.Core;
+using RTSEngine.Utils;
 
 namespace RTSEngine.Refactoring
 {
@@ -49,32 +50,9 @@ namespace RTSEngine.Refactoring
 
             public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
             {
-                return GetOrderedSelection(oldSelection, newSelection, actualSelection);
+                return GameUtils.GetOrderedSelection(actualSelection, EqualityComparer);
             }
 
-            private ISelectable[] GetOrderedSelection(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
-            {
-                List<ISelectable> list = new List<ISelectable>();
-                if (actualSelection.Length > 0)
-                {
-                    var grouped = actualSelection.GroupBy(x => x, EqualityComparer);
-                    var sorted = grouped.ToList();
-                    sorted.Sort(new ObjectComparer());
-                    foreach (var item in sorted)
-                    {
-                        list.AddRange(item);
-                    }
-                }
-                return list.ToArray();
-            }
-        }
-
-        public class ObjectComparer : IComparer<IGrouping<ISelectable, ISelectable>>
-        {
-            public int Compare(IGrouping<ISelectable, ISelectable> x, IGrouping<ISelectable, ISelectable> y)
-            {
-                return x.Key.CompareTo(y.Key);
-            }
         }
     }
 }
