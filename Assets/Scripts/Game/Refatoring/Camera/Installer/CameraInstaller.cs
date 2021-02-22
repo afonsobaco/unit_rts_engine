@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 using RTSEngine.Core;
-using RTSEngine.Refactoring;
+using RTSEngine.Utils;
 using System;
 using RTSEngine.Signal;
 
@@ -14,9 +14,9 @@ namespace RTSEngine.Refactoring
 
         [Space]
         [Header("Camera attributes")]
-        public float _moveSpeed;
-        public float _panSpeed;
-        public float _zoomSpeed;
+        public float _moveSpeed = 0.5f;
+        public float _panSpeed = 7f;
+        public float _zoomSpeed = 100;
 
         private RTSCamera _camera;
 
@@ -30,9 +30,12 @@ namespace RTSEngine.Refactoring
             Container.DeclareSignal<CameraMoveSignal>();
             Container.DeclareSignal<CameraPanSignal>();
             Container.DeclareSignal<CameraZoomSignal>();
+            Container.DeclareSignal<CameraGoToPositionSignal>();
+
             Container.BindSignal<CameraMoveSignal>().ToMethod<RTSCameraSignalManager>(x => x.OnCameraMoveSignal).FromResolve();
             Container.BindSignal<CameraPanSignal>().ToMethod<RTSCameraSignalManager>(x => x.OnCameraPanSignal).FromResolve();
             Container.BindSignal<CameraZoomSignal>().ToMethod<RTSCameraSignalManager>(x => x.OnCameraZoomSignal).FromResolve();
+            Container.BindSignal<CameraGoToPositionSignal>().ToMethod<RTSCameraSignalManager>(x => x.OnCameraGoToPositionSignal).FromResolve();
         }
 
         private void StartCamera(InjectContext ctx, RTSCamera camera)

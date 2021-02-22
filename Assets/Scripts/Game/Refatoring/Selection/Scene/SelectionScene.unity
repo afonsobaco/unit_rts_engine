@@ -135,13 +135,13 @@ GameObject:
   - component: {fileID: 574790113}
   - component: {fileID: 574790119}
   - component: {fileID: 574790121}
+  - component: {fileID: 574790120}
   - component: {fileID: 574790112}
   - component: {fileID: 574790123}
+  - component: {fileID: 574790122}
   - component: {fileID: 574790111}
   - component: {fileID: 574790117}
   - component: {fileID: 574790118}
-  - component: {fileID: 574790120}
-  - component: {fileID: 574790122}
   m_Layer: 0
   m_Name: SceneHelper
   m_TagString: Untagged
@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  modifierComponent: {fileID: 574790122}
+  modifierHelper: {fileID: 574790122}
 --- !u!1 &638685779
 GameObject:
   m_ObjectHideFlags: 0

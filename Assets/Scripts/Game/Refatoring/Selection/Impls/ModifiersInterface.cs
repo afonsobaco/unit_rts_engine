@@ -6,9 +6,9 @@ namespace RTSEngine.Refactoring
     public class ModifiersInterface
     {
 
-        private ISelectionModifier[] modifiers;
+        private IModifiersComponent modifiers;
 
-        public ModifiersInterface(ISelectionModifier[] modifiers)
+        public ModifiersInterface(IModifiersComponent modifiers)
         {
             this.modifiers = modifiers;
         }
@@ -16,7 +16,7 @@ namespace RTSEngine.Refactoring
         public virtual ISelectable[] ApplyAll(ISelectable[] oldSelection, ISelectable[] newSelection, SelectionType type)
         {
             ISelectable[] actualSelection = newSelection;
-            foreach (var mod in modifiers)
+            foreach (var mod in modifiers.GetModifiers())
             {
                 if (mod.Type == type || mod.Type == SelectionType.ANY)
                 {

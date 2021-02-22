@@ -13,7 +13,7 @@ namespace RTSEngine.Refactoring
 
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] private AbstractModifierComponent modifierComponent;
+        [SerializeField] private AbstractModifierHelper modifierHelper;
 
         private Modifier modifier = new Modifier();
         public SelectionType Type { get => type; set => type = value; }
@@ -33,7 +33,7 @@ namespace RTSEngine.Refactoring
 
         private void StartVariables()
         {
-            modifier.GroupRestriction = modifierComponent;
+            modifier.GroupRestrictionHelper = modifierHelper;
         }
 
         public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
@@ -43,12 +43,12 @@ namespace RTSEngine.Refactoring
 
         public class Modifier
         {
-            public IModifier GroupRestriction { get; set; }
+            public IModifier GroupRestrictionHelper { get; set; }
 
             public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
             {
-                if (GroupRestriction != null)
-                    return GroupRestriction.Apply(actualSelection);
+                if (GroupRestrictionHelper != null)
+                    return GroupRestrictionHelper.Apply(actualSelection);
                 return actualSelection;
             }
 

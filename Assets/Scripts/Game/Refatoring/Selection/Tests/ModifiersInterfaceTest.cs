@@ -13,13 +13,16 @@ namespace Tests
     public class ModifiersInterfaceTest
     {
         private ModifiersInterface _modifiersInterface;
-        private ISelectionModifier[] modifiers;
+        private IModifiersComponent _modifiersComponent;
+        private ISelectionModifier[] _modifiers;
 
         [SetUp]
         public void SetUp()
         {
-            modifiers = GetModifiers();
-            _modifiersInterface = Substitute.ForPartsOf<ModifiersInterface>(new object[] { modifiers });
+            _modifiers = GetModifiers();
+            _modifiersComponent = Substitute.For<IModifiersComponent>();
+            _modifiersComponent.GetModifiers().Returns(_modifiers);
+            _modifiersInterface = Substitute.ForPartsOf<ModifiersInterface>(new object[] { _modifiersComponent });
         }
 
         private ISelectionModifier[] GetModifiers()
@@ -60,7 +63,7 @@ namespace Tests
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 
             CollectionAssert.AreEqual(newSelection, result);
-            foreach (var m in modifiers)
+            foreach (var m in _modifiers)
             {
                 if (m.Type == type || m.Type == SelectionType.ANY)
                     m.Received().Apply(Arg.Is(oldSelection), Arg.Is(newSelection), Arg.Any<ISelectable[]>(), type);
@@ -81,7 +84,7 @@ namespace Tests
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 
             CollectionAssert.AreEqual(newSelection, result);
-            foreach (var m in modifiers)
+            foreach (var m in _modifiers)
             {
                 if (m.Type == type || m.Type == SelectionType.ANY)
                     m.Received().Apply(Arg.Is(oldSelection), Arg.Is(newSelection), Arg.Any<ISelectable[]>(), type);
@@ -102,7 +105,7 @@ namespace Tests
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 
             CollectionAssert.AreEqual(newSelection, result);
-            foreach (var m in modifiers)
+            foreach (var m in _modifiers)
             {
                 if (m.Type == type || m.Type == SelectionType.ANY)
                     m.Received().Apply(Arg.Is(oldSelection), Arg.Is(newSelection), Arg.Any<ISelectable[]>(), type);

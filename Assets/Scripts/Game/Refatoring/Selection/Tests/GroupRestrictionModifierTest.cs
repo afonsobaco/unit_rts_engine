@@ -20,7 +20,7 @@ namespace Tests
         {
             modifier = Substitute.ForPartsOf<GroupRestrictionSelectionModifier.Modifier>();
             groupRestriction = Substitute.For<IModifier>();
-            modifier.GroupRestriction = groupRestriction;
+            modifier.GroupRestrictionHelper = groupRestriction;
             groupRestriction.Apply(Arg.Any<ISelectable[]>()).Returns(args =>
             {
                 List<ISelectable> selectables = new List<ISelectable>(args[0] as ISelectable[]);

@@ -1,6 +1,6 @@
 using Zenject;
 using UnityEngine;
-using RTSEngine.Core;
+using RTSEngine.Utils;
 
 namespace RTSEngine.Installers
 {
@@ -9,6 +9,8 @@ namespace RTSEngine.Installers
         public override void InstallBindings()
         {
             SignalBusInstaller.Install(Container);
+            Container.Bind<GameSignalBus>().AsSingle().MoveIntoAllSubContainers();
+
         }
     }
 }

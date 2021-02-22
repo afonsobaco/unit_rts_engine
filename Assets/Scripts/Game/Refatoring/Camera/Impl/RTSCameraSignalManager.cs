@@ -38,5 +38,12 @@ namespace RTSEngine.Refactoring
             transform.position = _cameraManager.DoCameraZoom(transform, desiredZoom);
         }
 
+
+        public void OnCameraGoToPositionSignal(CameraGoToPositionSignal signal)
+        {
+            Transform transform = Camera.main.transform;
+            transform.position = signal.Position;
+        }
+
     }
 }

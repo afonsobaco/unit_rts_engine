@@ -2,6 +2,7 @@ using UnityEngine;
 using Zenject;
 using RTSEngine.Core;
 using RTSEngine.Signal;
+using RTSEngine.Utils;
 
 namespace RTSEngine.Refactoring
 {
@@ -20,14 +21,16 @@ namespace RTSEngine.Refactoring
             Container.Bind<IAreaSelection>().To<AreaSelection>().AsSingle();
             Container.Bind<IGroupSelection>().To<GroupSelection>().AsSingle();
             Container.Bind<IIndividualSelection>().To<IndividualSelection>().AsSingle();
-            Container.Bind<ISelectionModifier[]>().FromMethod(GetModifiers);
+            Container.Bind<ModifiersComponent>().FromMethod(GetModifiers);
             Container.Bind<IRuntimeSet<ISelectable>>().FromMethod(GetMainList);
+
             Container.DeclareSignal<SelectableObjectCreatedSignal>();
             Container.DeclareSignal<SelectableObjectDeletedSignal>();
             Container.DeclareSignal<AreaSelectionSignal>();
             Container.DeclareSignal<GroupSelectionSignal>();
             Container.DeclareSignal<IndividualSelectionSignal>();
             Container.DeclareSignal<SelectionUpdateSignal>();
+
             Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectCreatedSignal).FromResolve();
             Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectDeletedSignal).FromResolve();
             Container.BindSignal<AreaSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnAreaSignal).FromResolve();
@@ -35,14 +38,14 @@ namespace RTSEngine.Refactoring
             Container.BindSignal<IndividualSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnIndividualSignal).FromResolve();
         }
 
-        private ISelectionModifier[] GetModifiers()
+        private ModifiersComponent GetModifiers()
         {
-            return modifiers.GetComponents<ISelectionModifier>();
+            return modifiers;
         }
 
         private IRuntimeSet<ISelectable> GetMainList()
         {
-            return runtimeSet.GetComponent<IRuntimeSet<ISelectable>>();
+            return runtimeSet;
         }
     }
 }

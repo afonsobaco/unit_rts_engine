@@ -37,7 +37,7 @@ public class DefaultObject : DefaultSelectable
 
     private void OnMouseUpAsButton()
     {
-        _signalBus.Fire(new IndividualSelectionSignal() { Clicked = this, BlockAreaSelection = true });
+        _signalBus.Fire(new IndividualSelectionSignal() { Clicked = this });
     }
 
     public override int CompareTo(object obj)

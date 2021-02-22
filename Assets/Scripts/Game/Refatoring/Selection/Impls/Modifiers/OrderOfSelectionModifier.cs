@@ -13,7 +13,7 @@ namespace RTSEngine.Refactoring
 
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] private AbstractModifierComponent orderOfSelection;
+        [SerializeField] private AbstractModifierHelper orderOfSelection;
 
         private Modifier modifier = new Modifier();
         public SelectionType Type { get => type; set => type = value; }

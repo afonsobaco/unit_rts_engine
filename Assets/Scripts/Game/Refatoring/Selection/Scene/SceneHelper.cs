@@ -64,7 +64,7 @@ public class SceneHelper : MonoBehaviour
         {
             var item = GetItem();
             if (item != null)
-                _signalBus.Fire(new IndividualSelectionSignal() { BlockAreaSelection = false, Clicked = item });
+                _signalBus.Fire(new IndividualSelectionSignal() { Clicked = item });
         }
     }
 

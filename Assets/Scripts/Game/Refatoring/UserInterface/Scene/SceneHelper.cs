@@ -8,7 +8,7 @@ using RTSEngine.Refactoring;
 using RTSEngine.Utils;
 using Zenject;
 
-public partial class SceneHelper : MonoBehaviour
+public class SceneHelper : MonoBehaviour
 {
     public RectTransform portrait;
     public GridLayoutGroup grid;

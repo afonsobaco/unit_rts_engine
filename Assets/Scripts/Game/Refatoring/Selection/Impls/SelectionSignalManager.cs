@@ -53,7 +53,7 @@ namespace RTSEngine.Refactoring
 
         public void OnIndividualSignal(IndividualSelectionSignal signal)
         {
-            this.BlockAreaSelection = signal.BlockAreaSelection;
+            this.BlockAreaSelection = true;
             var selection = _selectionManager.GetIndividualSelection(GetMainList(), signal.Clicked);
             var result = _selection.DoSelection(selection, SelectionType.INDIVIDUAL);
             _signalBus.Fire(new SelectionUpdateSignal() { Selection = result });

@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.guciodevs.simple-min-max-slider": {
+      "version": "https://github.com/GucioDevs/SimpleMinMaxSlider.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "46ff35d22982657d55f7861ddc01b115a2db1554"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -39,6 +46,22 @@
     "com.unity.postprocessing": {
       "version": "2.3.0",
       "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.probuilder": {
+      "version": "4.4.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.settings-manager": "1.0.3"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.settings-manager": {
+      "version": "1.0.3",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
