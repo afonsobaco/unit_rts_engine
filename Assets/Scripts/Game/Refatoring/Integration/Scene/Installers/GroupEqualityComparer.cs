@@ -10,14 +10,14 @@ namespace RTSEngine.Refactoring
     {
         public override bool Equals(ISelectable x, ISelectable y)
         {
-            var first = x as DefaultObject;
-            var second = y as DefaultObject;
+            var first = x as GameDefaultObject;
+            var second = y as GameDefaultObject;
             return first.objectType == second.objectType;
         }
 
         public override int GetHashCode(ISelectable obj)
         {
-            var first = obj as DefaultObject;
+            var first = obj as GameDefaultObject;
             int hCode = first.objectType.GetHashCode();
             return hCode;
         }

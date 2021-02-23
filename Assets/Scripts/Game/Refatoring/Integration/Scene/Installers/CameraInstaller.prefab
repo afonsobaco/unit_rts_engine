@@ -60,6 +60,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a7db1ae00933cd48930eb3148584e7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidth: 15
-  mapHeight: 15
-  zoom: {x: 1, y: 10}
+  mapWidth: 30
+  mapHeight: 30
+  zoom: {x: 1, y: 15}

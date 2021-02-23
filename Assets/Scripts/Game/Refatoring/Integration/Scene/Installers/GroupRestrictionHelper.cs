@@ -11,7 +11,7 @@ namespace RTSEngine.Refactoring
         public override ISelectable[] Apply(ISelectable[] selection)
         {
             List<ISelectable> selectables = selection.ToList();
-            selectables.RemoveAll(x => (x as DefaultObject).selectionOrder > 1);
+            selectables.RemoveAll(x => (x as GameDefaultObject).selectionOrder > 1);
             if (selectables.Count == 0)
             {
                 return selection;

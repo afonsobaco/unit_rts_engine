@@ -9,6 +9,8 @@ namespace RTSEngine.Refactoring
     public abstract class DefaultClickableButton : MonoBehaviour, UIClickable
     {
         private GameSignalBus _signalBus;
+        private bool _pressing;
+        private bool _inside;
         protected GameSignalBus SignalBus { get => _signalBus; set => _signalBus = value; }
 
         [Inject]
@@ -16,7 +18,28 @@ namespace RTSEngine.Refactoring
         {
             this.SignalBus = signalBus;
         }
-        public abstract void Clicked();
+
+        private void Update()
+        {
+            if (_pressing && _inside)
+            {
+                DoPress();
+            }
+        }
+
+        public abstract void DoClick();
+
+        public abstract void DoPress();
+
+        public virtual void OnPress(bool pressing)
+        {
+            this._pressing = pressing;
+        }
+
+        public virtual void OnHover(bool inside)
+        {
+            this._inside = inside;
+        }
 
     }
 }

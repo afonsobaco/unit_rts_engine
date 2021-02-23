@@ -8,9 +8,15 @@ namespace RTSEngine.Refactoring
 {
     public class DefaultPortraitButton : DefaultClickableButton
     {
-        public override void Clicked()
+        public override void DoClick()
         {
             Debug.Log("Portrait");
         }
+
+        public override void DoPress()
+        {
+            Debug.Log("Portrait Press");
+        }
+
     }
 }

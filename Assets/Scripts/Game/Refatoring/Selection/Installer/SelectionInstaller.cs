@@ -21,7 +21,7 @@ namespace RTSEngine.Refactoring
             Container.Bind<IAreaSelection>().To<AreaSelection>().AsSingle();
             Container.Bind<IGroupSelection>().To<GroupSelection>().AsSingle();
             Container.Bind<IIndividualSelection>().To<IndividualSelection>().AsSingle();
-            Container.Bind<ModifiersComponent>().FromMethod(GetModifiers);
+            Container.Bind<IModifiersComponent>().FromMethod(GetModifiers);
             Container.Bind<IRuntimeSet<ISelectable>>().FromMethod(GetMainList);
 
             Container.DeclareSignal<SelectableObjectCreatedSignal>();

@@ -5,10 +5,10 @@ namespace RTSEngine.Core
 {
     public class DefaultSelectable : ZenAutoInjecter, ISelectable
     {
-        public int Index { get; set; }
-        public bool IsSelected { get; set; }
-        public bool IsPreSelected { get; set; }
-        public Vector3 Position
+        public virtual int Index { get; set; }
+        public virtual bool IsSelected { get; set; }
+        public virtual bool IsPreSelected { get; set; }
+        public virtual Vector3 Position
         {
             get { return this.transform.position; }
             set
@@ -17,7 +17,7 @@ namespace RTSEngine.Core
             }
         }
 
-        public bool IsHighlighted { get; set; }
+        public virtual bool IsHighlighted { get; set; }
 
         public virtual int CompareTo(object obj)
         {

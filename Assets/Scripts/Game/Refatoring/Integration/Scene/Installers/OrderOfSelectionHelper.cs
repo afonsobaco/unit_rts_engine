@@ -32,7 +32,7 @@ namespace RTSEngine.Refactoring
 
         public List<IGrouping<int, ISelectable>> FakePriorityGroup(ISelectable[] selection)
         {
-            return selection.GroupBy(x => (x as DefaultObject).selectionOrder).ToList();
+            return selection.GroupBy(x => (x as GameDefaultObject).selectionOrder).ToList();
         }
 
         public class ObjectComparer : IComparer<IGrouping<int, ISelectable>>

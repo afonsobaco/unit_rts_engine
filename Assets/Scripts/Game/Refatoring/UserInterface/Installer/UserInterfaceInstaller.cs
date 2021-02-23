@@ -22,6 +22,24 @@ namespace RTSEngine.Refactoring
         [SerializeField] private GameObject actionPrefab;
         [SerializeField] private GameObject itemPrefab;
 
+        public override void Start()
+        {
+            base.Start();
+            ClearPanel(portraitPanel);
+            ClearPanel(itemPanel);
+            ClearPanel(miniaturePanel);
+            ClearPanel(bannerPanel);
+            ClearPanel(actionPanel);
+        }
+
+        private static void ClearPanel(RectTransform panel)
+        {
+            foreach (Transform child in panel)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
+
         public override void InstallBindings()
         {
             Container.Bind<UserInterfaceSignalManager>().AsSingle();
@@ -56,5 +74,7 @@ namespace RTSEngine.Refactoring
         {
             button.transform.SetParent(miniaturePanel.transform, false);
         }
+
+
     }
 }

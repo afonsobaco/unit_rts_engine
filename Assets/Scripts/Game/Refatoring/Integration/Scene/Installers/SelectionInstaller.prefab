@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 6840077804431259544}
   - component: {fileID: 7594333134778112674}
   - component: {fileID: 6669022171584907306}
-  - component: {fileID: 776549880523321200}
+  - component: {fileID: -2846684252184765155}
   m_Layer: 0
   m_Name: SelectionInstaller
   m_TagString: Untagged
@@ -189,8 +189,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  equalityComparer: {fileID: 776549880523321200}
---- !u!114 &776549880523321200
+  equalityComparer: {fileID: -2846684252184765155}
+--- !u!114 &-2846684252184765155
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,6 +199,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 197634333273064212}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3b1955ab622fe14b9a8eccab26078c0, type: 3}
+  m_Script: {fileID: 11500000, guid: dee08eb91631ae943bad76bec4ffe4bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
