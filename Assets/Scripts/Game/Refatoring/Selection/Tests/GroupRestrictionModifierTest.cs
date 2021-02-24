@@ -36,16 +36,13 @@ namespace Tests
         }
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldApplyModifier(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes, int[] actualSelection)
+        public void ShouldApplyModifier(int amount, int[] newSelectionIndexes, int[] actualSelection)
         {
             ISelectable[] mainList = TestUtils.GetSomeObjects(amount);
-            ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
             ISelectable[] expected = TestUtils.GetListByIndex(actualSelection, mainList);
 
-            var result = modifier.Apply(oldSelection, newSelection, newSelection, SelectionType.ANY);
-            Debug.Log(expected.GetType().Name);
-            Debug.Log(">" + result.GetType().Name);
+            var result = modifier.Apply(newSelection);
             CollectionAssert.AreEquivalent(expected, result);
         }
 
@@ -61,7 +58,7 @@ namespace Tests
                         if (a < 7)
                             expected.Add(a);
                     }
-                    yield return new TestCaseData(item.amount, item.oldSelection, item.newSelection, expected.ToArray()).SetName(TestUtils.GetCaseName(item));
+                    yield return new TestCaseData(item.amount, item.newSelection, expected.ToArray()).SetName(TestUtils.GetCaseName(item));
                 }
             }
         }

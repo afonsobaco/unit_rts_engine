@@ -5,15 +5,12 @@ using Zenject;
 public class ZenjectTestInstaller : MonoInstaller
 {
 
-    [SerializeField] private GameObject prefab;
+    [SerializeField] private Foo foo;
 
     public override void InstallBindings()
     {
-        Container.BindFactory<Foo, Foo.Factory>().FromComponentInNewPrefab(prefab).OnInstantiated(Created);
+        // Container.BindFactory<Foo, Foo.Factory>().FromComponentInNewPrefab(prefab).OnInstantiated(Created);
+        Container.Bind<Foo>().FromComponentInNewPrefab(foo).AsSingle().NonLazy();
     }
 
-    private void Created(InjectContext arg1, object arg2)
-    {
-        Debug.Log("created");
-    }
 }

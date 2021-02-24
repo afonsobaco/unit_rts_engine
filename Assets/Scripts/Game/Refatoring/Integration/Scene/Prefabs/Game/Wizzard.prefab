@@ -385,6 +385,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3967659217511259958}
   - component: {fileID: 1759904571232850837}
+  - component: {fileID: 962960284139340498}
   - component: {fileID: 1558981957422232270}
   m_Layer: 0
   m_Name: Wizzard
@@ -425,6 +426,20 @@ CapsuleCollider:
   m_Height: 1.7
   m_Direction: 1
   m_Center: {x: 0, y: 0.7, z: 0}
+--- !u!114 &962960284139340498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909930287666605681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5900cbdee9c7449ae40d0fdbf50f33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _containerSource: 2
+  selectionMark: {fileID: 4782704107103593911}
 --- !u!114 &1558981957422232270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,9 +452,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89497b3f8e9c6ee40990292bf0836a40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _containerSource: 2
-  selectionMark: {fileID: 4782704107103593911}
-  selectionOrder: 0
   objectType: Wizzard
 --- !u!1001 &921565070994784896
 PrefabInstance:

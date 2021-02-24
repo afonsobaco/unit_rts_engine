@@ -1,24 +1,57 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RTSEngine.Refactoring;
 
 public class SceneHelper : MonoBehaviour
 {
     [SerializeField] private GameObject[] objects;
-    [SerializeField] [Range(0, 100)] private int index;
+    private int index;
 
     void Update()
     {
-        index = Mathf.Clamp(index, 0, objects.Length - 1);
         CreateSceneObjects();
 
     }
 
     private void CreateSceneObjects()
     {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            index++;
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            index--;
+        }
+
+        index = Mathf.Clamp(index, 0, objects.Length - 1);
+
         if (Input.GetMouseButtonUp(1))
         {
-            CreateSelectableObject(objects[index]);
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                RemoveSelectableObject();
+            }
+            else
+            {
+                CreateSelectableObject(objects[index]);
+            }
+        }
+    }
+
+    private void RemoveSelectableObject()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            var gdo = hit.transform.GetComponent<GameDefaultObject>();
+            if (gdo)
+            {
+                Destroy(gdo.gameObject);
+            }
         }
     }
 

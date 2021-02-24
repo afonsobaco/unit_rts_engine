@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace RTSEngine.Core
 {
-    public interface ISelectable : IComparable
+    public interface ISelectable
     {
         int Index { get; set; } //forDebugOnly
         bool IsSelected { get; set; }

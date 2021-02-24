@@ -21,8 +21,8 @@ namespace RTSEngine.Refactoring
             Container.Bind<IAreaSelection>().To<AreaSelection>().AsSingle();
             Container.Bind<IGroupSelection>().To<GroupSelection>().AsSingle();
             Container.Bind<IIndividualSelection>().To<IndividualSelection>().AsSingle();
-            Container.Bind<IModifiersComponent>().FromMethod(GetModifiers);
-            Container.Bind<IRuntimeSet<ISelectable>>().FromMethod(GetMainList);
+            Container.Bind<IModifiersComponent>().FromComponentInNewPrefab(modifiers).AsSingle();
+            Container.Bind<IRuntimeSet<ISelectable>>().FromComponentInNewPrefab(runtimeSet).AsSingle();
 
             Container.DeclareSignal<SelectableObjectCreatedSignal>();
             Container.DeclareSignal<SelectableObjectDeletedSignal>();
@@ -38,14 +38,5 @@ namespace RTSEngine.Refactoring
             Container.BindSignal<IndividualSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnIndividualSignal).FromResolve();
         }
 
-        private ModifiersComponent GetModifiers()
-        {
-            return modifiers;
-        }
-
-        private IRuntimeSet<ISelectable> GetMainList()
-        {
-            return runtimeSet;
-        }
     }
 }

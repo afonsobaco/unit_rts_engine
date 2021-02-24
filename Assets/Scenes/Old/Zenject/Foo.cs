@@ -1,15 +1,13 @@
 using Zenject;
 using UnityEngine;
 
+
 public class Foo : MonoBehaviour
 {
     [Inject]
     private void Construct()
     {
-        Debug.Log("Here");
+        Debug.Log("Foo Construct");
     }
 
-    public class Factory : PlaceholderFactory<Foo>
-    {
-    }
 }

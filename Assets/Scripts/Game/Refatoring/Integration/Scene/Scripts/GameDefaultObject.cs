@@ -11,8 +11,6 @@ namespace RTSEngine.Refactoring
     public class GameDefaultObject : DefaultSelectable
     {
         [SerializeField] private SelectionMark selectionMark;
-        public int selectionOrder;
-        public string objectType;
 
         private SignalBus _signalBus;
 
@@ -49,20 +47,6 @@ namespace RTSEngine.Refactoring
         private void OnMouseUpAsButton()
         {
             _signalBus.Fire(new IndividualSelectionSignal() { Clicked = this });
-        }
-
-        public override int CompareTo(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return -1;
-            }
-
-            var other = obj as GameDefaultObject;
-
-            int v = other.selectionOrder - this.selectionOrder;
-
-            return v;
         }
 
     }

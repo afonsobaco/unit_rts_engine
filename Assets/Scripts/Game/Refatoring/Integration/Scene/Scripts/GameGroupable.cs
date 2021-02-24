@@ -7,15 +7,17 @@ using Zenject;
 namespace RTSEngine.Refactoring
 {
 
-    public class GameGroupableObject : GameDefaultObject, IGroupable
+    public class GameGroupable : MonoBehaviour, IGroupable
     {
+        public string objectType;
+
         public bool IsCompatible(object other)
         {
             if (other == null || GetType() != other.GetType())
             {
                 return false;
             }
-            return this.objectType.Equals((other as GameGroupableObject).objectType);
+            return this.objectType.Equals((other as GameGroupable).objectType);
         }
 
     }

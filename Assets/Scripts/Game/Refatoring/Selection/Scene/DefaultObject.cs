@@ -40,18 +40,18 @@ public class DefaultObject : DefaultSelectable
         _signalBus.Fire(new IndividualSelectionSignal() { Clicked = this });
     }
 
-    public override int CompareTo(object obj)
-    {
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return -1;
-        }
+    // public override int CompareTo(object obj)
+    // {
+    //     if (obj == null || GetType() != obj.GetType())
+    //     {
+    //         return -1;
+    //     }
 
-        var other = obj as DefaultObject;
+    //     var other = obj as DefaultObject;
 
-        int v = other.selectionOrder - this.selectionOrder;
+    //     int v = other.selectionOrder - this.selectionOrder;
 
-        return v;
-    }
+    //     return v;
+    // }
 
 }

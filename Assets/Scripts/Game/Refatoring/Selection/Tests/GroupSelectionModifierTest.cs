@@ -12,12 +12,19 @@ namespace Tests
     [TestFixture]
     public class GroupSelectionModifierTest
     {
-        private GroupSelectionModifier.Modifier modifier;
+        private SubGroupSelectionModifier.Modifier modifier;
+
+        public IEqualityComparer<ISelectable> equalityComparer;
+        public IComparer<IGrouping<ISelectable, ISelectable>> groupingComparer;
 
         [SetUp]
         public void SetUp()
         {
-            modifier = Substitute.ForPartsOf<GroupSelectionModifier.Modifier>();
+            modifier = Substitute.ForPartsOf<SubGroupSelectionModifier.Modifier>();
+            equalityComparer = Substitute.For<IEqualityComparer<ISelectable>>();
+            groupingComparer = Substitute.For<IComparer<IGrouping<ISelectable, ISelectable>>>();
+            modifier.EqualityComparer = equalityComparer;
+            modifier.SubGroupComparer = groupingComparer;
         }
 
         [Test]
@@ -27,28 +34,41 @@ namespace Tests
         }
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldGroupSelectionToPassedValue(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes, int[] actualSelection)
+        public void ShouldGroupSelectionToPassedValue(int amount, int[] newSelectionIndexes, int[] expectedIndexes)
         {
-
             ISelectable[] mainList = TestUtils.GetSomeObjects(amount);
-            ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
-            ISelectable[] expected = TestUtils.GetListByIndex(actualSelection, mainList);
+            ISelectable[] expected = TestUtils.GetListByIndex(expectedIndexes, mainList);
 
-            mainList.ToList().ForEach(x =>
-            {
-                x.CompareTo(Arg.Any<ISelectable>()).Returns(
-                    args =>
-                    {
-                        var selectable = args[0] as ISelectable;
-                        return (selectable.Index % 2) - (x.Index % 2);
-                    }
-                );
-            });
+            modifier.WhenForAnyArgs(x => x.OrderSubGroups(default)).DoNotCallBase();
+            modifier.OrderSubGroups(Arg.Any<ISelectable[]>()).Returns(expected);
 
-            var result = modifier.Apply(oldSelection, newSelection, newSelection, SelectionType.ANY);
+            var result = modifier.Apply(newSelection);
 
             CollectionAssert.AreEquivalent(expected, result);
+        }
+
+        [TestCaseSource(nameof(Scenarios))]
+        public void ShouldOrderSubGroups(int amount, int[] newSelectionIndexes, int[] expectedIndexes)
+        {
+            ISelectable[] mainList = TestUtils.GetSomeObjects(amount);
+            ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
+            ISelectable[] expected = TestUtils.GetListByIndex(expectedIndexes, mainList);
+
+            equalityComparer.GetHashCode(default).ReturnsForAnyArgs(x =>
+            {
+                return ((x[0] as ISelectable).Index % 2).GetHashCode();
+            });
+            groupingComparer.Compare(default, default).ReturnsForAnyArgs(x =>
+            {
+                IGrouping<ISelectable, ISelectable> first = (x[0] as IGrouping<ISelectable, ISelectable>);
+                IGrouping<ISelectable, ISelectable> second = (x[1] as IGrouping<ISelectable, ISelectable>);
+                return (first.Key.Index % 2) - (second.Key.Index % 2);
+            });
+
+            var result = modifier.OrderSubGroups(newSelection);
+
+            CollectionAssert.AreEqual(expected, result);
         }
 
         private static IEnumerable<TestCaseData> Scenarios
@@ -57,22 +77,22 @@ namespace Tests
             {
                 foreach (var item in TestUtils.GetDefaultCases())
                 {
-                    List<int> actualSelection = new List<int>();
+                    List<int> expected = new List<int>();
                     foreach (var i in item.newSelection)
                     {
                         if (i % 2 == 0)
                         {
-                            actualSelection.Add(i);
+                            expected.Add(i);
                         }
                     }
                     foreach (var i in item.newSelection)
                     {
                         if (i % 2 != 0)
                         {
-                            actualSelection.Add(i);
+                            expected.Add(i);
                         }
                     }
-                    yield return new TestCaseData(item.amount, item.oldSelection, item.newSelection, actualSelection.ToArray()).SetName(TestUtils.GetCaseName(item));
+                    yield return new TestCaseData(item.amount, item.newSelection, expected.ToArray()).SetName(TestUtils.GetCaseName(item));
                 }
             }
         }

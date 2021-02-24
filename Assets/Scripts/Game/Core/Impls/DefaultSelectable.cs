@@ -16,13 +16,7 @@ namespace RTSEngine.Core
                 this.transform.position = value;
             }
         }
-
         public virtual bool IsHighlighted { get; set; }
-
-        public virtual int CompareTo(object obj)
-        {
-            return 0;
-        }
 
     }
 

@@ -24,6 +24,10 @@ namespace RTSEngine.Utils
             }
             return list.ToArray();
         }
+        public static List<IGrouping<ISelectable, ISelectable>> GetGrouped(ISelectable[] actualSelection, IEqualityComparer<ISelectable> equalityComparer)
+        {
+            return actualSelection.GroupBy(x => x, equalityComparer).ToList();
+        }
 
 
         public static int GetAnyGroupKeyPressed()
@@ -42,7 +46,8 @@ namespace RTSEngine.Utils
         {
             public int Compare(IGrouping<ISelectable, ISelectable> x, IGrouping<ISelectable, ISelectable> y)
             {
-                return x.Key.CompareTo(y.Key);
+                // return x.Key.CompareTo(y.Key);
+                return 0;
             }
         }
 

@@ -38,14 +38,14 @@ namespace RTSEngine.Refactoring
 
         public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
         {
-            return this.modifier.Apply(oldSelection, newSelection, actualSelection, type);
+            return this.modifier.Apply(actualSelection);
         }
 
         public class Modifier
         {
             public IModifier GroupRestrictionHelper { get; set; }
 
-            public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+            public ISelectable[] Apply(ISelectable[] actualSelection)
             {
                 if (GroupRestrictionHelper != null)
                     return GroupRestrictionHelper.Apply(actualSelection);

@@ -8,41 +8,20 @@ namespace RTSEngine.Refactoring
 {
     public class OrderOfSelectionHelper : AbstractModifierHelper
     {
+
+        [SerializeField] private List<ObjectTypeEnum> types;
         public override ISelectable[] Apply(ISelectable[] selection)
         {
-            List<IGrouping<int, ISelectable>> items = FakePriorityGroup(selection);
-            items.Sort(new ObjectComparer());
-            List<ISelectable> selectables = new List<ISelectable>();
-            if (items.Count > 0)
+            List<ISelectable> result = new List<ISelectable>();
+            foreach (var item in selection)
             {
-                switch (items[0].Key)
+                if (item is GameDefaultObject)
                 {
-                    case 0:
-                        selectables = items[0].ToList();
-                        break;
-                    case 1:
-                        selectables.Add(items[0].First());
-                        break;
-                    default:
-                        break;
+
                 }
             }
-            return selectables.ToArray();
+            return selection;
         }
-
-        public List<IGrouping<int, ISelectable>> FakePriorityGroup(ISelectable[] selection)
-        {
-            return selection.GroupBy(x => (x as GameDefaultObject).selectionOrder).ToList();
-        }
-
-        public class ObjectComparer : IComparer<IGrouping<int, ISelectable>>
-        {
-            public int Compare(IGrouping<int, ISelectable> x, IGrouping<int, ISelectable> y)
-            {
-                return x.Key.CompareTo(y.Key);
-            }
-        }
-
 
     }
 }
