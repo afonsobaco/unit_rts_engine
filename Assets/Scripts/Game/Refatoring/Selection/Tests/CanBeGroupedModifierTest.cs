@@ -10,18 +10,18 @@ using System.Linq;
 namespace Tests
 {
     [TestFixture]
-    public class GroupRestrictionModifierTest
+    public class CanBeGroupedModifierTest
     {
 
-        private GroupRestrictionSelectionModifier.Modifier modifier;
-        private IModifier groupRestriction;
+        private CanBeGroupedSelectionModifier.Modifier modifier;
+        private IModifierHelper canBeGroupedHelper;
         [SetUp]
         public void SetUp()
         {
-            modifier = Substitute.ForPartsOf<GroupRestrictionSelectionModifier.Modifier>();
-            groupRestriction = Substitute.For<IModifier>();
-            modifier.GroupRestrictionHelper = groupRestriction;
-            groupRestriction.Apply(Arg.Any<ISelectable[]>()).Returns(args =>
+            modifier = Substitute.ForPartsOf<CanBeGroupedSelectionModifier.Modifier>();
+            canBeGroupedHelper = Substitute.For<IModifierHelper>();
+            modifier.CanBeGroupedHelper = canBeGroupedHelper;
+            canBeGroupedHelper.Apply(Arg.Any<ISelectable[]>()).Returns(args =>
             {
                 List<ISelectable> selectables = new List<ISelectable>(args[0] as ISelectable[]);
                 selectables.RemoveAll(x => x.Index >= 7);

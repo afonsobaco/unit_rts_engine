@@ -37,16 +37,16 @@ namespace RTSEngine.Refactoring
             BlockAreaSelection = false;
         }
 
-        public void OnGroupSignal(GroupSelectionSignal signal)
+        public void OnPartySignal(PartySelectionSignal signal)
         {
             if (signal.CreateNew)
             {
-                _selectionManager.SetGroupSelection(_selection.GetCurrent(), signal.GroupId);
+                _selectionManager.SetPartySelection(_selection.GetCurrent(), signal.PartyId);
             }
             else
             {
-                var selection = _selectionManager.GetGroupSelection(GetMainList(), signal.GroupId);
-                var result = _selection.DoSelection(selection, SelectionType.GROUP);
+                var selection = _selectionManager.GetPartySelection(GetMainList(), signal.PartyId);
+                var result = _selection.DoSelection(selection, SelectionType.PARTY);
                 _signalBus.Fire(new SelectionUpdateSignal() { Selection = result });
             }
         }

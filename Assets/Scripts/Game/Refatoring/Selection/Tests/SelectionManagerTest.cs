@@ -12,17 +12,17 @@ namespace Tests
 
         private SelectionManager _selectionInterface;
         private IAreaSelection _areaSelection;
-        private IGroupSelection _groupSelection;
+        private IPartySelection _partySelection;
         private IIndividualSelection _individualSelection;
 
         [SetUp]
         public void SetUp()
         {
             _areaSelection = Substitute.For<IAreaSelection>();
-            _groupSelection = Substitute.For<IGroupSelection>();
+            _partySelection = Substitute.For<IPartySelection>();
             _individualSelection = Substitute.For<IIndividualSelection>();
             _selectionInterface = Substitute.ForPartsOf<SelectionManager>(new object[]{
-                _areaSelection, _groupSelection, _individualSelection
+                _areaSelection, _partySelection, _individualSelection
             });
         }
 
@@ -39,27 +39,27 @@ namespace Tests
             ISelectable[] result = _selectionInterface.GetAreaSelection(default, default, default);
 
             _areaSelection.ReceivedWithAnyArgs(1).GetSelection(default, default, default);
-            _groupSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
+            _partySelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
             _individualSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
         }
 
         [Test]
-        public void ShouldGetSelectionFromGroupSelectionType()
+        public void ShouldGetSelectionFromPartySelectionType()
         {
-            ISelectable[] result = _selectionInterface.GetGroupSelection(default, default);
+            ISelectable[] result = _selectionInterface.GetPartySelection(default, default);
 
-            _groupSelection.ReceivedWithAnyArgs(1).GetSelection(default, default);
+            _partySelection.ReceivedWithAnyArgs(1).GetSelection(default, default);
             _areaSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default, default);
             _individualSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
         }
 
         [Test]
-        public void ShouldSetSelectionFromGroupSelectionType()
+        public void ShouldSetSelectionFromPartySelectionType()
         {
-            _selectionInterface.SetGroupSelection(default, default);
+            _selectionInterface.SetPartySelection(default, default);
 
-            _groupSelection.ReceivedWithAnyArgs(1).ChangeGroup(default, default);
-            _groupSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
+            _partySelection.ReceivedWithAnyArgs(1).ChangeParty(default, default);
+            _partySelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
             _areaSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default, default);
             _individualSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
         }
@@ -71,7 +71,7 @@ namespace Tests
 
             _individualSelection.ReceivedWithAnyArgs(1).GetSelection(default, default);
             _areaSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default, default);
-            _groupSelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
+            _partySelection.DidNotReceiveWithAnyArgs().GetSelection(default, default);
         }
     }
 }

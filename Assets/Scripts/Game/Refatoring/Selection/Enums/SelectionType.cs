@@ -9,6 +9,6 @@ namespace RTSEngine.Refactoring
         ANY,
         AREA,
         INDIVIDUAL,
-        GROUP,
+        PARTY,
     }
 }

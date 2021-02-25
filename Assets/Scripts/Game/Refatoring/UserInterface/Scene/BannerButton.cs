@@ -7,7 +7,7 @@ using Zenject;
 public class BannerButton : ZenAutoInjecter
 {
     private SignalBus _signalBus;
-    public object GroupId { get; set; }
+    public object PartyId { get; set; }
 
     private Text text;
 
@@ -20,14 +20,14 @@ public class BannerButton : ZenAutoInjecter
     private void Start()
     {
         text = this.GetComponent<Button>().GetComponentInChildren<Text>();
-        text.text = GroupId.ToString();
+        text.text = PartyId.ToString();
     }
 
     public void Clicked()
     {
         _signalBus.Fire(new BannerClickedSignal()
         {
-            GroupId = this.GroupId,
+            PartyId = this.PartyId,
             ToRemove = Input.GetKey(KeyCode.LeftShift)
         });
     }

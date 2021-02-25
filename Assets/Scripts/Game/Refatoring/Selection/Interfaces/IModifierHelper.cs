@@ -5,7 +5,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public interface IModifier
+    public interface IModifierHelper
     {
         ISelectable[] Apply(ISelectable[] actualSelection);
     }

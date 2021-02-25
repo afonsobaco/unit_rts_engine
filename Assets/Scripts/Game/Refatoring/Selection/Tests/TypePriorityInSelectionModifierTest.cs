@@ -9,18 +9,18 @@ using System.Linq;
 namespace Tests
 {
     [TestFixture]
-    public class OrderOfSelectionModifierTest
+    public class TypePriorityInSelectionModifierTest
     {
 
-        private OrderOfSelectionModifier.Modifier modifier;
-        private IModifier orderOfSelection;
+        private TypePriorityInSelectionModifier.Modifier modifier;
+        private IModifierHelper typePriorityHelper;
         [SetUp]
         public void SetUp()
         {
-            modifier = Substitute.ForPartsOf<OrderOfSelectionModifier.Modifier>();
-            orderOfSelection = Substitute.For<IModifier>();
-            modifier.OrderOfSelection = orderOfSelection;
-            orderOfSelection.Apply(Arg.Any<ISelectable[]>()).Returns(args =>
+            modifier = Substitute.ForPartsOf<TypePriorityInSelectionModifier.Modifier>();
+            typePriorityHelper = Substitute.For<IModifierHelper>();
+            modifier.TypePriorityHelper = typePriorityHelper;
+            typePriorityHelper.Apply(Arg.Any<ISelectable[]>()).Returns(args =>
             {
                 var a = new List<ISelectable>();
                 var b = new List<ISelectable>();
@@ -64,14 +64,13 @@ namespace Tests
         }
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldApplyModifier(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes, int[] actualSelection)
+        public void ShouldApplyModifier(int amount, int[] newSelectionIndexes, int[] expectedSelection)
         {
             ISelectable[] mainList = TestUtils.GetSomeObjects(amount);
-            ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
-            ISelectable[] expected = TestUtils.GetListByIndex(actualSelection, mainList);
+            ISelectable[] expected = TestUtils.GetListByIndex(expectedSelection, mainList);
 
-            var result = modifier.Apply(oldSelection, newSelection, newSelection, SelectionType.ANY);
+            var result = modifier.Apply(newSelection);
 
             CollectionAssert.AreEquivalent(expected, result);
         }
@@ -110,10 +109,10 @@ namespace Tests
                         expected = aux;
                     }
 
-                    yield return new TestCaseData(item.amount, item.oldSelection, item.newSelection, expected.ToArray()).SetName(TestUtils.GetCaseName(item));
+                    yield return new TestCaseData(item.amount, item.newSelection, expected.ToArray()).SetName(TestUtils.GetCaseName(item));
                 }
-                yield return new TestCaseData(10, new int[] { }, new int[] { 4, 5, 6 }, new int[] { 4 }).SetName("EMPTY OLD, MULTIPLE NEW, All on secondary list, first choice, get by secondary order");
-                yield return new TestCaseData(10, new int[] { }, new int[] { 7, 9, 4, 5, 6 }, new int[] { 4 }).SetName("EMPTY OLD, MULTIPLE NEW, All on secondary list, shuffled, first choice, get by secondary order");
+                yield return new TestCaseData(10, new int[] { 4, 5, 6 }, new int[] { 4 }).SetName("EMPTY OLD, MULTIPLE NEW, All on secondary list, first choice, get by secondary order");
+                yield return new TestCaseData(10, new int[] { 7, 9, 4, 5, 6 }, new int[] { 4 }).SetName("EMPTY OLD, MULTIPLE NEW, All on secondary list, shuffled, first choice, get by secondary order");
             }
         }
     }

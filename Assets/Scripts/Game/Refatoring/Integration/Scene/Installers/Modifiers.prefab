@@ -68,6 +68,7 @@ MonoBehaviour:
   key: 306
   initialViewportPoint: {x: 0, y: 0}
   finalViewportPoint: {x: 1, y: 1}
+  equalityComparer: {fileID: 7183327930620528340}
 --- !u!114 &4761113946230260488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,7 +82,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  orderOfSelection: {fileID: 7057072094132882759}
+  typePriorityHelper: {fileID: 7057072094132882759}
 --- !u!114 &7057072094132882759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e03f3ad2fcd0a8c47832e65f783591d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  types: 0000000001000000
+  partySelectionType: 00000000
+  singleSelectionType: 01000000
 --- !u!114 &2964952482933065852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  limit: 20
+  limit: 15
 --- !u!114 &6343031411079719706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,8 +164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfe7dae03d8fade44811b22206e6a0b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
-  subGroupEqualityComparer: {fileID: 7183327930620528340}
+  _type: 0
+  _subGroupComparer: {fileID: 0}
+  _equalityComparer: {fileID: 0}
 --- !u!114 &7183327930620528340
 MonoBehaviour:
   m_ObjectHideFlags: 0

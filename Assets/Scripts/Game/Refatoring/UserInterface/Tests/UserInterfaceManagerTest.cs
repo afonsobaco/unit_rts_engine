@@ -36,8 +36,8 @@ namespace Tests
             ISelectable[] selection = GetSubGroups(4);
             ISelectable clicked = selection[0];
             bool toRemove = false;
-            bool asGroup = false;
-            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asGroup);
+            bool asSubGroup = false;
+            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asSubGroup);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, new ISelectable[] { clicked })
             ));
@@ -50,8 +50,8 @@ namespace Tests
             ISelectable clicked = selection[0];
             ISelectable[] expected = selection.ToList().FindAll(x => !x.Equals(clicked)).ToArray();
             bool toRemove = true;
-            bool asGroup = false;
-            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asGroup);
+            bool asSubGroup = false;
+            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asSubGroup);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, expected)
             ));
@@ -65,8 +65,8 @@ namespace Tests
             ISelectable clicked = selection[0];
             ISelectable[] expected = selection.ToList().FindAll(x => x.Index < Amount / 2).ToArray();
             bool toRemove = false;
-            bool asGroup = true;
-            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asGroup);
+            bool asSubGroup = true;
+            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asSubGroup);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, expected)
             ));
@@ -80,8 +80,8 @@ namespace Tests
             ISelectable clicked = selection[0];
             ISelectable[] expected = selection.ToList().FindAll(x => x.Index >= Amount / 2).ToArray();
             bool toRemove = true;
-            bool asGroup = true;
-            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asGroup);
+            bool asSubGroup = true;
+            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asSubGroup);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, expected)
             ));

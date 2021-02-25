@@ -10,7 +10,7 @@ namespace RTSEngine.Refactoring
 {
     public class DefaultSelectionInput : MonoBehaviour
     {
-        [SerializeField] private KeyCode GroupKeyCode = KeyCode.Z;
+        [SerializeField] private KeyCode PartyKeyCode = KeyCode.Z;
         private bool preventSelection;
         private bool isSelecting;
         protected Vector3 _startScreenPoint;
@@ -28,7 +28,7 @@ namespace RTSEngine.Refactoring
         void Update()
         {
             GetAreaSelectionInput();
-            GetGroupSelectionInput();
+            GetPartySelectionInput();
             GetOtherInputs();
         }
 
@@ -46,12 +46,12 @@ namespace RTSEngine.Refactoring
             }
         }
 
-        public virtual void GetGroupSelectionInput()
+        public virtual void GetPartySelectionInput()
         {
-            var keyPressed = GameUtils.GetAnyGroupKeyPressed();
+            var keyPressed = GameUtils.GetAnyPartyKeyPressed();
             if (keyPressed > 0)
             {
-                _signalBus.Fire(new GroupSelectionSignal() { GroupId = keyPressed, CreateNew = Input.GetKey(GroupKeyCode) });
+                _signalBus.Fire(new PartySelectionSignal() { PartyId = keyPressed, CreateNew = Input.GetKey(PartyKeyCode) });
             }
         }
 

@@ -20,7 +20,7 @@ namespace RTSEngine.Refactoring
             {
                 if (mod.Type == type || mod.Type == SelectionType.ANY)
                 {
-                    actualSelection = mod.Apply(oldSelection, newSelection, actualSelection, type);
+                    actualSelection = mod.Apply(ref oldSelection, ref newSelection, actualSelection);
                 }
             }
             return actualSelection;

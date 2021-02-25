@@ -44,9 +44,9 @@ namespace RTSEngine.Manager
                 new SameTypeSelectionModifier(this),
                 new OrderOfSelectionModifier(this),
                 new AdditiveSelectionModifier(this),
-                new GroupRestrictorSelectionModifier(this),
+                new CanBeGroupedSelectionModifier(this),
                 new LimitSelectionModifier(this),
-                new GroupSelectionModifier(this)
+                new OrderSelectionModifier(this)
             };
         }
 

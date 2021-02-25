@@ -32,12 +32,11 @@ namespace Tests
         {
 
             ISelectable[] mainList = TestUtils.GetSomeObjects(amount);
-            ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
             ISelectable[] expected = TestUtils.GetListByIndex(actualSelection, mainList);
             modifier.Limit = limit;
 
-            var result = modifier.Apply(oldSelection, newSelection, newSelection, SelectionType.ANY);
+            var result = modifier.Apply(newSelection);
 
             CollectionAssert.AreEquivalent(expected, result);
         }

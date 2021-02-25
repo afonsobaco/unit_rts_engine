@@ -7,22 +7,15 @@ using System;
 namespace RTSEngine.Refactoring
 {
 
-    public static class GroupableUtil
+    public static class SubGroupUtil
     {
 
-        public static List<ISelectable> GetFromSameTypeOnScreen(ISelectable[] groupables, ISelectable selected, Func<ISelectable, bool> IsInsideViewportPoints)
+        public static List<ISelectable> GetFromSubGroupOnScreen(ISelectable[] groupables, ISelectable selected, Func<ISelectable, bool> IsInsideViewportPoints, EqualityComparerComponent equalityComparer)
         {
             List<ISelectable> result = new List<ISelectable>();
             foreach (var item in GetAllInsideViewportPoints(groupables, selected.Position, IsInsideViewportPoints))
             {
-                if (item is IGroupable)
-                {
-                    var obj = item as IGroupable;
-                    if (obj.IsCompatible(selected))
-                    {
-                        result.Add(item);
-                    }
-                }
+                equalityComparer.Equals(selected, item);
             }
             return result;
         }

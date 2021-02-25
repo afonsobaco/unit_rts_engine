@@ -57,7 +57,7 @@ public class SceneHelper : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _signalBus.Fire(new GroupSelectionSignal() { GroupId = 1, CreateNew = Input.GetKey(KeyCode.Z) });
+            _signalBus.Fire(new PartySelectionSignal() { PartyId = 1, CreateNew = Input.GetKey(KeyCode.Z) });
         }
 
         if (Input.GetKeyDown(KeyCode.Q))

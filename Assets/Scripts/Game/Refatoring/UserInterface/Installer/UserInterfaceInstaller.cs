@@ -47,7 +47,7 @@ namespace RTSEngine.Refactoring
             Container.Bind<UserInterface>().AsSingle();
 
             Container.DeclareSignal<SelectionUpdateSignal>();
-            Container.DeclareSignal<GroupUpdateSignal>();
+            Container.DeclareSignal<PartyUpdateSignal>();
             Container.DeclareSignal<AlternateSubGroupSignal>();
             Container.DeclareSignal<MiniatureClickedSignal>();
             Container.DeclareSignal<PortraitClickedSignal>();
@@ -58,7 +58,7 @@ namespace RTSEngine.Refactoring
             Container.DeclareSignal<ChangeSelectionSignal>();
 
             Container.BindSignal<SelectionUpdateSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnSelectionUpdate).FromResolve();
-            Container.BindSignal<GroupUpdateSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnGroupUpdate).FromResolve();
+            Container.BindSignal<PartyUpdateSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnPartyUpdate).FromResolve();
             Container.BindSignal<AlternateSubGroupSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnAlternateSubGroup).FromResolve();
             Container.BindSignal<MiniatureClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnMiniatureClicked).FromResolve();
             Container.BindSignal<PortraitClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnPortraitClicked).FromResolve();

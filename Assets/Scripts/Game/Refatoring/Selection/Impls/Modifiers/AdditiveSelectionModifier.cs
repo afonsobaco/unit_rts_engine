@@ -23,25 +23,25 @@ namespace RTSEngine.Refactoring
             modifier.Active = Input.GetKey(key);
         }
 
-        public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
         {
-            return this.modifier.Apply(oldSelection, newSelection, actualSelection, type);
+            return this.modifier.Apply(ref oldSelection, ref newSelection, actualSelection);
         }
 
         public class Modifier
         {
             public bool Active { get; set; }
 
-            public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+            public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
             {
                 if (Active)
                 {
-                    return AddOrRemoveFromSelection(oldSelection, newSelection, actualSelection);
+                    return AddOrRemoveFromSelection(ref oldSelection, ref newSelection, actualSelection);
                 }
                 return actualSelection;
             }
 
-            private ISelectable[] AddOrRemoveFromSelection(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
+            private ISelectable[] AddOrRemoveFromSelection(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
             {
                 List<ISelectable> aux = new List<ISelectable>(oldSelection);
                 aux = aux.Union(actualSelection).ToList();

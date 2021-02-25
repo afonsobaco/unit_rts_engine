@@ -21,9 +21,9 @@ namespace RTSEngine.Refactoring
             _userInterface.DoSelectionUpdate(signal.Selection);
         }
 
-        public void OnGroupUpdate(GroupUpdateSignal signal)
+        public void OnPartyUpdate(PartyUpdateSignal signal)
         {
-            _userInterface.DoGroupUpdate(signal.Groups);
+            _userInterface.DoPartyUpdate(signal.Parties);
         }
 
         public void OnAlternateSubGroup(AlternateSubGroupSignal signal)
@@ -34,7 +34,7 @@ namespace RTSEngine.Refactoring
 
         public void OnMiniatureClicked(MiniatureClickedSignal signal)
         {
-            _userInterfaceManager.DoMiniatureClicked(_userInterface.Selection, signal.Selected, signal.ToRemove, signal.AsGroup);
+            _userInterfaceManager.DoMiniatureClicked(_userInterface.Selection, signal.Selected, signal.ToRemove, signal.AsSubGroup);
         }
         public void OnPortraitClicked(PortraitClickedSignal signal)
         {
@@ -43,7 +43,7 @@ namespace RTSEngine.Refactoring
         public void OnBannerClicked(BannerClickedSignal signal)
         {
             Core.ISelectable[] value;
-            _userInterface.Groups.TryGetValue(signal.GroupId, out value);
+            _userInterface.Parties.TryGetValue(signal.PartyId, out value);
             _userInterfaceManager.DoBannerClicked(_userInterface.Selection, value, signal.ToRemove);
         }
         public void OnMapClicked(MapClickedSignal signal)

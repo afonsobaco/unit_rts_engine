@@ -8,13 +8,13 @@ namespace RTSEngine.Refactoring
 {
     public class UserInterface
     {
-        private Dictionary<object, ISelectable[]> _groups = new Dictionary<object, ISelectable[]>() { };
+        private Dictionary<object, ISelectable[]> _parties = new Dictionary<object, ISelectable[]>() { };
         private ISelectable[] _selection = new ISelectable[] { };
         private ISelectable _highlighted;
 
         public ISelectable Highlighted { get => _highlighted; set => _highlighted = value; }
         public ISelectable[] Selection { get => _selection; set => _selection = value; }
-        public Dictionary<object, ISelectable[]> Groups { get => _groups; set => _groups = value; }
+        public Dictionary<object, ISelectable[]> Parties { get => _parties; set => _parties = value; }
 
         public void DoSelectionUpdate(ISelectable[] selection)
         {
@@ -51,9 +51,9 @@ namespace RTSEngine.Refactoring
             }
         }
 
-        public void DoGroupUpdate(Dictionary<object, ISelectable[]> groups)
+        public void DoPartyUpdate(Dictionary<object, ISelectable[]> parties)
         {
-            this.Groups = groups;
+            this.Parties = parties;
         }
 
         public void DoNextSubGroup()

@@ -34,16 +34,16 @@ namespace RTSEngine.Refactoring
             modifier.Limit = limit;
         }
 
-        public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
         {
-            return this.modifier.Apply(oldSelection, newSelection, actualSelection, type);
+            return this.modifier.Apply(actualSelection);
         }
 
         public class Modifier
         {
             public int Limit { get; set; }
 
-            public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+            public ISelectable[] Apply(ISelectable[] actualSelection)
             {
                 IEnumerable<ISelectable> result = actualSelection.ToList().Take(Limit);
                 return result.ToArray();

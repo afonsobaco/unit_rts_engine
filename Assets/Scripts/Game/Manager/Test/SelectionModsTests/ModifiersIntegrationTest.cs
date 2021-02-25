@@ -69,15 +69,15 @@ namespace Tests
             modifiers.Add(GetDefaultSameTypeMod(sameType));
             modifiers.Add(GetDefaultOrderOfSelectionModifier());
             modifiers.Add(GetDefaultAdditiveMod());
-            modifiers.Add(GetDefaultGroupRestrictorMod());
+            modifiers.Add(GetDefaultCanBeGroupedMod());
             modifiers.Add(GetDefaultLimitMod());
             modifiers.Add(GetDefaultGroupMod());
             return modifiers.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
         }
 
-        private ISelectionModifier GetDefaultGroupRestrictorMod()
+        private ISelectionModifier GetDefaultCanBeGroupedMod()
         {
-            GroupRestrictorSelectionModifier modifier = Substitute.ForPartsOf<GroupRestrictorSelectionModifier>(new object[] { selectionManager });
+            CanBeGroupedSelectionModifier modifier = Substitute.ForPartsOf<CanBeGroupedSelectionModifier>(new object[] { selectionManager });
             return modifier;
         }
 
@@ -123,7 +123,7 @@ namespace Tests
 
         private ISelectionModifier GetDefaultGroupMod()
         {
-            GroupSelectionModifier modifier = Substitute.ForPartsOf<GroupSelectionModifier>(new object[] { selectionManager });
+            OrderSelectionModifier modifier = Substitute.ForPartsOf<OrderSelectionModifier>(new object[] { selectionManager });
             return modifier;
         }
 

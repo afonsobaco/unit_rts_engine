@@ -24,7 +24,7 @@ public class SceneHelper : MonoBehaviour
 
     private UserInterface _userInterface;
     private SignalBus _signalBus;
-    private Dictionary<object, ISelectable[]> groups;
+    private Dictionary<object, ISelectable[]> parties;
 
     [Inject]
     public void Construct(SignalBus signalBus, UserInterface userInterface)
@@ -42,7 +42,7 @@ public class SceneHelper : MonoBehaviour
             mainList.Add(CreateMiniature(ARCHER, i + 10));
         }
 
-        groups = new Dictionary<object, ISelectable[]>();
+        parties = new Dictionary<object, ISelectable[]>();
     }
 
     private void Update()
@@ -59,14 +59,14 @@ public class SceneHelper : MonoBehaviour
             UpdateAll();
         }
 
-        int groupKeyPressed = GameUtils.GetAnyGroupKeyPressed();
+        int groupKeyPressed = GameUtils.GetAnyPartyKeyPressed();
         if (groupKeyPressed > 0 && Input.GetKey(KeyCode.Z))
         {
             if (_userInterface.Selection.Length > 0)
-                groups[groupKeyPressed] = _userInterface.Selection;
+                parties[groupKeyPressed] = _userInterface.Selection;
             else
-                groups.Remove(groupKeyPressed);
-            _signalBus.Fire(new GroupUpdateSignal() { Groups = this.groups });
+                parties.Remove(groupKeyPressed);
+            _signalBus.Fire(new PartyUpdateSignal() { Parties = this.parties });
             UpdateAll();
         }
 
@@ -106,11 +106,11 @@ public class SceneHelper : MonoBehaviour
     private void UpdateBanners()
     {
         RemoveChildren(banner.transform);
-        foreach (var item in _userInterface.Groups)
+        foreach (var item in _userInterface.Parties)
         {
             var instance = GameObject.Instantiate(bannerPrefab);
             instance.transform.SetParent(banner.transform, false);
-            instance.GroupId = item.Key;
+            instance.PartyId = item.Key;
         }
     }
 

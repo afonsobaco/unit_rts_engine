@@ -6,7 +6,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public class GroupRestrictionHelper : AbstractModifierHelper
+    public class CanBeGroupedHelper : AbstractModifierHelper
     {
         public override ISelectable[] Apply(ISelectable[] selection)
         {

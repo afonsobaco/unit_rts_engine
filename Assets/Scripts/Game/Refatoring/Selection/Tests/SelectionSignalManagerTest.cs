@@ -81,40 +81,40 @@ namespace Tests
         }
 
         [Test]
-        public void ShouldCallGetSelectionOnGroupSingal()
+        public void ShouldCallGetSelectionOnPartySingal()
         {
             int amount = 10;
             var mainList = SelectionTestUtils.GetSomeSelectable(amount);
             var expected = mainList.ToList().Take(3).ToArray();
-            var groupId = 1;
-            GroupSelectionSignal signal = new GroupSelectionSignal();
-            signal.GroupId = groupId;
+            var partyId = 1;
+            PartySelectionSignal signal = new PartySelectionSignal();
+            signal.PartyId = partyId;
             signal.CreateNew = false;
-            _selectionManager.GetGroupSelection(Arg.Any<ISelectable[]>(), Arg.Any<object>()).Returns(expected);
+            _selectionManager.GetPartySelection(Arg.Any<ISelectable[]>(), Arg.Any<object>()).Returns(expected);
             _selectionSignalManager.GetMainList().Returns(mainList);
 
-            _selectionSignalManager.OnGroupSignal(signal);
+            _selectionSignalManager.OnPartySignal(signal);
 
-            _selectionManager.Received().GetGroupSelection(mainList, groupId);
-            _selection.Received().DoSelection(expected, SelectionType.GROUP);
+            _selectionManager.Received().GetPartySelection(mainList, partyId);
+            _selection.Received().DoSelection(expected, SelectionType.PARTY);
         }
 
         [Test]
-        public void ShouldCallChangeGroupOnGroupSingalWithCreateNewSignal()
+        public void ShouldCallChangePartyOnPartySingalWithCreateNewSignal()
         {
             int amount = 10;
             var mainList = SelectionTestUtils.GetSomeSelectable(amount);
             var expected = mainList.ToList().Take(3).ToArray();
-            var groupId = 1;
-            GroupSelectionSignal signal = new GroupSelectionSignal();
-            signal.GroupId = groupId;
+            var partyId = 1;
+            PartySelectionSignal signal = new PartySelectionSignal();
+            signal.PartyId = partyId;
             signal.CreateNew = true;
-            _selectionManager.WhenForAnyArgs(x => x.SetGroupSelection(default, default)).DoNotCallBase();
+            _selectionManager.WhenForAnyArgs(x => x.SetPartySelection(default, default)).DoNotCallBase();
             _selection.GetCurrent().Returns(expected);
 
-            _selectionSignalManager.OnGroupSignal(signal);
+            _selectionSignalManager.OnPartySignal(signal);
 
-            _selectionManager.Received().SetGroupSelection(expected, groupId);
+            _selectionManager.Received().SetPartySelection(expected, partyId);
             _selection.DidNotReceiveWithAnyArgs().DoSelection(default, default);
         }
 

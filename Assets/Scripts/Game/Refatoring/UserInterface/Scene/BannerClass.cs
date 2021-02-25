@@ -7,7 +7,7 @@ using Zenject;
 public class BannerClass
 {
 
-    public object GroupId;
+    public object PartyId;
 
 }
 

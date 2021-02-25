@@ -10,9 +10,9 @@ using Tests.Utils;
 namespace Tests
 {
     [TestFixture]
-    public class GroupSelectionModifierTest
+    public class OrderSelectionModifierTest
     {
-        private SubGroupSelectionModifier.Modifier modifier;
+        private OrderSelectionModifier.Modifier modifier;
 
         public IEqualityComparer<ISelectable> equalityComparer;
         public IComparer<IGrouping<ISelectable, ISelectable>> groupingComparer;
@@ -20,7 +20,7 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-            modifier = Substitute.ForPartsOf<SubGroupSelectionModifier.Modifier>();
+            modifier = Substitute.ForPartsOf<OrderSelectionModifier.Modifier>();
             equalityComparer = Substitute.For<IEqualityComparer<ISelectable>>();
             groupingComparer = Substitute.For<IComparer<IGrouping<ISelectable, ISelectable>>>();
             modifier.EqualityComparer = equalityComparer;
@@ -34,7 +34,7 @@ namespace Tests
         }
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldGroupSelectionToPassedValue(int amount, int[] newSelectionIndexes, int[] expectedIndexes)
+        public void ShouldOrderSelectionToPassedValue(int amount, int[] newSelectionIndexes, int[] expectedIndexes)
         {
             ISelectable[] mainList = TestUtils.GetSomeObjects(amount);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);

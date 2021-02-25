@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using RTSEngine.Core;
@@ -19,13 +20,13 @@ public class SceneHelperInstaller : MonoInstaller
 
     private void UpdateAll(ChangeSelectionSignal obj)
     {
-        ISelectable[] selection = GameUtils.GetOrderedSelection(obj.Selection, new EqualityComparer());
+        ISelectable[] selection = GameUtils.GetOrderedSelection(obj.Selection, new EqualityComparer(), new ObjectComparer());
         _signalBus.Fire(new SelectionUpdateSignal() { Selection = selection });
         var _helper = GetComponent<SceneHelper>();
         _helper.UpdateAll();
     }
 
-    public class EqualityComparer : IEqualityComparer<ISelectable>
+    private class EqualityComparer : IEqualityComparer<ISelectable>
     {
         public bool Equals(ISelectable x, ISelectable y)
         {
@@ -40,7 +41,13 @@ public class SceneHelperInstaller : MonoInstaller
             int hCode = first.Type.GetHashCode();
             return hCode;
         }
+    }
 
-
+    private class ObjectComparer : IComparer<IGrouping<ISelectable, ISelectable>>
+    {
+        public int Compare(IGrouping<ISelectable, ISelectable> x, IGrouping<ISelectable, ISelectable> y)
+        {
+            return 0;
+        }
     }
 }

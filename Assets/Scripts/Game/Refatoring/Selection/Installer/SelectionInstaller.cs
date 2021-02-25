@@ -19,7 +19,7 @@ namespace RTSEngine.Refactoring
             Container.Bind<ModifiersInterface>().AsSingle();
             Container.Bind<IAreaSelectionType>().To<PolyAreaSelectionType>().AsSingle();
             Container.Bind<IAreaSelection>().To<AreaSelection>().AsSingle();
-            Container.Bind<IGroupSelection>().To<GroupSelection>().AsSingle();
+            Container.Bind<IPartySelection>().To<PartySelection>().AsSingle();
             Container.Bind<IIndividualSelection>().To<IndividualSelection>().AsSingle();
             Container.Bind<IModifiersComponent>().FromComponentInNewPrefab(modifiers).AsSingle();
             Container.Bind<IRuntimeSet<ISelectable>>().FromComponentInNewPrefab(runtimeSet).AsSingle();
@@ -27,14 +27,14 @@ namespace RTSEngine.Refactoring
             Container.DeclareSignal<SelectableObjectCreatedSignal>();
             Container.DeclareSignal<SelectableObjectDeletedSignal>();
             Container.DeclareSignal<AreaSelectionSignal>();
-            Container.DeclareSignal<GroupSelectionSignal>();
+            Container.DeclareSignal<PartySelectionSignal>();
             Container.DeclareSignal<IndividualSelectionSignal>();
             Container.DeclareSignal<SelectionUpdateSignal>();
 
             Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectCreatedSignal).FromResolve();
             Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectDeletedSignal).FromResolve();
             Container.BindSignal<AreaSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnAreaSignal).FromResolve();
-            Container.BindSignal<GroupSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnGroupSignal).FromResolve();
+            Container.BindSignal<PartySelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnPartySignal).FromResolve();
             Container.BindSignal<IndividualSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnIndividualSignal).FromResolve();
         }
 

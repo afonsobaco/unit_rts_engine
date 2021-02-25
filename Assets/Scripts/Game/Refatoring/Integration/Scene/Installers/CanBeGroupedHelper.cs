@@ -6,7 +6,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public class GroupRestrictionHelper : AbstractModifierHelper
+    public class CanBeGroupedHelper : AbstractModifierHelper
     {
         [SerializeField] private List<ObjectTypeEnum> types;
         public override ISelectable[] Apply(ISelectable[] selection)
@@ -16,21 +16,17 @@ namespace RTSEngine.Refactoring
                 {
                     return TypesDoesNotContainsElement(x);
                 });
-            if (selectables.Count == 0)
+            if (selectables.Count > 0)
             {
-                return selection;
+                return selectables.ToArray();
             }
-            return selectables.ToArray();
+            return selection;
         }
 
         private bool TypesDoesNotContainsElement(ISelectable element)
         {
             var gameType = (element as GameDefaultObject).GetComponent<GameType>();
-            if (gameType)
-            {
-                return !types.Contains(gameType.Type);
-            }
-            return false;
+            return gameType && !types.Contains(gameType.Type);
         }
     }
 }

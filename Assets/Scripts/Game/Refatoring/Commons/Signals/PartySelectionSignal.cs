@@ -2,9 +2,9 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Signal
 {
-    public class GroupSelectionSignal
+    public class PartySelectionSignal
     {
-        public object GroupId;
+        public object PartyId;
 
         public bool CreateNew;
 

@@ -31,19 +31,19 @@ namespace Tests
             var list = new List<ISelectionModifier>();
             ISelectionModifier modifier = Substitute.For<ISelectionModifier>();
             modifier.Type = SelectionType.ANY;
-            modifier.Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>()).Returns(x => x[1]);
+            modifier.Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>()).Returns(x => x[1]);
             list.Add(modifier);
             modifier = Substitute.For<ISelectionModifier>();
             modifier.Type = SelectionType.AREA;
-            modifier.Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>()).Returns(x => x[1]);
+            modifier.Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>()).Returns(x => x[1]);
             list.Add(modifier);
             modifier = Substitute.For<ISelectionModifier>();
-            modifier.Type = SelectionType.GROUP;
-            modifier.Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>()).Returns(x => x[1]);
+            modifier.Type = SelectionType.PARTY;
+            modifier.Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>()).Returns(x => x[1]);
             list.Add(modifier);
             modifier = Substitute.For<ISelectionModifier>();
             modifier.Type = SelectionType.INDIVIDUAL;
-            modifier.Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>()).Returns(x => x[1]);
+            modifier.Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>()).Returns(x => x[1]);
             list.Add(modifier);
             return list.ToArray();
         }
@@ -66,19 +66,19 @@ namespace Tests
             foreach (var m in _modifiers)
             {
                 if (m.Type == type || m.Type == SelectionType.ANY)
-                    m.Received().Apply(Arg.Is(oldSelection), Arg.Is(newSelection), Arg.Any<ISelectable[]>(), type);
+                    m.Received().Apply(ref Arg.Is(oldSelection), ref Arg.Is(newSelection), Arg.Any<ISelectable[]>());
                 else
                 {
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Is(SelectionType.GROUP));
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Is(SelectionType.INDIVIDUAL));
+                    m.DidNotReceive().Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
+                    m.DidNotReceive().Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
                 }
             }
         }
 
         [Test]
-        public void ShouldApplyAllModifiersOfGroupType()
+        public void ShouldApplyAllModifiersOfType()
         {
-            SelectionType type = SelectionType.GROUP;
+            SelectionType type = SelectionType.PARTY;
             ISelectable[] newSelection = SelectionTestUtils.GetSomeSelectable(Random.Range(1, 5));
             ISelectable[] oldSelection = new ISelectable[] { };
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
@@ -87,11 +87,11 @@ namespace Tests
             foreach (var m in _modifiers)
             {
                 if (m.Type == type || m.Type == SelectionType.ANY)
-                    m.Received().Apply(Arg.Is(oldSelection), Arg.Is(newSelection), Arg.Any<ISelectable[]>(), type);
+                    m.Received().Apply(ref Arg.Is(oldSelection), ref Arg.Is(newSelection), Arg.Any<ISelectable[]>());
                 else
                 {
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Is(SelectionType.AREA));
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Is(SelectionType.INDIVIDUAL));
+                    m.DidNotReceive().Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
+                    m.DidNotReceive().Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
                 }
             }
         }
@@ -108,11 +108,11 @@ namespace Tests
             foreach (var m in _modifiers)
             {
                 if (m.Type == type || m.Type == SelectionType.ANY)
-                    m.Received().Apply(Arg.Is(oldSelection), Arg.Is(newSelection), Arg.Any<ISelectable[]>(), type);
+                    m.Received().Apply(ref Arg.Is(oldSelection), ref Arg.Is(newSelection), Arg.Any<ISelectable[]>());
                 else
                 {
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Is(SelectionType.AREA));
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Is(SelectionType.GROUP));
+                    m.DidNotReceive().Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
+                    m.DidNotReceive().Apply(ref Arg.Any<ISelectable[]>(), ref Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
                 }
             }
         }

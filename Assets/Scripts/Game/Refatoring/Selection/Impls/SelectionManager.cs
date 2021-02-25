@@ -6,35 +6,35 @@ namespace RTSEngine.Refactoring
 {
     public class SelectionManager
     {
-        private IAreaSelection areaSelection;
-        private IGroupSelection groupSelection;
-        private IIndividualSelection individualSelection;
+        private IAreaSelection _areaSelection;
+        private IPartySelection _partySelection;
+        private IIndividualSelection _individualSelection;
 
-        public SelectionManager(IAreaSelection areaSelection, IGroupSelection groupSelection, IIndividualSelection individualSelection)
+        public SelectionManager(IAreaSelection areaSelection, IPartySelection partySelection, IIndividualSelection individualSelection)
         {
-            this.areaSelection = areaSelection;
-            this.groupSelection = groupSelection;
-            this.individualSelection = individualSelection;
+            this._areaSelection = areaSelection;
+            this._partySelection = partySelection;
+            this._individualSelection = individualSelection;
         }
 
         public virtual ISelectable[] GetAreaSelection(ISelectable[] mainList, Vector2 startPoint, Vector2 endPoint)
         {
-            return areaSelection.GetSelection(mainList, startPoint, endPoint);
+            return _areaSelection.GetSelection(mainList, startPoint, endPoint);
         }
 
-        public virtual ISelectable[] GetGroupSelection(ISelectable[] mainList, object groupId)
+        public virtual ISelectable[] GetPartySelection(ISelectable[] mainList, object partyId)
         {
-            return groupSelection.GetSelection(mainList, groupId);
+            return _partySelection.GetSelection(mainList, partyId);
         }
 
-        public virtual void SetGroupSelection(ISelectable[] selectables, object groupId)
+        public virtual void SetPartySelection(ISelectable[] selectables, object partyId)
         {
-            groupSelection.ChangeGroup(groupId, selectables);
+            _partySelection.ChangeParty(partyId, selectables);
         }
 
         public virtual ISelectable[] GetIndividualSelection(ISelectable[] mainList, ISelectable clicked)
         {
-            return individualSelection.GetSelection(mainList, clicked);
+            return _individualSelection.GetSelection(mainList, clicked);
         }
 
     }

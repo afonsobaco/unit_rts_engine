@@ -6,14 +6,14 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public class OrderOfSelectionModifier : MonoBehaviour, ISelectionModifier
+    public class TypePriorityInSelectionModifier : MonoBehaviour, ISelectionModifier
     {
 
         [SerializeField] private SelectionType type;
 
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] private AbstractModifierHelper orderOfSelection;
+        [SerializeField] private AbstractModifierHelper typePriorityHelper;
 
         private Modifier modifier = new Modifier();
         public SelectionType Type { get => type; set => type = value; }
@@ -33,22 +33,22 @@ namespace RTSEngine.Refactoring
 
         private void StartVariables()
         {
-            modifier.OrderOfSelection = orderOfSelection;
+            modifier.TypePriorityHelper = typePriorityHelper;
         }
 
-        public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
         {
-            return this.modifier.Apply(oldSelection, newSelection, actualSelection, type);
+            return this.modifier.Apply(actualSelection);
         }
 
         public class Modifier
         {
-            public IModifier OrderOfSelection { get; set; }
+            public IModifierHelper TypePriorityHelper { get; set; }
 
-            public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+            public ISelectable[] Apply(ISelectable[] actualSelection)
             {
-                if (OrderOfSelection != null)
-                    return OrderOfSelection.Apply(actualSelection);
+                if (TypePriorityHelper != null)
+                    return TypePriorityHelper.Apply(actualSelection);
                 return actualSelection;
             }
 

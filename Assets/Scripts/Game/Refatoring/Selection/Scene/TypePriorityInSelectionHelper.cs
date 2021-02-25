@@ -6,7 +6,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public class OrderOfSelectionHelper : AbstractModifierHelper
+    public class TypePriorityInSelectionHelper : AbstractModifierHelper
     {
         public override ISelectable[] Apply(ISelectable[] selection)
         {

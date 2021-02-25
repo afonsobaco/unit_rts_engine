@@ -36,7 +36,7 @@ public class MiniatureButton : ZenAutoInjecter
         _signalBus.Fire(new MiniatureClickedSignal()
         {
             Selected = this.Selectable,
-            AsGroup = Input.GetKey(KeyCode.LeftControl),
+            AsSubGroup = Input.GetKey(KeyCode.LeftControl),
             ToRemove = Input.GetKey(KeyCode.LeftShift)
         });
     }

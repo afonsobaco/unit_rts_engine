@@ -7,16 +7,14 @@ namespace RTSEngine.Utils
 {
     public static class GameUtils
     {
-
-
-        public static ISelectable[] GetOrderedSelection(ISelectable[] actualSelection, IEqualityComparer<ISelectable> equalityComparer)
+        public static ISelectable[] GetOrderedSelection(ISelectable[] actualSelection, IEqualityComparer<ISelectable> equalityComparer, IComparer<IGrouping<ISelectable, ISelectable>> groupingComparer)
         {
             List<ISelectable> list = new List<ISelectable>();
             if (actualSelection.Length > 0)
             {
                 var grouped = actualSelection.GroupBy(x => x, equalityComparer);
                 var sorted = grouped.ToList();
-                sorted.Sort(new ObjectComparer());
+                sorted.Sort(groupingComparer);
                 foreach (var item in sorted)
                 {
                     list.AddRange(item);
@@ -24,15 +22,10 @@ namespace RTSEngine.Utils
             }
             return list.ToArray();
         }
-        public static List<IGrouping<ISelectable, ISelectable>> GetGrouped(ISelectable[] actualSelection, IEqualityComparer<ISelectable> equalityComparer)
-        {
-            return actualSelection.GroupBy(x => x, equalityComparer).ToList();
-        }
 
-
-        public static int GetAnyGroupKeyPressed()
+        public static int GetAnyPartyKeyPressed()
         {
-            foreach (KeyValuePair<KeyCode, int> entry in _groupKeys)
+            foreach (KeyValuePair<KeyCode, int> entry in _partyKeys)
             {
                 if (Input.GetKeyDown(entry.Key))
                 {
@@ -42,16 +35,7 @@ namespace RTSEngine.Utils
             return 0;
         }
 
-        private class ObjectComparer : IComparer<IGrouping<ISelectable, ISelectable>>
-        {
-            public int Compare(IGrouping<ISelectable, ISelectable> x, IGrouping<ISelectable, ISelectable> y)
-            {
-                // return x.Key.CompareTo(y.Key);
-                return 0;
-            }
-        }
-
-        private static Dictionary<KeyCode, int> _groupKeys = new Dictionary<KeyCode, int>()
+        private static Dictionary<KeyCode, int> _partyKeys = new Dictionary<KeyCode, int>()
             {
                 {KeyCode.Alpha1, 1},
                 {KeyCode.Alpha2, 2},

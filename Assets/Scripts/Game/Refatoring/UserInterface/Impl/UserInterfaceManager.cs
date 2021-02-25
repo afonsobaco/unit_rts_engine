@@ -17,20 +17,20 @@ namespace RTSEngine.Refactoring
             _signalBus = signalBus;
         }
 
-        public void DoMiniatureClicked(ISelectable[] selection, ISelectable clicked, bool toRemove, bool asGroup)
+        public void DoMiniatureClicked(ISelectable[] selection, ISelectable clicked, bool toRemove, bool asSubGroup)
         {
             List<ISelectable> newSelection = new List<ISelectable>(selection);
-            List<ISelectable> group = new List<ISelectable>();
+            List<ISelectable> subGroup = new List<ISelectable>();
 
-            if (asGroup)
-                group = GetAllFromSameSubGroup(selection, clicked);
+            if (asSubGroup)
+                subGroup = GetAllFromSameSubGroup(selection, clicked);
             else
-                group.Add(clicked);
+                subGroup.Add(clicked);
 
             if (toRemove)
-                newSelection.RemoveAll(x => group.Contains(x));
+                newSelection.RemoveAll(x => subGroup.Contains(x));
             else
-                newSelection = group;
+                newSelection = subGroup;
 
             _signalBus.Fire(new ChangeSelectionSignal() { Selection = newSelection.ToArray() });
         }

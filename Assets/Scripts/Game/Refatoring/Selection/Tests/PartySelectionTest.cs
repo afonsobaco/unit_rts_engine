@@ -6,51 +6,51 @@ using NSubstitute;
 
 namespace Tests
 {
-    public class GroupSelectionTest
+    public class PartySelectionTest
     {
-        private GroupSelection _groupsSelection;
+        private PartySelection _partySelection;
 
 
         [SetUp]
         public void SetUp()
         {
-            _groupsSelection = Substitute.ForPartsOf<GroupSelection>();
+            _partySelection = Substitute.ForPartsOf<PartySelection>();
         }
 
         [Test]
-        public void GroupSelectionTestSimplePasses()
+        public void PartySelectionTestSimplePasses()
         {
-            Assert.NotNull(_groupsSelection);
+            Assert.NotNull(_partySelection);
         }
 
         [Test]
         public void ShouldReturnEmptySelectionByDefault()
         {
-            var result = _groupsSelection.GetSelection(null, default);
+            var result = _partySelection.GetSelection(null, default);
             Assert.IsEmpty(result);
         }
 
         [Test]
-        public void ShouldReturnEmptySelectionWhenGroupDoesNotExist()
+        public void ShouldReturnEmptySelectionWhenPartyDoesNotExist()
         {
             const int amount = 10;
             var mainList = SelectionTestUtils.GetSomeSelectable(amount);
 
-            var result = _groupsSelection.GetSelection(mainList, 0);
+            var result = _partySelection.GetSelection(mainList, 0);
             Assert.IsEmpty(result);
         }
 
         [Test]
-        public void ShouldReturnSelectionWhenGroupExists()
+        public void ShouldReturnSelectionWhenPartyExists()
         {
             const int amount = 10;
-            const int groupId = 1;
+            const int partyId = 1;
 
             var mainList = SelectionTestUtils.GetSomeSelectable(amount);
             var expected = mainList.ToList().Take(3).ToArray();
-            _groupsSelection.ChangeGroup(groupId, expected);
+            _partySelection.ChangeParty(partyId, expected);
 
-            var result = _groupsSelection.GetSelection(mainList, groupId);
+            var result = _partySelection.GetSelection(mainList, partyId);
             Assert.IsNotEmpty(result);
             CollectionAssert.AreEquivalent(expected, result);
         }

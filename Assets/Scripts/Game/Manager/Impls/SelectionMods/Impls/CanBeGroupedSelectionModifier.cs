@@ -7,20 +7,20 @@ using Zenject;
 
 namespace RTSEngine.Manager
 {
-    public class GroupRestrictorSelectionModifier : AbstractSelectionModifier
+    public class CanBeGroupedSelectionModifier : AbstractSelectionModifier
     {
         private ISelectionManager _selectionManager;
-        public GroupRestrictorSelectionModifier(ISelectionManager selectionManager)
+        public CanBeGroupedSelectionModifier(ISelectionManager selectionManager)
         {
             this._selectionManager = selectionManager;
         }
 
         public override SelectionArguments Apply(SelectionArguments args)
         {
-            return GroupRestrictorSelection(args);
+            return CanBeGroupedSelection(args);
         }
 
-        public SelectionArguments GroupRestrictorSelection(SelectionArguments args)
+        public SelectionArguments CanBeGroupedSelection(SelectionArguments args)
         {
             ObjectTypeEnum[] canGroup = this._selectionManager.GetSettings().Restricted;
             var onlyRestrictedObject = args.ToBeAdded.ToList().TrueForAll(x =>

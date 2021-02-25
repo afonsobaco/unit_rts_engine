@@ -3,9 +3,9 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Signal
 {
-    public class GroupUpdateSignal
+    public class PartyUpdateSignal
     {
-        public Dictionary<object, ISelectable[]> Groups;
+        public Dictionary<object, ISelectable[]> Parties;
 
     }
 }

@@ -46,13 +46,13 @@
 //         }
 
 //         [TestCaseSource(nameof(Scenarios))]
-//         public void ShouldRunAllIntegrationCases(SelectionTypeEnum type, bool isAdditive, bool isSameType, int[] oldSelectionIndexes, int[] newSelectionIndexes, int[] expectedResultIndexes)
+//         public void ShouldRunAllIntegrationCases(SelectionTypeEnum type, bool isAdditive, bool isSubGroup, int[] oldSelectionIndexes, int[] newSelectionIndexes, int[] expectedResultIndexes)
 //         {
 //             HashSet<ISelectableObject> oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
 //             HashSet<ISelectableObject> newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
 //             HashSet<ISelectableObject> expected = TestUtils.GetListByIndex(expectedResultIndexes, mainList);
 //             selectionManager.IsAdditive().Returns(isAdditive);
-//             selectionManager.IsSameType().Returns(isSameType);
+//             selectionManager.IsSubGroup().Returns(isSubGroup);
 
 //             SelectionArguments args = new SelectionArguments(oldSelection, newSelection, mainList);
 
@@ -66,18 +66,18 @@
 //         private List<ISelectionModifier> GetModifiersBySelectionType(SelectionTypeEnum type, HashSet<int[]> sameType)
 //         {
 //             List<ISelectionModifier> modifiers = new List<ISelectionModifier>();
-//             modifiers.Add(GetDefaultSameTypeMod(sameType));
-//             modifiers.Add(GetDefaultOrderOfSelectionModifier());
+//             modifiers.Add(GetDefaultSubGroupMod(sameType));
+//             modifiers.Add(GetDefaultTypePriorityInSelectionModifier());
 //             modifiers.Add(GetDefaultAdditiveMod());
-//             modifiers.Add(GetDefaultGroupRestrictionMod());
+//             modifiers.Add(GetDefaultCanBeGroupedMod());
 //             modifiers.Add(GetDefaultLimitMod());
 //             modifiers.Add(GetDefaultGroupMod());
 //             return modifiers.FindAll(x => x.Type.Equals(type) || x.Type.Equals(SelectionTypeEnum.ANY));
 //         }
 
-//         private ISelectionModifier GetDefaultGroupRestrictionMod()
+//         private ISelectionModifier GetDefaultCanBeGroupedMod()
 //         {
-//             GroupRestrictionSelectionModifier modifier = Substitute.ForPartsOf<GroupRestrictionSelectionModifier>(new object[] { selectionManager });
+//             CanBeGroupedSelectionModifier modifier = Substitute.ForPartsOf<CanBeGroupedSelectionModifier>(new object[] { selectionManager });
 //             return modifier;
 //         }
 
@@ -87,12 +87,12 @@
 //             return modifier;
 //         }
 
-//         private ISelectionModifier GetDefaultSameTypeMod(HashSet<int[]> sameType)
+//         private ISelectionModifier GetDefaultSubGroupMod(HashSet<int[]> sameType)
 //         {
-//             SameTypeSelectionModifier modifier = Substitute.ForPartsOf<SameTypeSelectionModifier>(new object[] { selectionManager });
+//             SubGroupSelectionModifier modifier = Substitute.ForPartsOf<SubGroupSelectionModifier>(new object[] { selectionManager });
 
-//             modifier.When(x => x.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArguments>())).DoNotCallBase();
-//             modifier.GetAllFromSameTypeThatCanGroup(Arg.Any<SelectionArguments>()).Returns(args =>
+//             modifier.When(x => x.GetAllFromSubGroupThatCanGroup(Arg.Any<SelectionArguments>())).DoNotCallBase();
+//             modifier.GetAllFromSubGroupThatCanGroup(Arg.Any<SelectionArguments>()).Returns(args =>
 //                 {
 //                     var index = (args[0] as SelectionArguments).NewSelection.First().Index;
 //                     foreach (var item in sameType)
@@ -109,9 +109,9 @@
 //         }
 
 
-//         private ISelectionModifier GetDefaultOrderOfSelectionModifier()
+//         private ISelectionModifier GetDefaultTypePriorityInSelectionModifier()
 //         {
-//             OrderOfSelectionModifier modifier = Substitute.ForPartsOf<OrderOfSelectionModifier>(new object[] { selectionManager });
+//             TypePriorityInSelectionModifier modifier = Substitute.ForPartsOf<TypePriorityInSelectionModifier>(new object[] { selectionManager });
 //             return modifier;
 //         }
 
@@ -136,7 +136,7 @@
 //                     var name = TestUtils.GetCaseName(item.selection, item.modifiers);
 //                     SelectionTypeEnum type = item.selection.additionalInfo.type;
 //                     yield return new TestCaseData(
-//                         type, item.modifiers.isAdditive, item.modifiers.isSameType,
+//                         type, item.modifiers.isAdditive, item.modifiers.isSubGroup,
 //                         item.selection.oldSelection, item.selection.newSelection, item.result).SetName(type + " | " + name);
 //                 }
 //             }

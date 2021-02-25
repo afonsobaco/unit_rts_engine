@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace RTSEngine.Manager
 {
-    public class GroupSelectionModifier : AbstractSelectionModifier
+    public class OrderSelectionModifier : AbstractSelectionModifier
     {
         private ISelectionManager selectionManager;
 
-        public GroupSelectionModifier(ISelectionManager selectionManager)
+        public OrderSelectionModifier(ISelectionManager selectionManager)
         {
             this.selectionManager = selectionManager;
         }

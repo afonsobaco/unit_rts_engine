@@ -6,7 +6,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public class GroupRestrictionSelectionModifier : MonoBehaviour, ISelectionModifier
+    public class CanBeGroupedSelectionModifier : MonoBehaviour, ISelectionModifier
     {
 
         [SerializeField] private SelectionType type;
@@ -33,22 +33,22 @@ namespace RTSEngine.Refactoring
 
         private void StartVariables()
         {
-            modifier.GroupRestrictionHelper = modifierHelper;
+            modifier.CanBeGroupedHelper = modifierHelper;
         }
 
-        public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, SelectionType type)
+        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
         {
             return this.modifier.Apply(actualSelection);
         }
 
         public class Modifier
         {
-            public IModifier GroupRestrictionHelper { get; set; }
+            public IModifierHelper CanBeGroupedHelper { get; set; }
 
             public ISelectable[] Apply(ISelectable[] actualSelection)
             {
-                if (GroupRestrictionHelper != null)
-                    return GroupRestrictionHelper.Apply(actualSelection);
+                if (CanBeGroupedHelper != null)
+                    return CanBeGroupedHelper.Apply(actualSelection);
                 return actualSelection;
             }
 
