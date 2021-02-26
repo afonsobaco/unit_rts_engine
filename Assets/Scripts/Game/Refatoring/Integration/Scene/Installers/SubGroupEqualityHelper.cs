@@ -10,20 +10,37 @@ namespace RTSEngine.Refactoring
     {
         public override bool Equals(ISelectable x, ISelectable y)
         {
-            if (x is GameSubGroup && y is GameSubGroup)
+            var xGameSubGroup = GetGameSubGroup(x);
+            var yGameSubGroup = GetGameSubGroup(y);
+            if (xGameSubGroup && yGameSubGroup)
             {
-                var first = x as GameSubGroup;
-                var second = y as GameSubGroup;
-                return first.SubGroup == second.SubGroup;
+                Debug.Log(xGameSubGroup.SubGroup + " == " + yGameSubGroup.SubGroup);
+                return xGameSubGroup.SubGroup.Equals(yGameSubGroup.SubGroup);
             }
             return false;
         }
 
         public override int GetHashCode(ISelectable obj)
         {
-            var first = obj as GameSubGroup;
-            int hCode = first.SubGroup.GetHashCode();
-            return hCode;
+            var result = obj.GetHashCode();
+            var gameSubGroup = GetGameSubGroup(obj);
+            if (gameSubGroup)
+            {
+                return gameSubGroup.SubGroup.GetHashCode();
+            }
+            return result;
         }
+
+        private GameSubGroup GetGameSubGroup(ISelectable obj)
+        {
+            var defaultObject = obj as GameDefaultObject;
+            if (defaultObject)
+            {
+                var gameSubGroup = defaultObject.GetComponent<GameSubGroup>();
+                return gameSubGroup;
+            }
+            return null;
+        }
+
     }
 }

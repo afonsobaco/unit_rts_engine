@@ -16,10 +16,18 @@ namespace RTSEngine.Refactoring
         [SerializeField] private Vector2 _initialViewportPoint = Vector2.zero;
         [SerializeField] private Vector2 _finalViewportPoint = Vector2.one;
         [SerializeField] private EqualityComparerComponent _equalityComparer;
-        [Inject] private IRuntimeSet<ISelectable> _mainList;
-        [Inject] private IAreaSelectionType _areaSelectionType;
+        private IRuntimeSet<ISelectable> _mainList;
+        private IAreaSelectionType _areaSelectionType;
 
         private Modifier _modifier;
+
+        [Inject]
+        public void Constructor(IRuntimeSet<ISelectable> mainList, IAreaSelectionType areaSelectionType)
+        {
+            _mainList = mainList;
+            _areaSelectionType = areaSelectionType;
+        }
+
         public override void StartVariables()
         {
             if (_modifier == null)

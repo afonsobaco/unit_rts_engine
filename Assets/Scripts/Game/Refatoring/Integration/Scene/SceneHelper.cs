@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RTSEngine.Core;
 using RTSEngine.Refactoring;
 
 public class SceneHelper : MonoBehaviour
 {
     [SerializeField] private GameObject[] objects;
-    private int index;
+    private int createIndex;
+    private int count;
 
     void Update()
     {
@@ -19,14 +21,14 @@ public class SceneHelper : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            index++;
+            createIndex++;
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            index--;
+            createIndex--;
         }
 
-        index = Mathf.Clamp(index, 0, objects.Length - 1);
+        createIndex = Mathf.Clamp(createIndex, 0, objects.Length - 1);
 
         if (Input.GetMouseButtonUp(1))
         {
@@ -36,7 +38,7 @@ public class SceneHelper : MonoBehaviour
             }
             else
             {
-                CreateSelectableObject(objects[index]);
+                CreateSelectableObject(objects[createIndex]);
             }
         }
     }
@@ -62,6 +64,11 @@ public class SceneHelper : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             var newObjet = GameObject.Instantiate(prefab);
+            var a = newObjet.GetComponent<GameDefaultObject>();
+            if (a)
+            {
+                a.Index = count++;
+            }
             newObjet.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
         }
     }

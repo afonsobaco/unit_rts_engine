@@ -386,7 +386,8 @@ GameObject:
   - component: {fileID: 3967659217511259958}
   - component: {fileID: 3946025015106541936}
   - component: {fileID: 2733061619037254491}
-  - component: {fileID: 4235530958624498466}
+  - component: {fileID: 3784724875939911964}
+  - component: {fileID: -5340915209723718913}
   m_Layer: 0
   m_Name: Warrior
   m_TagString: Untagged
@@ -440,7 +441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _containerSource: 2
   selectionMark: {fileID: 4782704107103593911}
---- !u!114 &4235530958624498466
+--- !u!114 &3784724875939911964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -449,10 +450,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 6909930287666605681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89497b3f8e9c6ee40990292bf0836a40, type: 3}
+  m_Script: {fileID: 11500000, guid: 4726c2d022e7a964fbb76bfd70caba59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: Warrior
+  type: 0
+--- !u!114 &-5340915209723718913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909930287666605681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ac3dbb51082a01468b2c3bd278e1e24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subGroup: Medieval Warrior
+  priority: 0
 --- !u!1001 &3007051456009605412
 PrefabInstance:
   m_ObjectHideFlags: 0

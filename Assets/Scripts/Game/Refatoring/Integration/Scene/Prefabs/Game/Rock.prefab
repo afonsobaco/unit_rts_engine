@@ -41,6 +41,7 @@ GameObject:
   - component: {fileID: 8000684103083655548}
   - component: {fileID: 6257604540736886496}
   - component: {fileID: 4816741819494178845}
+  - component: {fileID: -3522005625147510110}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -93,8 +94,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _containerSource: 2
   selectionMark: {fileID: 1898340702518819837}
-  selectionOrder: 0
-  objectType: Rock
+--- !u!114 &-3522005625147510110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568252041003937851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4726c2d022e7a964fbb76bfd70caba59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 3
 --- !u!1 &1190986131552168114
 GameObject:
   m_ObjectHideFlags: 0

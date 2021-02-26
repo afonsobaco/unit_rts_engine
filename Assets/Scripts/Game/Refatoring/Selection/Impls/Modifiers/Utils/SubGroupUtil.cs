@@ -10,22 +10,25 @@ namespace RTSEngine.Refactoring
     public static class SubGroupUtil
     {
 
-        public static List<ISelectable> GetFromSubGroupOnScreen(ISelectable[] groupables, ISelectable selected, Func<ISelectable, bool> IsInsideViewportPoints, EqualityComparerComponent equalityComparer)
+        public static List<ISelectable> GetFromSubGroupOnScreen(ISelectable[] mainList, ISelectable selected, Func<ISelectable, bool> IsInsideViewportPoints, EqualityComparerComponent equalityComparer)
         {
             List<ISelectable> result = new List<ISelectable>();
-            foreach (var item in GetAllInsideViewportPoints(groupables, selected.Position, IsInsideViewportPoints))
+            foreach (var item in GetAllInsideViewportPoints(mainList, selected.Position, IsInsideViewportPoints))
             {
-                equalityComparer.Equals(selected, item);
+                if (equalityComparer.Equals(selected, item))
+                {
+                    result.Add(item);
+                }
             }
             return result;
         }
 
-        private static List<ISelectable> GetAllInsideViewportPoints(ISelectable[] groupables, Vector3 startPosition, Func<ISelectable, bool> IsInsideViewportPoints)
+        private static List<ISelectable> GetAllInsideViewportPoints(ISelectable[] mainList, Vector3 startPosition, Func<ISelectable, bool> IsInsideViewportPoints)
         {
             List<ISelectable> result = new List<ISelectable>();
-            foreach (var item in groupables)
+            foreach (var item in mainList)
             {
-                if (item is IGroupable && IsInsideViewportPoints(item))
+                if (IsInsideViewportPoints(item))
                 {
                     result.Add(item);
                 }

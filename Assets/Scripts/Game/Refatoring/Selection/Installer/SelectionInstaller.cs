@@ -8,8 +8,8 @@ namespace RTSEngine.Refactoring
 {
     public class SelectionInstaller : MonoInstaller
     {
-        [SerializeField] private RuntimeSetComponent runtimeSet;
-        [SerializeField] private ModifiersComponent modifiers;
+        [SerializeField] private RuntimeSetComponent runtimeSetComponent;
+        [SerializeField] private ModifiersComponent modifiersComponent;
 
         public override void InstallBindings()
         {
@@ -21,8 +21,9 @@ namespace RTSEngine.Refactoring
             Container.Bind<IAreaSelection>().To<AreaSelection>().AsSingle();
             Container.Bind<IPartySelection>().To<PartySelection>().AsSingle();
             Container.Bind<IIndividualSelection>().To<IndividualSelection>().AsSingle();
-            Container.Bind<IModifiersComponent>().To<ModifiersComponent>().FromComponentInNewPrefab(modifiers).AsSingle();
-            Container.Bind<IRuntimeSet<ISelectable>>().To<RuntimeSetComponent>().FromComponentInNewPrefab(runtimeSet).AsSingle();
+            Container.Bind<IRuntimeSet<ISelectable>>().To<RuntimeSetComponent>().FromComponentInNewPrefab(runtimeSetComponent).AsSingle().NonLazy();
+            Container.Bind<IModifiersComponent>().To<ModifiersComponent>().FromComponentInNewPrefab(modifiersComponent).AsSingle();
+            Container.QueueForInject(modifiersComponent);
 
             Container.DeclareSignal<SelectableObjectCreatedSignal>();
             Container.DeclareSignal<SelectableObjectDeletedSignal>();
@@ -36,12 +37,9 @@ namespace RTSEngine.Refactoring
             Container.BindSignal<AreaSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnAreaSignal).FromResolve();
             Container.BindSignal<PartySelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnPartySignal).FromResolve();
             Container.BindSignal<IndividualSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnIndividualSignal).FromResolve();
+
         }
 
-        // public ModifiersComponent GetModifiers()
-        // {
-        //     return modifiers;
-        // }
 
         // public RuntimeSetComponent GetRuntimeSet()
         // {

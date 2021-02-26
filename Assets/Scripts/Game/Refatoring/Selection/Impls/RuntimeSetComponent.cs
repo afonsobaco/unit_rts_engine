@@ -9,6 +9,12 @@ namespace RTSEngine.Refactoring
     {
         public HashSet<ISelectable> Items = new HashSet<ISelectable>();
 
+        private void Start()
+        {
+            Debug.Log("RunTimeset(Start)");
+
+        }
+
         private int count = 0;
         public void Add(ISelectable thing)
         {

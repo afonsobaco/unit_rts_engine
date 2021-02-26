@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97a7d4d3d0dfdb340b83874bfdf5a4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runtimeSet: {fileID: 8574298477585247780, guid: 64537c7664b4a86439eab4e067719987,
+  runtimeSetComponent: {fileID: 8574298477585247780, guid: 64537c7664b4a86439eab4e067719987,
     type: 3}
-  modifiers: {fileID: 997195755027359482, guid: 5dcc64f5f325bdc4e8d6517ee3242efc,
+  modifiersComponent: {fileID: 997195755027359482, guid: 5dcc64f5f325bdc4e8d6517ee3242efc,
     type: 3}

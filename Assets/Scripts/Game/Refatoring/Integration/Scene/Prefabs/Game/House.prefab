@@ -41,7 +41,8 @@ GameObject:
   - component: {fileID: 7699382802292963159}
   - component: {fileID: 6880706898765923159}
   - component: {fileID: -4825413054770481720}
-  - component: {fileID: 132334589022928750}
+  - component: {fileID: 5449374259617141487}
+  - component: {fileID: -5447396345222447642}
   m_Layer: 0
   m_Name: House
   m_TagString: Untagged
@@ -95,7 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _containerSource: 2
   selectionMark: {fileID: 2272579343685930454}
---- !u!114 &132334589022928750
+--- !u!114 &5449374259617141487
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,10 +105,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 158547551831246352}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89497b3f8e9c6ee40990292bf0836a40, type: 3}
+  m_Script: {fileID: 11500000, guid: 4726c2d022e7a964fbb76bfd70caba59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: House
+  type: 1
+--- !u!114 &-5447396345222447642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158547551831246352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ac3dbb51082a01468b2c3bd278e1e24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subGroup: Human House
+  priority: 0
 --- !u!1 &1537604903727505049
 GameObject:
   m_ObjectHideFlags: 0
