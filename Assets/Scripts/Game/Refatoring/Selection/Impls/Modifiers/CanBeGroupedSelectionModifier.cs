@@ -6,39 +6,27 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public class CanBeGroupedSelectionModifier : MonoBehaviour, ISelectionModifier
+    public class CanBeGroupedSelectionModifier : BaseSelectionModifier
     {
-
-        [SerializeField] private SelectionType type;
 
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] private AbstractModifierHelper modifierHelper;
+        [SerializeField] private AbstractModifierHelper _modifierHelper;
 
-        private Modifier modifier = new Modifier();
-        public SelectionType Type { get => type; set => type = value; }
+        private Modifier _modifier;
 
-        private void Start()
+        public override void StartVariables()
         {
-            StartVariables();
-        }
-
-        private void OnValidate()
-        {
-            if (modifier != null)
+            if (_modifier == null)
             {
-                StartVariables();
+                _modifier = new Modifier();
             }
+            _modifier.CanBeGroupedHelper = _modifierHelper;
         }
 
-        private void StartVariables()
+        public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
         {
-            modifier.CanBeGroupedHelper = modifierHelper;
-        }
-
-        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
-        {
-            return this.modifier.Apply(actualSelection);
+            return this._modifier.Apply(actualSelection);
         }
 
         public class Modifier

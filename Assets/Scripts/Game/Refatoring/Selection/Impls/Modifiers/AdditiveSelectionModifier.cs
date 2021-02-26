@@ -7,41 +7,42 @@ using Zenject;
 
 namespace RTSEngine.Refactoring
 {
-    public class AdditiveSelectionModifier : MonoBehaviour, ISelectionModifier
+
+    public class AdditiveSelectionModifier : BaseSelectionModifier
     {
-        [SerializeField] private SelectionType type;
 
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] private KeyCode key = KeyCode.LeftShift;
+        [SerializeField] private KeyCode _key = KeyCode.LeftShift;
 
-        private Modifier modifier = new Modifier();
-        public SelectionType Type { get => type; set => type = value; }
+        private Modifier _modifier;
 
-        private void Update()
+        public override void StartVariables()
         {
-            modifier.Active = Input.GetKey(key);
+            if (_modifier == null)
+            {
+                _modifier = new Modifier();
+            }
         }
 
-        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
+        public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
         {
-            return this.modifier.Apply(ref oldSelection, ref newSelection, actualSelection);
+            return this._modifier.Apply(Input.GetKey(_key), oldSelection, newSelection, actualSelection);
         }
 
         public class Modifier
         {
-            public bool Active { get; set; }
 
-            public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
+            public ISelectable[] Apply(bool active, ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
             {
-                if (Active)
+                if (active)
                 {
-                    return AddOrRemoveFromSelection(ref oldSelection, ref newSelection, actualSelection);
+                    return AddOrRemoveFromSelection(oldSelection, newSelection, actualSelection);
                 }
                 return actualSelection;
             }
 
-            private ISelectable[] AddOrRemoveFromSelection(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
+            private ISelectable[] AddOrRemoveFromSelection(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
             {
                 List<ISelectable> aux = new List<ISelectable>(oldSelection);
                 aux = aux.Union(actualSelection).ToList();

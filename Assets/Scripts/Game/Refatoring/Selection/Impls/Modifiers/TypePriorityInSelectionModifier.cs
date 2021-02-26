@@ -6,39 +6,27 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public class TypePriorityInSelectionModifier : MonoBehaviour, ISelectionModifier
+    public class TypePriorityInSelectionModifier : BaseSelectionModifier
     {
-
-        [SerializeField] private SelectionType type;
 
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] private AbstractModifierHelper typePriorityHelper;
+        [SerializeField] private AbstractModifierHelper _typePriorityHelper;
 
-        private Modifier modifier = new Modifier();
-        public SelectionType Type { get => type; set => type = value; }
+        private Modifier _modifier;
 
-        private void Start()
+        public override void StartVariables()
         {
-            StartVariables();
-        }
-
-        private void OnValidate()
-        {
-            if (modifier != null)
+            if (_modifier == null)
             {
-                StartVariables();
+                _modifier = new Modifier();
             }
+            _modifier.TypePriorityHelper = _typePriorityHelper;
         }
 
-        private void StartVariables()
+        public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
         {
-            modifier.TypePriorityHelper = typePriorityHelper;
-        }
-
-        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
-        {
-            return this.modifier.Apply(actualSelection);
+            return this._modifier.Apply(actualSelection);
         }
 
         public class Modifier

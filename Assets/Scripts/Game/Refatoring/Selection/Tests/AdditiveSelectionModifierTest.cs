@@ -18,7 +18,6 @@ namespace Tests
         public void SetUp()
         {
             modifier = Substitute.ForPartsOf<AdditiveSelectionModifier.Modifier>();
-            modifier.Active = true;
         }
 
         [Test]
@@ -35,7 +34,7 @@ namespace Tests
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
             ISelectable[] expected = TestUtils.GetListByIndex(actualSelection, mainList);
 
-            var result = modifier.Apply(ref oldSelection, ref newSelection, newSelection);
+            var result = modifier.Apply(true, oldSelection, newSelection, newSelection);
 
             CollectionAssert.AreEquivalent(expected, result);
 

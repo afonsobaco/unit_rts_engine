@@ -5,38 +5,26 @@ using UnityEngine;
 
 namespace RTSEngine.Refactoring
 {
-    public class LimitSelectionModifier : MonoBehaviour, ISelectionModifier
+    public class LimitSelectionModifier : BaseSelectionModifier
     {
-        [SerializeField] private SelectionType type;
-
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] [Range(1, 100)] private int limit = 20;
+        [SerializeField] [Range(1, 100)] private int _limit = 20;
 
-        private Modifier modifier = new Modifier();
-        public SelectionType Type { get => type; set => type = value; }
+        private Modifier _modifier;
 
-        private void Start()
+        public override void StartVariables()
         {
-            StartVariables();
-        }
-
-        private void OnValidate()
-        {
-            if (modifier != null)
+            if (_modifier == null)
             {
-                StartVariables();
+                _modifier = new Modifier();
             }
+            _modifier.Limit = _limit;
         }
 
-        private void StartVariables()
+        public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
         {
-            modifier.Limit = limit;
-        }
-
-        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
-        {
-            return this.modifier.Apply(actualSelection);
+            return this._modifier.Apply(actualSelection);
         }
 
         public class Modifier

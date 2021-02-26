@@ -7,7 +7,7 @@ using System;
 
 namespace RTSEngine.Refactoring
 {
-    public class OrderSelectionModifier : MonoBehaviour, ISelectionModifier
+    public class OrderSelectionModifier : BaseSelectionModifier
     {
 
         [SerializeField] private SelectionType _type;
@@ -18,30 +18,19 @@ namespace RTSEngine.Refactoring
         [SerializeField] private GroupingComparerComponent _subGroupComparer;
         [SerializeField] private EqualityComparerComponent _equalityComparer;
 
-        private Modifier _modifier = new Modifier();
+        private Modifier _modifier;
 
-        public SelectionType Type { get => _type; set => _type = value; }
-
-        private void Start()
+        public override void StartVariables()
         {
-            StartVariables();
-        }
-
-        private void OnValidate()
-        {
-            if (_modifier != null)
+            if (_modifier == null)
             {
-                StartVariables();
+                _modifier = new Modifier();
             }
-        }
-
-        private void StartVariables()
-        {
             _modifier.SubGroupComparer = _subGroupComparer;
             _modifier.EqualityComparer = _equalityComparer;
         }
 
-        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
+        public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
         {
             return this._modifier.Apply(actualSelection);
         }

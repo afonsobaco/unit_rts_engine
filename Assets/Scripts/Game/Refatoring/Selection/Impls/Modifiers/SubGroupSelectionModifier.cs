@@ -7,45 +7,35 @@ using System;
 
 namespace RTSEngine.Refactoring
 {
-    public class SubGroupSelectionModifier : MonoBehaviour, ISelectionModifier
+    public class SubGroupSelectionModifier : BaseSelectionModifier
     {
-        [SerializeField] private SelectionType type;
 
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] private KeyCode key = KeyCode.LeftControl;
-        [SerializeField] private Vector2 initialViewportPoint = Vector2.zero;
-        [SerializeField] private Vector2 finalViewportPoint = Vector2.one;
-        [SerializeField] private EqualityComparerComponent equalityComparer;
-        [Inject] private IRuntimeSet<ISelectable> mainList;
-        [Inject] private IAreaSelectionType areaSelectionType;
+        [SerializeField] private KeyCode _key = KeyCode.LeftControl;
+        [SerializeField] private Vector2 _initialViewportPoint = Vector2.zero;
+        [SerializeField] private Vector2 _finalViewportPoint = Vector2.one;
+        [SerializeField] private EqualityComparerComponent _equalityComparer;
+        [Inject] private IRuntimeSet<ISelectable> _mainList;
+        [Inject] private IAreaSelectionType _areaSelectionType;
 
-        private Modifier modifier = new Modifier();
-        public SelectionType Type { get => type; set => type = value; }
-
-        private void Start()
+        private Modifier _modifier;
+        public override void StartVariables()
         {
-            StartVariables();
+            if (_modifier == null)
+            {
+                _modifier = new Modifier();
+            }
+            _modifier.InitialViewportPoint = _initialViewportPoint;
+            _modifier.FinalViewportPoint = _finalViewportPoint;
+            _modifier.MainList = _mainList;
+            _modifier.AreaSelectionType = _areaSelectionType;
+            _modifier.EqualityComparer = _equalityComparer;
         }
 
-        private void OnValidate()
+        public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
         {
-            if (modifier != null)
-                StartVariables();
-        }
-
-        private void StartVariables()
-        {
-            modifier.InitialViewportPoint = initialViewportPoint;
-            modifier.FinalViewportPoint = finalViewportPoint;
-            modifier.MainList = mainList;
-            modifier.AreaSelectionType = areaSelectionType;
-            modifier.EqualityComparer = equalityComparer;
-        }
-
-        public ISelectable[] Apply(ref ISelectable[] oldSelection, ref ISelectable[] newSelection, ISelectable[] actualSelection)
-        {
-            return this.modifier.Apply(Input.GetKey(key), actualSelection);
+            return this._modifier.Apply(Input.GetKey(_key), actualSelection);
         }
 
         public class Modifier

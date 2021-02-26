@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7699382802292963159}
   - component: {fileID: 6880706898765923159}
+  - component: {fileID: -4825413054770481720}
   - component: {fileID: 132334589022928750}
   m_Layer: 0
   m_Name: House
@@ -80,6 +81,20 @@ CapsuleCollider:
   m_Height: 8.12
   m_Direction: 1
   m_Center: {x: 0.2, y: 1, z: 0.6}
+--- !u!114 &-4825413054770481720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158547551831246352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5900cbdee9c7449ae40d0fdbf50f33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _containerSource: 2
+  selectionMark: {fileID: 2272579343685930454}
 --- !u!114 &132334589022928750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,9 +107,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89497b3f8e9c6ee40990292bf0836a40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _containerSource: 2
-  selectionMark: {fileID: 2272579343685930454}
-  selectionOrder: 2
   objectType: House
 --- !u!1 &1537604903727505049
 GameObject:

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +10,10 @@ namespace RTSEngine.Refactoring
     {
         public ISelectionModifier[] GetModifiers()
         {
-            return GetComponents<ISelectionModifier>();
+            var selectionModifiers = GetComponents<ISelectionModifier>().ToList();
+            selectionModifiers.RemoveAll(x => !(x as BaseSelectionModifier).enabled);
+            selectionModifiers.ForEach(x => Debug.Log(x.GetType().Name));
+            return selectionModifiers.ToArray();
         }
 
     }
