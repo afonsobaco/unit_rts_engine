@@ -64,31 +64,31 @@ namespace Tests.Manager
             Assert.AreEqual(mainCamera.transform.position, result);
         }
 
-        [TestCase(45f, 10f, 10f)]
-        [TestCase(45f, 20f, 20f)]
-        [TestCase(60f, 10f, 5.77350187f)]
-        [TestCase(60f, 20f, 11.5470037f)]
-        public void ShouldCenterCameraToPositionWhenCenterCameraToSelection(float cameraXRotation, float yPos, float expectedZ)
-        {
+        // [TestCase(45f, 10f, 10f)]
+        // [TestCase(45f, 20f, 20f)]
+        // [TestCase(60f, 10f, 5.77350187f)]
+        // [TestCase(60f, 20f, 11.5470037f)]
+        // public void ShouldCenterCameraToPositionWhenCenterCameraToSelection(float cameraXRotation, float yPos, float expectedZ)
+        // {
 
-            Vector3 expectedPos = new Vector3(2, 0, 20);
-            HashSet<ISelectableObject> list = new HashSet<ISelectableObject>();
-            list.Add(Substitute.For<ISelectableObject>());
-            list.First().Position.Returns(expectedPos);
+        //     Vector3 expectedPos = new Vector3(2, 0, 20);
+        //     HashSet<ISelectableObject> list = new HashSet<ISelectableObject>();
+        //     list.Add(Substitute.For<ISelectableObject>());
+        //     list.First().Position.Returns(expectedPos);
 
-            //TODO adjust test
-            //selectionManager.GetCurrentSelection().Returns(list);
-            // selectionManager.GetSelectionMainPoint().Returns(expectedPos);
+        //     //TODO adjust test
+        //     //selectionManager.GetCurrentSelection().Returns(list);
+        //     // selectionManager.GetSelectionMainPoint().Returns(expectedPos);
 
 
 
-            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, yPos, mainCamera.transform.position.z);
-            mainCamera.transform.eulerAngles = new Vector3(cameraXRotation, mainCamera.transform.eulerAngles.y, mainCamera.transform.eulerAngles.z);
-            var result = manager.DoCameraCentering();
-            var expected = new Vector3(expectedPos.x, mainCamera.transform.position.y, Mathf.Round((expectedPos.z - expectedZ)));
-            Assert.AreEqual(expected, new Vector3(result.x, result.y, Mathf.Round(result.z)));
+        //     mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, yPos, mainCamera.transform.position.z);
+        //     mainCamera.transform.eulerAngles = new Vector3(cameraXRotation, mainCamera.transform.eulerAngles.y, mainCamera.transform.eulerAngles.z);
+        //     var result = manager.DoCameraCentering();
+        //     var expected = new Vector3(expectedPos.x, mainCamera.transform.position.y, Mathf.Round((expectedPos.z - expectedZ)));
+        //     Assert.AreEqual(expected, new Vector3(result.x, result.y, Mathf.Round(result.z)));
 
-        }
+        // }
 
         [TestCase(20f, 2.71f)]
         [TestCase(10f, 1.71f)]
@@ -140,13 +140,13 @@ namespace Tests.Manager
             Assert.AreEqual(Vector3.zero, result);
         }
 
-        [Test]
-        public void ShouldNotDoCameraInputMovementWhenIsSelecting()
-        {
-            Vector3 mousePos = mainCamera.ViewportToScreenPoint(new Vector2(1f, 1f));
-            var result = manager.DoCameraInputMovement(0f, 0f, mousePos, DeltaTime);
-            Assert.AreEqual(Vector3.zero, result);
-        }
+        // [Test]
+        // public void ShouldNotDoCameraInputMovementWhenIsSelecting()
+        // {
+        //     Vector3 mousePos = mainCamera.ViewportToScreenPoint(new Vector2(1f, 1f));
+        //     var result = manager.DoCameraInputMovement(0f, 0f, mousePos, DeltaTime);
+        //     Assert.AreEqual(Vector3.zero, result);
+        // }
 
 
         [TestCase(0f, 0f, -2.708f, -2.708f)]

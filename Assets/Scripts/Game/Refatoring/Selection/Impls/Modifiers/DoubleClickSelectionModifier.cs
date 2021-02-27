@@ -7,7 +7,7 @@ using System;
 
 namespace RTSEngine.Refactoring
 {
-    public class DoubleClickModifier : BaseSelectionModifier
+    public class DoubleClickSelectionModifier : BaseSelectionModifier
     {
 
         [Space]

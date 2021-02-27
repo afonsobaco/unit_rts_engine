@@ -10,7 +10,7 @@ using Tests.Utils;
 namespace Tests
 {
     [TestFixture]
-    public class LimitModifierTest
+    public class LimitSelectionModifierTest
     {
         private LimitSelectionModifier modifier;
         private ISelectionManager selectionManager;

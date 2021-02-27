@@ -9,36 +9,33 @@ using System.Linq;
 namespace Tests
 {
     [TestFixture]
-    public class DoubleClickModifierTest
+    public class SubGroupSelectionModifierTest
     {
-        private DoubleClickModifier.Modifier modifier;
+        private SubGroupSelectionModifier.Modifier modifier;
 
         [SetUp]
         public void SetUp()
         {
-            modifier = Substitute.ForPartsOf<DoubleClickModifier.Modifier>();
+            modifier = Substitute.ForPartsOf<SubGroupSelectionModifier.Modifier>();
         }
 
         [Test]
-        public void DoubleClickModifierTestSimplePasses()
+        public void SubGroupModifierTestSimplePasses()
         {
             Assert.IsNotNull(modifier);
         }
 
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldApplyModifier(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
+        public void ShouldApplyModifier(int amount, int[] newSelectionIndexes)
         {
             ISelectable[] mainList = SelectionTestUtils.GetSomeSelectable(amount, amount);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
-            ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
 
             ISelectable[] expected = null;
-            ISelectable selected = null;
             if (newSelection.Length == 1)
             {
-                selected = newSelection.First();
-                expected = GetMockedSubGroup(mainList, selected);
+                expected = GetMockedSubGroup(mainList, newSelection.First());
             }
             else
             {
@@ -48,13 +45,13 @@ namespace Tests
             modifier.WhenForAnyArgs(x => x.GetAllGroupableOnScreen(default)).DoNotCallBase();
             modifier.GetAllGroupableOnScreen(default).ReturnsForAnyArgs(expected);
 
-            var result = modifier.Apply(oldSelection, newSelection, newSelection, selected);
+            var result = modifier.Apply(true, newSelection);
 
             CollectionAssert.AreEquivalent(expected, result);
         }
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldGetAllGroupableOnScreen(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
+        public void ShouldGetAllGroupableOnScreen(int amount, int[] newSelectionIndexes)
         {
             ISelectable[] mainList = SelectionTestUtils.GetSomeSelectable(amount, amount);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
@@ -95,7 +92,7 @@ namespace Tests
             {
                 foreach (var item in TestUtils.GetDefaultCases())
                 {
-                    yield return new TestCaseData(item.amount, item.oldSelection, item.newSelection).SetName(TestUtils.GetCaseName(item));
+                    yield return new TestCaseData(item.amount, item.newSelection).SetName(TestUtils.GetCaseName(item));
                 }
             }
         }

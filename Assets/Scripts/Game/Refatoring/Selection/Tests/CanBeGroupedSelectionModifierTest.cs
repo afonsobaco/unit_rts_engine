@@ -10,7 +10,7 @@ using System.Linq;
 namespace Tests
 {
     [TestFixture]
-    public class CanBeGroupedModifierTest
+    public class CanBeGroupedSelectionModifierTest
     {
 
         private CanBeGroupedSelectionModifier.Modifier modifier;
