@@ -27,6 +27,7 @@ namespace RTSEngine.Refactoring
 
         public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
         {
+            StartVariables();
             return this._modifier.Apply(Input.GetKey(_key), oldSelection, newSelection, actualSelection);
         }
 
@@ -46,7 +47,7 @@ namespace RTSEngine.Refactoring
             {
                 List<ISelectable> aux = new List<ISelectable>(oldSelection);
                 aux = aux.Union(actualSelection).ToList();
-                if (ContainsAllSelected(oldSelection, newSelection))
+                if (ContainsAllSelected(oldSelection, actualSelection))
                 {
                     aux.RemoveAll(x => actualSelection.Contains(x));
                 }

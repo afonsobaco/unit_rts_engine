@@ -8,14 +8,8 @@ namespace RTSEngine.Refactoring
     public class RuntimeSetComponent : MonoBehaviour, IRuntimeSet<ISelectable>
     {
         public HashSet<ISelectable> Items = new HashSet<ISelectable>();
-
-        private void Start()
-        {
-            Debug.Log("RunTimeset(Start)");
-
-        }
-
         private int count = 0;
+
         public void Add(ISelectable thing)
         {
             if (!Items.Contains(thing))

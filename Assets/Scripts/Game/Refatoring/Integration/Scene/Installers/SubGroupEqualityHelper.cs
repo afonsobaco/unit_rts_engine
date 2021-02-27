@@ -14,7 +14,6 @@ namespace RTSEngine.Refactoring
             var yGameSubGroup = GetGameSubGroup(y);
             if (xGameSubGroup && yGameSubGroup)
             {
-                Debug.Log(xGameSubGroup.SubGroup + " == " + yGameSubGroup.SubGroup);
                 return xGameSubGroup.SubGroup.Equals(yGameSubGroup.SubGroup);
             }
             return false;

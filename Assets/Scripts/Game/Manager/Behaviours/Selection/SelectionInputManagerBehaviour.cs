@@ -121,7 +121,6 @@ namespace RTSEngine.Manager
             {
                 this._lastTimeClicked = Time.time;
             }
-
         }
     }
 }

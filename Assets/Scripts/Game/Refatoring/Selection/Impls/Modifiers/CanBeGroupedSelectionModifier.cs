@@ -26,6 +26,7 @@ namespace RTSEngine.Refactoring
 
         public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
         {
+            StartVariables();
             return this._modifier.Apply(actualSelection);
         }
 

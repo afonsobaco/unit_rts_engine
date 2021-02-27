@@ -7,17 +7,18 @@ using System;
 
 namespace RTSEngine.Refactoring
 {
-    public class SubGroupSelectionModifier : BaseSelectionModifier
+    public class DoubleClickModifier : BaseSelectionModifier
     {
 
         [Space]
         [Header("Modifier attributes")]
-        [SerializeField] private KeyCode _key = KeyCode.LeftControl;
+        [SerializeField] private float _doubleClickTime = 0.3f;
         [SerializeField] private Vector2 _initialViewportPoint = Vector2.zero;
         [SerializeField] private Vector2 _finalViewportPoint = Vector2.one;
         [SerializeField] private EqualityComparerComponent _equalityComparer;
         private IRuntimeSet<ISelectable> _mainList;
         private IAreaSelectionType _areaSelectionType;
+        private LastClicked _lastClicked;
 
         private Modifier _modifier;
 
@@ -44,7 +45,25 @@ namespace RTSEngine.Refactoring
         public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
         {
             StartVariables();
-            return this._modifier.Apply(Input.GetKey(_key), actualSelection);
+            var doubleClicked = GetDoubleClicked(newSelection);
+            UpdateLastClicked(newSelection);
+            if (doubleClicked != null)
+            {
+                return this._modifier.Apply(oldSelection, newSelection, actualSelection, doubleClicked);
+            }
+            return actualSelection;
+        }
+
+        private void UpdateLastClicked(ISelectable[] newSelection)
+        {
+            _lastClicked = new LastClicked { Selectable = newSelection.Length == 1 ? newSelection.First() : null, Time = Time.time };
+        }
+
+        private ISelectable GetDoubleClicked(ISelectable[] actualSelection)
+        {
+            bool checkEquals = actualSelection.Length == 1 && _lastClicked != null && actualSelection.First().Equals(_lastClicked.Selectable);
+            bool checkTime = _lastClicked != null ? Time.time - _lastClicked.Time <= _doubleClickTime : false;
+            return checkEquals && checkTime ? actualSelection.First() : null;
         }
 
         public class Modifier
@@ -55,11 +74,23 @@ namespace RTSEngine.Refactoring
             public IAreaSelectionType AreaSelectionType { get; set; }
             public EqualityComparerComponent EqualityComparer { get; internal set; }
 
-            public ISelectable[] Apply(bool active, ISelectable[] actualSelection)
+            public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, ISelectable doubleClicked)
             {
-                if (active && actualSelection.Length == 1)
-                    return GetAllGroupableOnScreen(actualSelection.First());
-                return actualSelection;
+                var result = new List<ISelectable>(actualSelection);
+                if (doubleClicked != null)
+                {
+                    ISelectable[] allFromSubGroup = GetAllGroupableOnScreen(doubleClicked);
+                    result = result.Union(allFromSubGroup).ToList();
+                    if (!oldSelection.Contains(doubleClicked))
+                    {
+                        result.RemoveAll(x => allFromSubGroup.Contains(x));
+                    }
+                    if (result.Count == 0)
+                    {
+                        result = result.Union(allFromSubGroup).ToList();
+                    }
+                }
+                return result.ToArray();
             }
 
             public virtual ISelectable[] GetAllGroupableOnScreen(ISelectable selected)
@@ -85,5 +116,14 @@ namespace RTSEngine.Refactoring
                 return MainList.GetAllItems().ToArray();
             }
         }
+    }
+
+    internal class LastClicked
+    {
+        private ISelectable selectable;
+        private float time;
+
+        public ISelectable Selectable { get => selectable; set => selectable = value; }
+        public float Time { get => time; set => time = value; }
     }
 }
