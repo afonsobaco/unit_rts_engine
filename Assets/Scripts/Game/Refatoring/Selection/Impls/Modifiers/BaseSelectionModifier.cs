@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using RTSEngine.Core;
 using UnityEngine;
 
@@ -5,9 +6,11 @@ namespace RTSEngine.Refactoring
 {
     public abstract class BaseSelectionModifier : MonoBehaviour, ISelectionModifier
     {
-        [SerializeField] private SelectionType type;
-        public SelectionType Type { get => type; set => type = value; }
-        public abstract ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection);
+        [SerializeField] private SelectionType[] restrictedTypes;
+
+        public SelectionType[] RestrictedTypes { get => restrictedTypes; set => restrictedTypes = value; }
+
+        public abstract ISelectable[] Apply(SelectionInfo info);
 
         private void Start()
         {
@@ -20,5 +23,6 @@ namespace RTSEngine.Refactoring
         }
 
         public virtual void StartVariables() { }
+
     }
 }

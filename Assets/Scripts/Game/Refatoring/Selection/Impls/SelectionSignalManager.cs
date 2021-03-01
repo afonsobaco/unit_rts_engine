@@ -55,7 +55,15 @@ namespace RTSEngine.Refactoring
         {
             this.BlockAreaSelection = true;
             var selection = _selectionManager.GetIndividualSelection(GetMainList(), signal.Clicked);
-            var result = _selection.DoSelection(selection, SelectionType.INDIVIDUAL);
+            ISelectable[] result;
+            if (signal.OnSelection)
+            {
+                result = _selection.DoSelection(selection, SelectionType.INDIVIDUAL_ON_SELECTION);
+            }
+            else
+            {
+                result = _selection.DoSelection(selection, SelectionType.INDIVIDUAL);
+            }
             _signalBus.Fire(new SelectionUpdateSignal() { Selection = result });
         }
 

@@ -25,25 +25,25 @@ namespace RTSEngine.Refactoring
             }
         }
 
-        public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
+        public override ISelectable[] Apply(SelectionInfo info)
         {
             StartVariables();
-            return this._modifier.Apply(Input.GetKey(_key), oldSelection, newSelection, actualSelection);
+            return this._modifier.Apply(Input.GetKey(_key), info.OldSelection, info.ActualSelection);
         }
 
         public class Modifier
         {
 
-            public ISelectable[] Apply(bool active, ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
+            public ISelectable[] Apply(bool active, ISelectable[] oldSelection, ISelectable[] actualSelection)
             {
                 if (active)
                 {
-                    return AddOrRemoveFromSelection(oldSelection, newSelection, actualSelection);
+                    return AddOrRemoveFromSelection(oldSelection, actualSelection);
                 }
                 return actualSelection;
             }
 
-            private ISelectable[] AddOrRemoveFromSelection(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
+            private ISelectable[] AddOrRemoveFromSelection(ISelectable[] oldSelection, ISelectable[] actualSelection)
             {
                 List<ISelectable> aux = new List<ISelectable>(oldSelection);
                 aux = aux.Union(actualSelection).ToList();

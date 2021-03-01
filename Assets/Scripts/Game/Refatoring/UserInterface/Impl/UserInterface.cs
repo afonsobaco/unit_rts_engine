@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
-using System;
+using RTSEngine.Commons;
+using Zenject;
 
 namespace RTSEngine.Refactoring
 {
@@ -15,6 +16,8 @@ namespace RTSEngine.Refactoring
         public ISelectable Highlighted { get => _highlighted; set => _highlighted = value; }
         public ISelectable[] Selection { get => _selection; set => _selection = value; }
         public Dictionary<object, ISelectable[]> Parties { get => _parties; set => _parties = value; }
+
+        [Inject] private EqualityComparerComponent _equalityComparer;
 
         public void DoSelectionUpdate(ISelectable[] selection)
         {
@@ -40,14 +43,8 @@ namespace RTSEngine.Refactoring
         {
             if (_highlighted != null)
             {
-                foreach (var item in _selection)
-                {
-                    if (item is IGroupable)
-                    {
-                        IGroupable groupable = (item as IGroupable);
-                        item.IsHighlighted = groupable.IsCompatible(_highlighted);
-                    }
-                }
+                List<ISelectable> selectables = GetSubGroupOf(_highlighted);
+                _selection.ToList().ForEach(x => x.IsHighlighted = selectables.Contains(x));
             }
         }
 
@@ -58,11 +55,15 @@ namespace RTSEngine.Refactoring
 
         public void DoNextSubGroup()
         {
-            if (_selection == null || _selection.Length == 0)
+            if (_selection == null)
+            {
+                return;
+            }
+            if (_selection.Length == 0)
                 _highlighted = null;
             if (_highlighted != null)
             {
-                var index = _selection.ToList().FindLastIndex(x => { return (x as IGroupable).IsCompatible(_highlighted); });
+                var index = _selection.ToList().FindLastIndex(x => { return AreCompatible(x, _highlighted); });
                 if (index < _selection.Length - 1)
                     _highlighted = _selection[index + 1];
                 else
@@ -72,17 +73,34 @@ namespace RTSEngine.Refactoring
 
         public void DoPreviousSubGroup()
         {
-
             if (_selection == null || _selection.Length == 0)
                 _highlighted = null;
             if (_highlighted != null)
             {
-                var index = _selection.ToList().FindIndex(x => { return (x as IGroupable).IsCompatible(_highlighted); });
+                var index = _selection.ToList().FindIndex(x => { return AreCompatible(x, _highlighted); });
                 if (index > 0)
-                    _highlighted = _selection.ToList().Find(x => { return (x as IGroupable).IsCompatible(_selection[index - 1]); });
+                    _highlighted = _selection.ToList().Find(x => { return AreCompatible(x, _selection[index - 1]); });
                 else
-                    _highlighted = _selection.ToList().Find(x => { return (x as IGroupable).IsCompatible(_selection[_selection.Length - 1]); });
+                    _highlighted = _selection.ToList().Find(x => { return AreCompatible(x, _selection[_selection.Length - 1]); });
             }
+        }
+
+        private bool AreCompatible(ISelectable x, ISelectable y)
+        {
+            return _equalityComparer.Equals(x, y);
+        }
+
+        private List<ISelectable> GetSubGroupOf(ISelectable selectable)
+        {
+            List<ISelectable> list = new List<ISelectable>();
+            foreach (var item in _selection)
+            {
+                if (AreCompatible(item, selectable))
+                {
+                    list.Add(item);
+                }
+            }
+            return list;
         }
     }
 }

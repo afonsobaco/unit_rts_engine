@@ -7,34 +7,37 @@ namespace RTSEngine.Refactoring
 {
     public class UserInterfaceSignalManager
     {
+        private UserInterfaceBase _userInterfaceBase;
         private UserInterfaceManager _userInterfaceManager;
         private UserInterface _userInterface;
 
-        public UserInterfaceSignalManager(UserInterfaceManager userInterfaceManager, UserInterface userInterface)
+        public UserInterfaceSignalManager(UserInterfaceManager userInterfaceManager, UserInterface userInterface, UserInterfaceBase userInterfaceBase)
         {
             this._userInterfaceManager = userInterfaceManager;
             this._userInterface = userInterface;
+            this._userInterfaceBase = userInterfaceBase;
         }
 
         public void OnSelectionUpdate(SelectionUpdateSignal signal)
         {
             _userInterface.DoSelectionUpdate(signal.Selection);
+            _userInterfaceBase.UpdateAll();
         }
 
         public void OnPartyUpdate(PartyUpdateSignal signal)
         {
             _userInterface.DoPartyUpdate(signal.Parties);
+            _userInterfaceBase.UpdateBanners();
         }
 
         public void OnAlternateSubGroup(AlternateSubGroupSignal signal)
         {
             _userInterface.AlternateSubGroup(signal.Previous);
+            _userInterfaceBase.UpdateAll();
         }
-
-
         public void OnMiniatureClicked(MiniatureClickedSignal signal)
         {
-            _userInterfaceManager.DoMiniatureClicked(_userInterface.Selection, signal.Selected, signal.ToRemove, signal.AsSubGroup);
+            _userInterfaceManager.DoMiniatureClicked(signal.Selected);
         }
         public void OnPortraitClicked(PortraitClickedSignal signal)
         {
@@ -44,7 +47,7 @@ namespace RTSEngine.Refactoring
         {
             Core.ISelectable[] value;
             _userInterface.Parties.TryGetValue(signal.PartyId, out value);
-            _userInterfaceManager.DoBannerClicked(_userInterface.Selection, value, signal.ToRemove);
+            _userInterfaceManager.DoBannerClicked(value);
         }
         public void OnMapClicked(MapClickedSignal signal)
         {

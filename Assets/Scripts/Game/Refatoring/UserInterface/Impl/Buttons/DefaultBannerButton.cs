@@ -17,5 +17,9 @@ namespace RTSEngine.Refactoring
         {
             Debug.Log("Banner Press");
         }
+        public class Factory : PlaceholderFactory<DefaultBannerButton>
+        {
+        }
+
     }
 }

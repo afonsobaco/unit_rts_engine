@@ -43,8 +43,5 @@ namespace Tests
             CollectionAssert.AreEquivalent(expected, _selection.GetCurrent());
 
         }
-
-
-
     }
 }

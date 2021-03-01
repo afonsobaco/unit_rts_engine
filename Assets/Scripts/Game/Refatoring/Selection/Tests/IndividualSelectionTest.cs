@@ -52,7 +52,5 @@ namespace Tests
             Assert.AreEqual(1, result.Length);
             Assert.AreEqual(expected, result[0]);
         }
-
-
     }
 }

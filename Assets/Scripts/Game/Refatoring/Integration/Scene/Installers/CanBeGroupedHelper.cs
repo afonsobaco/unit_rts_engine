@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
-
-
 namespace RTSEngine.Refactoring
 {
     public class CanBeGroupedHelper : AbstractModifierHelper

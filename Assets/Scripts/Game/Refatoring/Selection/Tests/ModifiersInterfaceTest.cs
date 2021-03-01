@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
@@ -15,6 +16,10 @@ namespace Tests
         private ModifiersInterface _modifiersInterface;
         private IModifiersComponent _modifiersComponent;
         private ISelectionModifier[] _modifiers;
+        private ISelectionModifier any_modifier;
+        private ISelectionModifier area_modifier;
+        private ISelectionModifier party_modifier;
+        private ISelectionModifier individual_modifier;
 
         [SetUp]
         public void SetUp()
@@ -29,22 +34,21 @@ namespace Tests
         {
 
             var list = new List<ISelectionModifier>();
-            ISelectionModifier modifier = Substitute.For<ISelectionModifier>();
-            modifier.Type = SelectionType.ANY;
-            modifier.Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>()).Returns(x => x[1]);
-            list.Add(modifier);
-            modifier = Substitute.For<ISelectionModifier>();
-            modifier.Type = SelectionType.AREA;
-            modifier.Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>()).Returns(x => x[1]);
-            list.Add(modifier);
-            modifier = Substitute.For<ISelectionModifier>();
-            modifier.Type = SelectionType.PARTY;
-            modifier.Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>()).Returns(x => x[1]);
-            list.Add(modifier);
-            modifier = Substitute.For<ISelectionModifier>();
-            modifier.Type = SelectionType.INDIVIDUAL;
-            modifier.Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>()).Returns(x => x[1]);
-            list.Add(modifier);
+            any_modifier = Substitute.For<ISelectionModifier>();
+            any_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
+            list.Add(any_modifier);
+            area_modifier = Substitute.For<ISelectionModifier>();
+            area_modifier.RestrictedTypes = new SelectionType[] { SelectionType.AREA };
+            area_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
+            list.Add(area_modifier);
+            party_modifier = Substitute.For<ISelectionModifier>();
+            party_modifier.RestrictedTypes = new SelectionType[] { SelectionType.PARTY };
+            party_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
+            list.Add(party_modifier);
+            individual_modifier = Substitute.For<ISelectionModifier>();
+            individual_modifier.RestrictedTypes = new SelectionType[] { SelectionType.INDIVIDUAL, SelectionType.INDIVIDUAL_ON_SELECTION };
+            individual_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
+            list.Add(individual_modifier);
             return list.ToArray();
         }
 
@@ -63,20 +67,11 @@ namespace Tests
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 
             CollectionAssert.AreEqual(newSelection, result);
-            foreach (var m in _modifiers)
-            {
-                if (m.Type == type || m.Type == SelectionType.ANY)
-                    m.Received().Apply(Arg.Is(oldSelection), Arg.Is(newSelection), Arg.Any<ISelectable[]>());
-                else
-                {
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
-                }
-            }
+            AssertModifiersReceived(type, newSelection, oldSelection);
         }
 
         [Test]
-        public void ShouldApplyAllModifiersOfType()
+        public void ShouldApplyAllModifiersOfPartyType()
         {
             SelectionType type = SelectionType.PARTY;
             ISelectable[] newSelection = SelectionTestUtils.GetSomeSelectable(Random.Range(1, 5));
@@ -84,16 +79,7 @@ namespace Tests
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 
             CollectionAssert.AreEqual(newSelection, result);
-            foreach (var m in _modifiers)
-            {
-                if (m.Type == type || m.Type == SelectionType.ANY)
-                    m.Received().Apply(Arg.Is(oldSelection), Arg.Is(newSelection), Arg.Any<ISelectable[]>());
-                else
-                {
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
-                }
-            }
+            AssertModifiersReceived(type, newSelection, oldSelection);
         }
 
         [Test]
@@ -105,18 +91,31 @@ namespace Tests
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 
             CollectionAssert.AreEqual(newSelection, result);
-            foreach (var m in _modifiers)
-            {
-                if (m.Type == type || m.Type == SelectionType.ANY)
-                    m.Received().Apply(Arg.Is(oldSelection), Arg.Is(newSelection), Arg.Any<ISelectable[]>());
-                else
-                {
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
-                    m.DidNotReceive().Apply(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>());
-                }
-            }
+            AssertModifiersReceived(type, newSelection, oldSelection);
         }
 
+        [Test]
+        public void ShouldApplyAllModifiersOfIndividualOnSelectionType()
+        {
+            SelectionType type = SelectionType.INDIVIDUAL_ON_SELECTION;
+            ISelectable[] newSelection = SelectionTestUtils.GetSomeSelectable(Random.Range(1, 5));
+            ISelectable[] oldSelection = new ISelectable[] { };
+            var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
+
+            CollectionAssert.AreEqual(newSelection, result);
+            AssertModifiersReceived(type, newSelection, oldSelection);
+        }
+
+        private void AssertModifiersReceived(SelectionType type, ISelectable[] newSelection, ISelectable[] oldSelection)
+        {
+            foreach (var modifier in _modifiers)
+            {
+                if (modifier.RestrictedTypes == null || modifier.RestrictedTypes.Length == 0 || modifier.RestrictedTypes.Contains(type))
+                    modifier.Received().Apply(Arg.Any<SelectionInfo>());
+                else
+                    modifier.DidNotReceiveWithAnyArgs().Apply(default);
+            }
+        }
 
     }
 }

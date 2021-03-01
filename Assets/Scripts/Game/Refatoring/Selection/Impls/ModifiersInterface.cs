@@ -1,3 +1,5 @@
+using System.ComponentModel.Design;
+using System.Linq;
 using RTSEngine.Core;
 using UnityEngine;
 
@@ -18,9 +20,10 @@ namespace RTSEngine.Refactoring
             ISelectable[] actualSelection = newSelection;
             foreach (var mod in modifiers.GetModifiers())
             {
-                if (mod.Type == type || mod.Type == SelectionType.ANY)
+                if (mod.RestrictedTypes == null || mod.RestrictedTypes.Length == 0 || mod.RestrictedTypes.Contains(type))
                 {
-                    actualSelection = mod.Apply(oldSelection, newSelection, actualSelection);
+                    SelectionInfo info = new SelectionInfo { OldSelection = oldSelection, NewSelection = newSelection, ActualSelection = actualSelection, SelectionType = type };
+                    actualSelection = mod.Apply(info);
                 }
             }
             return actualSelection;

@@ -106,10 +106,7 @@
 //                 }
 //             );
 //             return modifier;
-//         }
-
-
-//         private ISelectionModifier GetDefaultTypePriorityInSelectionModifier()
+//         }//         private ISelectionModifier GetDefaultTypePriorityInSelectionModifier()
 //         {
 //             TypePriorityInSelectionModifier modifier = Substitute.ForPartsOf<TypePriorityInSelectionModifier>(new object[] { selectionManager });
 //             return modifier;

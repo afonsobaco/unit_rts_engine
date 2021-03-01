@@ -8,10 +8,7 @@ namespace Tests
 {
     public class PartySelectionTest
     {
-        private PartySelection _partySelection;
-
-
-        [SetUp]
+        private PartySelection _partySelection;[SetUp]
         public void SetUp()
         {
             _partySelection = Substitute.ForPartsOf<PartySelection>();

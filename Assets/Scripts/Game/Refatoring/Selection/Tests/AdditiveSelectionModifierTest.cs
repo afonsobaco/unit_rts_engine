@@ -34,7 +34,7 @@ namespace Tests
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
             ISelectable[] expected = TestUtils.GetListByIndex(actualSelection, mainList);
 
-            var result = modifier.Apply(true, oldSelection, newSelection, newSelection);
+            var result = modifier.Apply(true, oldSelection, newSelection);
 
             CollectionAssert.AreEquivalent(expected, result);
 

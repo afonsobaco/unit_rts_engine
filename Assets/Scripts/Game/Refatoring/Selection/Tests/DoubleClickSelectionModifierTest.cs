@@ -24,8 +24,6 @@ namespace Tests
         {
             Assert.IsNotNull(modifier);
         }
-
-
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldApplyModifier(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
         {
@@ -48,7 +46,7 @@ namespace Tests
             modifier.WhenForAnyArgs(x => x.GetAllGroupableOnScreen(default)).DoNotCallBase();
             modifier.GetAllGroupableOnScreen(default).ReturnsForAnyArgs(expected);
 
-            var result = modifier.Apply(oldSelection, newSelection, newSelection, selected);
+            var result = modifier.Apply(oldSelection, newSelection, selected);
 
             CollectionAssert.AreEquivalent(expected, result);
         }

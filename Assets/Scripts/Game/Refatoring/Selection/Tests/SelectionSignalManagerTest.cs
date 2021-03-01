@@ -7,8 +7,6 @@ using RTSEngine.Refactoring;
 using RTSEngine.Signal;
 using RTSEngine.Utils;
 using System.Collections.Generic;
-
-
 namespace Tests
 {
     [TestFixture]

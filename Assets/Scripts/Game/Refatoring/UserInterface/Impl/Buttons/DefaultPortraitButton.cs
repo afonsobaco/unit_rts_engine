@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using RTSEngine.Utils;
+using RTSEngine.Core;
 using Zenject;
 
 namespace RTSEngine.Refactoring
@@ -15,8 +14,11 @@ namespace RTSEngine.Refactoring
 
         public override void DoPress()
         {
-            Debug.Log("Portrait Press");
+            if (ObjectReference is ISelectable)
+                Debug.Log((ObjectReference as ISelectable).Position);
         }
-
+        public class Factory : PlaceholderFactory<DefaultPortraitButton>
+        {
+        }
     }
 }

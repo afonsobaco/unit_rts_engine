@@ -77,8 +77,6 @@ namespace Tests
             Assert.NotNull(_userInterface.Highlighted);
             Assert.AreEqual(selectables[0], _userInterface.Highlighted);
         }
-
-
         [Test]
         public void ShouldGetNullHighlightedWhenDoPreviousSubGroupWithEmptySelection()
         {

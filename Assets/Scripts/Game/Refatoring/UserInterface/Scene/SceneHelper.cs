@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using RTSEngine.Commons;
 using RTSEngine.Core;
 using RTSEngine.Signal;
 using RTSEngine.Refactoring;
@@ -10,13 +12,6 @@ using Zenject;
 
 public class SceneHelper : MonoBehaviour
 {
-    public RectTransform portrait;
-    public GridLayoutGroup grid;
-    public GridLayoutGroup banner;
-    public BannerButton bannerPrefab;
-    public MiniatureButton miniaturePrefab;
-    public PortraitButton portraitPrefab;
-
     private List<ISelectable> mainList = new List<ISelectable>();
     const string WIZZARD = "Wizzard";
     const string WARRIOR = "Warrior";
@@ -26,20 +21,25 @@ public class SceneHelper : MonoBehaviour
     private SignalBus _signalBus;
     private Dictionary<object, ISelectable[]> parties;
 
+    private EqualityComparerComponent _equalityComparer;
+    private GroupingComparerComponent _groupingComparer;
+
     [Inject]
-    public void Construct(SignalBus signalBus, UserInterface userInterface)
+    public void Construct(SignalBus signalBus, UserInterface userInterface, EqualityComparerComponent equalityComparer, GroupingComparerComponent groupingComparer)
     {
         this._signalBus = signalBus;
         this._userInterface = userInterface;
+        this._equalityComparer = equalityComparer;
+        this._groupingComparer = groupingComparer;
     }
 
     private void Start()
     {
         for (var i = 0; i < 5; i++)
         {
-            mainList.Add(CreateMiniature(WIZZARD, i));
-            mainList.Add(CreateMiniature(WARRIOR, i + 5));
-            mainList.Add(CreateMiniature(ARCHER, i + 10));
+            mainList.Add(CreateSelectable(WIZZARD, i));
+            mainList.Add(CreateSelectable(WARRIOR, i + 5));
+            mainList.Add(CreateSelectable(ARCHER, i + 10));
         }
 
         parties = new Dictionary<object, ISelectable[]>();
@@ -47,79 +47,66 @@ public class SceneHelper : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            _signalBus.Fire(new SelectionUpdateSignal() { Selection = GetRandomSelection() });
-            UpdateAll();
-        }
+        AddRandomSelection();
+        ChangeSubGroup();
+        AddRemoveSelectParty();
 
+    }
+
+    private void AddRemoveSelectParty()
+    {
+        int groupKeyPressed = GameUtils.GetAnyPartyKeyPressed();
+        if (groupKeyPressed > 0)
+        {
+            if (Input.GetKey(KeyCode.Z))
+            {
+                if (_userInterface.Selection.Length > 0)
+                    parties[groupKeyPressed] = _userInterface.Selection;
+                else
+                    parties.Remove(groupKeyPressed);
+                _signalBus.Fire(new PartyUpdateSignal() { Parties = this.parties });
+            }
+            else
+            {
+                ISelectable[] selectables;
+                if (!parties.TryGetValue(groupKeyPressed, out selectables))
+                {
+                    selectables = new ISelectable[0];
+                }
+                _signalBus.Fire(new SelectionUpdateSignal() { Selection = selectables });
+            }
+        }
+    }
+
+    private void ChangeSubGroup()
+    {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             _signalBus.Fire(new AlternateSubGroupSignal() { Previous = Input.GetKey(KeyCode.LeftShift) });
-            UpdateAll();
-        }
-
-        int groupKeyPressed = GameUtils.GetAnyPartyKeyPressed();
-        if (groupKeyPressed > 0 && Input.GetKey(KeyCode.Z))
-        {
-            if (_userInterface.Selection.Length > 0)
-                parties[groupKeyPressed] = _userInterface.Selection;
-            else
-                parties.Remove(groupKeyPressed);
-            _signalBus.Fire(new PartyUpdateSignal() { Parties = this.parties });
-            UpdateAll();
-        }
-
-    }
-
-    public void UpdateAll()
-    {
-        UpdateGrid();
-        UpdatePortrait();
-        UpdateBanners();
-    }
-
-    private void UpdatePortrait()
-    {
-        RemoveChildren(portrait.transform);
-        if (_userInterface.Highlighted != null)
-        {
-            var instance = GameObject.Instantiate(portraitPrefab);
-            instance.transform.SetParent(portrait.transform, false);
-            var miniaure = _userInterface.Highlighted as MiniatureClass;
-            var p = CreatePortrait(miniaure.Type);
-            instance.Selectable = p;
         }
     }
 
-    private void UpdateGrid()
+    private void AddRandomSelection()
     {
-        RemoveChildren(grid.transform);
-        foreach (ISelectable item in _userInterface.Selection)
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            var instance = GameObject.Instantiate(miniaturePrefab);
-            instance.transform.SetParent(grid.transform, false);
-            instance.Selectable = item as MiniatureClass;
+            _signalBus.Fire(new SelectionUpdateSignal() { Selection = GetRandomSelection() });
         }
     }
 
-    private void UpdateBanners()
+    public void UpdateAll(ChangeSelectionSignal obj)
     {
-        RemoveChildren(banner.transform);
-        foreach (var item in _userInterface.Parties)
-        {
-            var instance = GameObject.Instantiate(bannerPrefab);
-            instance.transform.SetParent(banner.transform, false);
-            instance.PartyId = item.Key;
-        }
+        ISelectable[] selection = GameUtils.GetOrderedSelection(obj.Selection, _equalityComparer, _groupingComparer);
+        _signalBus.Fire(new SelectionUpdateSignal() { Selection = selection });
     }
 
-    private void RemoveChildren(Transform transf)
+    private GameSelectable CreateSelectable(string type, int index)
     {
-        foreach (Transform item in transf)
-        {
-            GameObject.Destroy(item.gameObject);
-        }
+        var selectable = new GameSelectable();
+        selectable.Type = type;
+        selectable.Index = index;
+        selectable.Position = new Vector3(Random.Range(0, 5), 0, Random.Range(0, 5));
+        return selectable;
     }
 
     private ISelectable[] GetRandomSelection()
@@ -134,23 +121,6 @@ public class SceneHelper : MonoBehaviour
         }
         result.Sort(new Comparer());
         return result.ToArray();
-    }
-
-    private MiniatureClass CreateMiniature(string type, int index)
-    {
-        var miniature = new MiniatureClass();
-        miniature.Type = type;
-        miniature.Index = index;
-        miniature.Position = new Vector3(Random.Range(0, 5), 0, Random.Range(0, 5));
-        return miniature;
-    }
-
-    private PortraitClass CreatePortrait(string name)
-    {
-        var portrait = new PortraitClass();
-        portrait.Name = name;
-        portrait.Position = new Vector3(Random.Range(0, 5), 0, Random.Range(0, 5));
-        return portrait;
     }
 
     private class Comparer : IComparer<ISelectable>

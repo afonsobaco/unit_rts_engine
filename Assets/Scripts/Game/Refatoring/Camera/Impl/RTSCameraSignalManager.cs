@@ -37,8 +37,6 @@ namespace RTSEngine.Refactoring
             var desiredZoom = _camera.GetCameraZoom(signal.Zoom, transform.forward, Time.deltaTime);
             transform.position = _cameraManager.DoCameraZoom(transform, desiredZoom);
         }
-
-
         public void OnCameraGoToPositionSignal(CameraGoToPositionSignal signal)
         {
             Transform transform = Camera.main.transform;

@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using RTSEngine.Core;
+using RTSEngine.Commons;
 using RTSEngine.Signal;
 using RTSEngine.Utils;
 using Zenject;
@@ -11,40 +12,27 @@ namespace RTSEngine.Refactoring
     public class UserInterfaceManager
     {
         private GameSignalBus _signalBus;
+        private EqualityComparerComponent _equalityComparer;
 
-        public UserInterfaceManager(GameSignalBus signalBus)
+        public UserInterfaceManager(GameSignalBus signalBus, EqualityComparerComponent equalityComparer)
         {
             _signalBus = signalBus;
+            _equalityComparer = equalityComparer;
         }
 
-        public void DoMiniatureClicked(ISelectable[] selection, ISelectable clicked, bool toRemove, bool asSubGroup)
+        public void DoMiniatureClicked(ISelectable clicked)
         {
-            List<ISelectable> newSelection = new List<ISelectable>(selection);
-            List<ISelectable> subGroup = new List<ISelectable>();
-
-            if (asSubGroup)
-                subGroup = GetAllFromSameSubGroup(selection, clicked);
-            else
-                subGroup.Add(clicked);
-
-            if (toRemove)
-                newSelection.RemoveAll(x => subGroup.Contains(x));
-            else
-                newSelection = subGroup;
-
-            _signalBus.Fire(new ChangeSelectionSignal() { Selection = newSelection.ToArray() });
+            if (clicked != null)
+            {
+                _signalBus.Fire(new ChangeSelectionSignal() { Selection = new ISelectable[] { clicked } });
+            }
         }
 
-        private static List<ISelectable> GetAllFromSameSubGroup(ISelectable[] selection, ISelectable selected)
+        private List<ISelectable> GetAllFromSameSubGroup(ISelectable[] selection, ISelectable selected)
         {
             List<ISelectable> selectables = selection.ToList().FindAll(x =>
             {
-                if (x is IGroupable)
-                {
-                    var item = x as IGroupable;
-                    return item.IsCompatible(selected);
-                }
-                return false;
+                return _equalityComparer.Equals(x, selected);
             });
             return selectables;
         }
@@ -59,27 +47,11 @@ namespace RTSEngine.Refactoring
             }
         }
 
-        public void DoBannerClicked(ISelectable[] selection, ISelectable[] group, bool toRemove)
+        public void DoBannerClicked(ISelectable[] group)
         {
             if (group != null)
             {
-                List<ISelectable> newSelection = new List<ISelectable>(selection);
-                if (toRemove)
-                {
-                    if (group.ToList().TrueForAll(x => newSelection.Contains(x)))
-                    {
-                        newSelection.RemoveAll(x => group.Contains(x));
-                    }
-                    else
-                    {
-                        newSelection = newSelection.Union(group).ToList();
-                    }
-                }
-                else
-                {
-                    newSelection = new List<ISelectable>(group);
-                }
-                _signalBus.Fire(new ChangeSelectionSignal() { Selection = newSelection.ToArray() });
+                _signalBus.Fire(new SelectionUpdateSignal() { Selection = group });
             }
         }
 

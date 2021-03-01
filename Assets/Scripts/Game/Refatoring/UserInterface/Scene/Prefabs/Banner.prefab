@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 1464685420131850311}
   - component: {fileID: 7675089872460866899}
   - component: {fileID: 1422146848948173846}
-  - component: {fileID: -7485155944682791474}
+  - component: {fileID: 8768189857451257424}
   m_Layer: 5
-  m_Name: Miniature
+  m_Name: Banner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -120,8 +120,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -7485155944682791474}
-        m_MethodName: Clicked
+      - m_Target: {fileID: 8768189857451257424}
+        m_MethodName: DoClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -131,7 +131,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &-7485155944682791474
+--- !u!114 &8768189857451257424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,10 +140,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2210446483931723651}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a519b2799d3efb14a9c00c622d6e3c5f, type: 3}
+  m_Script: {fileID: 11500000, guid: 19b44cbfbadf64744b57fe02cb361b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _containerSource: 2
 --- !u!1 &4909320275083496941
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,10 +209,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 10
+    m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
+    m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0

@@ -31,8 +31,6 @@ namespace Tests
         {
             Assert.NotNull(_selectionInterface);
         }
-
-
         [Test]
         public void ShouldGetSelectionFromAreaSelectionType()
         {

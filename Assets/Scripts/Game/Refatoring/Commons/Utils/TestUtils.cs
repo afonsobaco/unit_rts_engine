@@ -99,9 +99,6 @@ namespace Tests.Utils
             if (list.Length < otherCollection.Length) return collectionName + " Contains SOME of " + otherCollectionName + "";
             return collectionName + " Contains ALL of " + otherCollectionName + "";
         }
-
-
-
         private static CaseStruct[] SelectionList()
         {
             List<CaseStruct> list = new List<CaseStruct>();

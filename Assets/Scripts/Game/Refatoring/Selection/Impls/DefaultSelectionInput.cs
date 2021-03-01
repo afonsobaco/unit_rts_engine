@@ -4,8 +4,6 @@ using UnityEngine;
 using RTSEngine.Utils;
 using RTSEngine.Signal;
 using Zenject;
-
-
 namespace RTSEngine.Refactoring
 {
     public class DefaultSelectionInput : MonoBehaviour

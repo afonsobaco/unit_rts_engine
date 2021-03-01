@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using RTSEngine.Utils;
+﻿using UnityEngine;
 using Zenject;
 
 namespace RTSEngine.Refactoring
@@ -17,7 +14,6 @@ namespace RTSEngine.Refactoring
         {
             Debug.Log("Miniature Press");
         }
-
         public class Factory : PlaceholderFactory<DefaultMiniatureButton>
         {
         }

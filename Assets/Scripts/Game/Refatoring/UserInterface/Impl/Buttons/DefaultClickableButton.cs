@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using RTSEngine.Core;
 using RTSEngine.Utils;
 using Zenject;
 
@@ -9,8 +8,11 @@ namespace RTSEngine.Refactoring
     public abstract class DefaultClickableButton : MonoBehaviour, UIClickable
     {
         private GameSignalBus _signalBus;
-        private bool _pressing;
-        private bool _inside;
+        private bool _isMousePressing;
+        private bool _isHover;
+
+        private object _objectReference;
+        public object ObjectReference { get => _objectReference; set => _objectReference = value; }
         protected GameSignalBus SignalBus { get => _signalBus; set => _signalBus = value; }
 
         [Inject]
@@ -21,7 +23,7 @@ namespace RTSEngine.Refactoring
 
         private void Update()
         {
-            if (_pressing && _inside)
+            if (_isMousePressing && _isHover)
             {
                 DoPress();
             }
@@ -30,16 +32,18 @@ namespace RTSEngine.Refactoring
         public abstract void DoClick();
 
         public abstract void DoPress();
+        public virtual void UpdateApperance() { }
 
         public virtual void OnPress(bool pressing)
         {
-            this._pressing = pressing;
+            this._isMousePressing = pressing;
         }
 
-        public virtual void OnHover(bool inside)
+        public virtual void OnHover(bool hover)
         {
-            this._inside = inside;
+            this._isHover = hover;
         }
+
 
     }
 }

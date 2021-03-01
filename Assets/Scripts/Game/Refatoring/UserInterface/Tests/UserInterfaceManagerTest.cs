@@ -7,6 +7,7 @@ using RTSEngine.Signal;
 using NSubstitute;
 using Tests.Utils;
 using RTSEngine.Utils;
+using RTSEngine.Commons;
 
 namespace Tests
 {
@@ -14,13 +15,15 @@ namespace Tests
     public class UserInterfaceManagerTest
     {
         private UserInterfaceManager _userInterfaceManager;
+        private EqualityComparerComponent _equalityComparer;
         private GameSignalBus _signalBus;
 
         [SetUp]
         public void SetUp()
         {
             _signalBus = Substitute.ForPartsOf<GameSignalBus>(new object[] { default });
-            _userInterfaceManager = Substitute.ForPartsOf<UserInterfaceManager>(new object[] { _signalBus });
+            _equalityComparer = Substitute.ForPartsOf<EqualityComparerComponent>();
+            _userInterfaceManager = Substitute.ForPartsOf<UserInterfaceManager>(new object[] { _signalBus, _equalityComparer });
             _signalBus.WhenForAnyArgs(x => x.Fire(default)).DoNotCallBase();
         }
 
@@ -35,9 +38,7 @@ namespace Tests
         {
             ISelectable[] selection = GetSubGroups(4);
             ISelectable clicked = selection[0];
-            bool toRemove = false;
-            bool asSubGroup = false;
-            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asSubGroup);
+            _userInterfaceManager.DoMiniatureClicked(clicked);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, new ISelectable[] { clicked })
             ));
@@ -49,9 +50,7 @@ namespace Tests
             ISelectable[] selection = GetSubGroups(4);
             ISelectable clicked = selection[0];
             ISelectable[] expected = selection.ToList().FindAll(x => !x.Equals(clicked)).ToArray();
-            bool toRemove = true;
-            bool asSubGroup = false;
-            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asSubGroup);
+            _userInterfaceManager.DoMiniatureClicked(clicked);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, expected)
             ));
@@ -64,9 +63,7 @@ namespace Tests
             ISelectable[] selection = GetSubGroups(Amount);
             ISelectable clicked = selection[0];
             ISelectable[] expected = selection.ToList().FindAll(x => x.Index < Amount / 2).ToArray();
-            bool toRemove = false;
-            bool asSubGroup = true;
-            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asSubGroup);
+            _userInterfaceManager.DoMiniatureClicked(clicked);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, expected)
             ));
@@ -79,9 +76,7 @@ namespace Tests
             ISelectable[] selection = GetSubGroups(Amount);
             ISelectable clicked = selection[0];
             ISelectable[] expected = selection.ToList().FindAll(x => x.Index >= Amount / 2).ToArray();
-            bool toRemove = true;
-            bool asSubGroup = true;
-            _userInterfaceManager.DoMiniatureClicked(selection, clicked, toRemove, asSubGroup);
+            _userInterfaceManager.DoMiniatureClicked(clicked);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, expected)
             ));
@@ -104,12 +99,10 @@ namespace Tests
                 arg => arg.Position == clicked.Position
             ));
         }
-
-
         [Test]
         public void ShouldDoNothingWhenDoBannerClickedWithNull()
         {
-            _userInterfaceManager.DoBannerClicked(default, default, default);
+            _userInterfaceManager.DoBannerClicked(default);
             _signalBus.DidNotReceiveWithAnyArgs().Fire(default);
         }
 
@@ -118,7 +111,7 @@ namespace Tests
         {
             ISelectable[] selection = GetSubGroups(4);
             ISelectable[] group = GetSubGroups(4);
-            _userInterfaceManager.DoBannerClicked(selection, group, false);
+            _userInterfaceManager.DoBannerClicked(group);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, group)
             ));
@@ -130,7 +123,7 @@ namespace Tests
             ISelectable[] selection = GetSubGroups(6);
             ISelectable[] group = new ISelectable[] { selection[0], selection[1], selection[2] };
             ISelectable[] expected = selection.ToList().FindAll(x => !group.Contains(x)).ToArray();
-            _userInterfaceManager.DoBannerClicked(selection, group, true);
+            _userInterfaceManager.DoBannerClicked(group);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, expected)
             ));
@@ -142,7 +135,7 @@ namespace Tests
             ISelectable[] selection = GetSubGroups(4);
             ISelectable[] group = GetSubGroups(4);
             ISelectable[] expected = selection.ToList().Union(group).ToArray();
-            _userInterfaceManager.DoBannerClicked(selection, group, true);
+            _userInterfaceManager.DoBannerClicked(group);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, expected)
             ));
@@ -155,7 +148,7 @@ namespace Tests
             ISelectable[] group = GetSubGroups(3);
             ISelectable[] selection = new ISelectable[] { group[0], aux[0] };
             ISelectable[] expected = selection.ToList().Union(group).ToArray();
-            _userInterfaceManager.DoBannerClicked(selection, group, true);
+            _userInterfaceManager.DoBannerClicked(group);
             _signalBus.Received().Fire(Arg.Is<ChangeSelectionSignal>(
                 arg => CompareArrays(arg.Selection, expected)
             ));

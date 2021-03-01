@@ -25,8 +25,6 @@ namespace Tests
         {
             Assert.IsNotNull(modifier);
         }
-
-
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldLimitSelectionToPassedValue(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes, int[] actualSelection, int limit)
         {
@@ -40,9 +38,6 @@ namespace Tests
 
             CollectionAssert.AreEquivalent(expected, result);
         }
-
-
-
         private static IEnumerable<TestCaseData> Scenarios
         {
             get

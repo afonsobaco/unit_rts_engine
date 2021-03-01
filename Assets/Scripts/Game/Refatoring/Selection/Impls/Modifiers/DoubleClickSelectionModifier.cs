@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Zenject;
 using RTSEngine.Core;
+using RTSEngine.Commons;
 using System;
 
 namespace RTSEngine.Refactoring
@@ -42,16 +43,16 @@ namespace RTSEngine.Refactoring
             _modifier.EqualityComparer = _equalityComparer;
         }
 
-        public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
+        public override ISelectable[] Apply(SelectionInfo info)
         {
             StartVariables();
-            var doubleClicked = GetDoubleClicked(newSelection);
-            UpdateLastClicked(newSelection);
+            var doubleClicked = GetDoubleClicked(info.NewSelection);
+            UpdateLastClicked(info.NewSelection);
             if (doubleClicked != null)
             {
-                return this._modifier.Apply(oldSelection, newSelection, actualSelection, doubleClicked);
+                return this._modifier.Apply(info.OldSelection, info.ActualSelection, doubleClicked);
             }
-            return actualSelection;
+            return info.ActualSelection;
         }
 
         private void UpdateLastClicked(ISelectable[] newSelection)
@@ -74,7 +75,7 @@ namespace RTSEngine.Refactoring
             public IAreaSelectionType AreaSelectionType { get; set; }
             public EqualityComparerComponent EqualityComparer { get; internal set; }
 
-            public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection, ISelectable doubleClicked)
+            public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] actualSelection, ISelectable doubleClicked)
             {
                 var result = new List<ISelectable>(actualSelection);
                 if (doubleClicked != null)
@@ -108,7 +109,7 @@ namespace RTSEngine.Refactoring
             public virtual ISelectable[] GetFromSubGroupOnScreen(ISelectable selected)
             {
                 var allOnScreen = AreaSelectionType.GetAllInsideViewportArea(GetMainList(), InitialViewportPoint, FinalViewportPoint);
-                return SubGroupUtil.GetFromSubGroupOnScreen(allOnScreen, selected, EqualityComparer);
+                return SubGroupUtil.FilterBySubGroup(allOnScreen, selected, EqualityComparer);
             }
 
             public virtual ISelectable[] GetMainList()

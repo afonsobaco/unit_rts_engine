@@ -13,10 +13,7 @@ namespace RTSEngine.Refactoring
     {
 
         [SerializeField] private RectTransform _selectionBox;
-        [SerializeField] private GraphicRaycaster raycaster;
-
-
-        public override void GetAreaSelectionInput()
+        [SerializeField] private GraphicRaycaster raycaster; public override void GetAreaSelectionInput()
         {
             PreventSelection = WasGUIClicked();
             base.GetAreaSelectionInput();

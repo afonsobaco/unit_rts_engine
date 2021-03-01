@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  limit: 10
+  _limit: 20
 --- !u!114 &574790112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  key: 304
+  _key: 304
 --- !u!114 &574790113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,8 +240,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22adfdf2511669f47af235d07022c427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
-  equalityComparer: {fileID: 574790118}
 --- !u!114 &574790118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,9 +265,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
-  key: 306
-  initialViewportPoint: {x: 0, y: 0}
-  finalViewportPoint: {x: 1, y: 1}
+  _key: 306
+  _initialViewportPoint: {x: 0, y: 0}
+  _finalViewportPoint: {x: 1, y: 1}
+  _equalityComparer: {fileID: 0}
 --- !u!114 &574790120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,7 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  orderOfSelection: {fileID: 574790120}
+  _typePriorityHelper: {fileID: 0}
 --- !u!114 &574790122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,7 +320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  modifierHelper: {fileID: 574790122}
+  _modifierHelper: {fileID: 0}
 --- !u!1 &638685779
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,7 +423,6 @@ GameObject:
   m_Component:
   - component: {fileID: 941733452}
   - component: {fileID: 941733451}
-  - component: {fileID: 941733450}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -432,20 +430,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &941733450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 941733449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97a7d4d3d0dfdb340b83874bfdf5a4a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  runtimeSet: {fileID: 574790114}
-  modifiers: {fileID: 574790113}
 --- !u!114 &941733451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,8 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers:
-  - {fileID: 941733450}
+  _monoInstallers: []
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:

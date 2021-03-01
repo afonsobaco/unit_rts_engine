@@ -10,34 +10,24 @@ namespace RTSEngine.Refactoring
 {
     public class UserInterfaceInstaller : MonoInstaller
     {
-
-        [SerializeField] private RectTransform portraitPanel;
-        [SerializeField] private RectTransform itemPanel;
-        [SerializeField] private RectTransform miniaturePanel;
-        [SerializeField] private RectTransform bannerPanel;
-        [SerializeField] private RectTransform actionPanel;
-        [SerializeField] private GameObject bannerPrefab;
-        [SerializeField] private GameObject miniaturePrefab;
-        [SerializeField] private GameObject portraitPrefab;
-        [SerializeField] private GameObject actionPrefab;
-        [SerializeField] private GameObject itemPrefab;
+        [SerializeField] private DefaultActionButton _actionPrefab;
+        [SerializeField] private DefaultBannerButton _bannerPrefab;
+        [SerializeField] private DefaultItemButton _itemPrefab;
+        [SerializeField] private DefaultMiniatureButton _miniaturePrefab;
+        [SerializeField] private DefaultPortraitButton _portraitPrefab;
+        [SerializeField] private RectTransform _actionPanel;
+        [SerializeField] private RectTransform _bannerPanel;
+        [SerializeField] private RectTransform _itemPanel;
+        [SerializeField] private RectTransform _miniaturePanel;
+        [SerializeField] private RectTransform _portraitPanel;
 
         public override void Start()
         {
-            base.Start();
-            ClearPanel(portraitPanel);
-            ClearPanel(itemPanel);
-            ClearPanel(miniaturePanel);
-            ClearPanel(bannerPanel);
-            ClearPanel(actionPanel);
-        }
-
-        private static void ClearPanel(RectTransform panel)
-        {
-            foreach (Transform child in panel)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
+            ClearPanel(_portraitPanel);
+            ClearPanel(_itemPanel);
+            ClearPanel(_miniaturePanel);
+            ClearPanel(_bannerPanel);
+            ClearPanel(_actionPanel);
         }
 
         public override void InstallBindings()
@@ -45,6 +35,7 @@ namespace RTSEngine.Refactoring
             Container.Bind<UserInterfaceSignalManager>().AsSingle();
             Container.Bind<UserInterfaceManager>().AsSingle();
             Container.Bind<UserInterface>().AsSingle();
+            Container.Bind<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase);
 
             Container.DeclareSignal<SelectionUpdateSignal>();
             Container.DeclareSignal<PartyUpdateSignal>();
@@ -66,15 +57,30 @@ namespace RTSEngine.Refactoring
             Container.BindSignal<MapClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnMapClicked).FromResolve();
             Container.BindSignal<ActionClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnActionClicked).FromResolve();
 
-            Container.BindFactory<DefaultMiniatureButton, DefaultMiniatureButton.Factory>()
-                .FromComponentInNewPrefab(miniaturePrefab).OnInstantiated<DefaultMiniatureButton>(MiniatureCreated);
+            Container.BindFactory<DefaultMiniatureButton, DefaultMiniatureButton.Factory>().FromComponentInNewPrefab(_miniaturePrefab);
+            Container.BindFactory<DefaultPortraitButton, DefaultPortraitButton.Factory>().FromComponentInNewPrefab(_portraitPrefab);
+            Container.BindFactory<DefaultBannerButton, DefaultBannerButton.Factory>().FromComponentInNewPrefab(_bannerPrefab);
+            Container.BindFactory<DefaultItemButton, DefaultItemButton.Factory>().FromComponentInNewPrefab(_itemPrefab);
+            Container.BindFactory<DefaultActionButton, DefaultActionButton.Factory>().FromComponentInNewPrefab(_actionPrefab);
         }
 
-        private void MiniatureCreated(InjectContext ctx, DefaultMiniatureButton button)
+        private void UpdateUserInterfaceBase(InjectContext ctx, UserInterfaceBase userInterfaceBase)
         {
-            button.transform.SetParent(miniaturePanel.transform, false);
+            userInterfaceBase.ActionPanel = _actionPanel;
+            userInterfaceBase.BannerPanel = _bannerPanel;
+            userInterfaceBase.ItemPanel = _itemPanel;
+            userInterfaceBase.MiniaturePanel = _miniaturePanel;
+            userInterfaceBase.PortraitPanel = _portraitPanel;
         }
-
-
+        public void ClearPanel(RectTransform panel)
+        {
+            if (panel)
+            {
+                foreach (Transform child in panel)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+            }
+        }
     }
 }

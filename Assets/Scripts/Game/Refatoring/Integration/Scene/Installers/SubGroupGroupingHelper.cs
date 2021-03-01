@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
+using RTSEngine.Commons;
 using System.Linq;
 
 namespace RTSEngine.Refactoring

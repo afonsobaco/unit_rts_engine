@@ -24,10 +24,10 @@ namespace RTSEngine.Refactoring
             _modifier.CanBeGroupedHelper = _modifierHelper;
         }
 
-        public override ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
+        public override ISelectable[] Apply(SelectionInfo info)
         {
             StartVariables();
-            return this._modifier.Apply(actualSelection);
+            return this._modifier.Apply(info.ActualSelection);
         }
 
         public class Modifier
