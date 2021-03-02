@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
-namespace RTSEngine.Refactoring
+
+namespace RTSEngine.Refactoring.Scene.Selection
 {
-    public class TypePriorityInSelectionHelper : AbstractModifierHelper
+    public class SelectionSceneTypePriorityHelper : AbstractModifierHelper
     {
         public override ISelectable[] Apply(ISelectable[] selection)
         {
@@ -30,9 +31,12 @@ namespace RTSEngine.Refactoring
 
         public List<IGrouping<int, ISelectable>> FakePriorityGroup(ISelectable[] selection)
         {
-            return selection.GroupBy(x => (x as DefaultObject).selectionOrder).ToList();
+            //TODO fix this
+            // return selection.GroupBy(x => (x as DefaultObject).selectionOrder).ToList();
+            return default;
         }
 
+        //TODO remove this
         public class ObjectComparer : IComparer<IGrouping<int, ISelectable>>
         {
             public int Compare(IGrouping<int, ISelectable> x, IGrouping<int, ISelectable> y)

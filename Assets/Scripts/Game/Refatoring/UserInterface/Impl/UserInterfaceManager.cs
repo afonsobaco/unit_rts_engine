@@ -24,17 +24,8 @@ namespace RTSEngine.Refactoring
         {
             if (clicked != null)
             {
-                _signalBus.Fire(new ChangeSelectionSignal() { Selection = new ISelectable[] { clicked } });
+                _signalBus.Fire(new IndividualSelectionSignal() { Clicked = clicked, OnSelection = true });
             }
-        }
-
-        private List<ISelectable> GetAllFromSameSubGroup(ISelectable[] selection, ISelectable selected)
-        {
-            List<ISelectable> selectables = selection.ToList().FindAll(x =>
-            {
-                return _equalityComparer.Equals(x, selected);
-            });
-            return selectables;
         }
 
         public void DoPortraitClicked(ISelectable clicked)
@@ -47,20 +38,26 @@ namespace RTSEngine.Refactoring
             }
         }
 
-        public void DoBannerClicked(ISelectable[] group)
+        public void DoBannerClicked(object partyId)
         {
-            if (group != null)
+            if (partyId != null)
             {
-                _signalBus.Fire(new SelectionUpdateSignal() { Selection = group });
+                _signalBus.Fire(new PartySelectionSignal() { CreateNew = false, PartyId = partyId });
             }
         }
 
         public void DoMapClicked(ISelectable selection)
         {
+            if (selection != null)
+            {
+            }
         }
 
         public void DoActionClicked(ISelectable selection)
         {
+            if (selection != null)
+            {
+            }
         }
     }
 }

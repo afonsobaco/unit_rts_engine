@@ -38,9 +38,6 @@ namespace RTSEngine.Refactoring
             Container.BindSignal<PartySelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnPartySignal).FromResolve();
             Container.BindSignal<IndividualSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnIndividualSignal).FromResolve();
 
-        }        // public RuntimeSetComponent GetRuntimeSet()
-        // {
-        //     return runtimeSet;
-        // }
+        }
     }
 }

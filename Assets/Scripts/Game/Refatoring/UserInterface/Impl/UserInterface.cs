@@ -17,7 +17,12 @@ namespace RTSEngine.Refactoring
         public ISelectable[] Selection { get => _selection; set => _selection = value; }
         public Dictionary<object, ISelectable[]> Parties { get => _parties; set => _parties = value; }
 
-        [Inject] private EqualityComparerComponent _equalityComparer;
+        private EqualityComparerComponent _equalityComparer;
+
+        public UserInterface(EqualityComparerComponent equalityComparer)
+        {
+            _equalityComparer = equalityComparer;
+        }
 
         public void DoSelectionUpdate(ISelectable[] selection)
         {
@@ -63,7 +68,13 @@ namespace RTSEngine.Refactoring
                 _highlighted = null;
             if (_highlighted != null)
             {
-                var index = _selection.ToList().FindLastIndex(x => { return AreCompatible(x, _highlighted); });
+                var index = _selection.ToList().FindLastIndex(x =>
+                {
+                    Debug.Log(x);
+                    Debug.Log(_highlighted);
+                    return AreCompatible(x, _highlighted);
+
+                });
                 if (index < _selection.Length - 1)
                     _highlighted = _selection[index + 1];
                 else

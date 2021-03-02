@@ -41,7 +41,6 @@ public class SceneHelper : MonoBehaviour
             mainList.Add(CreateSelectable(WARRIOR, i + 5));
             mainList.Add(CreateSelectable(ARCHER, i + 10));
         }
-
         parties = new Dictionary<object, ISelectable[]>();
     }
 
@@ -50,7 +49,6 @@ public class SceneHelper : MonoBehaviour
         AddRandomSelection();
         ChangeSubGroup();
         AddRemoveSelectParty();
-
     }
 
     private void AddRemoveSelectParty()

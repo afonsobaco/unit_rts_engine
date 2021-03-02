@@ -11,8 +11,6 @@ using RTSEngine.Commons;
 
 public class SceneHelperInstaller : MonoInstaller
 {
-    [Inject] private SignalBus _signalBus;
-
     public override void InstallBindings()
     {
         Container.DeclareSignal<ChangeSelectionSignal>();

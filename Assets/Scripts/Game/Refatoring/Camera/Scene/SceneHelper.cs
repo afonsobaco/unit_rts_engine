@@ -17,7 +17,13 @@ using RTSEngine.Signal;
 public class SceneHelper : MonoBehaviour
 {
     [SerializeField] private float viewportOffset;
-    [Inject] private SignalBus _signalBus;
+    private SignalBus _signalBus;
+
+    [Inject]
+    public void Construct(SignalBus signalBus)
+    {
+        _signalBus = signalBus;
+    }
 
     private void Update()
     {

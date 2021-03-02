@@ -14,20 +14,20 @@ namespace RTSEngine.Refactoring
         [Space]
         [Header("Modifier attributes")]
         [SerializeField] private float _doubleClickTime = 0.3f;
-        [SerializeField] private Vector2 _initialViewportPoint = Vector2.zero;
-        [SerializeField] private Vector2 _finalViewportPoint = Vector2.one;
-        [SerializeField] private EqualityComparerComponent _equalityComparer;
-        private IRuntimeSet<ISelectable> _mainList;
+        private EqualityComparerComponent _equalityComparer;
         private IAreaSelectionType _areaSelectionType;
+        private IRuntimeSet<ISelectable> _mainList;
+        private IViewportHelper _viewportHelper;
         private LastClicked _lastClicked;
-
         private Modifier _modifier;
 
         [Inject]
-        public void Constructor(IRuntimeSet<ISelectable> mainList, IAreaSelectionType areaSelectionType)
+        public void Construct(EqualityComparerComponent equalityComparer, IAreaSelectionType areaSelectionType, IRuntimeSet<ISelectable> mainList, IViewportHelper viewportHelper)
         {
-            _mainList = mainList;
             _areaSelectionType = areaSelectionType;
+            _equalityComparer = equalityComparer;
+            _mainList = mainList;
+            _viewportHelper = viewportHelper;
         }
 
         public override void StartVariables()
@@ -36,8 +36,7 @@ namespace RTSEngine.Refactoring
             {
                 _modifier = new Modifier();
             }
-            _modifier.InitialViewportPoint = _initialViewportPoint;
-            _modifier.FinalViewportPoint = _finalViewportPoint;
+            _modifier.ViewportHelper = _viewportHelper;
             _modifier.MainList = _mainList;
             _modifier.AreaSelectionType = _areaSelectionType;
             _modifier.EqualityComparer = _equalityComparer;
@@ -69,11 +68,11 @@ namespace RTSEngine.Refactoring
 
         public class Modifier
         {
-            public Vector2 InitialViewportPoint { get; set; }
-            public Vector2 FinalViewportPoint { get; set; }
-            public IRuntimeSet<ISelectable> MainList { get; set; }
-            public IAreaSelectionType AreaSelectionType { get; set; }
+
             public EqualityComparerComponent EqualityComparer { get; internal set; }
+            public IAreaSelectionType AreaSelectionType { get; set; }
+            public IRuntimeSet<ISelectable> MainList { get; set; }
+            public IViewportHelper ViewportHelper { get; set; }
 
             public ISelectable[] Apply(ISelectable[] oldSelection, ISelectable[] actualSelection, ISelectable doubleClicked)
             {
@@ -108,7 +107,7 @@ namespace RTSEngine.Refactoring
 
             public virtual ISelectable[] GetFromSubGroupOnScreen(ISelectable selected)
             {
-                var allOnScreen = AreaSelectionType.GetAllInsideViewportArea(GetMainList(), InitialViewportPoint, FinalViewportPoint);
+                var allOnScreen = AreaSelectionType.GetAllInsideViewportArea(GetMainList(), this.ViewportHelper.InitialViewportPoint, this.ViewportHelper.FinalViewportPoint);
                 return SubGroupUtil.FilterBySubGroup(allOnScreen, selected, EqualityComparer);
             }
 

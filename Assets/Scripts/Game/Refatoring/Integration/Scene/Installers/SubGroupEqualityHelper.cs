@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
 using RTSEngine.Commons;
+using RTSEngine.Utils;
 using System.Linq;
 
 namespace RTSEngine.Refactoring
@@ -11,8 +12,8 @@ namespace RTSEngine.Refactoring
     {
         public override bool Equals(ISelectable x, ISelectable y)
         {
-            var xGameSubGroup = GetGameSubGroup(x);
-            var yGameSubGroup = GetGameSubGroup(y);
+            var xGameSubGroup = GameUtils.GetComponent<GameDefaultObject, GameSubGroup>(x);
+            var yGameSubGroup = GameUtils.GetComponent<GameDefaultObject, GameSubGroup>(y);
             if (xGameSubGroup && yGameSubGroup)
             {
                 return xGameSubGroup.SubGroup.Equals(yGameSubGroup.SubGroup);
@@ -23,7 +24,7 @@ namespace RTSEngine.Refactoring
         public override int GetHashCode(ISelectable obj)
         {
             var result = obj.GetHashCode();
-            var gameSubGroup = GetGameSubGroup(obj);
+            var gameSubGroup = GameUtils.GetComponent<GameDefaultObject, GameSubGroup>(obj);
             if (gameSubGroup)
             {
                 return gameSubGroup.SubGroup.GetHashCode();
@@ -31,16 +32,7 @@ namespace RTSEngine.Refactoring
             return result;
         }
 
-        private GameSubGroup GetGameSubGroup(ISelectable obj)
-        {
-            var defaultObject = obj as GameDefaultObject;
-            if (defaultObject)
-            {
-                var gameSubGroup = defaultObject.GetComponent<GameSubGroup>();
-                return gameSubGroup;
-            }
-            return null;
-        }
+
 
     }
 }

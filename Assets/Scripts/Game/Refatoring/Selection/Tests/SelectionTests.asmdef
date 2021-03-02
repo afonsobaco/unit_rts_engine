@@ -6,7 +6,8 @@
         "Core",
         "Selection",
         "Commons",
-        "Zenject"
+        "Zenject",
+        "Zenject-TestFramework"
     ],
     "includePlatforms": [
         "Editor"

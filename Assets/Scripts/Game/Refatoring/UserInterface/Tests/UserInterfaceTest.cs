@@ -1,11 +1,7 @@
-﻿using System.Linq;
-using System;
-using System.Runtime.Serialization;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using NUnit.Framework;
-using UnityEngine;
 using RTSEngine.Core;
+using RTSEngine.Commons;
 using RTSEngine.Refactoring;
 using NSubstitute;
 using Tests.Utils;
@@ -16,11 +12,13 @@ namespace Tests
     public class UserInterfaceTest
     {
         private UserInterface _userInterface;
+        private EqualityTest _equalityComparer;
 
         [SetUp]
         public void SetUp()
         {
-            _userInterface = Substitute.ForPartsOf<UserInterface>();
+            _equalityComparer = new EqualityTest();
+            _userInterface = Substitute.ForPartsOf<UserInterface>(new object[] { _equalityComparer });
         }
 
         [Test]
@@ -126,6 +124,19 @@ namespace Tests
                 });
             }
             return selectables;
+        }
+
+        class EqualityTest : EqualityComparerComponent
+        {
+            public override bool Equals(ISelectable x, ISelectable y)
+            {
+                return x.Index.Equals(y.Index);
+            }
+
+            public override int GetHashCode(ISelectable obj)
+            {
+                return obj.Index.GetHashCode();
+            }
         }
     }
 }

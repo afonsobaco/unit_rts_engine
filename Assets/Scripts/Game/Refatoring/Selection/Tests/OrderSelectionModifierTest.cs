@@ -6,11 +6,12 @@ using NSubstitute;
 using RTSEngine.Refactoring;
 using System.Collections.Generic;
 using Tests.Utils;
+using Zenject;
 
 namespace Tests
 {
     [TestFixture]
-    public class OrderSelectionModifierTest
+    public class OrderSelectionModifierTest : ZenjectUnitTestFixture
     {
         private OrderSelectionModifier.Modifier modifier;
 
@@ -23,8 +24,8 @@ namespace Tests
             modifier = Substitute.ForPartsOf<OrderSelectionModifier.Modifier>();
             equalityComparer = Substitute.For<IEqualityComparer<ISelectable>>();
             groupingComparer = Substitute.For<IComparer<IGrouping<ISelectable, ISelectable>>>();
-            modifier.EqualityComparer = equalityComparer;
-            modifier.SubGroupComparer = groupingComparer;
+            Container.BindInstance(equalityComparer).AsSingle();
+            Container.BindInstance(groupingComparer).AsSingle();
         }
 
         [Test]
@@ -46,29 +47,6 @@ namespace Tests
             var result = modifier.Apply(newSelection);
 
             CollectionAssert.AreEquivalent(expected, result);
-        }
-
-        [TestCaseSource(nameof(Scenarios))]
-        public void ShouldOrderSubGroups(int amount, int[] newSelectionIndexes, int[] expectedIndexes)
-        {
-            ISelectable[] mainList = TestUtils.GetSomeObjects(amount);
-            ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
-            ISelectable[] expected = TestUtils.GetListByIndex(expectedIndexes, mainList);
-
-            equalityComparer.GetHashCode(default).ReturnsForAnyArgs(x =>
-            {
-                return ((x[0] as ISelectable).Index % 2).GetHashCode();
-            });
-            groupingComparer.Compare(default, default).ReturnsForAnyArgs(x =>
-            {
-                IGrouping<ISelectable, ISelectable> first = (x[0] as IGrouping<ISelectable, ISelectable>);
-                IGrouping<ISelectable, ISelectable> second = (x[1] as IGrouping<ISelectable, ISelectable>);
-                return (first.Key.Index % 2) - (second.Key.Index % 2);
-            });
-
-            var result = modifier.OrderSubGroups(newSelection);
-
-            CollectionAssert.AreEqual(expected, result);
         }
 
         private static IEnumerable<TestCaseData> Scenarios

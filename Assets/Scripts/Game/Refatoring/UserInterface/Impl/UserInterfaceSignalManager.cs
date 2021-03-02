@@ -35,24 +35,27 @@ namespace RTSEngine.Refactoring
             _userInterface.AlternateSubGroup(signal.Previous);
             _userInterfaceBase.UpdateAll();
         }
+
         public void OnMiniatureClicked(MiniatureClickedSignal signal)
         {
             _userInterfaceManager.DoMiniatureClicked(signal.Selected);
         }
+
         public void OnPortraitClicked(PortraitClickedSignal signal)
         {
             _userInterfaceManager.DoPortraitClicked(signal.Selection);
         }
+
         public void OnBannerClicked(BannerClickedSignal signal)
         {
-            Core.ISelectable[] value;
-            _userInterface.Parties.TryGetValue(signal.PartyId, out value);
-            _userInterfaceManager.DoBannerClicked(value);
+            _userInterfaceManager.DoBannerClicked(signal.PartyId);
         }
+
         public void OnMapClicked(MapClickedSignal signal)
         {
             _userInterfaceManager.DoMapClicked(signal.Selection);
         }
+
         public void OnActionClicked(ActionClickedSignal signal)
         {
             _userInterfaceManager.DoActionClicked(signal.Selection);

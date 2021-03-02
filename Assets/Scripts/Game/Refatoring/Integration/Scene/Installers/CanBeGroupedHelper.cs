@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
+using RTSEngine.Utils;
 namespace RTSEngine.Refactoring
 {
     public class CanBeGroupedHelper : AbstractModifierHelper
@@ -23,7 +24,7 @@ namespace RTSEngine.Refactoring
 
         private bool TypesDoesNotContainsElement(ISelectable element)
         {
-            var gameType = (element as GameDefaultObject).GetComponent<GameType>();
+            var gameType = GameUtils.GetComponent<GameDefaultObject, GameType>(element);
             return gameType && !types.Contains(gameType.Type);
         }
     }

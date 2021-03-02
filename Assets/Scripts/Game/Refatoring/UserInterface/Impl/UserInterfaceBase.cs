@@ -16,12 +16,22 @@ namespace RTSEngine.Refactoring
         private RectTransform _miniaturePanel;
         private RectTransform _portraitPanel;
 
-        [Inject] private UserInterface _userInterface;
-        [Inject] private DefaultActionButton.Factory _actionFactory;
-        [Inject] private DefaultBannerButton.Factory _bannerFactory;
-        [Inject] private DefaultItemButton.Factory _itemFactory;
-        [Inject] private DefaultMiniatureButton.Factory _miniatureFactory;
-        [Inject] private DefaultPortraitButton.Factory _portraitFactory;
+        private UserInterface _userInterface;
+        private DefaultActionButton.Factory _actionFactory;
+        private DefaultBannerButton.Factory _bannerFactory;
+        private DefaultItemButton.Factory _itemFactory;
+        private DefaultMiniatureButton.Factory _miniatureFactory;
+        private DefaultPortraitButton.Factory _portraitFactory;
+
+        public UserInterfaceBase(UserInterface userInterface, DefaultActionButton.Factory actionFactory, DefaultBannerButton.Factory bannerFactory, DefaultItemButton.Factory itemFactory, DefaultMiniatureButton.Factory miniatureFactory, DefaultPortraitButton.Factory portraitFactory)
+        {
+            _userInterface = userInterface;
+            _actionFactory = actionFactory;
+            _bannerFactory = bannerFactory;
+            _itemFactory = itemFactory;
+            _miniatureFactory = miniatureFactory;
+            _portraitFactory = portraitFactory;
+        }
 
         public RectTransform ActionPanel { get => _actionPanel; set => _actionPanel = value; }
         public RectTransform BannerPanel { get => _bannerPanel; set => _bannerPanel = value; }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using RTSEngine.Core;
 using RTSEngine.Utils;
 using RTSEngine.Commons;
-using System;
+using Zenject;
 
 namespace RTSEngine.Refactoring
 {
@@ -13,13 +13,17 @@ namespace RTSEngine.Refactoring
 
         [SerializeField] private SelectionType _type;
 
-        [Space]
-        [Header("Modifier attributes")]
-
-        [SerializeField] private GroupingComparerComponent _subGroupComparer;
-        [SerializeField] private EqualityComparerComponent _equalityComparer;
+        private GroupingComparerComponent _subGroupComparer;
+        private EqualityComparerComponent _equalityComparer;
 
         private Modifier _modifier;
+
+        [Inject]
+        public void Construct(GroupingComparerComponent subGroupComparer, EqualityComparerComponent equalityComparer)
+        {
+            _subGroupComparer = subGroupComparer;
+            _equalityComparer = equalityComparer;
+        }
 
         public override void StartVariables()
         {

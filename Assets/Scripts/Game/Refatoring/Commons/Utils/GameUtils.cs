@@ -25,7 +25,17 @@ namespace RTSEngine.Utils
 
         public static int GetAnyPartyKeyPressed()
         {
-            foreach (KeyValuePair<KeyCode, int> entry in _partyKeys)
+            return GetAnyKeyNumberPressed(_partyKeys);
+        }
+
+        public static int GetAnyNumpadKeyPressed()
+        {
+            return GetAnyKeyNumberPressed(_numpadKeys);
+        }
+
+        private static int GetAnyKeyNumberPressed(Dictionary<KeyCode, int> dict)
+        {
+            foreach (KeyValuePair<KeyCode, int> entry in dict)
             {
                 if (Input.GetKeyDown(entry.Key))
                 {
@@ -33,6 +43,17 @@ namespace RTSEngine.Utils
                 }
             }
             return 0;
+        }
+
+        public static G GetComponent<T, G>(ISelectable obj) where T : DefaultSelectable
+        {
+            var defaultObject = obj as T;
+            if (defaultObject)
+            {
+                var component = defaultObject.GetComponent<G>();
+                return component;
+            }
+            return default;
         }
 
         private static Dictionary<KeyCode, int> _partyKeys = new Dictionary<KeyCode, int>()
@@ -47,6 +68,20 @@ namespace RTSEngine.Utils
                 {KeyCode.Alpha8, 8},
                 {KeyCode.Alpha9, 9},
                 {KeyCode.Alpha0, 10}
+            };
+
+        private static Dictionary<KeyCode, int> _numpadKeys = new Dictionary<KeyCode, int>()
+            {
+                {KeyCode.Keypad0, 0},
+                {KeyCode.Keypad1, 1},
+                {KeyCode.Keypad2, 2},
+                {KeyCode.Keypad3, 3},
+                {KeyCode.Keypad4, 4},
+                {KeyCode.Keypad5, 5},
+                {KeyCode.Keypad6, 6},
+                {KeyCode.Keypad7, 7},
+                {KeyCode.Keypad8, 8},
+                {KeyCode.Keypad9, 9},
             };
     }
 }
