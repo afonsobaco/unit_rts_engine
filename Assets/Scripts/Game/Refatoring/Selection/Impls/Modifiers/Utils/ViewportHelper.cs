@@ -7,7 +7,9 @@ using System;
 
 namespace RTSEngine.Refactoring
 {
-    public class ViewportHelper : MonoBehaviour, IViewportHelper
+    [CreateAssetMenu(fileName = "ViewportHelper", menuName = "Installers/ViewportHelper")]
+
+    public class ViewportHelper : ScriptableObject, IViewportHelper
     {
         [SerializeField] private Vector2 _initialViewportPoint = Vector2.zero;
         [SerializeField] private Vector2 _finalViewportPoint = Vector2.one;

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7334894926e9410408ae4d80a8d6b177, type: 3}
-  m_Name: ModifiersSO
+  m_Script: {fileID: 11500000, guid: 20f1c9058bfee1240a5b366846f08466, type: 3}
+  m_Name: AdditiveSelectionModifier
   m_EditorClassIdentifier: 
-  modifiers:
-  - {fileID: 0}
-  - {fileID: 0}
+  active: 1
+  restrictedTypes: 
+  _key: 304

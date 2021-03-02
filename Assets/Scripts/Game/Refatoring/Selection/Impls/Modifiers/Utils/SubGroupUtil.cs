@@ -10,7 +10,7 @@ namespace RTSEngine.Refactoring
 
     public static class SubGroupUtil
     {
-        public static ISelectable[] FilterBySubGroup(ISelectable[] selectables, ISelectable selected, EqualityComparerComponent equalityComparer)
+        public static ISelectable[] FilterBySubGroup(ISelectable[] selectables, ISelectable selected, IEqualityComparer<ISelectable> equalityComparer)
         {
             List<ISelectable> result = new List<ISelectable>();
             if (selectables == null || selected == null || equalityComparer == null)

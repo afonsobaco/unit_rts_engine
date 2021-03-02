@@ -6,6 +6,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
+    [CreateAssetMenu(fileName = "TypePriorityInSelectionModifier", menuName = "Modifiers/TypePriorityInSelectionModifier")]
     public class TypePriorityInSelectionModifier : BaseSelectionModifier
     {
 

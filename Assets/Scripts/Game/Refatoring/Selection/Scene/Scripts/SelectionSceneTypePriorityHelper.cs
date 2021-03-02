@@ -2,47 +2,59 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Core;
+using Zenject;
 
 namespace RTSEngine.Refactoring.Scene.Selection
 {
     public class SelectionSceneTypePriorityHelper : AbstractModifierHelper
     {
+        [SerializeField] private List<string> partySelectionType;
+        [SerializeField] private List<string> singleSelectionType;
+
         public override ISelectable[] Apply(ISelectable[] selection)
         {
-            List<IGrouping<int, ISelectable>> items = FakePriorityGroup(selection);
-            items.Sort(new ObjectComparer());
-            List<ISelectable> selectables = new List<ISelectable>();
-            if (items.Count > 0)
+            if (selection.Length == 0)
             {
-                switch (items[0].Key)
+                return selection;
+            }
+            List<ISelectable> result = new List<ISelectable>();
+            var aux = GetPriorityFromTypeList(selection, partySelectionType);
+            if (aux.Count > 0)
+            {
+                result = aux;
+            }
+            else
+            {
+                aux = GetPriorityFromTypeList(selection, singleSelectionType);
+                if (aux.Count > 0)
                 {
-                    case 0:
-                        selectables = items[0].ToList();
-                        break;
-                    case 1:
-                        selectables.Add(items[0].First());
-                        break;
-                    default:
-                        break;
+                    result.Add(aux.First());
+                }
+                else
+                {
+                    result.Add(selection.First());
                 }
             }
-            return selectables.ToArray();
+            return result.ToArray();
         }
 
-        public List<IGrouping<int, ISelectable>> FakePriorityGroup(ISelectable[] selection)
+        private List<ISelectable> GetPriorityFromTypeList(ISelectable[] selection, List<string> typeList)
         {
-            //TODO fix this
-            // return selection.GroupBy(x => (x as DefaultObject).selectionOrder).ToList();
-            return default;
-        }
-
-        //TODO remove this
-        public class ObjectComparer : IComparer<IGrouping<int, ISelectable>>
-        {
-            public int Compare(IGrouping<int, ISelectable> x, IGrouping<int, ISelectable> y)
+            List<ISelectable> result = new List<ISelectable>();
+            foreach (var item in selection)
             {
-                return x.Key.CompareTo(y.Key);
+                if (item is SelectionSceneObject)
+                {
+                    var a = item as SelectionSceneObject;
+                    var gameType = a.GetComponent<SelectionSceneGameType>();
+                    if (gameType && typeList.Contains(gameType.Type))
+                    {
+                        result.Add(a);
+                    }
+                }
             }
+            return result;
         }
+
     }
 }

@@ -8,6 +8,8 @@ using System;
 
 namespace RTSEngine.Refactoring
 {
+
+    [CreateAssetMenu(fileName = "SubGroupSelectionModifier", menuName = "Modifiers/SubGroupSelectionModifier")]
     public class SubGroupSelectionModifier : BaseSelectionModifier
     {
 
@@ -15,7 +17,7 @@ namespace RTSEngine.Refactoring
         [Header("Modifier attributes")]
         [SerializeField] private KeyCode _key = KeyCode.LeftControl;
 
-        private EqualityComparerComponent _equalityComparer;
+        private IEqualityComparer<ISelectable> _equalityComparer;
         private IAreaSelectionType _areaSelectionType;
         private IRuntimeSet<ISelectable> _mainList;
         private IViewportHelper _viewportHelper;
@@ -23,7 +25,7 @@ namespace RTSEngine.Refactoring
         private Modifier _modifier;
 
         [Inject]
-        public void Construct(EqualityComparerComponent equalityComparer, IAreaSelectionType areaSelectionType, IRuntimeSet<ISelectable> mainList, IViewportHelper viewportHelper)
+        public void Construct(IEqualityComparer<ISelectable> equalityComparer, IAreaSelectionType areaSelectionType, IRuntimeSet<ISelectable> mainList, IViewportHelper viewportHelper)
         {
             _equalityComparer = equalityComparer;
             _mainList = mainList;
@@ -51,7 +53,7 @@ namespace RTSEngine.Refactoring
 
         public class Modifier
         {
-            public EqualityComparerComponent EqualityComparer { get; set; }
+            public IEqualityComparer<ISelectable> EqualityComparer { get; set; }
             public IAreaSelectionType AreaSelectionType { get; set; }
             public IRuntimeSet<ISelectable> MainList { get; set; }
             public IViewportHelper ViewportHelper { get; set; }
@@ -78,7 +80,8 @@ namespace RTSEngine.Refactoring
 
             public virtual ISelectable[] FilterBySubGroup(ISelectable[] selectables, ISelectable selected)
             {
-                return SubGroupUtil.FilterBySubGroup(selectables, selected, EqualityComparer);
+                ISelectable[] result = SubGroupUtil.FilterBySubGroup(selectables, selected, EqualityComparer);
+                return DistanceHelper.SortWorldSpace(result, selected.Position);
             }
         }
     }

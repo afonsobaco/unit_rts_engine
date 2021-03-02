@@ -6,37 +6,36 @@ namespace RTSEngine.Core
 {
     public abstract class AbstractRuntimeSetSO<T> : ScriptableObject, IRuntimeSet<T>
     {
-        [SerializeField] private HashSet<T> _list = new HashSet<T>();
+        [SerializeField] private HashSet<T> _mainList = new HashSet<T>();
 
-        public HashSet<T> HashSet { get => _list; set => _list = value; }
+        public HashSet<T> MainList { get => _mainList; set => _mainList = value; }
 
         public void Add(T item)
         {
-            if (item != null && !HashSet.Contains(item))
+            if (item != null && !MainList.Contains(item))
             {
-                HashSet.Add(item);
+                MainList.Add(item);
             }
         }
 
         public void Remove(T item)
         {
-            if (item != null && HashSet.Contains(item))
+            if (item != null && MainList.Contains(item))
             {
-                HashSet.Remove(item);
+                MainList.Remove(item);
             }
         }
 
         public HashSet<T> GetAllItems()
         {
-
-            return HashSet;
+            return MainList;
         }
 
         public T GetItem(int index)
         {
-            if (index < HashSet.Count)
+            if (index < MainList.Count)
             {
-                return HashSet.ElementAt(index);
+                return MainList.ElementAt(index);
             }
             return default(T);
         }

@@ -5,7 +5,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
-    public abstract class AbstractModifierHelper : MonoBehaviour, IModifierHelper
+    public abstract class AbstractModifierHelper : Zenject.ZenAutoInjecter, IModifierHelper
     {
         public abstract ISelectable[] Apply(ISelectable[] selection);
     }

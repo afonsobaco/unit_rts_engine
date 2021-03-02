@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace RTSEngine.Refactoring
 {
+
+    [CreateAssetMenu(fileName = "LimitSelectionModifier", menuName = "Modifiers/LimitSelectionModifier")]
     public class LimitSelectionModifier : BaseSelectionModifier
     {
         [Space]

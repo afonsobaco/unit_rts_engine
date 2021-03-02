@@ -8,18 +8,18 @@ using Zenject;
 
 namespace RTSEngine.Refactoring
 {
+
+    [CreateAssetMenu(fileName = "OrderSelectionModifier", menuName = "Modifiers/OrderSelectionModifier")]
+
     public class OrderSelectionModifier : BaseSelectionModifier
     {
-
-        [SerializeField] private SelectionType _type;
-
-        private GroupingComparerComponent _subGroupComparer;
-        private EqualityComparerComponent _equalityComparer;
+        private IComparer<IGrouping<ISelectable, ISelectable>> _subGroupComparer;
+        private IEqualityComparer<ISelectable> _equalityComparer;
 
         private Modifier _modifier;
 
         [Inject]
-        public void Construct(GroupingComparerComponent subGroupComparer, EqualityComparerComponent equalityComparer)
+        public void Construct(IComparer<IGrouping<ISelectable, ISelectable>> subGroupComparer, IEqualityComparer<ISelectable> equalityComparer)
         {
             _subGroupComparer = subGroupComparer;
             _equalityComparer = equalityComparer;

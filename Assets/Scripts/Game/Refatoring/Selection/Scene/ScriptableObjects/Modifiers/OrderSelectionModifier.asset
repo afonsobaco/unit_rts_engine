@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4af2ebfefbfec246b37d56c8b0441be, type: 3}
-  m_Name: SelectionSceneSelectionInstallerSO
+  m_Script: {fileID: 11500000, guid: dfe7dae03d8fade44811b22206e6a0b7, type: 3}
+  m_Name: OrderSelectionModifier
   m_EditorClassIdentifier: 
-  runtimeSetComponent: {fileID: 0}
-  modifiersComponent: {fileID: 0}
+  active: 1
+  restrictedTypes: 00000000

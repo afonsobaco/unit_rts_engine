@@ -8,13 +8,16 @@ using System;
 
 namespace RTSEngine.Refactoring
 {
+
+    [CreateAssetMenu(fileName = "DoubleClickSelectionModifier", menuName = "Modifiers/DoubleClickSelectionModifier")]
+
     public class DoubleClickSelectionModifier : BaseSelectionModifier
     {
 
         [Space]
         [Header("Modifier attributes")]
         [SerializeField] private float _doubleClickTime = 0.3f;
-        private EqualityComparerComponent _equalityComparer;
+        private IEqualityComparer<ISelectable> _equalityComparer;
         private IAreaSelectionType _areaSelectionType;
         private IRuntimeSet<ISelectable> _mainList;
         private IViewportHelper _viewportHelper;
@@ -22,7 +25,7 @@ namespace RTSEngine.Refactoring
         private Modifier _modifier;
 
         [Inject]
-        public void Construct(EqualityComparerComponent equalityComparer, IAreaSelectionType areaSelectionType, IRuntimeSet<ISelectable> mainList, IViewportHelper viewportHelper)
+        public void Construct(IEqualityComparer<ISelectable> equalityComparer, IAreaSelectionType areaSelectionType, IRuntimeSet<ISelectable> mainList, IViewportHelper viewportHelper)
         {
             _areaSelectionType = areaSelectionType;
             _equalityComparer = equalityComparer;
@@ -69,7 +72,7 @@ namespace RTSEngine.Refactoring
         public class Modifier
         {
 
-            public EqualityComparerComponent EqualityComparer { get; internal set; }
+            public IEqualityComparer<ISelectable> EqualityComparer { get; internal set; }
             public IAreaSelectionType AreaSelectionType { get; set; }
             public IRuntimeSet<ISelectable> MainList { get; set; }
             public IViewportHelper ViewportHelper { get; set; }

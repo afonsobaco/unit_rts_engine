@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb318d9b011ac1e4495c0051cd46c778, type: 3}
-  m_Name: SelectionSceneEqualitySO
+  m_Script: {fileID: 11500000, guid: 7d86dc5c727ad0e49b992e2ee38563e2, type: 3}
+  m_Name: CanBeGroupedSelectionModifier
   m_EditorClassIdentifier: 
-  equalityComparer: {fileID: 2323536466486238715, guid: f7f713ada3e596d41b5248462dc6e14c,
-    type: 3}
-  groupingComparer: {fileID: 9172712336678466830, guid: 2c805789cc2e3b24587ecaa6a9333883,
+  active: 1
+  restrictedTypes: 
+  _modifierHelper: {fileID: 8258942927394821627, guid: f2017ef179ffa2c488f4fd450f3a7cc8,
     type: 3}

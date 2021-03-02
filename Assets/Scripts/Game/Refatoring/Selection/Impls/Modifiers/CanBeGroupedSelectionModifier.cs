@@ -6,6 +6,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Refactoring
 {
+    [CreateAssetMenu(fileName = "CanBeGroupedSelectionModifier", menuName = "Modifiers/CanBeGroupedSelectionModifier")]
     public class CanBeGroupedSelectionModifier : BaseSelectionModifier
     {
 

@@ -7,7 +7,7 @@ using Zenject;
 
 namespace RTSEngine.Refactoring
 {
-
+    [CreateAssetMenu(fileName = "AdditiveSelectionModifier", menuName = "Modifiers/AdditiveSelectionModifier")]
     public class AdditiveSelectionModifier : BaseSelectionModifier
     {
 
