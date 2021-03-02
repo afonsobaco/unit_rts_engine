@@ -27,7 +27,7 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldApplyModifier(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
         {
-            ISelectable[] mainList = SelectionTestUtils.GetSomeSelectable(amount, amount);
+            ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
             ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
 
@@ -54,7 +54,7 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldGetAllGroupableOnScreen(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
         {
-            ISelectable[] mainList = SelectionTestUtils.GetSomeSelectable(amount, amount);
+            ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
 
             ISelectable[] expected = null;

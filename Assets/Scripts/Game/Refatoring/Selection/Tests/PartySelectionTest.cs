@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Linq;
-using UnityEngine;
+using Tests.Utils;
 using RTSEngine.Refactoring;
 using NSubstitute;
 
@@ -31,7 +31,7 @@ namespace Tests
         public void ShouldReturnEmptySelectionWhenPartyDoesNotExist()
         {
             const int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
 
             var result = _partySelection.GetSelection(mainList, 0);
             Assert.IsEmpty(result);
@@ -43,7 +43,7 @@ namespace Tests
             const int amount = 10;
             const int partyId = 1;
 
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
             var expected = mainList.ToList().Take(3).ToArray();
             _partySelection.ChangeParty(partyId, expected);
 

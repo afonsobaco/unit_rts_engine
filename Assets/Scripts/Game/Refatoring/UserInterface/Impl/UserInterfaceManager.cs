@@ -12,9 +12,9 @@ namespace RTSEngine.Refactoring
     public class UserInterfaceManager
     {
         private GameSignalBus _signalBus;
-        private EqualityComparerComponent _equalityComparer;
+        private IEqualityComparer<ISelectable> _equalityComparer;
 
-        public UserInterfaceManager(GameSignalBus signalBus, EqualityComparerComponent equalityComparer)
+        public UserInterfaceManager(GameSignalBus signalBus, IEqualityComparer<ISelectable> equalityComparer)
         {
             _signalBus = signalBus;
             _equalityComparer = equalityComparer;
@@ -24,6 +24,8 @@ namespace RTSEngine.Refactoring
         {
             if (clicked != null)
             {
+                //TODO test this intergated
+                Debug.Log(" Perform Selection On " + clicked.Position);
                 _signalBus.Fire(new IndividualSelectionSignal() { Clicked = clicked, OnSelection = true });
             }
         }
@@ -42,6 +44,8 @@ namespace RTSEngine.Refactoring
         {
             if (partyId != null)
             {
+                //TODO test this intergated
+                Debug.Log(" Get Party at " + partyId);
                 _signalBus.Fire(new PartySelectionSignal() { CreateNew = false, PartyId = partyId });
             }
         }

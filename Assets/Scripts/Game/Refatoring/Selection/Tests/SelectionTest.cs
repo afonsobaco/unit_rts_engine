@@ -1,10 +1,8 @@
-﻿using UnityEngine;
-using System.Linq;
-using NSubstitute;
+﻿using NSubstitute;
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Refactoring;
-using Zenject;
+using Tests.Utils;
 
 namespace Tests
 {
@@ -36,7 +34,7 @@ namespace Tests
         public void ShouldCallDoSelection()
         {
             int amount = 10;
-            var expected = SelectionTestUtils.GetSomeSelectable(amount);
+            var expected = TestUtils.GetSomeObjects(amount);
 
             _selection.DoSelection(expected, default);
 

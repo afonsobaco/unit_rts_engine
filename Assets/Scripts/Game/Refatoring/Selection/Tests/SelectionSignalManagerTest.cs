@@ -6,7 +6,8 @@ using RTSEngine.Core;
 using RTSEngine.Refactoring;
 using RTSEngine.Signal;
 using RTSEngine.Utils;
-using System.Collections.Generic;
+using Tests.Utils;
+
 namespace Tests
 {
     [TestFixture]
@@ -43,7 +44,7 @@ namespace Tests
         public void ShouldCallGetSelectionOnAreaSingal()
         {
             int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
             var expected = mainList.ToList().Take(3).ToArray();
             var startPoint = Vector2.zero;
             var endPoint = Vector2.zero;
@@ -63,7 +64,7 @@ namespace Tests
         public void ShouldNotCallGetSelectionOnAreaSingalIfClickedIsNotNull()
         {
             int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
             var expected = mainList.ToList().Take(3).ToArray();
             var startPoint = Vector2.zero;
             var endPoint = Vector2.zero;
@@ -82,7 +83,7 @@ namespace Tests
         public void ShouldCallGetSelectionOnPartySingal()
         {
             int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
             var expected = mainList.ToList().Take(3).ToArray();
             var partyId = 1;
             PartySelectionSignal signal = new PartySelectionSignal();
@@ -101,7 +102,7 @@ namespace Tests
         public void ShouldCallChangePartyOnPartySingalWithCreateNewSignal()
         {
             int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
             var expected = mainList.ToList().Take(3).ToArray();
             var partyId = 1;
             PartySelectionSignal signal = new PartySelectionSignal();
@@ -120,7 +121,7 @@ namespace Tests
         public void ShouldCallGetSelectionOnIndividualSingal()
         {
             int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
             var clicked = mainList.ToList().ElementAt(Random.Range(0, amount));
             var expected = new ISelectable[] { clicked };
             IndividualSelectionSignal signal = new IndividualSelectionSignal();

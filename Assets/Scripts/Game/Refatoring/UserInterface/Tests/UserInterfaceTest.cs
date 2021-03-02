@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System;
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Commons;
@@ -13,6 +14,7 @@ namespace Tests
     {
         private UserInterface _userInterface;
         private EqualityTest _equalityComparer;
+        private const int Amount = 4;
 
         [SetUp]
         public void SetUp()
@@ -53,12 +55,12 @@ namespace Tests
         [Test]
         public void ShouldGetNextHighlightedWhenDoNextSubGroup()
         {
-            const int Amount = 2;
-            ISelectable[] selectables = GetSubGroups(Amount);
+            ISelectable[] selectables = TestUtils.GetSomeObjects(Amount);
             _userInterface.Selection = selectables;
             _userInterface.Highlighted = selectables[0];
 
             _userInterface.DoNextSubGroup();
+
             Assert.NotNull(_userInterface.Highlighted);
             Assert.AreEqual(selectables[Amount / 2], _userInterface.Highlighted);
         }
@@ -66,8 +68,7 @@ namespace Tests
         [Test]
         public void ShouldGoBackToFirstWhenDoNextSubGroupAtEndOfSubGroups()
         {
-            const int Amount = 2;
-            ISelectable[] selectables = GetSubGroups(Amount);
+            ISelectable[] selectables = TestUtils.GetSomeObjects(Amount);
             _userInterface.Selection = selectables;
             _userInterface.Highlighted = selectables[Amount / 2];
 
@@ -75,6 +76,7 @@ namespace Tests
             Assert.NotNull(_userInterface.Highlighted);
             Assert.AreEqual(selectables[0], _userInterface.Highlighted);
         }
+
         [Test]
         public void ShouldGetNullHighlightedWhenDoPreviousSubGroupWithEmptySelection()
         {
@@ -85,8 +87,7 @@ namespace Tests
         [Test]
         public void ShouldGetPreviousHighlightedWhenDoPreviousSubGroup()
         {
-            const int Amount = 2;
-            ISelectable[] selectables = GetSubGroups(Amount);
+            ISelectable[] selectables = TestUtils.GetSomeObjects(Amount);
             _userInterface.Selection = selectables;
             _userInterface.Highlighted = selectables[Amount / 2];
 
@@ -98,8 +99,7 @@ namespace Tests
         [Test]
         public void ShouldGoToLastWhenDoPreviousSubGroupAtStartOfSubGroups()
         {
-            const int Amount = 2;
-            ISelectable[] selectables = GetSubGroups(Amount);
+            ISelectable[] selectables = TestUtils.GetSomeObjects(Amount);
             _userInterface.Selection = selectables;
             _userInterface.Highlighted = selectables[0];
 
@@ -108,35 +108,19 @@ namespace Tests
             Assert.AreEqual(selectables[Amount / 2], _userInterface.Highlighted);
         }
 
-        private static ISelectable[] GetSubGroups(int Amount)
+        class EqualityTest : IEqualityComparer<ISelectable>
         {
-            Type[] types = new Type[] { typeof(IGroupable) };
-            var selectables = TestUtils.GetSomeObjects(Amount, types);
-            int halfAmount = Amount / 2;
-            for (var i = 0; i < Amount; i++)
+            public bool Equals(ISelectable x, ISelectable y)
             {
-                IGroupable groupable = selectables[i] as IGroupable;
-                ISelectable selectable = selectables[i] as ISelectable;
-                groupable.IsCompatible(default).ReturnsForAnyArgs(x =>
-                {
-                    var index = (x[0] as ISelectable).Index;
-                    return (selectable.Index < halfAmount && index < halfAmount) || (selectable.Index >= halfAmount && index >= halfAmount);
-                });
-            }
-            return selectables;
-        }
-
-        class EqualityTest : EqualityComparerComponent
-        {
-            public override bool Equals(ISelectable x, ISelectable y)
-            {
-                return x.Index.Equals(y.Index);
+                return (x.Index < Amount / 2 && y.Index < Amount / 2) || (x.Index >= Amount / 2 && y.Index >= Amount / 2);
             }
 
-            public override int GetHashCode(ISelectable obj)
+            public int GetHashCode(ISelectable obj)
             {
                 return obj.Index.GetHashCode();
             }
         }
+
+
     }
 }

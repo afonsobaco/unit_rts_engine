@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using NUnit.Framework;
 using System.Linq;
-using RTSEngine.Core;
+using Tests.Utils;
 using RTSEngine.Refactoring;
 using NSubstitute;
 
@@ -34,7 +34,7 @@ namespace Tests
         public void ShouldReturnEmptySelectionWhenNothingWasSelected()
         {
             const int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
             var result = _individualSelection.GetSelection(mainList, null);
             Assert.IsEmpty(result);
         }
@@ -44,7 +44,7 @@ namespace Tests
         {
             const int amount = 10;
 
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
             var expected = mainList.ToList().ElementAt(Random.Range(0, amount));
             var result = _individualSelection.GetSelection(mainList, expected);
 

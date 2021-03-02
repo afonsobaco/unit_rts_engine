@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Linq;
 using RTSEngine.Core;
 using RTSEngine.Refactoring;
+using Tests.Utils;
 using NSubstitute;
 using System;
 
@@ -38,7 +39,7 @@ namespace Tests
         public void ShouldReturnSelectionInsideArea()
         {
             const int amount = 10;
-            var mainList = SelectionTestUtils.GetSomeSelectable(amount);
+            var mainList = TestUtils.GetSomeObjects(amount);
             Vector2 startPoint = Vector2.zero;
             Vector2 endPoint = Vector2.one * amount / 2;
             MockSelectionInsideArea(startPoint, endPoint);

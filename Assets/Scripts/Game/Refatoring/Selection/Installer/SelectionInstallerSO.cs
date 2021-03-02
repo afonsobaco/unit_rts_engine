@@ -13,16 +13,16 @@ namespace RTSEngine.Refactoring
     [CreateAssetMenu(fileName = "SelectionInstallerSO", menuName = "Installers/SelectionInstallerSO")]
     public class SelectionInstallerSO : ScriptableObjectInstaller<SelectionInstallerSO>
     {
-        [SerializeField] private EqualityComparerComponent equalityComparer;
-        [SerializeField] private GroupingComparerComponent groupingComparer;
-        [SerializeField] private RuntimeSetComponent runtimeSetComponent;
+        [SerializeField] private EqualityComparerComponent _equalityComparer;
+        [SerializeField] private GroupSortComparerComponent _groupSortComparer;
+        [SerializeField] private DefaultRuntimeSetSO _runtimeSet;
+
         [Space]
-        [SerializeField] private ModifiersSO modifiersComponent;
-        [SerializeField] private ViewportHelper viewportHelper;
+        [SerializeField] private ModifiersSO _modifiersComponent;
+        [SerializeField] private ViewportHelper _viewportHelper;
 
         public override void InstallBindings()
         {
-
             Container.Bind<SelectionSignalManager>().AsSingle();
             Container.Bind<SelectionManager>().AsSingle();
             Container.Bind<Selection>().AsSingle();
@@ -31,13 +31,13 @@ namespace RTSEngine.Refactoring
             Container.Bind<IAreaSelection>().To<AreaSelection>().AsSingle();
             Container.Bind<IPartySelection>().To<PartySelection>().AsSingle();
             Container.Bind<IIndividualSelection>().To<IndividualSelection>().AsSingle();
-            Container.Bind<IRuntimeSet<ISelectable>>().To<RuntimeSetComponent>().FromComponentInNewPrefab(runtimeSetComponent).AsSingle().NonLazy();
-            Container.Bind<IModifiersComponent>().To<ModifiersSO>().FromScriptableObject(modifiersComponent).AsSingle();
-            Container.Bind<IViewportHelper>().To<ViewportHelper>().FromScriptableObject(viewportHelper).AsSingle();
-            Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(equalityComparer).AsSingle();
-            Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupingComparerComponent>().FromComponentInNewPrefab(groupingComparer).AsSingle();
+            Container.Bind<IModifiersComponent>().To<ModifiersSO>().FromScriptableObject(_modifiersComponent).AsSingle();
+            Container.Bind<IViewportHelper>().To<ViewportHelper>().FromScriptableObject(_viewportHelper).AsSingle();
+            Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSetSO>().FromScriptableObject(_runtimeSet).AsSingle().IfNotBound();
+            Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsSingle().IfNotBound();
+            Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupSortComparerComponent>().FromComponentInNewPrefab(_groupSortComparer).AsSingle().IfNotBound();
 
-            foreach (var item in modifiersComponent.GetModifiers())
+            foreach (var item in _modifiersComponent.GetModifiers())
             {
                 Container.QueueForInject(item);
             }

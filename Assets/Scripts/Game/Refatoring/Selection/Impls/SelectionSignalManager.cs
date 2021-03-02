@@ -67,11 +67,6 @@ namespace RTSEngine.Refactoring
             _signalBus.Fire(new SelectionUpdateSignal() { Selection = result });
         }
 
-        public void OnChangeSelectionSignal(ChangeSelectionSignal signal)
-        {
-            _selection.FinalizeSelection(signal.Selection);
-        }
-
         public void OnSelectableObjectCreatedSignal(SelectableObjectCreatedSignal signal)
         {
             _mainList.Add(signal.Selectable);

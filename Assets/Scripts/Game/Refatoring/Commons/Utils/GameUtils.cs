@@ -7,14 +7,14 @@ namespace RTSEngine.Utils
 {
     public static class GameUtils
     {
-        public static ISelectable[] GetOrderedSelection(ISelectable[] actualSelection, IEqualityComparer<ISelectable> equalityComparer, IComparer<IGrouping<ISelectable, ISelectable>> groupingComparer)
+        public static ISelectable[] GetOrderedSelection(ISelectable[] actualSelection, IEqualityComparer<ISelectable> equalityComparer, IComparer<IGrouping<ISelectable, ISelectable>> groupSortComparer)
         {
             List<ISelectable> list = new List<ISelectable>();
             if (actualSelection.Length > 0)
             {
                 var grouped = actualSelection.GroupBy(x => x, equalityComparer);
                 var sorted = grouped.ToList();
-                sorted.Sort(groupingComparer);
+                sorted.Sort(groupSortComparer);
                 foreach (var item in sorted)
                 {
                     list.AddRange(item);

@@ -10,11 +10,6 @@ namespace RTSEngine.Refactoring
 {
     public class UserInterfaceBase
     {
-        private RectTransform _actionPanel;
-        private RectTransform _bannerPanel;
-        private RectTransform _itemPanel;
-        private RectTransform _miniaturePanel;
-        private RectTransform _portraitPanel;
 
         private UserInterface _userInterface;
         private DefaultActionButton.Factory _actionFactory;
@@ -33,11 +28,7 @@ namespace RTSEngine.Refactoring
             _portraitFactory = portraitFactory;
         }
 
-        public RectTransform ActionPanel { get => _actionPanel; set => _actionPanel = value; }
-        public RectTransform BannerPanel { get => _bannerPanel; set => _bannerPanel = value; }
-        public RectTransform ItemPanel { get => _itemPanel; set => _itemPanel = value; }
-        public RectTransform MiniaturePanel { get => _miniaturePanel; set => _miniaturePanel = value; }
-        public RectTransform PortraitPanel { get => _portraitPanel; set => _portraitPanel = value; }
+        public UserInterfaceBaseComponent UserInterfaceBaseComponent { get; set; }
 
         public void UpdateAll()
         {
@@ -54,14 +45,14 @@ namespace RTSEngine.Refactoring
 
         public virtual void UpdateBanners()
         {
-            if (BannerPanel)
+            if (UserInterfaceBaseComponent.BannerPanel)
             {
-                ClearPanel(BannerPanel);
+                ClearPanel(UserInterfaceBaseComponent.BannerPanel);
                 if (_userInterface.Parties != null)
                 {
                     foreach (var party in _userInterface.Parties)
                     {
-                        var button = CreatePrefabOnPanel(_bannerFactory, BannerPanel, party.Key);
+                        var button = CreatePrefabOnPanel(_bannerFactory, UserInterfaceBaseComponent.BannerPanel, party.Key);
                     }
                 }
             }
@@ -73,14 +64,14 @@ namespace RTSEngine.Refactoring
 
         public virtual void UpdateMiniatures()
         {
-            if (MiniaturePanel)
+            if (UserInterfaceBaseComponent.MiniaturePanel)
             {
-                ClearPanel(MiniaturePanel);
+                ClearPanel(UserInterfaceBaseComponent.MiniaturePanel);
                 if (_userInterface.Selection != null)
                 {
                     foreach (var selectable in _userInterface.Selection)
                     {
-                        var button = CreatePrefabOnPanel(_miniatureFactory, MiniaturePanel, selectable);
+                        var button = CreatePrefabOnPanel(_miniatureFactory, UserInterfaceBaseComponent.MiniaturePanel, selectable);
                     }
                 }
             }
@@ -88,12 +79,12 @@ namespace RTSEngine.Refactoring
 
         public virtual void UpdatePortrait()
         {
-            if (PortraitPanel)
+            if (UserInterfaceBaseComponent.PortraitPanel)
             {
-                ClearPanel(PortraitPanel);
+                ClearPanel(UserInterfaceBaseComponent.PortraitPanel);
                 if (_userInterface.Highlighted != null)
                 {
-                    var button = CreatePrefabOnPanel(_portraitFactory, PortraitPanel, _userInterface.Highlighted);
+                    var button = CreatePrefabOnPanel(_portraitFactory, UserInterfaceBaseComponent.PortraitPanel, _userInterface.Highlighted);
                 }
             }
         }

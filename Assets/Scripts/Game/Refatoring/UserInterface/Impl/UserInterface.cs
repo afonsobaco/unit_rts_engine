@@ -17,9 +17,9 @@ namespace RTSEngine.Refactoring
         public ISelectable[] Selection { get => _selection; set => _selection = value; }
         public Dictionary<object, ISelectable[]> Parties { get => _parties; set => _parties = value; }
 
-        private EqualityComparerComponent _equalityComparer;
+        private IEqualityComparer<ISelectable> _equalityComparer;
 
-        public UserInterface(EqualityComparerComponent equalityComparer)
+        public UserInterface(IEqualityComparer<ISelectable> equalityComparer)
         {
             _equalityComparer = equalityComparer;
         }
@@ -70,8 +70,6 @@ namespace RTSEngine.Refactoring
             {
                 var index = _selection.ToList().FindLastIndex(x =>
                 {
-                    Debug.Log(x);
-                    Debug.Log(_highlighted);
                     return AreCompatible(x, _highlighted);
 
                 });

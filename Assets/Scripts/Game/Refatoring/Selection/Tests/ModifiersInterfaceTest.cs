@@ -1,9 +1,8 @@
 ﻿using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
+using Tests.Utils;
 using RTSEngine.Core;
 using RTSEngine.Refactoring;
 using NSubstitute;
@@ -62,7 +61,7 @@ namespace Tests
         public void ShouldApplyAllModifiersOfAreaType()
         {
             SelectionType type = SelectionType.AREA;
-            ISelectable[] newSelection = SelectionTestUtils.GetSomeSelectable(Random.Range(1, 5));
+            ISelectable[] newSelection = TestUtils.GetSomeObjects(Random.Range(1, 5));
             ISelectable[] oldSelection = new ISelectable[] { };
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 
@@ -74,7 +73,7 @@ namespace Tests
         public void ShouldApplyAllModifiersOfPartyType()
         {
             SelectionType type = SelectionType.PARTY;
-            ISelectable[] newSelection = SelectionTestUtils.GetSomeSelectable(Random.Range(1, 5));
+            ISelectable[] newSelection = TestUtils.GetSomeObjects(Random.Range(1, 5));
             ISelectable[] oldSelection = new ISelectable[] { };
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 
@@ -86,7 +85,7 @@ namespace Tests
         public void ShouldApplyAllModifiersOfIndividualType()
         {
             SelectionType type = SelectionType.INDIVIDUAL;
-            ISelectable[] newSelection = SelectionTestUtils.GetSomeSelectable(Random.Range(1, 5));
+            ISelectable[] newSelection = TestUtils.GetSomeObjects(Random.Range(1, 5));
             ISelectable[] oldSelection = new ISelectable[] { };
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 
@@ -98,7 +97,7 @@ namespace Tests
         public void ShouldApplyAllModifiersOfIndividualOnSelectionType()
         {
             SelectionType type = SelectionType.INDIVIDUAL_ON_SELECTION;
-            ISelectable[] newSelection = SelectionTestUtils.GetSomeSelectable(Random.Range(1, 5));
+            ISelectable[] newSelection = TestUtils.GetSomeObjects(Random.Range(1, 5));
             ISelectable[] oldSelection = new ISelectable[] { };
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
 

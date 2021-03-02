@@ -28,7 +28,7 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldApplyModifierIndividual(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
         {
-            ISelectable[] mainList = SelectionTestUtils.GetSomeSelectable(amount, amount);
+            ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount);
             ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
 
@@ -52,7 +52,7 @@ namespace Tests
         [TestCaseSource(nameof(Scenarios))]
         public void ShouldApplyModifierIndividualOnSelection(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
         {
-            ISelectable[] mainList = SelectionTestUtils.GetSomeSelectable(amount, amount);
+            ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount);
             ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
             ISelectable[] newSelection = TestUtils.GetListByIndex(newSelectionIndexes, mainList);
 

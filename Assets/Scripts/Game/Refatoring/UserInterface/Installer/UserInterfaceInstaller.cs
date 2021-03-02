@@ -1,52 +1,56 @@
+using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using RTSEngine.Core;
 using RTSEngine.Signal;
 using RTSEngine.Utils;
+using RTSEngine.Commons;
 using UnityEngine.UI;
 using System;
 
 namespace RTSEngine.Refactoring
 {
-    public class UserInterfaceInstaller : MonoInstaller
+    [CreateAssetMenu(fileName = "UserInterfaceInstaller", menuName = "Installers/UserInterfaceInstaller")]
+
+    public class UserInterfaceInstaller : ScriptableObjectInstaller<UserInterfaceInstaller>
     {
+        [SerializeField] private EqualityComparerComponent _equalityComparer;
+        [SerializeField] private GroupSortComparerComponent _groupSortComparer;
+        [SerializeField] private DefaultRuntimeSetSO _runtimeSet;
         [SerializeField] private DefaultActionButton _actionPrefab;
         [SerializeField] private DefaultBannerButton _bannerPrefab;
         [SerializeField] private DefaultItemButton _itemPrefab;
         [SerializeField] private DefaultMiniatureButton _miniaturePrefab;
         [SerializeField] private DefaultPortraitButton _portraitPrefab;
-        [SerializeField] private RectTransform _actionPanel;
-        [SerializeField] private RectTransform _bannerPanel;
-        [SerializeField] private RectTransform _itemPanel;
-        [SerializeField] private RectTransform _miniaturePanel;
-        [SerializeField] private RectTransform _portraitPanel;
-
-        public override void Start()
-        {
-            ClearPanel(_portraitPanel);
-            ClearPanel(_itemPanel);
-            ClearPanel(_miniaturePanel);
-            ClearPanel(_bannerPanel);
-            ClearPanel(_actionPanel);
-        }
+        [SerializeField] private UserInterfaceBaseComponent _userInterfacePrefab;
 
         public override void InstallBindings()
         {
             Container.Bind<UserInterfaceSignalManager>().AsSingle();
             Container.Bind<UserInterfaceManager>().AsSingle();
             Container.Bind<UserInterface>().AsSingle();
-            Container.Bind<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase);
+            Container.Bind<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase).NonLazy();
+            Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSetSO>().FromScriptableObject(_runtimeSet).AsSingle().IfNotBound();
+            Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsSingle().IfNotBound();
+            Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupSortComparerComponent>().FromComponentInNewPrefab(_groupSortComparer).AsSingle().IfNotBound();
 
+            //External In
             Container.DeclareSignal<SelectionUpdateSignal>();
             Container.DeclareSignal<PartyUpdateSignal>();
+
+            //Internal
             Container.DeclareSignal<AlternateSubGroupSignal>();
             Container.DeclareSignal<MiniatureClickedSignal>();
             Container.DeclareSignal<PortraitClickedSignal>();
             Container.DeclareSignal<BannerClickedSignal>();
             Container.DeclareSignal<MapClickedSignal>();
             Container.DeclareSignal<ActionClickedSignal>();
+
+            //External Out
             Container.DeclareSignal<CameraGoToPositionSignal>();
-            Container.DeclareSignal<ChangeSelectionSignal>();
+            Container.DeclareSignal<IndividualSelectionSignal>();
+            Container.DeclareSignal<PartySelectionSignal>();
 
             Container.BindSignal<SelectionUpdateSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnSelectionUpdate).FromResolve();
             Container.BindSignal<PartyUpdateSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnPartyUpdate).FromResolve();
@@ -66,21 +70,8 @@ namespace RTSEngine.Refactoring
 
         private void UpdateUserInterfaceBase(InjectContext ctx, UserInterfaceBase userInterfaceBase)
         {
-            userInterfaceBase.ActionPanel = _actionPanel;
-            userInterfaceBase.BannerPanel = _bannerPanel;
-            userInterfaceBase.ItemPanel = _itemPanel;
-            userInterfaceBase.MiniaturePanel = _miniaturePanel;
-            userInterfaceBase.PortraitPanel = _portraitPanel;
-        }
-        public void ClearPanel(RectTransform panel)
-        {
-            if (panel)
-            {
-                foreach (Transform child in panel)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
-            }
+            GameObject gameObject = Container.InstantiatePrefab(_userInterfacePrefab);
+            userInterfaceBase.UserInterfaceBaseComponent = gameObject.GetComponent<UserInterfaceBaseComponent>();
         }
     }
 }
