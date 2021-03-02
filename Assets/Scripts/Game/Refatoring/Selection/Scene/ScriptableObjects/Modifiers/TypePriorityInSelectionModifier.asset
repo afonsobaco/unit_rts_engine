@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: TypePriorityInSelectionModifier
   m_EditorClassIdentifier: 
   active: 1
-  restrictedTypes: 
+  restrictedTypes: 00000000
   _typePriorityHelper: {fileID: 5788284955412665119, guid: 819563a782c751f4cb79a73600946c87,
     type: 3}

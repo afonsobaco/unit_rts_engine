@@ -1,9 +1,7 @@
-using System.Security.Cryptography.X509Certificates;
 using System.Linq;
 using System.Collections.Generic;
 using RTSEngine.Core;
 using UnityEngine;
-using Zenject;
 
 namespace RTSEngine.Refactoring
 {
@@ -28,37 +26,42 @@ namespace RTSEngine.Refactoring
         public override ISelectable[] Apply(SelectionInfo info)
         {
             StartVariables();
-            return this._modifier.Apply(Input.GetKey(_key), info.OldSelection, info.ActualSelection);
+            return this._modifier.Apply(Input.GetKey(_key), info.OldSelection, info.NewSelection, info.ActualSelection);
         }
 
         public class Modifier
         {
 
-            public ISelectable[] Apply(bool active, ISelectable[] oldSelection, ISelectable[] actualSelection)
+            public ISelectable[] Apply(bool active, ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
             {
                 if (active)
                 {
-                    return AddOrRemoveFromSelection(oldSelection, actualSelection);
+                    return AddOrRemoveFromSelection(oldSelection, newSelection, actualSelection);
                 }
                 return actualSelection;
             }
 
-            private ISelectable[] AddOrRemoveFromSelection(ISelectable[] oldSelection, ISelectable[] actualSelection)
+            private ISelectable[] AddOrRemoveFromSelection(ISelectable[] oldSelection, ISelectable[] newSelection, ISelectable[] actualSelection)
             {
                 List<ISelectable> aux = new List<ISelectable>(oldSelection);
                 aux = aux.Union(actualSelection).ToList();
-                if (ContainsAllSelected(oldSelection, actualSelection))
+                if (ContainsAllSelected(oldSelection, actualSelection) || ContainsAllSelected(oldSelection, newSelection))
                 {
                     aux.RemoveAll(x => actualSelection.Contains(x));
                 }
                 return aux.ToArray();
             }
 
-            private bool ContainsAllSelected(ISelectable[] oldSelection, ISelectable[] newSelection)
+            private bool ContainsClicked(ISelectable[] oldSelection, ISelectable[] newSelection)
             {
-                bool oldContainsNew = newSelection.All(x => oldSelection.Contains(x));
+                return newSelection.Length == 1 && ContainsAllSelected(oldSelection, newSelection);
+            }
+
+            private bool ContainsAllSelected(ISelectable[] oldSelection, ISelectable[] actualSelection)
+            {
+                bool oldContainsNew = actualSelection.All(x => oldSelection.Contains(x));
                 List<ISelectable> aux = new List<ISelectable>(oldSelection);
-                aux.RemoveAll(x => newSelection.Contains(x));
+                aux.RemoveAll(x => actualSelection.Contains(x));
                 return oldContainsNew && aux.Count > 0;
             }
         }

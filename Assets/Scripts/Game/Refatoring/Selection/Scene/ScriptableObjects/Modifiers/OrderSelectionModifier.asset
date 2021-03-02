@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: OrderSelectionModifier
   m_EditorClassIdentifier: 
   active: 1
-  restrictedTypes: 00000000
+  restrictedTypes: 

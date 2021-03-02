@@ -20,7 +20,12 @@ namespace RTSEngine.Refactoring.Scene.Selection
             {
                 return selectables.ToArray();
             }
-            return selection;
+            else if (selection.Length > 0)
+            {
+                selectables.Add(selection[0]);
+            }
+
+            return selectables.ToArray();
         }
 
         private bool TypesDoesNotContainsElement(ISelectable element)
