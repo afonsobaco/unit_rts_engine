@@ -6,9 +6,8 @@ namespace RTSEngine.Refactoring
 {
     public enum SelectionType
     {
-        AREA,
+        MULTIPLE,
         INDIVIDUAL,
         INDIVIDUAL_ON_SELECTION,
-        PARTY,
     }
 }

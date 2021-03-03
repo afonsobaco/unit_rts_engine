@@ -12,12 +12,12 @@ namespace RTSEngine.Refactoring
     public class UserInterfaceManager
     {
         private GameSignalBus _signalBus;
-        private IEqualityComparer<ISelectable> _equalityComparer;
+        private UserInterface _userInterface;
 
-        public UserInterfaceManager(GameSignalBus signalBus, IEqualityComparer<ISelectable> equalityComparer)
+        public UserInterfaceManager(GameSignalBus signalBus, UserInterface userInterface)
         {
             _signalBus = signalBus;
-            _equalityComparer = equalityComparer;
+            _userInterface = userInterface;
         }
 
         public void DoMiniatureClicked(ISelectable clicked)
@@ -46,7 +46,7 @@ namespace RTSEngine.Refactoring
             {
                 //TODO test this intergated
                 Debug.Log(" Get Party at " + partyId);
-                _signalBus.Fire(new PartySelectionSignal() { CreateNew = false, PartyId = partyId });
+                _signalBus.Fire(new ChangeSelectionSignal() { Selection = _userInterface.GetParty(partyId) });
             }
         }
 

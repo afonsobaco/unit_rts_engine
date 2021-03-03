@@ -67,9 +67,9 @@ namespace RTSEngine.Refactoring
             if (UserInterfaceBaseComponent.MiniaturePanel)
             {
                 ClearPanel(UserInterfaceBaseComponent.MiniaturePanel);
-                if (_userInterface.Selection != null)
+                if (_userInterface.ActualSelection != null)
                 {
-                    foreach (var selectable in _userInterface.Selection)
+                    foreach (var selectable in _userInterface.ActualSelection)
                     {
                         var button = CreatePrefabOnPanel(_miniatureFactory, UserInterfaceBaseComponent.MiniaturePanel, selectable);
                     }

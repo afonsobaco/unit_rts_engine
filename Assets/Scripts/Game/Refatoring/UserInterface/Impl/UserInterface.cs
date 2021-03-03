@@ -10,11 +10,11 @@ namespace RTSEngine.Refactoring
     public class UserInterface
     {
         private Dictionary<object, ISelectable[]> _parties = new Dictionary<object, ISelectable[]>() { };
-        private ISelectable[] _selection = new ISelectable[] { };
+        private ISelectable[] _actualSelection = new ISelectable[] { };
         private ISelectable _highlighted;
 
         public ISelectable Highlighted { get => _highlighted; set => _highlighted = value; }
-        public ISelectable[] Selection { get => _selection; set => _selection = value; }
+        public ISelectable[] ActualSelection { get => _actualSelection; set => _actualSelection = value; }
         public Dictionary<object, ISelectable[]> Parties { get => _parties; set => _parties = value; }
 
         private IEqualityComparer<ISelectable> _equalityComparer;
@@ -26,16 +26,16 @@ namespace RTSEngine.Refactoring
 
         public void DoSelectionUpdate(ISelectable[] selection)
         {
-            this.Selection = selection;
+            this.ActualSelection = selection;
             this.Highlighted = null;
-            if (Selection.Length > 0)
+            if (ActualSelection.Length > 0)
             {
                 this.Highlighted = selection[0];
                 UpdateAllHighlighted();
             }
         }
 
-        public void AlternateSubGroup(bool previous)
+        public virtual void AlternateSubGroup(bool previous)
         {
             if (previous)
                 DoPreviousSubGroup();
@@ -49,48 +49,61 @@ namespace RTSEngine.Refactoring
             if (_highlighted != null)
             {
                 List<ISelectable> selectables = GetSubGroupOf(_highlighted);
-                _selection.ToList().ForEach(x => x.IsHighlighted = selectables.Contains(x));
+                _actualSelection.ToList().ForEach(x => x.IsHighlighted = selectables.Contains(x));
             }
         }
 
-        public void DoPartyUpdate(Dictionary<object, ISelectable[]> parties)
+        public virtual ISelectable[] GetParty(object partyId)
         {
-            this.Parties = parties;
+            ISelectable[] selectables;
+            if (!Parties.TryGetValue(partyId, out selectables))
+            {
+                selectables = new ISelectable[0];
+            }
+            return selectables;
+        }
+
+        public virtual void DoPartyUpdate(object partyId)
+        {
+            if (ActualSelection.Length > 0)
+                this.Parties[partyId] = ActualSelection;
+            else
+                this.Parties.Remove(partyId);
         }
 
         public void DoNextSubGroup()
         {
-            if (_selection == null)
+            if (_actualSelection == null)
             {
                 return;
             }
-            if (_selection.Length == 0)
+            if (_actualSelection.Length == 0)
                 _highlighted = null;
             if (_highlighted != null)
             {
-                var index = _selection.ToList().FindLastIndex(x =>
+                var index = _actualSelection.ToList().FindLastIndex(x =>
                 {
                     return AreCompatible(x, _highlighted);
 
                 });
-                if (index < _selection.Length - 1)
-                    _highlighted = _selection[index + 1];
+                if (index < _actualSelection.Length - 1)
+                    _highlighted = _actualSelection[index + 1];
                 else
-                    _highlighted = _selection[0];
+                    _highlighted = _actualSelection[0];
             }
         }
 
         public void DoPreviousSubGroup()
         {
-            if (_selection == null || _selection.Length == 0)
+            if (_actualSelection == null || _actualSelection.Length == 0)
                 _highlighted = null;
             if (_highlighted != null)
             {
-                var index = _selection.ToList().FindIndex(x => { return AreCompatible(x, _highlighted); });
+                var index = _actualSelection.ToList().FindIndex(x => { return AreCompatible(x, _highlighted); });
                 if (index > 0)
-                    _highlighted = _selection.ToList().Find(x => { return AreCompatible(x, _selection[index - 1]); });
+                    _highlighted = _actualSelection.ToList().Find(x => { return AreCompatible(x, _actualSelection[index - 1]); });
                 else
-                    _highlighted = _selection.ToList().Find(x => { return AreCompatible(x, _selection[_selection.Length - 1]); });
+                    _highlighted = _actualSelection.ToList().Find(x => { return AreCompatible(x, _actualSelection[_actualSelection.Length - 1]); });
             }
         }
 
@@ -102,7 +115,7 @@ namespace RTSEngine.Refactoring
         private List<ISelectable> GetSubGroupOf(ISelectable selectable)
         {
             List<ISelectable> list = new List<ISelectable>();
-            foreach (var item in _selection)
+            foreach (var item in _actualSelection)
             {
                 if (AreCompatible(item, selectable))
                 {

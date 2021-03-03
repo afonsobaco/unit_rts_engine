@@ -21,8 +21,6 @@ namespace RTSEngine.Refactoring.Scene.UInterface
 
         private UserInterface _userInterface;
         private SignalBus _signalBus;
-        private Dictionary<object, ISelectable[]> parties;
-
         private IEqualityComparer<ISelectable> _equalityComparer;
         private IComparer<IGrouping<ISelectable, ISelectable>> _groupSortComparer;
 
@@ -43,7 +41,6 @@ namespace RTSEngine.Refactoring.Scene.UInterface
                 mainList.Add(CreateSelectable(WARRIOR, i + 5));
                 mainList.Add(CreateSelectable(ARCHER, i + 10));
             }
-            parties = new Dictionary<object, ISelectable[]>();
         }
 
         public override void GetOtherInputs()
@@ -51,34 +48,8 @@ namespace RTSEngine.Refactoring.Scene.UInterface
             AddRandomSelection();
             GetHighlightedSelection();
             ClearSelection();
-            AddRemoveSelectParty();
         }
-
-        private void AddRemoveSelectParty()
-        {
-            int groupKeyPressed = GameUtils.GetAnyPartyKeyPressed();
-            if (groupKeyPressed > 0)
-            {
-                if (Input.GetKey(KeyCode.Z))
-                {
-                    if (_userInterface.Selection.Length > 0)
-                        parties[groupKeyPressed] = _userInterface.Selection;
-                    else
-                        parties.Remove(groupKeyPressed);
-                    _signalBus.Fire(new PartyUpdateSignal() { Parties = this.parties });
-                }
-                else
-                {
-                    ISelectable[] selectables;
-                    if (!parties.TryGetValue(groupKeyPressed, out selectables))
-                    {
-                        selectables = new ISelectable[0];
-                    }
-                    _signalBus.Fire(new SelectionUpdateSignal() { Selection = selectables });
-                }
-            }
-        }
-
+      
         private void AddRandomSelection()
         {
             if (Input.GetKeyDown(KeyCode.Q))

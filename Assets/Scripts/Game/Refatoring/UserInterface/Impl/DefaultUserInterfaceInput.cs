@@ -11,9 +11,10 @@ using System;
 
 public class DefaultUserInterfaceInput : MonoBehaviour
 {
-    [SerializeField] private KeyCode ToRemoveKeyCode = KeyCode.LeftShift;
-    [SerializeField] private KeyCode ChangeSubGroupKeyCode = KeyCode.Tab;
-    [SerializeField] private KeyCode CenterCameraToSelection = KeyCode.Space;
+    [SerializeField] private KeyCode _toRemoveKeyCode = KeyCode.LeftShift;
+    [SerializeField] private KeyCode _changeSubGroupKeyCode = KeyCode.Tab;
+    [SerializeField] private KeyCode _centerCameraKeyCode = KeyCode.Space;
+    [SerializeField] private KeyCode _partyKeyCode = KeyCode.Z;
     private GameSignalBus _signalBus;
     private UserInterface _userInterface;
 
@@ -28,12 +29,29 @@ public class DefaultUserInterfaceInput : MonoBehaviour
     {
         GetChangeSubGroupInput();
         GetCenterCameraInput();
+        GetPartyInput();
         GetOtherInputs();
+    }
+
+    public virtual void GetPartyInput()
+    {
+        int partyKeyPressed = GameUtils.GetAnyPartyKeyPressed();
+        if (partyKeyPressed > 0)
+        {
+            if (Input.GetKey(_partyKeyCode))
+            {
+                _signalBus.Fire(new PartyUpdateSignal() { PartyId = partyKeyPressed });
+            }
+            else
+            {
+                _signalBus.Fire(new ChangeSelectionSignal() { Selection = _userInterface.GetParty(partyKeyPressed) });
+            }
+        }
     }
 
     public virtual void GetCenterCameraInput()
     {
-        if (Input.GetKey(CenterCameraToSelection) && _userInterface.Highlighted != null)
+        if (Input.GetKey(_centerCameraKeyCode) && _userInterface.Highlighted != null)
         {
             _signalBus.Fire(new CameraGoToPositionSignal() { Position = _userInterface.Highlighted.Position });
         }
@@ -41,12 +59,14 @@ public class DefaultUserInterfaceInput : MonoBehaviour
 
     public virtual void GetChangeSubGroupInput()
     {
-        if (Input.GetKeyDown(ChangeSubGroupKeyCode))
+        if (Input.GetKeyDown(_changeSubGroupKeyCode))
         {
-            _signalBus.Fire(new AlternateSubGroupSignal() { Previous = Input.GetKey(ToRemoveKeyCode) });
+            _signalBus.Fire(new AlternateSubGroupSignal() { Previous = Input.GetKey(_toRemoveKeyCode) });
             UpdateAll();
         }
     }
+
+
 
     public virtual void UpdateAll()
     {

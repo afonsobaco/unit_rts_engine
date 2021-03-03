@@ -28,7 +28,6 @@ namespace RTSEngine.Refactoring
             Container.Bind<ModifiersInterface>().AsSingle();
             Container.Bind<IAreaSelectionType>().To<PolyAreaSelectionType>().AsSingle();
             Container.Bind<IAreaSelection>().To<AreaSelection>().AsSingle();
-            Container.Bind<IPartySelection>().To<PartySelection>().AsSingle();
             Container.Bind<IIndividualSelection>().To<IndividualSelection>().AsSingle();
             Container.Bind<IModifiersComponent>().To<Modifiers>().FromScriptableObject(_modifiersComponent).AsSingle();
             Container.Bind<IViewportHelper>().To<ViewportHelper>().FromScriptableObject(_viewportHelper).AsSingle();
@@ -44,15 +43,15 @@ namespace RTSEngine.Refactoring
             Container.DeclareSignal<SelectableObjectCreatedSignal>();
             Container.DeclareSignal<SelectableObjectDeletedSignal>();
             Container.DeclareSignal<AreaSelectionSignal>();
-            Container.DeclareSignal<PartySelectionSignal>();
             Container.DeclareSignal<IndividualSelectionSignal>();
+            Container.DeclareSignal<ChangeSelectionSignal>();
             Container.DeclareSignal<SelectionUpdateSignal>();
 
             Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectCreatedSignal).FromResolve();
             Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectDeletedSignal).FromResolve();
-            Container.BindSignal<AreaSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnAreaSignal).FromResolve();
-            Container.BindSignal<PartySelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnPartySignal).FromResolve();
-            Container.BindSignal<IndividualSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnIndividualSignal).FromResolve();
+            Container.BindSignal<AreaSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnAreaSelectionSignal).FromResolve();
+            Container.BindSignal<ChangeSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnChangeSelectionSignal).FromResolve();
+            Container.BindSignal<IndividualSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnIndividualSelectionSignal).FromResolve();
 
         }
     }

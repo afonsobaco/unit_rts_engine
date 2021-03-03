@@ -17,7 +17,7 @@ namespace RTSEngine.Refactoring.Scene.UInterface
         public override void DoClick()
         {
             if (ObjectReference is SceneUserInterfaceObject)
-                SignalBus.Fire(new PortraitClickedSignal() { Selection = ObjectReference as SceneUserInterfaceObject });
+                SignalBus.Fire(new PortraitClickedSignal() { Selected = ObjectReference as SceneUserInterfaceObject });
         }
     }
 }

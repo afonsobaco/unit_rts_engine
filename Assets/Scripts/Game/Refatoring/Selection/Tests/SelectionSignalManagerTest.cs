@@ -23,7 +23,7 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-            _selectionManager = Substitute.ForPartsOf<SelectionManager>(new object[] { default, default, default });
+            _selectionManager = Substitute.ForPartsOf<SelectionManager>(new object[] { default, default });
             _selection = Substitute.ForPartsOf<Selection>(new object[] { default, default });
             _mainList = Substitute.For<IRuntimeSet<ISelectable>>();
             _signalBus = Substitute.ForPartsOf<GameSignalBus>(new object[] { default });
@@ -54,10 +54,10 @@ namespace Tests
             _selectionManager.GetAreaSelection(Arg.Any<ISelectable[]>(), Arg.Any<Vector2>(), Arg.Any<Vector2>()).Returns(expected);
             _selectionSignalManager.GetMainList().Returns(mainList);
 
-            _selectionSignalManager.OnAreaSignal(signal);
+            _selectionSignalManager.OnAreaSelectionSignal(signal);
 
             _selectionManager.Received().GetAreaSelection(mainList, startPoint, endPoint);
-            _selection.Received().DoSelection(expected, SelectionType.AREA);
+            _selection.Received().DoSelection(expected, SelectionType.MULTIPLE);
         }
 
         [Test]
@@ -73,48 +73,10 @@ namespace Tests
             signal.EndPoint = endPoint;
             _selectionSignalManager.BlockAreaSelection = true;
 
-            _selectionSignalManager.OnAreaSignal(signal);
+            _selectionSignalManager.OnAreaSelectionSignal(signal);
 
-            _selection.DidNotReceiveWithAnyArgs().DoSelection(expected, SelectionType.AREA);
+            _selection.DidNotReceiveWithAnyArgs().DoSelection(expected, SelectionType.MULTIPLE);
             _selectionManager.DidNotReceiveWithAnyArgs().GetAreaSelection(Arg.Any<ISelectable[]>(), Arg.Any<Vector2>(), Arg.Any<Vector2>());
-        }
-
-        [Test]
-        public void ShouldCallGetSelectionOnPartySingal()
-        {
-            int amount = 10;
-            var mainList = TestUtils.GetSomeObjects(amount);
-            var expected = mainList.ToList().Take(3).ToArray();
-            var partyId = 1;
-            PartySelectionSignal signal = new PartySelectionSignal();
-            signal.PartyId = partyId;
-            signal.CreateNew = false;
-            _selectionManager.GetPartySelection(Arg.Any<ISelectable[]>(), Arg.Any<object>()).Returns(expected);
-            _selectionSignalManager.GetMainList().Returns(mainList);
-
-            _selectionSignalManager.OnPartySignal(signal);
-
-            _selectionManager.Received().GetPartySelection(mainList, partyId);
-            _selection.Received().DoSelection(expected, SelectionType.PARTY);
-        }
-
-        [Test]
-        public void ShouldCallChangePartyOnPartySingalWithCreateNewSignal()
-        {
-            int amount = 10;
-            var mainList = TestUtils.GetSomeObjects(amount);
-            var expected = mainList.ToList().Take(3).ToArray();
-            var partyId = 1;
-            PartySelectionSignal signal = new PartySelectionSignal();
-            signal.PartyId = partyId;
-            signal.CreateNew = true;
-            _selectionManager.WhenForAnyArgs(x => x.SetPartySelection(default, default)).DoNotCallBase();
-            _selection.GetCurrent().Returns(expected);
-
-            _selectionSignalManager.OnPartySignal(signal);
-
-            _selectionManager.Received().SetPartySelection(expected, partyId);
-            _selection.DidNotReceiveWithAnyArgs().DoSelection(default, default);
         }
 
         [Test]
@@ -130,10 +92,25 @@ namespace Tests
             _selectionManager.GetIndividualSelection(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable>()).Returns(expected);
             _selectionSignalManager.GetMainList().Returns(mainList);
 
-            _selectionSignalManager.OnIndividualSignal(signal);
+            _selectionSignalManager.OnIndividualSelectionSignal(signal);
 
             _selectionManager.Received().GetIndividualSelection(mainList, clicked);
             _selection.Received().DoSelection(expected, SelectionType.INDIVIDUAL);
+        }
+
+        [Test]
+        public void ShouldCallGetSelectionOnChangeSelectionSingal()
+        {
+            int amount = 10;
+            var mainList = TestUtils.GetSomeObjects(amount);
+            var selection = mainList.ToList().Take(Random.Range(1, amount)).ToArray();
+            var expected = selection;
+            ChangeSelectionSignal signal = new ChangeSelectionSignal();
+            signal.Selection = selection;
+
+            _selectionSignalManager.OnChangeSelectionSignal(signal);
+
+            _selection.Received().DoSelection(expected, SelectionType.MULTIPLE);
         }
 
     }

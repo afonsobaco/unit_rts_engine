@@ -26,7 +26,6 @@ namespace RTSEngine.Refactoring
         void Update()
         {
             GetAreaSelectionInput();
-            GetPartySelectionInput();
             GetOtherInputs();
         }
 
@@ -41,15 +40,6 @@ namespace RTSEngine.Refactoring
             {
                 IsSelecting = false;
                 _signalBus.Fire(new AreaSelectionSignal() { StartPoint = _startScreenPoint, EndPoint = Input.mousePosition });
-            }
-        }
-
-        public virtual void GetPartySelectionInput()
-        {
-            var keyPressed = GameUtils.GetAnyPartyKeyPressed();
-            if (keyPressed > 0)
-            {
-                _signalBus.Fire(new PartySelectionSignal() { PartyId = keyPressed, CreateNew = Input.GetKey(PartyKeyCode) });
             }
         }
 

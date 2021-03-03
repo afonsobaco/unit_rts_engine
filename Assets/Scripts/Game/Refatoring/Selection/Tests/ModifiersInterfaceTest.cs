@@ -15,9 +15,7 @@ namespace Tests
         private ModifiersInterface _modifiersInterface;
         private IModifiersComponent _modifiersComponent;
         private ISelectionModifier[] _modifiers;
-        private ISelectionModifier any_modifier;
-        private ISelectionModifier area_modifier;
-        private ISelectionModifier party_modifier;
+        private ISelectionModifier multiple_modifier;
         private ISelectionModifier individual_modifier;
 
         [SetUp]
@@ -33,17 +31,10 @@ namespace Tests
         {
 
             var list = new List<ISelectionModifier>();
-            any_modifier = Substitute.For<ISelectionModifier>();
-            any_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
-            list.Add(any_modifier);
-            area_modifier = Substitute.For<ISelectionModifier>();
-            area_modifier.RestrictedTypes = new SelectionType[] { SelectionType.AREA };
-            area_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
-            list.Add(area_modifier);
-            party_modifier = Substitute.For<ISelectionModifier>();
-            party_modifier.RestrictedTypes = new SelectionType[] { SelectionType.PARTY };
-            party_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
-            list.Add(party_modifier);
+            multiple_modifier = Substitute.For<ISelectionModifier>();
+            multiple_modifier.RestrictedTypes = new SelectionType[] { SelectionType.MULTIPLE };
+            multiple_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
+            list.Add(multiple_modifier);
             individual_modifier = Substitute.For<ISelectionModifier>();
             individual_modifier.RestrictedTypes = new SelectionType[] { SelectionType.INDIVIDUAL, SelectionType.INDIVIDUAL_ON_SELECTION };
             individual_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
@@ -60,19 +51,7 @@ namespace Tests
         [Test]
         public void ShouldApplyAllModifiersOfAreaType()
         {
-            SelectionType type = SelectionType.AREA;
-            ISelectable[] newSelection = TestUtils.GetSomeObjects(Random.Range(1, 5));
-            ISelectable[] oldSelection = new ISelectable[] { };
-            var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);
-
-            CollectionAssert.AreEqual(newSelection, result);
-            AssertModifiersReceived(type, newSelection, oldSelection);
-        }
-
-        [Test]
-        public void ShouldApplyAllModifiersOfPartyType()
-        {
-            SelectionType type = SelectionType.PARTY;
+            SelectionType type = SelectionType.MULTIPLE;
             ISelectable[] newSelection = TestUtils.GetSomeObjects(Random.Range(1, 5));
             ISelectable[] oldSelection = new ISelectable[] { };
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);

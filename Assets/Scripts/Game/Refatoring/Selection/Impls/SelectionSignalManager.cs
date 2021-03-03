@@ -26,32 +26,24 @@ namespace RTSEngine.Refactoring
             _signalBus = signalBus;
         }
 
-        public void OnAreaSignal(AreaSelectionSignal signal)
+        public void OnAreaSelectionSignal(AreaSelectionSignal signal)
         {
             if (!BlockAreaSelection)
             {
                 var selection = _selectionManager.GetAreaSelection(GetMainList(), signal.StartPoint, signal.EndPoint);
-                var result = _selection.DoSelection(selection, SelectionType.AREA);
+                var result = _selection.DoSelection(selection, SelectionType.MULTIPLE);
                 _signalBus.Fire(new SelectionUpdateSignal() { Selection = result });
             }
             BlockAreaSelection = false;
         }
 
-        public void OnPartySignal(PartySelectionSignal signal)
+        public void OnChangeSelectionSignal(ChangeSelectionSignal signal)
         {
-            if (signal.CreateNew)
-            {
-                _selectionManager.SetPartySelection(_selection.GetCurrent(), signal.PartyId);
-            }
-            else
-            {
-                var selection = _selectionManager.GetPartySelection(GetMainList(), signal.PartyId);
-                var result = _selection.DoSelection(selection, SelectionType.PARTY);
-                _signalBus.Fire(new SelectionUpdateSignal() { Selection = result });
-            }
+            var result = _selection.DoSelection(signal.Selection, SelectionType.MULTIPLE);
+            _signalBus.Fire(new SelectionUpdateSignal() { Selection = result });
         }
 
-        public void OnIndividualSignal(IndividualSelectionSignal signal)
+        public void OnIndividualSelectionSignal(IndividualSelectionSignal signal)
         {
             this.BlockAreaSelection = true;
             var selection = _selectionManager.GetIndividualSelection(GetMainList(), signal.Clicked);

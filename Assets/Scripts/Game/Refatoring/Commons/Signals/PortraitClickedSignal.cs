@@ -3,6 +3,6 @@ namespace RTSEngine.Signal
 {
     public class PortraitClickedSignal
     {
-        public ISelectable Selection { get; set; }
+        public ISelectable Selected { get; set; }
     }
 }

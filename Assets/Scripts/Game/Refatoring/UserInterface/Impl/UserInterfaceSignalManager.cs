@@ -26,7 +26,7 @@ namespace RTSEngine.Refactoring
 
         public void OnPartyUpdate(PartyUpdateSignal signal)
         {
-            _userInterface.DoPartyUpdate(signal.Parties);
+            _userInterface.DoPartyUpdate(signal.PartyId);
             _userInterfaceBase.UpdateBanners();
         }
 
@@ -43,7 +43,7 @@ namespace RTSEngine.Refactoring
 
         public void OnPortraitClicked(PortraitClickedSignal signal)
         {
-            _userInterfaceManager.DoPortraitClicked(signal.Selection);
+            _userInterfaceManager.DoPortraitClicked(signal.Selected);
         }
 
         public void OnBannerClicked(BannerClickedSignal signal)
@@ -58,7 +58,7 @@ namespace RTSEngine.Refactoring
 
         public void OnActionClicked(ActionClickedSignal signal)
         {
-            _userInterfaceManager.DoActionClicked(signal.Selection);
+            _userInterfaceManager.DoActionClicked(signal.Selected);
         }
 
     }

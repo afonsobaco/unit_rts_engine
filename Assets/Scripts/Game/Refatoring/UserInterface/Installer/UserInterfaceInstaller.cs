@@ -50,7 +50,7 @@ namespace RTSEngine.Refactoring
             //External Out
             Container.DeclareSignal<CameraGoToPositionSignal>();
             Container.DeclareSignal<IndividualSelectionSignal>();
-            Container.DeclareSignal<PartySelectionSignal>();
+            Container.DeclareSignal<ChangeSelectionSignal>();
 
             Container.BindSignal<SelectionUpdateSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnSelectionUpdate).FromResolve();
             Container.BindSignal<PartyUpdateSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnPartyUpdate).FromResolve();
