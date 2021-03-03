@@ -12,7 +12,7 @@ using Zenject;
 
 namespace RTSEngine.Refactoring.Scene.UInterface
 {
-    public class SceneUserInterfaceSceneHelper : MonoBehaviour
+    public class SceneUserInterfaceSceneHelper : DefaultUserInterfaceInput
     {
         private List<ISelectable> mainList = new List<ISelectable>();
         const string WIZZARD = "Wizzard";
@@ -46,10 +46,11 @@ namespace RTSEngine.Refactoring.Scene.UInterface
             parties = new Dictionary<object, ISelectable[]>();
         }
 
-        private void Update()
+        public override void GetOtherInputs()
         {
             AddRandomSelection();
-            ChangeSubGroup();
+            GetHighlightedSelection();
+            ClearSelection();
             AddRemoveSelectParty();
         }
 
@@ -78,22 +79,29 @@ namespace RTSEngine.Refactoring.Scene.UInterface
             }
         }
 
-        private void ChangeSubGroup()
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                _signalBus.Fire(new AlternateSubGroupSignal() { Previous = Input.GetKey(KeyCode.LeftShift) });
-            }
-        }
-
         private void AddRandomSelection()
         {
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.Q))
             {
                 _signalBus.Fire(new SelectionUpdateSignal() { Selection = GetRandomSelection() });
             }
         }
 
+        private void GetHighlightedSelection()
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                _signalBus.Fire(new SelectionUpdateSignal() { Selection = new ISelectable[] { _userInterface.Highlighted } });
+            }
+        }
+
+        private void ClearSelection()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                _signalBus.Fire(new SelectionUpdateSignal() { Selection = new ISelectable[] { } });
+            }
+        }
 
         private SceneUserInterfaceObject CreateSelectable(string type, int index)
         {

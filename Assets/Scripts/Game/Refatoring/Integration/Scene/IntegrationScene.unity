@@ -209,7 +209,6 @@ GameObject:
   m_Component:
   - component: {fileID: 161439090}
   - component: {fileID: 161439089}
-  - component: {fileID: 161439091}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -229,13 +228,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scriptableObjectInstallers: []
+  _scriptableObjectInstallers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   _monoInstallers: []
-  _installerPrefabs:
-  - {fileID: 1459006787239050817, guid: 95ef50392063efc429a004a914b9f4d7, type: 3}
-  - {fileID: 4657052876820270906, guid: ea09ddfb9aa875c499bca879198123bf, type: 3}
-  - {fileID: 2525227712332380241, guid: d3a2bdd28d7cb7d46bdda9ae0bd88cf6, type: 3}
-  _autoRun: 1
+  _installerPrefabs: []
+  _autoRun: 0
   OnPreInstall:
     m_PersistentCalls:
       m_Calls: []
@@ -265,25 +264,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &161439091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161439088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5736b832664f7934f9ba53291df94b01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects:
-  - {fileID: 6909930287666605681, guid: b21ab446c9c072149a5319387af1e277, type: 3}
-  - {fileID: 6909930287666605681, guid: db0e36d9ee018b34b8c0a14a5902af66, type: 3}
-  - {fileID: 4743669159949584747, guid: cd614c6a1d13371478333e6d774d8d12, type: 3}
-  - {fileID: 568252041003937851, guid: ebf9e89d0ded3db4bad5b348e6faa271, type: 3}
-  - {fileID: 158547551831246352, guid: 620ed987f0f02224ebd9e57d7a6031d4, type: 3}
-  index: 0
 --- !u!43 &261380952
 Mesh:
   m_ObjectHideFlags: 0
@@ -1049,16 +1029,8 @@ MonoBehaviour:
   m_Mesh: {fileID: 261380952}
   m_IsSelectable: 1
   m_SelectedFaces: 
-  m_SelectedEdges:
-  - a: 63
-    b: 62
-  - a: 59
-    b: 58
-  - a: 55
-    b: 54
-  - a: 51
-    b: 50
-  m_SelectedVertices: 3f0000003e0000003b0000003a00000037000000360000003300000032000000
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!4 &298140689
 Transform:
   m_ObjectHideFlags: 0

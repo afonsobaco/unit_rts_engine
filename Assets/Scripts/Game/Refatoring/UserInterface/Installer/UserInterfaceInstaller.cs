@@ -17,7 +17,7 @@ namespace RTSEngine.Refactoring
     {
         [SerializeField] private EqualityComparerComponent _equalityComparer;
         [SerializeField] private GroupSortComparerComponent _groupSortComparer;
-        [SerializeField] private DefaultRuntimeSetSO _runtimeSet;
+        [SerializeField] private DefaultRuntimeSet _runtimeSet;
         [SerializeField] private DefaultActionButton _actionPrefab;
         [SerializeField] private DefaultBannerButton _bannerPrefab;
         [SerializeField] private DefaultItemButton _itemPrefab;
@@ -31,7 +31,7 @@ namespace RTSEngine.Refactoring
             Container.Bind<UserInterfaceManager>().AsSingle();
             Container.Bind<UserInterface>().AsSingle();
             Container.Bind<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase).NonLazy();
-            Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSetSO>().FromScriptableObject(_runtimeSet).AsSingle().IfNotBound();
+            Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSet>().FromScriptableObject(_runtimeSet).AsSingle().IfNotBound();
             Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsSingle().IfNotBound();
             Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupSortComparerComponent>().FromComponentInNewPrefab(_groupSortComparer).AsSingle().IfNotBound();
 

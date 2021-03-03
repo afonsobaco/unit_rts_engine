@@ -111,7 +111,8 @@ namespace RTSEngine.Refactoring
             public virtual ISelectable[] GetFromSubGroupOnScreen(ISelectable selected)
             {
                 var allOnScreen = AreaSelectionType.GetAllInsideViewportArea(GetMainList(), this.ViewportHelper.InitialViewportPoint, this.ViewportHelper.FinalViewportPoint);
-                return SubGroupUtil.FilterBySubGroup(allOnScreen, selected, EqualityComparer);
+                ISelectable[] result = SubGroupUtil.FilterBySubGroup(allOnScreen, selected, EqualityComparer);
+                return DistanceHelper.SortWorldSpace(result, selected.Position);
             }
 
             public virtual ISelectable[] GetMainList()

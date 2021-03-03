@@ -6,8 +6,6 @@ namespace RTSEngine.Refactoring
 {
     public class SelectionBox
     {
-
-        private Vector3 _startScreenPoint;
         private RectTransform _selectionBox;
 
         public SelectionBox(RectTransform rectTransform)
@@ -15,13 +13,12 @@ namespace RTSEngine.Refactoring
             _selectionBox = rectTransform;
         }
 
-        public void Activate(Vector3 startPosition)
+        public void Activate()
         {
             if (!_selectionBox)
             {
                 return;
             }
-            _startScreenPoint = startPosition;
             this._selectionBox.gameObject.SetActive(true);
         }
 
@@ -34,11 +31,19 @@ namespace RTSEngine.Refactoring
             this._selectionBox.gameObject.SetActive(false);
         }
 
-        public void DrawSelectionBox(Vector3 finalPosition)
+        public void DrawSelectionBox(bool isSelecting, Vector3 _startScreenPoint, Vector3 finalPosition)
         {
             if (!_selectionBox)
             {
                 return;
+            }
+            if (isSelecting)
+            {
+                Activate();
+            }
+            else
+            {
+                Deactivate();
             }
             if (this._selectionBox.gameObject.activeInHierarchy)
             {

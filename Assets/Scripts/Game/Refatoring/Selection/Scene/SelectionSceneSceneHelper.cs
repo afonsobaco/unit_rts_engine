@@ -15,22 +15,19 @@ namespace RTSEngine.Refactoring.Scene.Selection
     *
     */
 
-    public class SelectionSceneSceneHelper : MonoBehaviour
+    public class SelectionSceneSceneHelper : DefaultSelectionInput
     {
         public GameObject prefab;
         public RectTransform _rectSelectionBox;
         public SelectionBox _selectionBox;
-        private SignalBus _signalBus;
         private IRuntimeSet<ISelectable> _mainList;
-        private Vector3 _starScreenPoint;
         private int createIndex = 1;
         private int strengthIndex = 0;
 
 
         [Inject]
-        public void Construct(SignalBus signalBus, IRuntimeSet<ISelectable> mainList)
+        public void Construct(IRuntimeSet<ISelectable> mainList)
         {
-            _signalBus = signalBus;
             _mainList = mainList;
         }
 
@@ -39,13 +36,12 @@ namespace RTSEngine.Refactoring.Scene.Selection
             _selectionBox = new SelectionBox(_rectSelectionBox);
         }
 
-        void Update()
+        public override void GetOtherInputs()
         {
+            _selectionBox.DrawSelectionBox(IsSelecting, _startScreenPoint, Input.mousePosition);
             ChangeColor();
             ChangeStrengthColor();
             AddDeleteCube();
-            SelectionWithMouse();
-            AddRemoveBanner();
         }
 
         private void ChangeStrengthColor()
@@ -96,30 +92,6 @@ namespace RTSEngine.Refactoring.Scene.Selection
             if (item != null)
             {
                 GameObject.Destroy(item.gameObject);
-            }
-        }
-
-        private void SelectionWithMouse()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                _starScreenPoint = Input.mousePosition;
-                _selectionBox.Activate(_starScreenPoint);
-            }
-            _selectionBox.DrawSelectionBox(Input.mousePosition);
-            if (Input.GetMouseButtonUp(0))
-            {
-                _selectionBox.Deactivate();
-                _signalBus.Fire(new AreaSelectionSignal() { StartPoint = _starScreenPoint, EndPoint = Input.mousePosition });
-            }
-        }
-
-        private void AddRemoveBanner()
-        {
-            var keyPressed = GameUtils.GetAnyPartyKeyPressed();
-            if (keyPressed > 0)
-            {
-                _signalBus.Fire(new PartySelectionSignal() { PartyId = keyPressed, CreateNew = Input.GetKey(KeyCode.Z) });
             }
         }
 

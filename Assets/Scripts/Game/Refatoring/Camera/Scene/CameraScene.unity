@@ -223,7 +223,6 @@ GameObject:
   m_Component:
   - component: {fileID: 647146567}
   - component: {fileID: 647146566}
-  - component: {fileID: 647146568}
   m_Layer: 0
   m_Name: SceneHelper
   m_TagString: Untagged
@@ -240,9 +239,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 647146565}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b778c17ee9f4e94ab93182e17b31626, type: 3}
+  m_Script: {fileID: 11500000, guid: f3fd15679b451324da81e31ae7c55470, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mousePanButton: 325
   viewportOffset: 0.05
 --- !u!4 &647146567
 Transform:
@@ -258,22 +258,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &647146568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 647146565}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05e466188231acd4ba5edb8d04745480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapWidth: 15
-  mapHeight: 10
-  maxZoom: 10
-  minZoom: 2
 --- !u!1 &941733449
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,7 +268,6 @@ GameObject:
   m_Component:
   - component: {fileID: 941733452}
   - component: {fileID: 941733451}
-  - component: {fileID: 941733450}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -292,22 +275,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &941733450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 941733449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a69dfe33019e3af40a300e9b9b4bf2af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraClamper: {fileID: 647146568}
-  _moveSpeed: 1.5
-  _panSpeed: 5
-  _zoomSpeed: 25
 --- !u!114 &941733451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,9 +287,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scriptableObjectInstallers: []
-  _monoInstallers:
-  - {fileID: 941733450}
+  _scriptableObjectInstallers:
+  - {fileID: 11400000, guid: 19baa11140b55054997b88fe0c4e8a88, type: 2}
+  _monoInstallers: []
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67905efd3f2b7f842a448e1d28a0232b, type: 3}
+  m_Name: SelectionSceneSelectionInstaller
+  m_EditorClassIdentifier: 
+  _equalityComparer: {fileID: 2323536466486238715, guid: f7f713ada3e596d41b5248462dc6e14c,
+    type: 3}
+  _groupSortComparer: {fileID: 9172712336678466830, guid: 2c805789cc2e3b24587ecaa6a9333883,
+    type: 3}
+  _runtimeSet: {fileID: 11400000, guid: 824369a0a813a9845a4d656df2af95db, type: 2}
+  _modifiersComponent: {fileID: 11400000, guid: 6d732b6bcd78676459ba09879835edc4,
+    type: 2}
+  _viewportHelper: {fileID: 11400000, guid: 9be98f4c32d93154ebf1654d471bd261, type: 2}

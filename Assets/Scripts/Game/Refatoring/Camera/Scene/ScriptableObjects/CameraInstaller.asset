@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a69dfe33019e3af40a300e9b9b4bf2af, type: 3}
+  m_Name: CameraInstaller
+  m_EditorClassIdentifier: 
+  cameraClamper: {fileID: 5706206463733338064, guid: f78227e961a548545b6ade46ee58ee0c,
+    type: 3}
+  _moveSpeed: 0.5
+  _panSpeed: 7
+  _zoomSpeed: 100

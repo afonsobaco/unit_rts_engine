@@ -7,7 +7,9 @@ using RTSEngine.Signal;
 
 namespace RTSEngine.Refactoring
 {
-    public class CameraInstaller : MonoInstaller
+
+    [CreateAssetMenu(fileName = "CameraInstaller", menuName = "Installers/CameraInstaller")]
+    public class CameraInstaller : ScriptableObjectInstaller<CameraInstaller>
     {
         [SerializeField]
         private RTSCameraClamperComponent cameraClamper;
