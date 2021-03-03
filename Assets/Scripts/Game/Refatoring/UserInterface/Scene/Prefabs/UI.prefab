@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d94714dd3bc9c74997766e4961b6f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raycaster: {fileID: 4586136237947085110}
   _actionPanel: {fileID: 1481238383275628164}
   _bannerPanel: {fileID: 1475742233100505105}
   _itemPanel: {fileID: 1481238384614040489}

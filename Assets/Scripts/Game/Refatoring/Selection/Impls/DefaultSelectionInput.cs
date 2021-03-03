@@ -8,19 +8,20 @@ namespace RTSEngine.Refactoring
 {
     public class DefaultSelectionInput : MonoBehaviour
     {
-        [SerializeField] private KeyCode PartyKeyCode = KeyCode.Z;
         private bool preventSelection;
         private bool isSelecting;
-        protected Vector3 _startScreenPoint;
-        protected GameSignalBus _signalBus;
+        private Vector3 _startScreenPoint;
+        private GameSignalBus _signalBus;
 
         public bool IsSelecting { get => isSelecting; set => isSelecting = value; }
         public bool PreventSelection { get => preventSelection; set => preventSelection = value; }
+        public Vector3 StartScreenPoint { get => _startScreenPoint; set => _startScreenPoint = value; }
+        public GameSignalBus SignalBus { get => _signalBus; set => _signalBus = value; }
 
         [Inject]
         public void Construct(GameSignalBus signalBus)
         {
-            this._signalBus = signalBus;
+            this.SignalBus = signalBus;
         }
 
         void Update()
@@ -34,12 +35,12 @@ namespace RTSEngine.Refactoring
             if (Input.GetMouseButtonDown(0) && !PreventSelection)
             {
                 IsSelecting = true;
-                _startScreenPoint = Input.mousePosition;
+                StartScreenPoint = Input.mousePosition;
             }
             if (Input.GetMouseButtonUp(0) && isSelecting)
             {
                 IsSelecting = false;
-                _signalBus.Fire(new AreaSelectionSignal() { StartPoint = _startScreenPoint, EndPoint = Input.mousePosition });
+                SignalBus.Fire(new AreaSelectionSignal() { StartPoint = StartScreenPoint, EndPoint = Input.mousePosition });
             }
         }
 

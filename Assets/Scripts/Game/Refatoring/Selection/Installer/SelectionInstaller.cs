@@ -31,9 +31,9 @@ namespace RTSEngine.Refactoring
             Container.Bind<IIndividualSelection>().To<IndividualSelection>().AsSingle();
             Container.Bind<IModifiersComponent>().To<Modifiers>().FromScriptableObject(_modifiersComponent).AsSingle();
             Container.Bind<IViewportHelper>().To<ViewportHelper>().FromScriptableObject(_viewportHelper).AsSingle();
-            Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSet>().FromScriptableObject(_runtimeSet).AsSingle().IfNotBound();
-            Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsSingle().IfNotBound();
-            Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupSortComparerComponent>().FromComponentInNewPrefab(_groupSortComparer).AsSingle().IfNotBound();
+            Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSet>().FromScriptableObject(_runtimeSet).AsCached().IfNotBound();
+            Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsCached().IfNotBound();
+            Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupSortComparerComponent>().FromComponentInNewPrefab(_groupSortComparer).AsCached().IfNotBound();
 
             foreach (var item in _modifiersComponent.GetModifiers())
             {

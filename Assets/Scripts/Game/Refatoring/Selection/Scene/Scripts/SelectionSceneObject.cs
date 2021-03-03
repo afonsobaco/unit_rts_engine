@@ -8,8 +8,11 @@ namespace RTSEngine.Refactoring.Scene.Selection
     public class SelectionSceneObject : DefaultSelectable
     {
         [SerializeField] private SelectionMark selectionMark;
+        [SerializeField] private Renderer mainRenderer;
 
         private GameSignalBus _signalBus;
+
+        public Renderer MainRenderer { get => mainRenderer; set => mainRenderer = value; }
 
         [Inject]
         public void Construct(GameSignalBus signalBus)

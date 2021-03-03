@@ -130,9 +130,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 15558052}
-  - component: {fileID: 15558049}
-  - component: {fileID: 15558050}
   - component: {fileID: 15558051}
+  - component: {fileID: 15558050}
+  - component: {fileID: 15558049}
+  - component: {fileID: 15558053}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -149,12 +150,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 15558048}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e689802ab55f17142ae28fb01063eec4, type: 3}
+  m_Script: {fileID: 11500000, guid: 229a78d3197d35d48b250d2af538b6d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ToRemoveKeyCode: 304
-  ChangeSubGroupKeyCode: 9
-  CenterCameraToSelection: 32
+  _toRemoveKeyCode: 304
+  _changeSubGroupKeyCode: 9
+  _centerCameraKeyCode: 32
+  _partyKeyCode: 122
 --- !u!114 &15558050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,12 +166,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 15558048}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eca7d0918c4bd145b6725fab242ac83, type: 3}
+  m_Script: {fileID: 11500000, guid: ee69cdc45072e614a88a01f5bb31f6f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GroupKeyCode: 122
   _selectionBox: {fileID: 616844836}
-  raycaster: {fileID: 0}
 --- !u!114 &15558051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,7 +179,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 15558048}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 526d8a358091b8246aae525ca577598a, type: 3}
+  m_Script: {fileID: 11500000, guid: 617d4281572b55142aeca7e3053b91c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mousePanButton: 325
@@ -199,6 +199,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &15558053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15558048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bebe004cdfefe2438ef7054130ac031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objects:
+  - {fileID: 158547551831246352, guid: 620ed987f0f02224ebd9e57d7a6031d4, type: 3}
+  - {fileID: 568252041003937851, guid: ebf9e89d0ded3db4bad5b348e6faa271, type: 3}
+  - {fileID: 4743669159949584747, guid: cd614c6a1d13371478333e6d774d8d12, type: 3}
+  - {fileID: 6909930287666605681, guid: b21ab446c9c072149a5319387af1e277, type: 3}
+  - {fileID: 6909930287666605681, guid: db0e36d9ee018b34b8c0a14a5902af66, type: 3}
 --- !u!1 &161439088
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,12 +247,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: f5424ad576e13264cbd201b0aafa21ac, type: 2}
+  - {fileID: 11400000, guid: c69ef84f4da4a7444aedf2f821a20270, type: 2}
+  - {fileID: 11400000, guid: 1fa808d14c5fe7b4cab8932fc74d69f6, type: 2}
   _monoInstallers: []
   _installerPrefabs: []
-  _autoRun: 0
+  _autoRun: 1
   OnPreInstall:
     m_PersistentCalls:
       m_Calls: []
@@ -270,7 +288,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh15768
+  m_Name: pb_Mesh30698
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

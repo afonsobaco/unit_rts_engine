@@ -10,6 +10,8 @@ namespace RTSEngine.Refactoring
 {
     public class UserInterfaceBaseComponent : MonoBehaviour
     {
+
+        [SerializeField] private GraphicRaycaster raycaster;
         [SerializeField] private RectTransform _actionPanel;
         [SerializeField] private RectTransform _bannerPanel;
         [SerializeField] private RectTransform _itemPanel;
@@ -21,6 +23,7 @@ namespace RTSEngine.Refactoring
         public RectTransform ItemPanel { get => _itemPanel; set => _itemPanel = value; }
         public RectTransform MiniaturePanel { get => _miniaturePanel; set => _miniaturePanel = value; }
         public RectTransform PortraitPanel { get => _portraitPanel; set => _portraitPanel = value; }
+        public GraphicRaycaster Raycaster { get => raycaster; set => raycaster = value; }
 
         public void ClearPanel(RectTransform panel)
         {

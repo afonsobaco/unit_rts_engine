@@ -31,9 +31,9 @@ namespace RTSEngine.Refactoring
             Container.Bind<UserInterfaceManager>().AsSingle();
             Container.Bind<UserInterface>().AsSingle();
             Container.Bind<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase).NonLazy();
-            Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSet>().FromScriptableObject(_runtimeSet).AsSingle().IfNotBound();
-            Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsSingle().IfNotBound();
-            Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupSortComparerComponent>().FromComponentInNewPrefab(_groupSortComparer).AsSingle().IfNotBound();
+            Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSet>().FromScriptableObject(_runtimeSet).AsCached().IfNotBound();
+            Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsCached().IfNotBound();
+            Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupSortComparerComponent>().FromComponentInNewPrefab(_groupSortComparer).AsCached().IfNotBound();
 
             //External In
             Container.DeclareSignal<SelectionUpdateSignal>();
@@ -43,7 +43,7 @@ namespace RTSEngine.Refactoring
             Container.DeclareSignal<AlternateSubGroupSignal>();
             Container.DeclareSignal<MiniatureClickedSignal>();
             Container.DeclareSignal<PortraitClickedSignal>();
-            Container.DeclareSignal<BannerClickedSignal>();
+            Container.DeclareSignal<PartySelectedSignal>();
             Container.DeclareSignal<MapClickedSignal>();
             Container.DeclareSignal<ActionClickedSignal>();
 
@@ -57,7 +57,7 @@ namespace RTSEngine.Refactoring
             Container.BindSignal<AlternateSubGroupSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnAlternateSubGroup).FromResolve();
             Container.BindSignal<MiniatureClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnMiniatureClicked).FromResolve();
             Container.BindSignal<PortraitClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnPortraitClicked).FromResolve();
-            Container.BindSignal<BannerClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnBannerClicked).FromResolve();
+            Container.BindSignal<PartySelectedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnBannerClicked).FromResolve();
             Container.BindSignal<MapClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnMapClicked).FromResolve();
             Container.BindSignal<ActionClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnActionClicked).FromResolve();
 
@@ -70,8 +70,11 @@ namespace RTSEngine.Refactoring
 
         private void UpdateUserInterfaceBase(InjectContext ctx, UserInterfaceBase userInterfaceBase)
         {
-            GameObject gameObject = Container.InstantiatePrefab(_userInterfacePrefab);
-            userInterfaceBase.UserInterfaceBaseComponent = gameObject.GetComponent<UserInterfaceBaseComponent>();
+            if (!ctx.Container.IsValidating)
+            {
+                GameObject gameObject = Container.InstantiatePrefab(_userInterfacePrefab);
+                userInterfaceBase.UserInterfaceBaseComponent = gameObject.GetComponent<UserInterfaceBaseComponent>();
+            }
         }
     }
 }

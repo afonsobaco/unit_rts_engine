@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d86dc5c727ad0e49b992e2ee38563e2, type: 3}
+  m_Name: IntegrationSceneCanBeGroupedSelectionModifier
+  m_EditorClassIdentifier: 
+  active: 1
+  restrictedTypes: 
+  _modifierHelper: {fileID: 379558059759343409, guid: 79356b2457f368d498676ae1df3c879c,
+    type: 3}

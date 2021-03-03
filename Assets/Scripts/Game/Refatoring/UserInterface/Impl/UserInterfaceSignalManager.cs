@@ -46,7 +46,7 @@ namespace RTSEngine.Refactoring
             _userInterfaceManager.DoPortraitClicked(signal.Selected);
         }
 
-        public void OnBannerClicked(BannerClickedSignal signal)
+        public void OnBannerClicked(PartySelectedSignal signal)
         {
             _userInterfaceManager.DoBannerClicked(signal.PartyId);
         }

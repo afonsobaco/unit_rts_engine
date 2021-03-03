@@ -44,7 +44,7 @@ public class DefaultUserInterfaceInput : MonoBehaviour
             }
             else
             {
-                _signalBus.Fire(new ChangeSelectionSignal() { Selection = _userInterface.GetParty(partyKeyPressed) });
+                _signalBus.Fire(new PartySelectedSignal() { PartyId = partyKeyPressed });
             }
         }
     }

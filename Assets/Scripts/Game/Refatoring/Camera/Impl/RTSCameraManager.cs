@@ -8,9 +8,9 @@ namespace RTSEngine.Refactoring
 {
     public class RTSCameraManager
     {
-        private ICameraClamper _clamper;
+        private IRTSCameraClamper _clamper;
 
-        public RTSCameraManager(ICameraClamper clamper)
+        public RTSCameraManager(IRTSCameraClamper clamper)
         {
             _clamper = clamper;
         }

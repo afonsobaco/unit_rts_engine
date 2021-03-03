@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 802277685384417532}
   - component: {fileID: 802277685384417533}
   - component: {fileID: 802277685384417534}
-  - component: {fileID: -1476169258204229805}
+  - component: {fileID: -2813199876698887072}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -120,8 +120,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -1476169258204229805}
-        m_MethodName: Clicked
+      - m_Target: {fileID: -2813199876698887072}
+        m_MethodName: DoClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -131,7 +131,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &-1476169258204229805
+--- !u!114 &-2813199876698887072
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 802277685384417505}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e80d073be8cadae4fabd10aebd6d76fb, type: 3}
+  m_Script: {fileID: 11500000, guid: 32afc8d821493614e92e12472fa240c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8016521113373009450
