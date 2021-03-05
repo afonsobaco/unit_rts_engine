@@ -26,7 +26,7 @@ namespace RTSEngine.Refactoring
             {
                 //TODO test this intergated
                 Debug.Log(" Perform Selection On " + clicked.Position);
-                _signalBus.Fire(new IndividualSelectionSignal() { Clicked = clicked, OnSelection = true });
+                _signalBus.Fire(new IndividualSelectionSignal() { Clicked = clicked, IsUISelection = true });
             }
         }
 

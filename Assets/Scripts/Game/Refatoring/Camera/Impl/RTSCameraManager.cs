@@ -10,6 +10,7 @@ namespace RTSEngine.Refactoring
     {
         private IRTSCameraClamper _clamper;
 
+        //TODO test
         public RTSCameraManager(IRTSCameraClamper clamper)
         {
             _clamper = clamper;
@@ -34,6 +35,20 @@ namespace RTSEngine.Refactoring
             float deltaTime = Time.deltaTime;
             cameraTransform.position += desiredZoom;
             return _clamper.ClampCameraPos(cameraTransform);
+        }
+
+        public Vector3 DoCameraCenter(Transform cameraTransform, Vector3 desiredPosition)
+        {
+            float z = desiredPosition.z - GetCameraZDistance(cameraTransform);
+            cameraTransform.position = new Vector3(desiredPosition.x, cameraTransform.position.y, (float)z);
+            return _clamper.ClampCameraPos(cameraTransform);
+        }
+
+        private float GetCameraZDistance(Transform cameraTransform)
+        {
+            float angle = 90 - cameraTransform.rotation.eulerAngles.x;
+            angle = Mathf.Clamp(angle, 0, 80); // prevent weird angles
+            return (cameraTransform.position.y * Mathf.Tan(angle * Mathf.Deg2Rad));
         }
     }
 }

@@ -50,7 +50,7 @@ namespace Tests
         }
 
         [TestCaseSource(nameof(Scenarios))]
-        public void ShouldApplyModifierIndividualOnSelection(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
+        public void ShouldApplyModifierIndividualUISelection(int amount, int[] oldSelectionIndexes, int[] newSelectionIndexes)
         {
             ISelectable[] mainList = TestUtils.GetSomeObjects(amount, amount);
             ISelectable[] oldSelection = TestUtils.GetListByIndex(oldSelectionIndexes, mainList);
@@ -64,7 +64,7 @@ namespace Tests
             modifier.WhenForAnyArgs(x => x.GetAllOnScreenArea()).DoNotCallBase();
             modifier.GetAllOnScreenArea().ReturnsForAnyArgs(mainList);
 
-            var result = modifier.Apply(true, oldSelection, newSelection, SelectionType.INDIVIDUAL_ON_SELECTION);
+            var result = modifier.Apply(true, oldSelection, newSelection, SelectionType.UI_SELECTION);
 
             CollectionAssert.AreEquivalent(expected, result);
             if (newSelection.Length == 1)

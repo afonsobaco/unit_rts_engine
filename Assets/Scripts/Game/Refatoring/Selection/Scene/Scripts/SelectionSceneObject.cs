@@ -46,7 +46,7 @@ namespace RTSEngine.Refactoring.Scene.Selection
 
         private void OnMouseUpAsButton()
         {
-            _signalBus.Fire(new IndividualSelectionSignal() { Clicked = this, OnSelection = false });
+            _signalBus.Fire(new IndividualSelectionSignal() { Clicked = this, IsUISelection = false });
         }
 
     }

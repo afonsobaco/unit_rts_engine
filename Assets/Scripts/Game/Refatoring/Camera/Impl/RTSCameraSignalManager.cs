@@ -40,7 +40,7 @@ namespace RTSEngine.Refactoring
         public void OnCameraGoToPositionSignal(CameraGoToPositionSignal signal)
         {
             Transform transform = Camera.main.transform;
-            transform.position = signal.Position;
+            transform.position = _cameraManager.DoCameraCenter(transform, signal.Position);
         }
 
     }

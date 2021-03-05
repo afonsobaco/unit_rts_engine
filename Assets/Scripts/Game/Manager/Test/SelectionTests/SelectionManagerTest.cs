@@ -19,7 +19,7 @@ namespace Tests.Manager
         {
             manager = Substitute.ForPartsOf<SelectionManager>();
             var so = Substitute.For<IRuntimeSet<ISelectableObject>>();
-            manager.SetMainList(so.GetAllItems());
+            manager.SetMainList(new HashSet<ISelectableObject>());
             manager.SetGroupNumperPressed(0);
             manager.When(x => x.GetObjectClicked()).DoNotCallBase();
             manager.GetObjectClicked().Returns(x => null);

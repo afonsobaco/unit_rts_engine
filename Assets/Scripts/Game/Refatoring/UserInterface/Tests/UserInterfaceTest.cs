@@ -32,7 +32,7 @@ namespace Tests
         [Test]
         public void ShouldReturnNullHighlightedWhenSelectionIsEmpty()
         {
-            _userInterface.DoSelectionUpdate(new ISelectable[] { });
+            _userInterface.DoSelectionUpdate(new ISelectable[] { }, true);
             Assert.Null(_userInterface.Highlighted);
         }
 
@@ -40,7 +40,7 @@ namespace Tests
         public void ShouldReturnHighlightedAsTheFirstItemOnSelection()
         {
             var selectables = TestUtils.GetSomeObjects(10);
-            _userInterface.DoSelectionUpdate(selectables);
+            _userInterface.DoSelectionUpdate(selectables, true);
             Assert.NotNull(_userInterface.Highlighted);
             Assert.AreEqual(selectables[0], _userInterface.Highlighted);
         }
@@ -56,7 +56,7 @@ namespace Tests
         public void ShouldGetNextHighlightedWhenDoNextSubGroup()
         {
             ISelectable[] selectables = TestUtils.GetSomeObjects(Amount);
-            _userInterface.ActualSelection = selectables;
+            _userInterface.SetActualSelection(selectables);
             _userInterface.Highlighted = selectables[0];
 
             _userInterface.DoNextSubGroup();
@@ -69,7 +69,7 @@ namespace Tests
         public void ShouldGoBackToFirstWhenDoNextSubGroupAtEndOfSubGroups()
         {
             ISelectable[] selectables = TestUtils.GetSomeObjects(Amount);
-            _userInterface.ActualSelection = selectables;
+            _userInterface.SetActualSelection(selectables);
             _userInterface.Highlighted = selectables[Amount / 2];
 
             _userInterface.DoNextSubGroup();
@@ -88,7 +88,7 @@ namespace Tests
         public void ShouldGetPreviousHighlightedWhenDoPreviousSubGroup()
         {
             ISelectable[] selectables = TestUtils.GetSomeObjects(Amount);
-            _userInterface.ActualSelection = selectables;
+            _userInterface.SetActualSelection(selectables);
             _userInterface.Highlighted = selectables[Amount / 2];
 
             _userInterface.DoPreviousSubGroup();
@@ -100,7 +100,7 @@ namespace Tests
         public void ShouldGoToLastWhenDoPreviousSubGroupAtStartOfSubGroups()
         {
             ISelectable[] selectables = TestUtils.GetSomeObjects(Amount);
-            _userInterface.ActualSelection = selectables;
+            _userInterface.SetActualSelection(selectables);
             _userInterface.Highlighted = selectables[0];
 
             _userInterface.DoPreviousSubGroup();

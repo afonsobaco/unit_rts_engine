@@ -9,13 +9,10 @@ namespace RTSEngine.Refactoring
     {
         public override void DoClick()
         {
-            Debug.Log("Portrait");
         }
 
         public override void DoPress()
         {
-            if (ObjectReference is ISelectable)
-                Debug.Log((ObjectReference as ISelectable).Position);
         }
         public class Factory : PlaceholderFactory<DefaultPortraitButton>
         {

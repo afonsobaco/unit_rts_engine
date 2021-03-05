@@ -39,24 +39,24 @@ namespace RTSEngine.Refactoring
 
         public void OnChangeSelectionSignal(ChangeSelectionSignal signal)
         {
-            var result = _selection.DoSelection(signal.Selection, SelectionType.MULTIPLE);
-            _signalBus.Fire(new SelectionUpdateSignal() { Selection = result });
+            var result = _selection.DoSelection(signal.Selection, SelectionType.UI_SELECTION);
+            _signalBus.Fire(new SelectionUpdateSignal() { Selection = result, IsUISelection = true });
         }
 
         public void OnIndividualSelectionSignal(IndividualSelectionSignal signal)
         {
-            this.BlockAreaSelection = true;
             var selection = _selectionManager.GetIndividualSelection(GetMainList(), signal.Clicked);
             ISelectable[] result;
-            if (signal.OnSelection)
+            if (signal.IsUISelection)
             {
-                result = _selection.DoSelection(selection, SelectionType.INDIVIDUAL_ON_SELECTION);
+                result = _selection.DoSelection(selection, SelectionType.UI_SELECTION);
             }
             else
             {
+                this.BlockAreaSelection = true;
                 result = _selection.DoSelection(selection, SelectionType.INDIVIDUAL);
             }
-            _signalBus.Fire(new SelectionUpdateSignal() { Selection = result });
+            _signalBus.Fire(new SelectionUpdateSignal() { Selection = result, IsUISelection = signal.IsUISelection });
         }
 
         public void OnSelectableObjectCreatedSignal(SelectableObjectCreatedSignal signal)
@@ -71,7 +71,7 @@ namespace RTSEngine.Refactoring
 
         public virtual ISelectable[] GetMainList()
         {
-            return _mainList.GetAllItems().ToArray();
+            return _mainList.GetMainList().ToArray();
         }
     }
 }

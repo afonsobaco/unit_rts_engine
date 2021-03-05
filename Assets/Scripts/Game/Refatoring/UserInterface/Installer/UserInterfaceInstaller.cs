@@ -30,7 +30,7 @@ namespace RTSEngine.Refactoring
             Container.Bind<UserInterfaceSignalManager>().AsSingle();
             Container.Bind<UserInterfaceManager>().AsSingle();
             Container.Bind<UserInterface>().AsSingle();
-            Container.Bind<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase).NonLazy();
+            Container.BindInterfacesAndSelfTo<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase).NonLazy();
             Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSet>().FromScriptableObject(_runtimeSet).AsCached().IfNotBound();
             Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsCached().IfNotBound();
             Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupSortComparerComponent>().FromComponentInNewPrefab(_groupSortComparer).AsCached().IfNotBound();

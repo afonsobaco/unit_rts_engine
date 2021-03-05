@@ -11,16 +11,12 @@ namespace Tests
     {
         private Selection _selection;
         private ModifiersInterface _modifiersInterface;
-        private IRuntimeSet<ISelectable> _mainList;
 
         [SetUp]
         public void SetUp()
         {
             _modifiersInterface = Substitute.For<ModifiersInterface>(new object[] { default });
-            _mainList = Substitute.For<IRuntimeSet<ISelectable>>();
-
-            _selection = Substitute.ForPartsOf<Selection>(new object[] { _modifiersInterface, _mainList });
-
+            _selection = Substitute.ForPartsOf<Selection>(new object[] { _modifiersInterface, default });
             _modifiersInterface.ApplyAll(Arg.Any<ISelectable[]>(), Arg.Any<ISelectable[]>(), Arg.Any<SelectionType>()).Returns(x => x[1]);
         }
 
@@ -38,7 +34,7 @@ namespace Tests
 
             _selection.DoSelection(expected, default);
 
-            CollectionAssert.AreEquivalent(expected, _selection.GetCurrent());
+            CollectionAssert.AreEquivalent(expected, _selection.GetActualSelection());
 
         }
     }

@@ -14,7 +14,16 @@ namespace RTSEngine.Refactoring
         private ISelectable _highlighted;
 
         public ISelectable Highlighted { get => _highlighted; set => _highlighted = value; }
-        public ISelectable[] ActualSelection { get => _actualSelection; set => _actualSelection = value; }
+
+        public ISelectable[] GetActualSelection()
+        {
+            return _actualSelection;
+        }
+        public void SetActualSelection(ISelectable[] value)
+        {
+            _actualSelection = value;
+        }
+
         public Dictionary<object, ISelectable[]> Parties { get => _parties; set => _parties = value; }
 
         private IEqualityComparer<ISelectable> _equalityComparer;
@@ -24,15 +33,18 @@ namespace RTSEngine.Refactoring
             _equalityComparer = equalityComparer;
         }
 
-        public void DoSelectionUpdate(ISelectable[] selection)
+        public void DoSelectionUpdate(ISelectable[] selection, bool isUISelection)
         {
-            this.ActualSelection = selection;
-            this.Highlighted = null;
-            if (ActualSelection.Length > 0)
+            this._actualSelection = selection;
+            if (!isUISelection || this.Highlighted == null || !this._actualSelection.Contains(this.Highlighted))
             {
-                this.Highlighted = selection[0];
-                UpdateAllHighlighted();
+                this.Highlighted = null;
+                if (_actualSelection.Length > 0)
+                {
+                    this.Highlighted = selection[0];
+                }
             }
+            UpdateAllHighlighted();
         }
 
         public virtual void AlternateSubGroup(bool previous)
@@ -65,8 +77,8 @@ namespace RTSEngine.Refactoring
 
         public virtual void DoPartyUpdate(object partyId)
         {
-            if (ActualSelection.Length > 0)
-                this.Parties[partyId] = ActualSelection;
+            if (_actualSelection.Length > 0)
+                this.Parties[partyId] = _actualSelection;
             else
                 this.Parties.Remove(partyId);
         }
@@ -124,5 +136,7 @@ namespace RTSEngine.Refactoring
             }
             return list;
         }
+
+
     }
 }

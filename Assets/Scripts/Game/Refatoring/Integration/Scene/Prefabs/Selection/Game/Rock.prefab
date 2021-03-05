@@ -93,6 +93,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _containerSource: 2
+  picture: {fileID: -5904420342645070368, guid: 40a8632ee625c4248b0f985ec2a0be94,
+    type: 3}
+  objectName: Rock
   selectionMark: {fileID: 1898340702518819837}
 --- !u!114 &-3522005625147510110
 MonoBehaviour:

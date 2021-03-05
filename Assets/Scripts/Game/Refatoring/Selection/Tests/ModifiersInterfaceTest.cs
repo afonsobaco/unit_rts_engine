@@ -36,7 +36,7 @@ namespace Tests
             multiple_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
             list.Add(multiple_modifier);
             individual_modifier = Substitute.For<ISelectionModifier>();
-            individual_modifier.RestrictedTypes = new SelectionType[] { SelectionType.INDIVIDUAL, SelectionType.INDIVIDUAL_ON_SELECTION };
+            individual_modifier.RestrictedTypes = new SelectionType[] { SelectionType.INDIVIDUAL, SelectionType.UI_SELECTION };
             individual_modifier.Apply(Arg.Any<SelectionInfo>()).Returns(x => (x[0] as SelectionInfo).ActualSelection);
             list.Add(individual_modifier);
             return list.ToArray();
@@ -73,9 +73,9 @@ namespace Tests
         }
 
         [Test]
-        public void ShouldApplyAllModifiersOfIndividualOnSelectionType()
+        public void ShouldApplyAllModifiersOfIndividualUISelectionType()
         {
-            SelectionType type = SelectionType.INDIVIDUAL_ON_SELECTION;
+            SelectionType type = SelectionType.UI_SELECTION;
             ISelectable[] newSelection = TestUtils.GetSomeObjects(Random.Range(1, 5));
             ISelectable[] oldSelection = new ISelectable[] { };
             var result = _modifiersInterface.ApplyAll(oldSelection, newSelection, type);

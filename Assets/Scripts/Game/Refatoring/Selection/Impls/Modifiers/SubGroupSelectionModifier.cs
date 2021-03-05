@@ -62,7 +62,7 @@ namespace RTSEngine.Refactoring
             {
                 if (active && actualSelection.Length == 1)
                 {
-                    ISelectable[] selectables = type == SelectionType.INDIVIDUAL_ON_SELECTION ? oldSelection : GetAllOnScreenArea();
+                    ISelectable[] selectables = type == SelectionType.UI_SELECTION ? oldSelection : GetAllOnScreenArea();
                     return FilterBySubGroup(selectables, actualSelection.First());
                 }
                 return actualSelection;
@@ -75,7 +75,7 @@ namespace RTSEngine.Refactoring
 
             public virtual ISelectable[] GetMainList()
             {
-                return MainList.GetAllItems().ToArray();
+                return MainList.GetMainList().ToArray();
             }
 
             public virtual ISelectable[] FilterBySubGroup(ISelectable[] selectables, ISelectable selected)

@@ -17,13 +17,13 @@ MonoBehaviour:
   _groupSortComparer: {fileID: 8974754553238443750, guid: 988b398a4dea6e747bd2f1d29fe0b27e,
     type: 3}
   _runtimeSet: {fileID: 11400000, guid: 7f6ab4fd290cbcb4790be015c13ad443, type: 2}
-  _actionPrefab: {fileID: -1476169258204229805, guid: 31008c02298ac554b87ce631cfb6afdf,
+  _actionPrefab: {fileID: -8284991165333103757, guid: 31008c02298ac554b87ce631cfb6afdf,
     type: 3}
-  _bannerPrefab: {fileID: 3904165636738703879, guid: 1c1243a623aa4e44d93095a64256bf6f,
+  _bannerPrefab: {fileID: 7329103006491024917, guid: 1c1243a623aa4e44d93095a64256bf6f,
     type: 3}
   _itemPrefab: {fileID: -2813199876698887072, guid: b4e58c0a41084284c9ba783a4cbe7891,
     type: 3}
-  _miniaturePrefab: {fileID: 3379047794782360086, guid: c3b27828f6a71a642a72cad85f029e40,
+  _miniaturePrefab: {fileID: 1552124228507457847, guid: c3b27828f6a71a642a72cad85f029e40,
     type: 3}
   _portraitPrefab: {fileID: 7602313565542962461, guid: dc1ea73a229147d4198bd0a09b87af53,
     type: 3}

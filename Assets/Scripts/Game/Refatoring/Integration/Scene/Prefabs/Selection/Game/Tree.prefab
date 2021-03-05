@@ -377,6 +377,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _containerSource: 2
+  picture: {fileID: 5063466513527928634, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
+  objectName: Tree
   selectionMark: {fileID: 6660385144150934189}
 --- !u!114 &-6909109685966195674
 MonoBehaviour:

@@ -24,7 +24,7 @@ namespace RTSEngine.Refactoring
         {
             Container.Bind<SelectionSignalManager>().AsSingle();
             Container.Bind<SelectionManager>().AsSingle();
-            Container.Bind<Selection>().AsSingle();
+            Container.BindInterfacesAndSelfTo<Selection>().AsSingle();
             Container.Bind<ModifiersInterface>().AsSingle();
             Container.Bind<IAreaSelectionType>().To<PolyAreaSelectionType>().AsSingle();
             Container.Bind<IAreaSelection>().To<AreaSelection>().AsSingle();

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 802277685384417532}
   - component: {fileID: 802277685384417533}
   - component: {fileID: 802277685384417534}
-  - component: {fileID: 3904165636738703879}
+  - component: {fileID: 7329103006491024917}
   m_Layer: 5
   m_Name: Banner
   m_TagString: Untagged
@@ -121,8 +121,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3904165636738703879}
-        m_MethodName: Clicked
+      - m_Target: {fileID: 7329103006491024917}
+        m_MethodName: DoClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -132,7 +132,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &3904165636738703879
+--- !u!114 &7329103006491024917
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 802277685384417505}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c189dbd81d910364699deb18892e28b3, type: 3}
+  m_Script: {fileID: 11500000, guid: ea813a11500bf5541b1e3570516f6f62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2183375757954128786

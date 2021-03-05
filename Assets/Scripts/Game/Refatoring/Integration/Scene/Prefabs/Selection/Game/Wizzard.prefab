@@ -440,6 +440,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _containerSource: 2
+  picture: {fileID: 4956942758328581113, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
+  objectName: Wizzard
   selectionMark: {fileID: 4782704107103593911}
 --- !u!114 &4629989173271284233
 MonoBehaviour:

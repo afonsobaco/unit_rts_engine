@@ -6,11 +6,11 @@ using Zenject;
 
 namespace RTSEngine.Refactoring
 {
-    public class Selection
+    public class Selection : ITickable
     {
         private ModifiersInterface _modifiersInterface;
         private IRuntimeSet<ISelectable> _mainList;
-        private ISelectable[] _current = new ISelectable[] { };
+        private ISelectable[] _actualSelection = new ISelectable[] { };
         private bool isSelecting;
 
         public Selection(ModifiersInterface modifiersInterface, IRuntimeSet<ISelectable> mainList)
@@ -21,26 +21,26 @@ namespace RTSEngine.Refactoring
 
         public virtual ISelectable[] DoSelection(ISelectable[] selection, SelectionType type)
         {
-            var modified = _modifiersInterface.ApplyAll(_current, selection, type);
+            var modified = _modifiersInterface.ApplyAll(_actualSelection, selection, type);
             return FinalizeSelection(modified);
         }
 
         public virtual ISelectable[] FinalizeSelection(ISelectable[] selection)
         {
             ChangeSelectionStatus(selection);
-            this._current = selection;
-            return _current;
+            this._actualSelection = selection;
+            return _actualSelection;
         }
 
         private void ChangeSelectionStatus(ISelectable[] selection)
         {
-            for (var i = 0; i < _current.Length; i++)
+            for (var i = 0; i < _actualSelection.Length; i++)
             {
-                if (!selection.Contains(_current[i]))
+                if (!selection.Contains(_actualSelection[i]))
                 {
-                    _current[i].IsSelected = false;
+                    _actualSelection[i].IsSelected = false;
                 }
-                _current[i].IsHighlighted = false;
+                _actualSelection[i].IsHighlighted = false;
             }
             for (var i = 0; i < selection.Length; i++)
             {
@@ -48,10 +48,14 @@ namespace RTSEngine.Refactoring
             }
         }
 
-        public virtual ISelectable[] GetCurrent()
+        public virtual ISelectable[] GetActualSelection()
         {
-            return this._current;
+            return this._actualSelection;
         }
 
+        public void Tick()
+        {
+            _actualSelection = _actualSelection.Where(x => _mainList.GetMainList().Contains(x)).ToArray();
+        }
     }
 }

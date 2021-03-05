@@ -1,7 +1,7 @@
 using Zenject;
 using UnityEngine;
 using RTSEngine.Manager;
-using System;
+using System.Collections.Generic;
 
 namespace RTSEngine.Installers
 {
@@ -47,7 +47,7 @@ namespace RTSEngine.Installers
         {
             if (this._selectionManager != null)
             {
-                this._selectionManager.SetMainList(this._selectableList.GetAllItems());
+                this._selectionManager.SetMainList(new HashSet<ISelectableObject>(this._selectableList.GetMainList()));
                 this._selectionManager.SetSettings(this._settings);
             }
         }

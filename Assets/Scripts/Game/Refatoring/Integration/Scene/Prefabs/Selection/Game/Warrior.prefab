@@ -440,6 +440,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _containerSource: 2
+  picture: {fileID: -903730026294837061, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
+  objectName: Warrior
   selectionMark: {fileID: 4782704107103593911}
 --- !u!114 &3784724875939911964
 MonoBehaviour:

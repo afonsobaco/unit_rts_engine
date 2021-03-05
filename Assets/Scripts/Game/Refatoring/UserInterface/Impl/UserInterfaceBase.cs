@@ -1,14 +1,11 @@
 using UnityEngine;
 using Zenject;
 using RTSEngine.Core;
-using RTSEngine.Signal;
-using RTSEngine.Utils;
-using UnityEngine.UI;
-using System;
+using System.Linq;
 
 namespace RTSEngine.Refactoring
 {
-    public class UserInterfaceBase
+    public class UserInterfaceBase : ITickable
     {
 
         private UserInterface _userInterface;
@@ -18,7 +15,10 @@ namespace RTSEngine.Refactoring
         private DefaultMiniatureButton.Factory _miniatureFactory;
         private DefaultPortraitButton.Factory _portraitFactory;
 
-        public UserInterfaceBase(UserInterface userInterface, DefaultActionButton.Factory actionFactory, DefaultBannerButton.Factory bannerFactory, DefaultItemButton.Factory itemFactory, DefaultMiniatureButton.Factory miniatureFactory, DefaultPortraitButton.Factory portraitFactory)
+        private IRuntimeSet<ISelectable> _mainList;
+
+
+        public UserInterfaceBase(UserInterface userInterface, DefaultActionButton.Factory actionFactory, DefaultBannerButton.Factory bannerFactory, DefaultItemButton.Factory itemFactory, DefaultMiniatureButton.Factory miniatureFactory, DefaultPortraitButton.Factory portraitFactory, IRuntimeSet<ISelectable> mainList)
         {
             _userInterface = userInterface;
             _actionFactory = actionFactory;
@@ -26,6 +26,7 @@ namespace RTSEngine.Refactoring
             _itemFactory = itemFactory;
             _miniatureFactory = miniatureFactory;
             _portraitFactory = portraitFactory;
+            _mainList = mainList;
         }
 
         public UserInterfaceBaseComponent UserInterfaceBaseComponent { get; set; }
@@ -67,9 +68,9 @@ namespace RTSEngine.Refactoring
             if (UserInterfaceBaseComponent.MiniaturePanel)
             {
                 ClearPanel(UserInterfaceBaseComponent.MiniaturePanel);
-                if (_userInterface.ActualSelection != null)
+                if (_userInterface.GetActualSelection() != null)
                 {
-                    foreach (var selectable in _userInterface.ActualSelection)
+                    foreach (var selectable in _userInterface.GetActualSelection())
                     {
                         var button = CreatePrefabOnPanel(_miniatureFactory, UserInterfaceBaseComponent.MiniaturePanel, selectable);
                     }
@@ -89,8 +90,6 @@ namespace RTSEngine.Refactoring
             }
         }
 
-
-
         private DefaultClickableButton CreatePrefabOnPanel<T>(PlaceholderFactory<T> factory, RectTransform panel, object reference) where T : DefaultClickableButton
         {
             var instance = factory.Create();
@@ -109,6 +108,17 @@ namespace RTSEngine.Refactoring
                     GameObject.Destroy(child.gameObject);
                 }
             }
+        }
+
+        public void Tick()
+        {
+            var aux = _userInterface.GetActualSelection().Where(x => _mainList.GetMainList().Contains(x)).ToArray();
+            if (!_mainList.GetMainList().Contains(_userInterface.Highlighted))
+            {
+                _userInterface.Highlighted = null;
+            }
+            _userInterface.DoSelectionUpdate(aux, true);
+            UpdateAll();
         }
     }
 }

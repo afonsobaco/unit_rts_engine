@@ -24,8 +24,8 @@ namespace Tests
         public void SetUp()
         {
             _selectionManager = Substitute.ForPartsOf<SelectionManager>(new object[] { default, default });
-            _selection = Substitute.ForPartsOf<Selection>(new object[] { default, default });
             _mainList = Substitute.For<IRuntimeSet<ISelectable>>();
+            _selection = Substitute.ForPartsOf<Selection>(new object[] { default, _mainList });
             _signalBus = Substitute.ForPartsOf<GameSignalBus>(new object[] { default });
             _signalBus.WhenForAnyArgs(x => x.Fire(default)).DoNotCallBase();
             _selectionSignalManager = Substitute.ForPartsOf<SelectionSignalManager>(new object[] { _selection, _selectionManager, _mainList, _signalBus });
@@ -110,7 +110,7 @@ namespace Tests
 
             _selectionSignalManager.OnChangeSelectionSignal(signal);
 
-            _selection.Received().DoSelection(expected, SelectionType.MULTIPLE);
+            _selection.Received().DoSelection(expected, SelectionType.UI_SELECTION);
         }
 
     }

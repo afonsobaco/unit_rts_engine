@@ -8,6 +8,6 @@ namespace RTSEngine.Refactoring
     {
         MULTIPLE,
         INDIVIDUAL,
-        INDIVIDUAL_ON_SELECTION,
+        UI_SELECTION,
     }
 }

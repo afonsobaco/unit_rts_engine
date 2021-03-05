@@ -117,7 +117,7 @@ namespace RTSEngine.Refactoring
 
             public virtual ISelectable[] GetMainList()
             {
-                return MainList.GetAllItems().ToArray();
+                return MainList.GetMainList().ToArray();
             }
         }
     }

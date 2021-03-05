@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using RTSEngine.Core;
 
 namespace RTSEngine.Core
 {

@@ -20,7 +20,7 @@ namespace RTSEngine.Refactoring
 
         public void OnSelectionUpdate(SelectionUpdateSignal signal)
         {
-            _userInterface.DoSelectionUpdate(signal.Selection);
+            _userInterface.DoSelectionUpdate(signal.Selection, signal.IsUISelection);
             _userInterfaceBase.UpdateAll();
         }
 
