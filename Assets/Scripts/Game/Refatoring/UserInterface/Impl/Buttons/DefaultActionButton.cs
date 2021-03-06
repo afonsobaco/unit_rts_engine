@@ -10,12 +10,12 @@ namespace RTSEngine.Refactoring
     {
         public override void DoClick()
         {
-            Debug.Log("Action");
+            Debug.Log("Unimplemented: Action");
         }
 
         public override void DoPress()
         {
-            Debug.Log("Action Press");
+            Debug.Log("Unimplemented: Action Press");
         }
         public class Factory : PlaceholderFactory<DefaultActionButton>
         {

@@ -52,6 +52,7 @@ namespace RTSEngine.Refactoring
             UpdateLastClicked(info.NewSelection);
             if (doubleClicked != null)
             {
+                _lastClicked = null;
                 return this._modifier.Apply(info.OldSelection, info.ActualSelection, doubleClicked);
             }
             return info.ActualSelection;

@@ -6,7 +6,7 @@ using Zenject;
 
 namespace RTSEngine.Refactoring
 {
-    public class Selection : ITickable
+    public class Selection
     {
         private ModifiersInterface _modifiersInterface;
         private IRuntimeSet<ISelectable> _mainList;
@@ -53,7 +53,7 @@ namespace RTSEngine.Refactoring
             return this._actualSelection;
         }
 
-        public void Tick()
+        public void UpdateSelection()
         {
             _actualSelection = _actualSelection.Where(x => _mainList.GetMainList().Contains(x)).ToArray();
         }

@@ -10,12 +10,12 @@ namespace RTSEngine.Refactoring
     {
         public override void DoClick()
         {
-            Debug.Log("Banner");
+            Debug.Log("Unimplemented: Banner");
         }
 
         public override void DoPress()
         {
-            Debug.Log("Banner Press");
+            Debug.Log("Unimplemented: Banner Press");
         }
         public class Factory : PlaceholderFactory<DefaultBannerButton>
         {

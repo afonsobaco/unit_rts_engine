@@ -24,7 +24,7 @@ namespace RTSEngine.Refactoring
         {
             Container.Bind<SelectionSignalManager>().AsSingle();
             Container.Bind<SelectionManager>().AsSingle();
-            Container.BindInterfacesAndSelfTo<Selection>().AsSingle();
+            Container.Bind<Selection>().AsSingle();
             Container.Bind<ModifiersInterface>().AsSingle();
             Container.Bind<IAreaSelectionType>().To<PolyAreaSelectionType>().AsSingle();
             Container.Bind<IAreaSelection>().To<AreaSelection>().AsSingle();
@@ -41,6 +41,7 @@ namespace RTSEngine.Refactoring
             }
 
             Container.DeclareSignal<SelectableObjectCreatedSignal>();
+            Container.DeclareSignal<SelectableObjectUpdatedSignal>();
             Container.DeclareSignal<SelectableObjectDeletedSignal>();
             Container.DeclareSignal<AreaSelectionSignal>();
             Container.DeclareSignal<IndividualSelectionSignal>();
@@ -48,6 +49,7 @@ namespace RTSEngine.Refactoring
             Container.DeclareSignal<SelectionUpdateSignal>();
 
             Container.BindSignal<SelectableObjectCreatedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectCreatedSignal).FromResolve();
+            Container.BindSignal<SelectableObjectUpdatedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectUpdatedSignal).FromResolve();
             Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<SelectionSignalManager>(x => x.OnSelectableObjectDeletedSignal).FromResolve();
             Container.BindSignal<AreaSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnAreaSelectionSignal).FromResolve();
             Container.BindSignal<ChangeSelectionSignal>().ToMethod<SelectionSignalManager>(x => x.OnChangeSelectionSignal).FromResolve();

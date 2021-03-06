@@ -24,8 +24,6 @@ namespace RTSEngine.Refactoring
         {
             if (clicked != null)
             {
-                //TODO test this intergated
-                Debug.Log(" Perform Selection On " + clicked.Position);
                 _signalBus.Fire(new IndividualSelectionSignal() { Clicked = clicked, IsUISelection = true });
             }
         }
@@ -34,8 +32,6 @@ namespace RTSEngine.Refactoring
         {
             if (clicked != null)
             {
-                //TODO test this intergated
-                Debug.Log("camera goes to position " + clicked.Position);
                 _signalBus.Fire(new CameraGoToPositionSignal() { Position = clicked.Position });
             }
         }
@@ -44,8 +40,6 @@ namespace RTSEngine.Refactoring
         {
             if (partyId != null)
             {
-                //TODO test this intergated
-                Debug.Log(" Get Party at " + partyId);
                 _signalBus.Fire(new ChangeSelectionSignal() { Selection = _userInterface.GetParty(partyId) });
             }
         }

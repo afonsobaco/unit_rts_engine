@@ -24,7 +24,15 @@ namespace RTSEngine.Refactoring
             _actualSelection = value;
         }
 
-        public Dictionary<object, ISelectable[]> Parties { get => _parties; set => _parties = value; }
+        public Dictionary<object, ISelectable[]> GetParties()
+        {
+            return _parties;
+        }
+
+        public void SetParties(Dictionary<object, ISelectable[]> value)
+        {
+            _parties = value;
+        }
 
         private IEqualityComparer<ISelectable> _equalityComparer;
 
@@ -68,7 +76,7 @@ namespace RTSEngine.Refactoring
         public virtual ISelectable[] GetParty(object partyId)
         {
             ISelectable[] selectables;
-            if (!Parties.TryGetValue(partyId, out selectables))
+            if (!GetParties().TryGetValue(partyId, out selectables))
             {
                 selectables = new ISelectable[0];
             }
@@ -78,9 +86,9 @@ namespace RTSEngine.Refactoring
         public virtual void DoPartyUpdate(object partyId)
         {
             if (_actualSelection.Length > 0)
-                this.Parties[partyId] = _actualSelection;
+                this.GetParties()[partyId] = _actualSelection;
             else
-                this.Parties.Remove(partyId);
+                this.GetParties().Remove(partyId);
         }
 
         public void DoNextSubGroup()

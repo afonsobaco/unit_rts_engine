@@ -61,5 +61,15 @@ namespace RTSEngine.Refactoring
             _userInterfaceManager.DoActionClicked(signal.Selected);
         }
 
+        public void OnSelectableObjectUpdatedSignal(SelectableObjectUpdatedSignal signal)
+        {
+            _userInterfaceBase.UpdatedObject(signal.Selectable);
+        }
+
+        public void OnSelectableObjectDeletedSignal(SelectableObjectDeletedSignal signal)
+        {
+            _userInterfaceBase.DeletedObject(signal.Selectable);
+        }
+
     }
 }

@@ -64,9 +64,16 @@ namespace RTSEngine.Refactoring
             _mainList.Add(signal.Selectable);
         }
 
+        public void OnSelectableObjectUpdatedSignal(SelectableObjectUpdatedSignal signal)
+        {
+            _selection.UpdateSelection();
+        }
+
         public void OnSelectableObjectDeletedSignal(SelectableObjectDeletedSignal signal)
         {
             _mainList.Remove(signal.Selectable);
+            _selection.UpdateSelection();
+
         }
 
         public virtual ISelectable[] GetMainList()

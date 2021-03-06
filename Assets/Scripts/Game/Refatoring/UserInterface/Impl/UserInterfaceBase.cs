@@ -1,11 +1,13 @@
+using RTSEngine.Core;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 using UnityEngine;
 using Zenject;
-using RTSEngine.Core;
-using System.Linq;
 
 namespace RTSEngine.Refactoring
 {
-    public class UserInterfaceBase : ITickable
+    public class UserInterfaceBase
     {
 
         private UserInterface _userInterface;
@@ -49,9 +51,9 @@ namespace RTSEngine.Refactoring
             if (UserInterfaceBaseComponent.BannerPanel)
             {
                 ClearPanel(UserInterfaceBaseComponent.BannerPanel);
-                if (_userInterface.Parties != null)
+                if (_userInterface.GetParties() != null)
                 {
-                    foreach (var party in _userInterface.Parties)
+                    foreach (var party in _userInterface.GetParties())
                     {
                         var button = CreatePrefabOnPanel(_bannerFactory, UserInterfaceBaseComponent.BannerPanel, party.Key);
                     }
@@ -77,6 +79,8 @@ namespace RTSEngine.Refactoring
                 }
             }
         }
+
+
 
         public virtual void UpdatePortrait()
         {
@@ -110,15 +114,40 @@ namespace RTSEngine.Refactoring
             }
         }
 
-        public void Tick()
+        public void UpdatedObject(ISelectable selectable)
         {
-            var aux = _userInterface.GetActualSelection().Where(x => _mainList.GetMainList().Contains(x)).ToArray();
-            if (!_mainList.GetMainList().Contains(_userInterface.Highlighted))
+            throw new NotImplementedException();
+        }
+
+        public void DeletedObject(ISelectable selectable)
+        {
+            DeleteFromSelection(selectable);
+            DeleteFromParties(selectable);
+            UpdateAll();
+        }
+
+        private void DeleteFromSelection(ISelectable selectable)
+        {
+            List<ISelectable> aux = _userInterface.GetActualSelection().ToList();
+            aux.Remove(selectable);
+            if (!aux.Contains(_userInterface.Highlighted))
             {
                 _userInterface.Highlighted = null;
             }
-            _userInterface.DoSelectionUpdate(aux, true);
-            UpdateAll();
+            _userInterface.DoSelectionUpdate(aux.ToArray(), true);
+        }
+
+        private void DeleteFromParties(ISelectable selectable)
+        {
+            foreach (var party in _userInterface.GetParties().ToList())
+            {
+                var aux = party.Value.ToList();
+                aux.Remove(selectable);
+                if (aux.Count > 0)
+                    _userInterface.GetParties()[party.Key] = aux.ToArray();
+                else
+                    _userInterface.GetParties().Remove(party.Key);
+            }
         }
     }
 }

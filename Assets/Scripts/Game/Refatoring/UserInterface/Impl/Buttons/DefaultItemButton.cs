@@ -7,12 +7,12 @@ namespace RTSEngine.Refactoring
     {
         public override void DoClick()
         {
-            Debug.Log("Item");
+            Debug.Log("Unimplemented: Item");
         }
 
         public override void DoPress()
         {
-            Debug.Log("Item Press");
+            Debug.Log("Unimplemented: Item Press");
         }
         public class Factory : PlaceholderFactory<DefaultItemButton>
         {

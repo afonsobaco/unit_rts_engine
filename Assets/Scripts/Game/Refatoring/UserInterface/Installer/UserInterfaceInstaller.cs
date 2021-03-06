@@ -30,7 +30,7 @@ namespace RTSEngine.Refactoring
             Container.Bind<UserInterfaceSignalManager>().AsSingle();
             Container.Bind<UserInterfaceManager>().AsSingle();
             Container.Bind<UserInterface>().AsSingle();
-            Container.BindInterfacesAndSelfTo<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase).NonLazy();
+            Container.Bind<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase).NonLazy();
             Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSet>().FromScriptableObject(_runtimeSet).AsCached().IfNotBound();
             Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsCached().IfNotBound();
             Container.Bind<IComparer<IGrouping<ISelectable, ISelectable>>>().To<GroupSortComparerComponent>().FromComponentInNewPrefab(_groupSortComparer).AsCached().IfNotBound();
@@ -38,6 +38,8 @@ namespace RTSEngine.Refactoring
             //External In
             Container.DeclareSignal<SelectionUpdateSignal>();
             Container.DeclareSignal<PartyUpdateSignal>();
+            Container.DeclareSignal<SelectableObjectUpdatedSignal>();
+            Container.DeclareSignal<SelectableObjectDeletedSignal>();
 
             //Internal
             Container.DeclareSignal<AlternateSubGroupSignal>();
@@ -54,6 +56,9 @@ namespace RTSEngine.Refactoring
 
             Container.BindSignal<SelectionUpdateSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnSelectionUpdate).FromResolve();
             Container.BindSignal<PartyUpdateSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnPartyUpdate).FromResolve();
+            Container.BindSignal<SelectableObjectUpdatedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnSelectableObjectUpdatedSignal).FromResolve();
+            Container.BindSignal<SelectableObjectDeletedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnSelectableObjectDeletedSignal).FromResolve();
+
             Container.BindSignal<AlternateSubGroupSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnAlternateSubGroup).FromResolve();
             Container.BindSignal<MiniatureClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnMiniatureClicked).FromResolve();
             Container.BindSignal<PortraitClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnPortraitClicked).FromResolve();

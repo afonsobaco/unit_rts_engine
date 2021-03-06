@@ -7,12 +7,12 @@ namespace RTSEngine.Refactoring
     {
         public override void DoClick()
         {
-            Debug.Log("Miniature");
+            Debug.Log("Unimplemented: Miniature");
         }
 
         public override void DoPress()
         {
-            Debug.Log("Miniature Press");
+            Debug.Log("Unimplemented: Miniature Press");
         }
         public class Factory : PlaceholderFactory<DefaultMiniatureButton>
         {
