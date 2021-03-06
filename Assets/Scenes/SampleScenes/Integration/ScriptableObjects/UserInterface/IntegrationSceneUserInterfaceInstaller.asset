@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a30889cf0959ada43aff41d786545484, type: 3}
+  m_Name: IntegrationSceneUserInterfaceInstaller
+  m_EditorClassIdentifier: 
+  _equalityComparer: {fileID: 6109555371161110103, guid: 8148f933b3122354b80e9babbfe99f0c,
+    type: 3}
+  _groupSortComparer: {fileID: 8974754553238443750, guid: 988b398a4dea6e747bd2f1d29fe0b27e,
+    type: 3}
+  _runtimeSet: {fileID: 11400000, guid: 7f6ab4fd290cbcb4790be015c13ad443, type: 2}
+  _actionPrefab: {fileID: -8284991165333103757, guid: 31008c02298ac554b87ce631cfb6afdf,
+    type: 3}
+  _bannerPrefab: {fileID: 7329103006491024917, guid: 1c1243a623aa4e44d93095a64256bf6f,
+    type: 3}
+  _itemPrefab: {fileID: -2813199876698887072, guid: b4e58c0a41084284c9ba783a4cbe7891,
+    type: 3}
+  _miniaturePrefab: {fileID: 1552124228507457847, guid: c3b27828f6a71a642a72cad85f029e40,
+    type: 3}
+  _portraitPrefab: {fileID: 7602313565542962461, guid: dc1ea73a229147d4198bd0a09b87af53,
+    type: 3}
+  _userInterfacePrefab: {fileID: 2513552558533314439, guid: 751c6a1b9deda3c4ca9c93e5ffc5bf9b,
+    type: 3}
