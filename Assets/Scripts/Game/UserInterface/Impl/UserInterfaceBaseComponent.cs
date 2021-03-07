@@ -1,8 +1,9 @@
+using System.Linq;
 using UnityEngine;
 using Zenject;
 using RTSEngine.Core;
 using RTSEngine.Signal;
-using RTSEngine.Utils;
+using RTSEngine.RTSUserInterface.Utils;
 using UnityEngine.UI;
 using System;
 
@@ -17,32 +18,24 @@ namespace RTSEngine.RTSUserInterface
         [SerializeField] private RectTransform _itemPanel;
         [SerializeField] private RectTransform _miniaturePanel;
         [SerializeField] private RectTransform _portraitPanel;
+        [SerializeField] private RectTransform _infoPanel;
 
+        public GraphicRaycaster Raycaster { get => raycaster; set => raycaster = value; }
         public RectTransform ActionPanel { get => _actionPanel; set => _actionPanel = value; }
         public RectTransform BannerPanel { get => _bannerPanel; set => _bannerPanel = value; }
         public RectTransform ItemPanel { get => _itemPanel; set => _itemPanel = value; }
         public RectTransform MiniaturePanel { get => _miniaturePanel; set => _miniaturePanel = value; }
         public RectTransform PortraitPanel { get => _portraitPanel; set => _portraitPanel = value; }
-        public GraphicRaycaster Raycaster { get => raycaster; set => raycaster = value; }
+        public RectTransform InfoPanel { get => _infoPanel; set => _infoPanel = value; }
 
-        public void ClearPanel(RectTransform panel)
+        private void Awake()
         {
-            if (panel)
-            {
-                foreach (Transform child in panel)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
-            }
-        }
-
-        private void Start()
-        {
-            ClearPanel(PortraitPanel);
-            ClearPanel(ItemPanel);
-            ClearPanel(MiniaturePanel);
-            ClearPanel(BannerPanel);
-            ClearPanel(ActionPanel);
+            UserInterfaceUtils.ClearPanel(PortraitPanel);
+            UserInterfaceUtils.ClearPanel(ItemPanel);
+            UserInterfaceUtils.ClearPanel(MiniaturePanel);
+            UserInterfaceUtils.ClearPanel(BannerPanel);
+            UserInterfaceUtils.ClearPanel(ActionPanel);
+            UserInterfaceUtils.ClearPanel(InfoPanel);
         }
 
     }

@@ -27,5 +27,7 @@ MonoBehaviour:
     type: 3}
   _portraitPrefab: {fileID: -9058064349839850653, guid: 3592e1f34c0b6274693790b77ef7fa13,
     type: 3}
+  _infoPrefab: {fileID: 6497956780824373787, guid: 228ee422630c46444b0c776ada2e1d44,
+    type: 3}
   _userInterfacePrefab: {fileID: 2513552558533314439, guid: 751c6a1b9deda3c4ca9c93e5ffc5bf9b,
     type: 3}

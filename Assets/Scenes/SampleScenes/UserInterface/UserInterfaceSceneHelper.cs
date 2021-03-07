@@ -5,8 +5,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using RTSEngine.Commons;
 using RTSEngine.Core;
+using RTSEngine.RTSUserInterface.Utils;
 using RTSEngine.Signal;
-using RTSEngine.Utils;
+using UnityEngine.EventSystems;
 using Zenject;
 
 namespace RTSEngine.RTSUserInterface.Scene
@@ -19,17 +20,19 @@ namespace RTSEngine.RTSUserInterface.Scene
         const string ARCHER = "Archer";
 
         private UserInterface _userInterface;
+        private UserInterfaceBase _userInterfaceBase;
         private SignalBus _signalBus;
         private IEqualityComparer<ISelectable> _equalityComparer;
         private IComparer<IGrouping<ISelectable, ISelectable>> _groupSortComparer;
 
         [Inject]
-        public void Construct(SignalBus signalBus, UserInterface userInterface, IEqualityComparer<ISelectable> equalityComparer, IComparer<IGrouping<ISelectable, ISelectable>> groupSortComparer)
+        public void Construct(SignalBus signalBus, UserInterface userInterface, UserInterfaceBase userInterfaceBase, IEqualityComparer<ISelectable> equalityComparer, IComparer<IGrouping<ISelectable, ISelectable>> groupSortComparer)
         {
             this._signalBus = signalBus;
             this._userInterface = userInterface;
             this._equalityComparer = equalityComparer;
             this._groupSortComparer = groupSortComparer;
+            this._userInterfaceBase = userInterfaceBase;
         }
 
         private void Start()
@@ -47,6 +50,27 @@ namespace RTSEngine.RTSUserInterface.Scene
             AddRandomSelection();
             GetHighlightedSelection();
             ClearSelection();
+            AddInfo();
+        }
+
+        private void AddInfo()
+        {
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                ExecuteEvents.Execute<IInfoMessageTarget>(_userInterfaceBase.UserInterfaceBaseComponent.InfoPanel.gameObject, null, (x, y) => x.AddInfo(CreateInfoButton()));
+            }
+        }
+
+        private int count = 0;
+
+        private DefaultInfoButton CreateInfoButton()
+        {
+            var button = _userInterfaceBase.InfoFactory.Create();
+            int index = count++;
+            button.Text.text = string.Format("This is the text for button info {0}", index);
+            button.SubText.text = string.Format("click to dismiss", index);
+            button.ToolTip.text = string.Format("This is the text toolTip for button info {0}", index);
+            return button;
         }
 
         private void AddRandomSelection()

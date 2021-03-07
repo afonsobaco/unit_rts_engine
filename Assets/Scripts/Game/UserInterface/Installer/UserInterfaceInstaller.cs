@@ -18,11 +18,14 @@ namespace RTSEngine.RTSUserInterface
         [SerializeField] private EqualityComparerComponent _equalityComparer;
         [SerializeField] private GroupSortComparerComponent _groupSortComparer;
         [SerializeField] private DefaultRuntimeSet _runtimeSet;
+
+        //TODO move prefabs to Scriptable Object
         [SerializeField] private DefaultActionButton _actionPrefab;
         [SerializeField] private DefaultBannerButton _bannerPrefab;
         [SerializeField] private DefaultItemButton _itemPrefab;
         [SerializeField] private DefaultMiniatureButton _miniaturePrefab;
         [SerializeField] private DefaultPortraitButton _portraitPrefab;
+        [SerializeField] private DefaultInfoButton _infoPrefab;
         [SerializeField] private UserInterfaceBaseComponent _userInterfacePrefab;
 
         public override void InstallBindings()
@@ -66,11 +69,13 @@ namespace RTSEngine.RTSUserInterface
             Container.BindSignal<MapClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnMapClicked).FromResolve();
             Container.BindSignal<ActionClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnActionClicked).FromResolve();
 
+            //TODO user prefab factories
             Container.BindFactory<DefaultMiniatureButton, DefaultMiniatureButton.Factory>().FromComponentInNewPrefab(_miniaturePrefab);
             Container.BindFactory<DefaultPortraitButton, DefaultPortraitButton.Factory>().FromComponentInNewPrefab(_portraitPrefab);
             Container.BindFactory<DefaultBannerButton, DefaultBannerButton.Factory>().FromComponentInNewPrefab(_bannerPrefab);
             Container.BindFactory<DefaultItemButton, DefaultItemButton.Factory>().FromComponentInNewPrefab(_itemPrefab);
             Container.BindFactory<DefaultActionButton, DefaultActionButton.Factory>().FromComponentInNewPrefab(_actionPrefab);
+            Container.BindFactory<DefaultInfoButton, DefaultInfoButton.Factory>().FromComponentInNewPrefab(_infoPrefab);
         }
 
         private void UpdateUserInterfaceBase(InjectContext ctx, UserInterfaceBase userInterfaceBase)

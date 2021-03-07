@@ -83,5 +83,13 @@ namespace RTSEngine.Utils
                 {KeyCode.Keypad8, 8},
                 {KeyCode.Keypad9, 9},
             };
+
+        public static T[] GetAllInactiveChildren<T>(GameObject parent) where T : MonoBehaviour
+        {
+            var allChildren = parent.GetComponentsInChildren<T>(true).ToList();
+            allChildren.RemoveAll(x => x.gameObject.activeInHierarchy);
+            return allChildren.ToArray();
+        }
+
     }
 }

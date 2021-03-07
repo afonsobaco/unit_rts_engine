@@ -3,7 +3,7 @@ using Zenject;
 
 namespace RTSEngine.RTSUserInterface
 {
-    public class DefaultMiniatureButton : DefaultClickableButton
+    public class DefaultMiniatureButton : DefaultClickable
     {
         public override void DoClick()
         {

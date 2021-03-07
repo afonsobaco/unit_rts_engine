@@ -1,0 +1,11 @@
+using UnityEngine.EventSystems;
+
+namespace RTSEngine.RTSUserInterface
+{
+    public interface IInfoMessageTarget : IEventSystemHandler
+    {
+        void RemoveInfo(DefaultInfoButton button);
+        void AddInfo(DefaultInfoButton button);
+    }
+
+}

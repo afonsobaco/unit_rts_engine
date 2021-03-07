@@ -6,7 +6,7 @@ using Zenject;
 
 namespace RTSEngine.RTSUserInterface
 {
-    public class DefaultBannerButton : DefaultClickableButton
+    public class DefaultBannerButton : DefaultClickable
     {
         public override void DoClick()
         {
