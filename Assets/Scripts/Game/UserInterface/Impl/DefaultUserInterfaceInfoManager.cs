@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using RTSEngine.Signal;
 using RTSEngine.Utils;
 using Zenject;
@@ -13,28 +14,77 @@ namespace RTSEngine.RTSUserInterface
     public class DefaultUserInterfaceInfoManager : MonoBehaviour, IInfoMessageTarget
     {
         [SerializeField] private int _maximunInfoOnScreen = 5;
-
-        [SerializeField] private RectTransform _infoPanel;
+        [Inject] private UserInterfaceBase userInterfaceBase;
 
         private List<DefaultInfoButton> _beingRemoved = new List<DefaultInfoButton>();
-
         private List<DefaultInfoButton> _beingAdded = new List<DefaultInfoButton>();
+
+        public RectTransform InfoPanel { get => userInterfaceBase.UserInterfaceBaseComponent.InfoPanel; }
 
         public void AddInfo(DefaultInfoButton button)
         {
-            if (!PanelContainsInfo(button.Text.text))
-            {
-                button.transform.SetParent(_infoPanel.transform, false);
-                UpdateInfoPanel();
-            }
+            AddSingleInfo(button);
         }
 
         public void RemoveInfo(DefaultInfoButton button)
         {
-            if (PanelContainsInfo(button.Text.text) && !_beingRemoved.Contains(button))
+            RemoveSingleInfo(button);
+        }
+
+        public void AddAllInfo(DefaultInfoButton[] buttons)
+        {
+            foreach (var button in buttons)
+            {
+                AddSingleInfo(button);
+            }
+        }
+
+        public void RemoveAllInfo(DefaultInfoButton[] buttons)
+        {
+            foreach (var button in buttons)
+            {
+                RemoveSingleInfo(button);
+            }
+        }
+
+        public void Clear()
+        {
+            StartCoroutine(ClearPanel());
+        }
+
+        private IEnumerator ClearPanel()
+        {
+            foreach (var button in InfoPanel.GetComponentsInChildren<DefaultInfoButton>(true))
+            {
+                StartCoroutine(DoRemove(button));
+            }
+            yield return null;
+        }
+
+        private void AddSingleInfo(DefaultInfoButton button)
+        {
+            if (!PanelContainsInfo(GetTextOn(button)))
+            {
+                button.gameObject.SetActive(false);
+                button.transform.SetParent(InfoPanel.transform, false);
+                UpdateInfoPanel();
+            }
+            else
+            {
+                Destroy(button);
+            }
+        }
+
+        private void RemoveSingleInfo(DefaultInfoButton button)
+        {
+            if (PanelContainsInfo(GetTextOn(button)) && !_beingRemoved.Contains(button))
             {
                 _beingRemoved.Add(button);
                 StartCoroutine(DoRemove(button));
+            }
+            else
+            {
+                Destroy(button);
             }
         }
 
@@ -54,7 +104,7 @@ namespace RTSEngine.RTSUserInterface
 
         public virtual void UpdateInfoPanel()
         {
-            var activeChildren = _infoPanel.GetComponentsInChildren<DefaultInfoButton>(false).ToList();
+            var activeChildren = InfoPanel.GetComponentsInChildren<DefaultInfoButton>(false).ToList();
             activeChildren.RemoveAll(x => _beingRemoved.Contains(x));
             if (activeChildren.Count < _maximunInfoOnScreen)
             {
@@ -69,30 +119,37 @@ namespace RTSEngine.RTSUserInterface
 
         private DefaultInfoButton[] GetToBeAdded(int diff)
         {
-            return GameUtils.GetAllInactiveChildren<DefaultInfoButton>(_infoPanel.gameObject).Take(diff).ToArray();
+            return GameUtils.GetAllInactiveChildren<DefaultInfoButton>(InfoPanel.gameObject).Take(diff).ToArray();
         }
 
         public virtual IEnumerator DoDestroyAnim(DefaultInfoButton button)
         {
-            yield return null;
+            yield return StartCoroutine(button.DoDestroyAnim());
         }
 
         public virtual IEnumerator DoCreateAnim(DefaultInfoButton button)
         {
-            yield return null;
+            yield return StartCoroutine(button.DoCreateAnim());
         }
 
         public bool PanelContainsInfo(string info)
         {
-            foreach (var item in _infoPanel.GetComponentsInChildren<DefaultInfoButton>(true))
+            foreach (var item in InfoPanel.GetComponentsInChildren<DefaultInfoButton>(true))
             {
-                if (item.Text.text.Equals(info))
+                if (GetTextOn(item).Equals(info))
                 {
                     return true;
                 }
             }
             return false;
         }
+
+        private string GetTextOn(DefaultInfoButton button)
+        {
+            return GameUtils.FindInComponent<Text>(button.Text.gameObject).text;
+        }
+
+
     }
 
 }

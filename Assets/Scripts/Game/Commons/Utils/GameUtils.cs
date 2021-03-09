@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using RTSEngine.Core;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RTSEngine.Utils
 {
@@ -91,5 +92,14 @@ namespace RTSEngine.Utils
             return allChildren.ToArray();
         }
 
+        public static T FindInComponent<T>(GameObject parent) where T : MonoBehaviour
+        {
+            T found = parent.GetComponentInChildren<T>(true);
+            if (found)
+            {
+                return found;
+            }
+            return parent.GetComponent<T>();
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace RTSEngine.RTSUserInterface
         [SerializeField] private RectTransform _miniaturePanel;
         [SerializeField] private RectTransform _portraitPanel;
         [SerializeField] private RectTransform _infoPanel;
+        [SerializeField] private RectTransform _logPanel;
 
         public GraphicRaycaster Raycaster { get => raycaster; set => raycaster = value; }
         public RectTransform ActionPanel { get => _actionPanel; set => _actionPanel = value; }
@@ -27,6 +28,7 @@ namespace RTSEngine.RTSUserInterface
         public RectTransform MiniaturePanel { get => _miniaturePanel; set => _miniaturePanel = value; }
         public RectTransform PortraitPanel { get => _portraitPanel; set => _portraitPanel = value; }
         public RectTransform InfoPanel { get => _infoPanel; set => _infoPanel = value; }
+        public RectTransform LogPanel { get => _logPanel; set => _logPanel = value; }
 
         private void Awake()
         {
@@ -36,6 +38,7 @@ namespace RTSEngine.RTSUserInterface
             UserInterfaceUtils.ClearPanel(BannerPanel);
             UserInterfaceUtils.ClearPanel(ActionPanel);
             UserInterfaceUtils.ClearPanel(InfoPanel);
+            UserInterfaceUtils.ClearPanel(LogPanel);
         }
 
     }

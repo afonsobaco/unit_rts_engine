@@ -26,6 +26,7 @@ namespace RTSEngine.RTSUserInterface
         [SerializeField] private DefaultMiniatureButton _miniaturePrefab;
         [SerializeField] private DefaultPortraitButton _portraitPrefab;
         [SerializeField] private DefaultInfoButton _infoPrefab;
+        [SerializeField] private DefaultLogText _logPrefab;
         [SerializeField] private UserInterfaceBaseComponent _userInterfacePrefab;
 
         public override void InstallBindings()
@@ -76,6 +77,7 @@ namespace RTSEngine.RTSUserInterface
             Container.BindFactory<DefaultItemButton, DefaultItemButton.Factory>().FromComponentInNewPrefab(_itemPrefab);
             Container.BindFactory<DefaultActionButton, DefaultActionButton.Factory>().FromComponentInNewPrefab(_actionPrefab);
             Container.BindFactory<DefaultInfoButton, DefaultInfoButton.Factory>().FromComponentInNewPrefab(_infoPrefab);
+            Container.BindFactory<DefaultLogText, DefaultLogText.Factory>().FromComponentInNewPrefab(_logPrefab);
         }
 
         private void UpdateUserInterfaceBase(InjectContext ctx, UserInterfaceBase userInterfaceBase)

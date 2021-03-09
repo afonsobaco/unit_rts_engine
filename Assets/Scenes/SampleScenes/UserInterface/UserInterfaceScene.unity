@@ -246,9 +246,6 @@ MonoBehaviour:
   _changeSubGroupKeyCode: 9
   _centerCameraKeyCode: 32
   _partyKeyCode: 122
-  infoPanel: {fileID: 0}
-  infoPrefab: {fileID: 6497956780824373787, guid: 228ee422630c46444b0c776ada2e1d44,
-    type: 3}
 --- !u!4 &647146567
 Transform:
   m_ObjectHideFlags: 0
@@ -428,7 +425,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

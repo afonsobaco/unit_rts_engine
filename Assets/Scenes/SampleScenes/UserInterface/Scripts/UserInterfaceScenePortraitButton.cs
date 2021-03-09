@@ -12,11 +12,5 @@ namespace RTSEngine.RTSUserInterface.Scene
                 this.GetComponentInChildren<Text>().text = (ObjectReference as UserInterfaceSceneObject).Type + " - " + (ObjectReference as UserInterfaceSceneObject).Index.ToString();
             }
         }
-
-        public override void DoClick()
-        {
-            if (ObjectReference is UserInterfaceSceneObject)
-                SignalBus.Fire(new PortraitClickedSignal() { Selected = ObjectReference as UserInterfaceSceneObject });
-        }
     }
 }

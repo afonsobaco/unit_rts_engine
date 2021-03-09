@@ -14,13 +14,6 @@ namespace RTSEngine.RTSUserInterface.Scene
                 this.GetComponentInChildren<Text>().text = (ObjectReference as int?).ToString();
         }
 
-        public override void DoClick()
-        {
-            SignalBus.Fire(new PartySelectedSignal()
-            {
-                PartyId = (ObjectReference as int?),
-            });
-        }
     }
 }
 

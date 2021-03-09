@@ -20,11 +20,12 @@ namespace RTSEngine.RTSUserInterface
         private DefaultMiniatureButton.Factory _miniatureFactory;
         private DefaultPortraitButton.Factory _portraitFactory;
         private DefaultInfoButton.Factory _infoFactory;
+        private DefaultLogText.Factory _logFactory;
 
         private IRuntimeSet<ISelectable> _mainList;
 
 
-        public UserInterfaceBase(UserInterface userInterface, DefaultActionButton.Factory actionFactory, DefaultBannerButton.Factory bannerFactory, DefaultItemButton.Factory itemFactory, DefaultMiniatureButton.Factory miniatureFactory, DefaultPortraitButton.Factory portraitFactory, DefaultInfoButton.Factory infoFactory, IRuntimeSet<ISelectable> mainList)
+        public UserInterfaceBase(UserInterface userInterface, DefaultActionButton.Factory actionFactory, DefaultBannerButton.Factory bannerFactory, DefaultItemButton.Factory itemFactory, DefaultMiniatureButton.Factory miniatureFactory, DefaultPortraitButton.Factory portraitFactory, DefaultInfoButton.Factory infoFactory, IRuntimeSet<ISelectable> mainList, DefaultLogText.Factory logFactory)
         {
             _userInterface = userInterface;
             ActionFactory = actionFactory;
@@ -34,6 +35,7 @@ namespace RTSEngine.RTSUserInterface
             PortraitFactory = portraitFactory;
             InfoFactory = infoFactory;
             _mainList = mainList;
+            LogFactory = logFactory;
         }
 
         public UserInterfaceBaseComponent UserInterfaceBaseComponent { get; set; }
@@ -43,6 +45,7 @@ namespace RTSEngine.RTSUserInterface
         public DefaultMiniatureButton.Factory MiniatureFactory { get => _miniatureFactory; set => _miniatureFactory = value; }
         public DefaultPortraitButton.Factory PortraitFactory { get => _portraitFactory; set => _portraitFactory = value; }
         public DefaultInfoButton.Factory InfoFactory { get => _infoFactory; set => _infoFactory = value; }
+        public DefaultLogText.Factory LogFactory { get => _logFactory; set => _logFactory = value; }
 
         public void UpdateAll()
         {

@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using RTSEngine.RTSUserInterface;
+using RTSEngine.Utils;
 using Zenject;
 using System;
 
@@ -30,7 +32,7 @@ namespace RTSEngine.Integration.Scene
 
         private IEnumerator StartInfo()
         {
-            yield return new WaitForSeconds(0);
+            yield return new WaitForEndOfFrame();
             foreach (var info in _sceneInfoList)
             {
                 ExecuteEvents.Execute<IInfoMessageTarget>(_infoManager.gameObject, null, (x, y) => x.AddInfo(CreateInfoButton(info)));
@@ -57,7 +59,7 @@ namespace RTSEngine.Integration.Scene
         private DefaultInfoButton GetInfoButton()
         {
             DefaultInfoButton button = null;
-            object[] info = GetNextInfo();
+            string[] info = GetNextInfo();
             if (info != null)
             {
                 button = CreateInfoButton(info);
@@ -65,21 +67,21 @@ namespace RTSEngine.Integration.Scene
             return button;
         }
 
-        private DefaultInfoButton CreateInfoButton(object[] info)
+        private DefaultInfoButton CreateInfoButton(string[] info)
         {
             DefaultInfoButton button = _userInterfaceBase.InfoFactory.Create();
-            button.Title.text = info[0] as string;
-            button.Text.text = info[1] as string;
-            button.SubText.text = info[2] as string;
-            button.ToolTip.text = info[3] as string;
+            GameUtils.FindInComponent<Text>(button.Title.gameObject).text = info[0];
+            GameUtils.FindInComponent<Text>(button.Text.gameObject).text = info[1];
+            GameUtils.FindInComponent<Text>(button.SubText.gameObject).text = info[2];
+            GameUtils.FindInComponent<Text>(button.ToolTip.gameObject).text = info[3];
             return button;
         }
 
-        private object[] GetNextInfo()
+        private string[] GetNextInfo()
         {
             foreach (var item in _sceneInfoList)
             {
-                if (!_infoManager.PanelContainsInfo(item[1] as string))
+                if (!_infoManager.PanelContainsInfo(item[1]))
                 {
                     return item;
                 }
@@ -87,15 +89,15 @@ namespace RTSEngine.Integration.Scene
             return null;
         }
 
-        private List<object[]> _sceneInfoList = new List<object[]>{
-            new object[]{"F1","Show next hint", "click to dismiss", "tooltip"},
-            new object[]{"Q/E","Select next/previous model", "click to dismiss", "tooltip"},
-            new object[]{"RightClick","Add selected model to scene at mouse positiion", "click to dismiss", "tooltip"},
-            new object[]{"Shift + RightClick","Remove model on scene at mouse positiion", "click to dismiss", "tooltip"},
-            new object[]{"Click","Selection", "click to dismiss", "tooltip"},
-            new object[]{"Ctrl+Click/DoubleClick","Select all of same model on screen", "click to dismiss", "tooltip"},
-            new object[]{"Shift+Click","Add/Remove from selection", "click to dismiss", "tooltip"},
-            new object[]{"Z + [number]","Create/Remove party at [number] with selection", "click to dismiss", "tooltip"},
+        private List<string[]> _sceneInfoList = new List<string[]>{
+            new string[]{"F1","Show next hint", "click to dismiss", "F1 \n Show next hint"},
+            new string[]{"Q/E","Select next/previous model", "click to dismiss", "Q/E \n Select next/previous model"},
+            new string[]{"RightClick","Add selected model to scene at mouse positiion", "click to dismiss", "RightClick \n Add selected model to scene at mouse positiion"},
+            new string[]{"Shift + RightClick","Remove model on scene at mouse positiion", "click to dismiss", "Shift + RightClick \n Remove model on scene at mouse positiion"},
+            new string[]{"Click","Selection", "click to dismiss", "Click \n Selection"},
+            new string[]{"Ctrl+Click/DoubleClick","Select all of same model on screen", "click to dismiss", "Ctrl+Click/DoubleClick \n Select all of same model on screen"},
+            new string[]{"Shift+Click","Add/Remove from selection", "click to dismiss", "Shift+Click \n Add/Remove from selection"},
+            new string[]{"Z + [number]","Create/Remove party at [number] with selection", "click to dismiss", "Z + [number] \n Create/Remove party at [number] with selection"},
         };
 
     }
