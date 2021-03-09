@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
+using RTSEngine.RTSUserInterface.Utils;
 using Zenject;
 
 namespace RTSEngine.RTSUserInterface
@@ -11,27 +12,40 @@ namespace RTSEngine.RTSUserInterface
     {
 
         private UserInterface _userInterface;
+
+        //TODO move to factory class
         private DefaultActionButton.Factory _actionFactory;
         private DefaultBannerButton.Factory _bannerFactory;
         private DefaultItemButton.Factory _itemFactory;
         private DefaultMiniatureButton.Factory _miniatureFactory;
         private DefaultPortraitButton.Factory _portraitFactory;
+        private DefaultInfoButton.Factory _infoFactory;
+        private DefaultLogText.Factory _logFactory;
 
         private IRuntimeSet<ISelectable> _mainList;
 
 
-        public UserInterfaceBase(UserInterface userInterface, DefaultActionButton.Factory actionFactory, DefaultBannerButton.Factory bannerFactory, DefaultItemButton.Factory itemFactory, DefaultMiniatureButton.Factory miniatureFactory, DefaultPortraitButton.Factory portraitFactory, IRuntimeSet<ISelectable> mainList)
+        public UserInterfaceBase(UserInterface userInterface, DefaultActionButton.Factory actionFactory, DefaultBannerButton.Factory bannerFactory, DefaultItemButton.Factory itemFactory, DefaultMiniatureButton.Factory miniatureFactory, DefaultPortraitButton.Factory portraitFactory, DefaultInfoButton.Factory infoFactory, IRuntimeSet<ISelectable> mainList, DefaultLogText.Factory logFactory)
         {
             _userInterface = userInterface;
-            _actionFactory = actionFactory;
-            _bannerFactory = bannerFactory;
-            _itemFactory = itemFactory;
-            _miniatureFactory = miniatureFactory;
-            _portraitFactory = portraitFactory;
+            ActionFactory = actionFactory;
+            BannerFactory = bannerFactory;
+            ItemFactory = itemFactory;
+            MiniatureFactory = miniatureFactory;
+            PortraitFactory = portraitFactory;
+            InfoFactory = infoFactory;
             _mainList = mainList;
+            LogFactory = logFactory;
         }
 
         public UserInterfaceBaseComponent UserInterfaceBaseComponent { get; set; }
+        public DefaultActionButton.Factory ActionFactory { get => _actionFactory; set => _actionFactory = value; }
+        public DefaultBannerButton.Factory BannerFactory { get => _bannerFactory; set => _bannerFactory = value; }
+        public DefaultItemButton.Factory ItemFactory { get => _itemFactory; set => _itemFactory = value; }
+        public DefaultMiniatureButton.Factory MiniatureFactory { get => _miniatureFactory; set => _miniatureFactory = value; }
+        public DefaultPortraitButton.Factory PortraitFactory { get => _portraitFactory; set => _portraitFactory = value; }
+        public DefaultInfoButton.Factory InfoFactory { get => _infoFactory; set => _infoFactory = value; }
+        public DefaultLogText.Factory LogFactory { get => _logFactory; set => _logFactory = value; }
 
         public void UpdateAll()
         {
@@ -50,12 +64,12 @@ namespace RTSEngine.RTSUserInterface
         {
             if (UserInterfaceBaseComponent.BannerPanel)
             {
-                ClearPanel(UserInterfaceBaseComponent.BannerPanel);
+                UserInterfaceUtils.ClearPanel(UserInterfaceBaseComponent.BannerPanel);
                 if (_userInterface.GetParties() != null)
                 {
                     foreach (var party in _userInterface.GetParties())
                     {
-                        var button = CreatePrefabOnPanel(_bannerFactory, UserInterfaceBaseComponent.BannerPanel, party.Key);
+                        var button = CreatePrefabOnPanel(BannerFactory, UserInterfaceBaseComponent.BannerPanel, party.Key);
                     }
                 }
             }
@@ -69,12 +83,12 @@ namespace RTSEngine.RTSUserInterface
         {
             if (UserInterfaceBaseComponent.MiniaturePanel)
             {
-                ClearPanel(UserInterfaceBaseComponent.MiniaturePanel);
+                UserInterfaceUtils.ClearPanel(UserInterfaceBaseComponent.MiniaturePanel);
                 if (_userInterface.GetActualSelection() != null)
                 {
                     foreach (var selectable in _userInterface.GetActualSelection())
                     {
-                        var button = CreatePrefabOnPanel(_miniatureFactory, UserInterfaceBaseComponent.MiniaturePanel, selectable);
+                        var button = CreatePrefabOnPanel(MiniatureFactory, UserInterfaceBaseComponent.MiniaturePanel, selectable);
                     }
                 }
             }
@@ -86,34 +100,24 @@ namespace RTSEngine.RTSUserInterface
         {
             if (UserInterfaceBaseComponent.PortraitPanel)
             {
-                ClearPanel(UserInterfaceBaseComponent.PortraitPanel);
+                UserInterfaceUtils.ClearPanel(UserInterfaceBaseComponent.PortraitPanel);
                 if (_userInterface.Highlighted != null)
                 {
-                    var button = CreatePrefabOnPanel(_portraitFactory, UserInterfaceBaseComponent.PortraitPanel, _userInterface.Highlighted);
+                    var button = CreatePrefabOnPanel(PortraitFactory, UserInterfaceBaseComponent.PortraitPanel, _userInterface.Highlighted);
                 }
             }
         }
 
-        private DefaultClickableButton CreatePrefabOnPanel<T>(PlaceholderFactory<T> factory, RectTransform panel, object reference) where T : DefaultClickableButton
+        private DefaultClickable CreatePrefabOnPanel<T>(PlaceholderFactory<T> factory, RectTransform panel, object reference) where T : DefaultClickable
         {
             var instance = factory.Create();
             instance.transform.SetParent(panel, false);
-            var button = instance as DefaultClickableButton;
+            var button = instance as DefaultClickable;
             button.ObjectReference = reference;
             button.UpdateApperance();
             return button;
         }
-        public void ClearPanel(RectTransform panel)
-        {
-            if (panel)
-            {
-                foreach (Transform child in panel)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
-            }
-        }
-
+       
         public void UpdatedObject(ISelectable selectable)
         {
             throw new NotImplementedException();

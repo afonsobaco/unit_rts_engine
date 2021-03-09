@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 15558050}
   - component: {fileID: 15558049}
   - component: {fileID: 15558053}
+  - component: {fileID: 15558054}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -217,6 +218,19 @@ MonoBehaviour:
   - {fileID: 158547551831246352, guid: 620ed987f0f02224ebd9e57d7a6031d4, type: 3}
   - {fileID: 4743669159949584747, guid: cd614c6a1d13371478333e6d774d8d12, type: 3}
   - {fileID: 568252041003937851, guid: ebf9e89d0ded3db4bad5b348e6faa271, type: 3}
+--- !u!114 &15558054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15558048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54243f60b0d01c541a0128e8963a0653, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  helpKeyCode: 282
 --- !u!1 &161439088
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +302,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh45094
+  m_Name: pb_Mesh15674
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using RTSEngine.Core;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RTSEngine.Utils
 {
@@ -83,5 +84,22 @@ namespace RTSEngine.Utils
                 {KeyCode.Keypad8, 8},
                 {KeyCode.Keypad9, 9},
             };
+
+        public static T[] GetAllInactiveChildren<T>(GameObject parent) where T : MonoBehaviour
+        {
+            var allChildren = parent.GetComponentsInChildren<T>(true).ToList();
+            allChildren.RemoveAll(x => x.gameObject.activeInHierarchy);
+            return allChildren.ToArray();
+        }
+
+        public static T FindInComponent<T>(GameObject parent) where T : MonoBehaviour
+        {
+            T found = parent.GetComponentInChildren<T>(true);
+            if (found)
+            {
+                return found;
+            }
+            return parent.GetComponent<T>();
+        }
     }
 }

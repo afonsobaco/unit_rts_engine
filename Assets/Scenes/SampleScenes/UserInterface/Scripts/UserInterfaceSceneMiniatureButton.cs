@@ -24,15 +24,5 @@ namespace RTSEngine.RTSUserInterface.Scene
             }
         }
 
-        public override void DoClick()
-        {
-            if (ObjectReference is UserInterfaceSceneObject)
-            {
-                SignalBus.Fire(new MiniatureClickedSignal()
-                {
-                    Selected = ObjectReference as UserInterfaceSceneObject
-                });
-            }
-        }
     }
 }

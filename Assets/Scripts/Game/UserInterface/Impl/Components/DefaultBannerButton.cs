@@ -6,19 +6,20 @@ using Zenject;
 
 namespace RTSEngine.RTSUserInterface
 {
-    public class DefaultActionButton : DefaultClickableButton
+    public class DefaultBannerButton : DefaultClickable
     {
         public override void DoClick()
         {
-            Debug.Log("Unimplemented: Action");
+            Debug.Log("Unimplemented: Banner");
         }
 
         public override void DoPress()
         {
-            Debug.Log("Unimplemented: Action Press");
+            Debug.Log("Unimplemented: Banner Press");
         }
-        public class Factory : PlaceholderFactory<DefaultActionButton>
+        public class Factory : PlaceholderFactory<DefaultBannerButton>
         {
         }
+
     }
 }
