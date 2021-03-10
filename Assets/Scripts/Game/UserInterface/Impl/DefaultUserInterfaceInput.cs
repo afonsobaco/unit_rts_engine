@@ -39,7 +39,7 @@ public class DefaultUserInterfaceInput : MonoBehaviour
             }
             else
             {
-                _signalBus.Fire(new PartySelectedSignal() { PartyId = partyKeyPressed });
+                _signalBus.Fire(new BannerClickedSignal() { PartyId = partyKeyPressed });
             }
         }
     }

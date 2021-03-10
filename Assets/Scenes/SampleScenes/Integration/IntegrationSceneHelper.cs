@@ -2,6 +2,7 @@
 using RTSEngine.RTSCamera;
 using RTSEngine.RTSSelection;
 using RTSEngine.RTSUserInterface;
+using Zenject;
 
 namespace RTSEngine.Integration.Scene
 {
@@ -10,6 +11,8 @@ namespace RTSEngine.Integration.Scene
         [SerializeField] private GameObject[] objects;
         private int createIndex;
         private int count;
+
+        [Inject] private IUserInterfaceLogManager _logManager;
 
         void Update()
         {
@@ -52,6 +55,7 @@ namespace RTSEngine.Integration.Scene
                 if (gdo)
                 {
                     Destroy(gdo.gameObject);
+                    _logManager.AddLog("Model at " + gdo.transform.position + " Destroyed");
                 }
             }
         }
@@ -69,6 +73,7 @@ namespace RTSEngine.Integration.Scene
                     a.Index = count++;
                 }
                 newObjet.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+                _logManager.AddLog("Model created at " + newObjet.transform.position);
             }
         }
     }

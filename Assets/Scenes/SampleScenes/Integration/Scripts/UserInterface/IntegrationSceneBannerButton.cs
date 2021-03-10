@@ -14,7 +14,7 @@ namespace RTSEngine.Integration.Scene
 
         public override void DoClick()
         {
-            SignalBus.Fire(new PartySelectedSignal()
+            SignalBus.Fire(new BannerClickedSignal()
             {
                 PartyId = (ObjectReference as int?),
             });
