@@ -34,6 +34,7 @@ namespace RTSEngine.RTSUserInterface
             Container.Bind<UserInterfaceSignalManager>().AsSingle();
             Container.Bind<UserInterfaceManager>().AsSingle();
             Container.Bind<UserInterface>().AsSingle();
+            Container.Bind<IUserInterfaceLogManager>().To<DefaultUserInterfaceLogManager>().AsSingle();
             Container.Bind<UserInterfaceBase>().AsSingle().OnInstantiated<UserInterfaceBase>(UpdateUserInterfaceBase).NonLazy();
             Container.Bind<IRuntimeSet<ISelectable>>().To<DefaultRuntimeSet>().FromScriptableObject(_runtimeSet).AsCached().IfNotBound();
             Container.Bind<IEqualityComparer<ISelectable>>().To<EqualityComparerComponent>().FromComponentInNewPrefab(_equalityComparer).AsCached().IfNotBound();
@@ -49,7 +50,7 @@ namespace RTSEngine.RTSUserInterface
             Container.DeclareSignal<AlternateSubGroupSignal>();
             Container.DeclareSignal<MiniatureClickedSignal>();
             Container.DeclareSignal<PortraitClickedSignal>();
-            Container.DeclareSignal<PartySelectedSignal>();
+            Container.DeclareSignal<BannerClickedSignal>();
             Container.DeclareSignal<MapClickedSignal>();
             Container.DeclareSignal<ActionClickedSignal>();
 
@@ -66,7 +67,7 @@ namespace RTSEngine.RTSUserInterface
             Container.BindSignal<AlternateSubGroupSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnAlternateSubGroup).FromResolve();
             Container.BindSignal<MiniatureClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnMiniatureClicked).FromResolve();
             Container.BindSignal<PortraitClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnPortraitClicked).FromResolve();
-            Container.BindSignal<PartySelectedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnBannerClicked).FromResolve();
+            Container.BindSignal<BannerClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnBannerClicked).FromResolve();
             Container.BindSignal<MapClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnMapClicked).FromResolve();
             Container.BindSignal<ActionClickedSignal>().ToMethod<UserInterfaceSignalManager>(x => x.OnActionClicked).FromResolve();
 

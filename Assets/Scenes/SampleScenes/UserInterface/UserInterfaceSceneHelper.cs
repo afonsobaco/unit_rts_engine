@@ -23,19 +23,19 @@ namespace RTSEngine.RTSUserInterface.Scene
         private SignalBus _signalBus;
         private IEqualityComparer<ISelectable> _equalityComparer;
         private IComparer<IGrouping<ISelectable, ISelectable>> _groupSortComparer;
+        private IUserInterfaceLogManager _logManager;
+        private DefaultUserInterfaceInfoManager _infoManager;
 
         [Inject]
-        public void Construct(SignalBus signalBus, UserInterface userInterface, UserInterfaceBase userInterfaceBase, IEqualityComparer<ISelectable> equalityComparer, IComparer<IGrouping<ISelectable, ISelectable>> groupSortComparer)
+        public void Construct(SignalBus signalBus, UserInterface userInterface, UserInterfaceBase userInterfaceBase, IEqualityComparer<ISelectable> equalityComparer, IComparer<IGrouping<ISelectable, ISelectable>> groupSortComparer, IUserInterfaceLogManager logManager)
         {
             this._signalBus = signalBus;
             this._userInterface = userInterface;
             this._equalityComparer = equalityComparer;
             this._groupSortComparer = groupSortComparer;
             this._userInterfaceBase = userInterfaceBase;
+            this._logManager = logManager;
         }
-
-        private DefaultUserInterfaceInfoManager _infoManager;
-        private DefaultUserInterfaceLogManager _logManager;
 
         private void Start()
         {
@@ -50,12 +50,6 @@ namespace RTSEngine.RTSUserInterface.Scene
             {
                 _infoManager = infoPanel.GetComponent<DefaultUserInterfaceInfoManager>();
             }
-
-            var logPanel = _userInterfaceBase.UserInterfaceBaseComponent.LogPanel;
-            if (logPanel)
-            {
-                _logManager = logPanel.GetComponent<DefaultUserInterfaceLogManager>();
-            }
             StartCoroutine(StartInfo());
         }
 
@@ -65,7 +59,7 @@ namespace RTSEngine.RTSUserInterface.Scene
             foreach (var info in _sceneInfoList)
             {
                 ExecuteEvents.Execute<IInfoMessageTarget>(_infoManager.gameObject, null, (x, y) => x.AddInfo(CreateInfoButton(info)));
-                SendLog("New hint!");
+                _logManager.AddLog("New hint!");
                 yield return new WaitForSeconds(.1f);
             }
         }
@@ -91,7 +85,7 @@ namespace RTSEngine.RTSUserInterface.Scene
         {
             if (Input.GetKeyDown(KeyCode.L))
             {
-                SendLog(fakeLogs[Random.Range(0, fakeLogs.Length)]);
+                _logManager.AddLog(fakeLogs[Random.Range(0, fakeLogs.Length)]);
             }
         }
 
@@ -104,18 +98,6 @@ namespace RTSEngine.RTSUserInterface.Scene
             "<b><color=yellow>Farm</color></b> build complete",
             "<b><color=yellow>Lumber Mill</color></b> build complete",
         };
-
-        private void SendLog(string log)
-        {
-            ExecuteEvents.Execute<ILogMessageTarget>(_logManager.gameObject, null, (x, y) => x.AddLog(CreateLog(log)));
-        }
-
-        private DefaultLogText CreateLog(string log)
-        {
-            DefaultLogText logComponent = _userInterfaceBase.LogFactory.Create();
-            GameUtils.FindInComponent<Text>(logComponent.gameObject).text = log;
-            return logComponent;
-        }
 
         private void AddRandomSelection()
         {

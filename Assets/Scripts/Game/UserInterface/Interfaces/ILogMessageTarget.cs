@@ -1,10 +1,11 @@
 using UnityEngine.EventSystems;
+using UnityEngine;
 
 namespace RTSEngine.RTSUserInterface
 {
     public interface ILogMessageTarget : IEventSystemHandler
     {
-        void AddLog(DefaultLogText log);
+        void AddLog(RectTransform log);
         void Clear();
     }
 

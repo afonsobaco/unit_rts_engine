@@ -2,7 +2,7 @@ using RTSEngine.Core;
 
 namespace RTSEngine.Signal
 {
-    public class PartySelectedSignal
+    public class BannerClickedSignal
     {
         public object PartyId { get; set; }
     }

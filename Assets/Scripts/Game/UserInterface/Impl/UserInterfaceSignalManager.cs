@@ -46,7 +46,7 @@ namespace RTSEngine.RTSUserInterface
             _userInterfaceManager.DoPortraitClicked(signal.Selected);
         }
 
-        public void OnBannerClicked(PartySelectedSignal signal)
+        public void OnBannerClicked(BannerClickedSignal signal)
         {
             _userInterfaceManager.DoBannerClicked(signal.PartyId);
         }
