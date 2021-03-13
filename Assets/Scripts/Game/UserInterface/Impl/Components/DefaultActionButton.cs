@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using RTSEngine.Utils;
+﻿using UnityEngine;
 using Zenject;
+using System;
 
 namespace RTSEngine.RTSUserInterface
 {
@@ -17,6 +15,7 @@ namespace RTSEngine.RTSUserInterface
         {
             Debug.Log("Unimplemented: Action Press");
         }
+
         public class Factory : PlaceholderFactory<DefaultActionButton>
         {
         }

@@ -28,6 +28,8 @@ namespace Zenject
             {
                 if (ctx.Container.IsValidating)
                 {
+                    Log.Info(obj.ToString());
+                    Log.Info(obj.GetType().Name);
                     Type markedType = ((ValidationMarker)obj).MarkedType;
                     Assert.That(markedType.Equals(typeof(T)),
                         "Invalid generic argument to OnInstantiated! {0} must be type {1}", markedType, typeof(T));

@@ -7,7 +7,7 @@ namespace RTSEngine.RTSUserInterface
 {
     public class DefaultPortraitButton : DefaultClickable
     {
-       public override void DoClick()
+        public override void DoClick()
         {
             Debug.Log("Unimplemented: Portrait");
         }

@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using RTSEngine.Utils;
 using Zenject;
 
 namespace RTSEngine.RTSUserInterface
@@ -17,6 +15,7 @@ namespace RTSEngine.RTSUserInterface
         {
             Debug.Log("Unimplemented: Banner Press");
         }
+
         public class Factory : PlaceholderFactory<DefaultBannerButton>
         {
         }
