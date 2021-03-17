@@ -2,7 +2,7 @@
 
 namespace RTSEngine.Integration.Scene
 {
-    public class IntegrationSceneItemButton : DefaultItemButton
+    public class IntegrationSceneItemButton //: DefaultItemButton
     {
     }
 }

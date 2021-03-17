@@ -1,16 +1,16 @@
-using UnityEngine.UI;
+using UnityEngine;
 using RTSEngine.Signal;
 
 namespace RTSEngine.RTSUserInterface.Scene
 {
-    public class UserInterfaceScenePortraitButton : DefaultPortraitButton
+    public class UserInterfaceScenePortraitButton : MonoBehaviour// TODO DefaultPortraitButton
     {
-        public override void UpdateApperance()
-        {
-            if (ObjectReference is UserInterfaceSceneObject)
-            {
-                this.GetComponentInChildren<Text>().text = (ObjectReference as UserInterfaceSceneObject).Type + " - " + (ObjectReference as UserInterfaceSceneObject).Index.ToString();
-            }
-        }
+        // public override void UpdateApperance()
+        // {
+        //     if (ObjectReference is UserInterfaceSceneObject)
+        //     {
+        //         this.GetComponentInChildren<Text>().text = (ObjectReference as UserInterfaceSceneObject).Type + " - " + (ObjectReference as UserInterfaceSceneObject).Index.ToString();
+        //     }
+        // }
     }
 }

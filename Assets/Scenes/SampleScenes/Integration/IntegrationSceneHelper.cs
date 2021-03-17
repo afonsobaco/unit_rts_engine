@@ -12,7 +12,7 @@ namespace RTSEngine.Integration.Scene
         private int createIndex;
         private int count;
 
-        [Inject] private IUserInterfaceLogManager _logManager;
+        // [Inject] private IUserInterfaceLogManager _logManager;
 
         void Update()
         {
@@ -55,7 +55,7 @@ namespace RTSEngine.Integration.Scene
                 if (gdo)
                 {
                     Destroy(gdo.gameObject);
-                    _logManager.AddLog("Model at " + gdo.transform.position + " Destroyed");
+                    // _logManager.AddLog("Model at " + gdo.transform.position + " Destroyed");
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace RTSEngine.Integration.Scene
                     a.Index = count++;
                 }
                 newObjet.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
-                _logManager.AddLog("Model created at " + newObjet.transform.position);
+                // _logManager.AddLog("Model created at " + newObjet.transform.position);
             }
         }
     }

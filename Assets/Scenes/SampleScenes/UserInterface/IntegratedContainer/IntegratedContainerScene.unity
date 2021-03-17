@@ -121,51 +121,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &490269503 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3985665080262135569, guid: 364e68938d602124f85986ad47c24fb5,
-    type: 3}
-  m_PrefabInstance: {fileID: 3985665080909590536}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &490269507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 490269503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 2
---- !u!114 &490269508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 490269503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 20
-    m_Right: 20
-    m_Top: 20
-    m_Bottom: 20
-  m_ChildAlignment: 4
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 1
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
 --- !u!1 &1032960224
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33c1bc7962ec5294abef0aac1aa404d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  miniatures:
+  - {fileID: -903730026294837061, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
+  - {fileID: 4956942758328581113, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
+  - {fileID: 2494351913818726731, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
 --- !u!4 &1032960226
 Transform:
   m_ObjectHideFlags: 0
@@ -239,10 +198,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers:
-  - {fileID: 11400000, guid: f079bfda2286c6444bdcc130bdb0fed5, type: 2}
-  - {fileID: 11400000, guid: 5f524f4b3851ee246928c97804f7376e, type: 2}
-  - {fileID: 11400000, guid: 16d8e17745b8f9d4cbc3c3c58d16e3ac, type: 2}
-  - {fileID: 11400000, guid: 2f2fec8976b9f1044b3c352ed13bb1bf, type: 2}
+  - {fileID: 11400000, guid: 6cb6686dc80e5b64c972ba364d6336c7, type: 2}
+  - {fileID: 11400000, guid: c1aac7cb619ce00459413fe18ba8b369, type: 2}
+  - {fileID: 11400000, guid: f2f1ed9ca59168d4084066c6ba968274, type: 2}
+  - {fileID: 11400000, guid: d5093f1251d5a0040b3510d169174606, type: 2}
+  - {fileID: 11400000, guid: f3732df9c52d33148a1f95ad14a25d11, type: 2}
+  - {fileID: 11400000, guid: 298a548f6d1c9274185324a60a85c7f6, type: 2}
+  - {fileID: 11400000, guid: 29abae8998675414e9477ddc45d97e57, type: 2}
   _monoInstallers: []
   _installerPrefabs: []
   _autoRun: 1
@@ -535,11 +497,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3985665080862206561, guid: 364e68938d602124f85986ad47c24fb5,
         type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3985665080862206561, guid: 364e68938d602124f85986ad47c24fb5,
-        type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
@@ -567,36 +524,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3985665080862206562, guid: 364e68938d602124f85986ad47c24fb5,
-        type: 3}
-      propertyPath: m_Text
-      value: '<b><color=yellow>Q</color></b> : Add <b>Log</b>
-
-        <b><color=yellow>W</color></b>
-        : Add <b>Banner</b>
-
-        <b><color=yellow>E</color></b> : Add <b>Info</b>
-
-        <b><color=yellow>A</color></b>
-        : Add <b>Minature</b>
-
-        <b><color=yellow>S</color></b> : Add <b>Item</b>
-
-        <b><color=yellow>D</color></b>
-        : Add <b>Action</b>
-
-
-
-        <b><color=lightblue>Click</color></b> : Remove
-        <b>component</b>
-
-'
-      objectReference: {fileID: 0}
-    - target: {fileID: 3985665080862206562, guid: 364e68938d602124f85986ad47c24fb5,
-        type: 3}
-      propertyPath: m_FontData.m_Alignment
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3985665081417650689, guid: 364e68938d602124f85986ad47c24fb5,
         type: 3}

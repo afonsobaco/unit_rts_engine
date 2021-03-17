@@ -6,13 +6,13 @@ using Zenject;
 
 namespace RTSEngine.RTSUserInterface.Scene
 {
-    public class UserInterfaceSceneBannerButton : DefaultBannerButton
+    public class UserInterfaceSceneBannerButton : MonoBehaviour// TODO  DefaultBannerButton
     {
-        public override void UpdateApperance()
-        {
-            if (ObjectReference is int)
-                this.GetComponentInChildren<Text>().text = (ObjectReference as int?).ToString();
-        }
+        // public override void UpdateApperance()
+        // {
+        //     if (ObjectReference is int)
+        //         this.GetComponentInChildren<Text>().text = (ObjectReference as int?).ToString();
+        // }
 
     }
 }

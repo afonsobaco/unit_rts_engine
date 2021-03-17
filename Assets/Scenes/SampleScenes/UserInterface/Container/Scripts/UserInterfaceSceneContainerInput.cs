@@ -5,7 +5,7 @@ using RTSEngine.RTSUserInterface;
 
 namespace RTSEngine.RTSUserInterface.Scene
 {
-    public class UserInterfaceSceneContainerInput : UserInterfaceContainerInput
+    public class UserInterfaceSceneContainerInput : MonoBehaviour
     {
 
         [Inject] private GameSignalBus _signalBus;

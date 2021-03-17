@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40049a38d64624d4daacda310de43f2b, type: 3}
+  m_Name: BannerUIContainerInstaller
+  m_EditorClassIdentifier: 
+  _containerPrefab: {fileID: -5648241187970291407, guid: 92c95eed24d973847ae339f36a410cb7,
+    type: 3}
+  _contentPrefab: {fileID: 4410416368935630590, guid: 0e6d3813b44df4840ac1008a698f0f44,
+    type: 3}
+  _manager: {fileID: 1970280519388583897, guid: 20ef779e27041814fa0a5a3ca691e736,
+    type: 3}

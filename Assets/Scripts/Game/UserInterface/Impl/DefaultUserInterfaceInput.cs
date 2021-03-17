@@ -61,8 +61,6 @@ public class DefaultUserInterfaceInput : MonoBehaviour
         }
     }
 
-
-
     public virtual void UpdateAll()
     {
     }

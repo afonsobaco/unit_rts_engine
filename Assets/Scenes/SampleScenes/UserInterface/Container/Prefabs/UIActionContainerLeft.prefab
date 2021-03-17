@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _containerId: ContainerLeft
-  placeholder: {fileID: 4827206715291418371}
+  _contentPlaceholder: {fileID: 4827206715291418371}
 --- !u!1 &4420159148981601324
 GameObject:
   m_ObjectHideFlags: 0
