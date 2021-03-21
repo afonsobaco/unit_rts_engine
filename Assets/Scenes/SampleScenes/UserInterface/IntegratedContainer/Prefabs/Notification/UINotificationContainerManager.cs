@@ -8,18 +8,18 @@ using RTSEngine.RTSUserInterface;
 
 namespace RTSEngine.RTSUserInterface.Scene
 {
-    public class UIInfoContainerManager : UILimitedContainerManager
+    public class UINotificationContainerManager : UILimitedContainerManager
     {
 
         [Inject] private SignalBus _signalBus;
 
-        private Queue<UIInfoContentInfo> _infoQueue = new Queue<UIInfoContentInfo>();
+        private Queue<UINotificationContentInfo> _notificationQueue = new Queue<UINotificationContentInfo>();
 
         public override UIContent AddToContainer(UIContentInfo info)
         {
             if (GetUIContentChildren().Count == _limit)
             {
-                _infoQueue.Enqueue(info as UIInfoContentInfo);
+                _notificationQueue.Enqueue(info as UINotificationContentInfo);
             }
             else
             {
@@ -60,9 +60,9 @@ namespace RTSEngine.RTSUserInterface.Scene
         private IEnumerator AddInfoFromQueue(float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
-            if (_infoQueue.Count > 0)
+            if (_notificationQueue.Count > 0)
             {
-                var info = _infoQueue.Dequeue() as UIInfoContentInfo;
+                var info = _notificationQueue.Dequeue() as UINotificationContentInfo;
                 _signalBus.Fire(new UIAddContentSignal { ContainerInfo = new UIContainerInfo() { ContainerId = container.ContainerId }, Info = info });
             }
         }

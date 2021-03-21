@@ -78,9 +78,9 @@ namespace RTSEngine.RTSUserInterface.Scene
             }
         }
 
-        private static UIInfoContentInfo GetInfo()
+        private static UINotificationContentInfo GetInfo()
         {
-            return new UIInfoContentInfo
+            return new UINotificationContentInfo
             {
                 MainText = " Main Text",
                 Tooltip = " ToolTip Text",

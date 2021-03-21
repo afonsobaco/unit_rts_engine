@@ -6,7 +6,7 @@ using RTSEngine.RTSUserInterface;
 
 namespace RTSEngine.RTSUserInterface.Scene
 {
-    public class UIInfoContentInfo : UIContentInfo
+    public class UINotificationContentInfo : UIContentInfo
     {
         private string mainText;
         private string subText;
