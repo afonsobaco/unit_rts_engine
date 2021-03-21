@@ -15,33 +15,33 @@ namespace RTSEngine.RTSUserInterface.Scene
 
         private Queue<UIInfoContentInfo> _infoQueue = new Queue<UIInfoContentInfo>();
 
-        public override UIContent AddToContainer(UIAddContentSignal signal)
+        public override UIContent AddToContainer(UIContentInfo info)
         {
             if (GetUIContentChildren().Count == _limit)
             {
-                _infoQueue.Enqueue(signal.Info as UIInfoContentInfo);
+                _infoQueue.Enqueue(info as UIInfoContentInfo);
             }
             else
             {
-                return base.AddToContainer(signal);
+                return base.AddToContainer(info);
             }
             return null;
         }
 
-        public override IEnumerator PosAddToContainer(UIContent content)
+        public override IEnumerator AfterAddToContainerAnimation(UIContentInfo contentInfo)
         {
-            var effect = content.GetComponentInChildren<UIEffectBase>();
-            if (effect)
+            if (contentInfo.Content)
             {
-                yield return StartCoroutine(effect.Create());
+                var effect = contentInfo.Content.GetComponentInChildren<UIEffectBase>();
+                if (effect)
+                {
+                    yield return StartCoroutine(effect.Create());
+                }
             }
-            else
-            {
-                yield return null;
-            }
+            yield return null;
         }
 
-        public override IEnumerator BeforeRemoveFromContainer(UIContent content)
+        public override IEnumerator BeforeRemoveFromContainerAnimation(UIContent content)
         {
             var effect = content.GetComponentInChildren<UIEffectBase>();
             var waitTime = 1f;
@@ -54,7 +54,6 @@ namespace RTSEngine.RTSUserInterface.Scene
             {
                 yield return null;
             }
-            Destroy(content.gameObject);
             StartCoroutine(AddInfoFromQueue(waitTime));
         }
 
@@ -64,7 +63,7 @@ namespace RTSEngine.RTSUserInterface.Scene
             if (_infoQueue.Count > 0)
             {
                 var info = _infoQueue.Dequeue() as UIInfoContentInfo;
-                _signalBus.Fire(new UIAddContentSignal { Info = info });
+                _signalBus.Fire(new UIAddContentSignal { ContainerInfo = new UIContainerInfo() { ContainerId = container.ContainerId }, Info = info });
             }
         }
 

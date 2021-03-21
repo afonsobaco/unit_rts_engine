@@ -9,15 +9,15 @@ namespace RTSEngine.RTSUserInterface.Scene
 {
     public class UIBannerContainerManager : UILimitedContainerManager
     {
-        public override UIContent AddToContainer(UIAddContentSignal signal)
+        public override UIContent AddToContainer(UIContentInfo info)
         {
-            UIBannerContentInfo uIBannerContentInfo = (signal.Info as UIBannerContentInfo);
+            UIBannerContentInfo uIBannerContentInfo = (info as UIBannerContentInfo);
             if (!CheckIfContains(uIBannerContentInfo.Key))
             {
                 Debug.Log(string.Format("Updated {0}", uIBannerContentInfo.Key));
                 return null;
             }
-            var content = base.AddToContainer(signal);
+            var content = base.AddToContainer(info);
             if (content)
             {
                 SortBanners();

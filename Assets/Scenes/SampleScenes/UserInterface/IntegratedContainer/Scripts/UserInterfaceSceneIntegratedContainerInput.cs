@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using RTSEngine.Utils;
 using Zenject;
@@ -7,92 +9,84 @@ namespace RTSEngine.RTSUserInterface.Scene
 {
     public class UserInterfaceSceneIntegratedContainerInput : MonoBehaviour
     {
-        [SerializeField] private Sprite[] miniatures;
 
         [Inject] private GameSignalBus _signalBus;
+        [SerializeField] private UIMiniatureSelectionManager uIMiniatureSelectionManager;
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = GetLogInfo() });
+                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "LogContainer" }, Info = new UIContentInfo() { } });
             }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = GetBannerInfo() });
+                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "BannerContainer" }, Info = new UIBannerContentInfo() { Key = Random.Range(1, 11) } });
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
                 //TODO rename to notification
-                _signalBus.Fire(new UIAddContentSignal { Info = GetInfo() });
+                _signalBus.Fire(new UIAddContentSignal { ContainerInfo = new UIContainerInfo() { ContainerId = "InfoContainer" }, Info = GetInfo() });
             }
 
             if (Input.GetKeyDown(KeyCode.A))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = GetProfileInfo() });
+                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "ProfileContainer" }, Info = new UIContentInfo() { } });
             }
 
             if (Input.GetKeyDown(KeyCode.S))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = GetRandomMiniatureInfo() });
+                GetRandomSelectionMiniature();
+            }
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                _signalBus.Fire(new UIClearContainerSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "MiniatureContainer" } });
             }
 
             if (Input.GetKeyDown(KeyCode.D))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = GetItemInfo() });
+                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "ItemContainer" }, Info = new UIContentInfo() { } });
             }
 
             if (Input.GetKeyDown(KeyCode.F))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = GetActionInfo() });
+                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "ActionContainer" }, Info = new UIContentInfo() { } });
+            }
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                ChangeHighlighted();
             }
         }
 
-        private static UIContentInfo GetLogInfo()
+        private void GetRandomSelectionMiniature()
         {
-            return new UIContentInfo
-            {
-                ContainerId = "LogContainer"
-            };
+            List<UIContentInfo> infoList = uIMiniatureSelectionManager.GetRandomSelection().Cast<UIContentInfo>().ToList();
+            UIContainerInfo miniatureContainerInfo = new UIMiniatureContainerInfo() { ContainerId = "MiniatureContainer" };
+            _signalBus.Fire(new UIAddAllContentSignal() { ContainerInfo = miniatureContainerInfo, InfoList = infoList });
         }
 
-        private static UIContentInfo GetActionInfo()
+        private void ChangeHighlighted()
         {
-            return new UIContentInfo
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                ContainerId = "ActionContainer"
-            };
-        }
-
-        private static UIContentInfo GetItemInfo()
-        {
-            return new UIContentInfo
+                UIMiniatureContainerInfo previousInfo = new UIMiniatureContainerInfo() { OldSelection = true, NextHighlight = false, ContainerId = "MiniatureContainer" };
+                _signalBus.Fire(new UIUpdateContainerSignal() { ContainerInfo = previousInfo });
+            }
+            else
             {
-                ContainerId = "ItemContainer"
-            };
-        }
-
-        private UIContentInfo GetProfileInfo()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private static UIBannerContentInfo GetBannerInfo()
-        {
-            return new UIBannerContentInfo
-            {
-                ContainerId = "BannerContainer",
-                Key = Random.Range(1, 11)
-            };
+                UIMiniatureContainerInfo nextInfo = new UIMiniatureContainerInfo() { OldSelection = true, NextHighlight = true, ContainerId = "MiniatureContainer" };
+                _signalBus.Fire(new UIUpdateContainerSignal() { ContainerInfo = nextInfo });
+            }
         }
 
         private static UIInfoContentInfo GetInfo()
         {
             return new UIInfoContentInfo
             {
-                ContainerId = "InfoContainer",
                 MainText = " Main Text",
                 Tooltip = " ToolTip Text",
                 SubText = " Click to Dismiss",
@@ -100,25 +94,7 @@ namespace RTSEngine.RTSUserInterface.Scene
             };
         }
 
-        private UIMiniatureContentInfo GetRandomMiniatureInfo()
-        {
-            var miniatureInfo = new UIMiniatureContentInfo();
-            int rndInt = Random.Range(0, miniatures.Length);
 
-            miniatureInfo.ContainerId = "MiniatureContainer";
-            miniatureInfo.MaxHealth = 100;
-            miniatureInfo.Health = Random.Range(1, 100);
-            if (rndInt > 0)
-            {
-                miniatureInfo.MaxMana = 50;
-                miniatureInfo.Mana = Random.Range(1, 50);
-            }
-            miniatureInfo.Picture = miniatures[rndInt];
-            miniatureInfo.Selectable = new UIMiniatureSelectable();
-            (miniatureInfo.Selectable as UIMiniatureSelectable).Type = rndInt;
-
-            return miniatureInfo;
-        }
     }
 }
 

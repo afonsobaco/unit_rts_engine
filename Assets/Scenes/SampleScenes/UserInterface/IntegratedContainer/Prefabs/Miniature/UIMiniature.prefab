@@ -1267,3 +1267,7 @@ MonoBehaviour:
   _picture: {fileID: 3916196129704254335}
   _healthBar: {fileID: 7408678119921631609}
   _manaBar: {fileID: 6561212468348414354}
+  _highlights:
+  - {fileID: 5029913862188616212}
+  - {fileID: 2698343360779676308}
+  - {fileID: 7686089078627580891}

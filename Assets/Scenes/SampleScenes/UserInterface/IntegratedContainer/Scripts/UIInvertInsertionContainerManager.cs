@@ -9,10 +9,9 @@ namespace RTSEngine.RTSUserInterface.Scene
 {
     public class UIInvertInsertionContainerManager : UIContainerManager
     {
-
-        public override UIContent AddToContainer(UIAddContentSignal signal)
+        public override UIContent AddToContainer(UIContentInfo info)
         {
-            UIContent uIContent = base.AddToContainer(signal);
+            UIContent uIContent = base.AddToContainer(info);
             uIContent.transform.SetAsFirstSibling();
             return uIContent;
         }

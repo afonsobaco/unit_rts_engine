@@ -14,23 +14,23 @@ namespace RTSEngine.RTSUserInterface.Scene
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = new UIContentInfo { ContainerId = "ContainerLeft" } });
+                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo { ContainerId = "ContainerLeft" }, Info = new UIContentInfo() { } });
             }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = new UIContentInfo { ContainerId = "ContainerTop" } });
+                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo { ContainerId = "ContainerTop" }, Info = new UIContentInfo() { } });
             }
 
             if (Input.GetKeyDown(KeyCode.S))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = new UIContentInfo { ContainerId = "ContainerBottom" } });
+                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo { ContainerId = "ContainerBottom" }, Info = new UIContentInfo() { } });
 
             }
 
             if (Input.GetKeyDown(KeyCode.D))
             {
-                _signalBus.Fire(new UIAddContentSignal() { Info = new UIContentInfo { ContainerId = "ContainerRight" } });
+                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo { ContainerId = "ContainerRight" }, Info = new UIContentInfo() { } });
 
             }
         }

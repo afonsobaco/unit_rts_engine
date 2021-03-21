@@ -12,7 +12,7 @@ namespace RTSEngine.RTSUserInterface.Scene
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            _signalBus.Fire(new UIRemoveContentSignal() { Content = this });
+            _signalBus.Fire(new UIRemoveContentSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = this.Container.ContainerId }, Content = this });
         }
     }
 }

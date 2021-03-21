@@ -131,6 +131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1032960226}
   - component: {fileID: 1032960225}
+  - component: {fileID: 1032960227}
   m_Layer: 0
   m_Name: Input
   m_TagString: Untagged
@@ -150,10 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33c1bc7962ec5294abef0aac1aa404d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  miniatures:
-  - {fileID: -903730026294837061, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
-  - {fileID: 4956942758328581113, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
-  - {fileID: 2494351913818726731, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
+  uIMiniatureSelectionManager: {fileID: 1032960227}
 --- !u!4 &1032960226
 Transform:
   m_ObjectHideFlags: 0
@@ -168,6 +166,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1032960227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032960224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0282a9d41b01e9a458223a756b917ad3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _miniatures:
+  - {fileID: -903730026294837061, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
+  - {fileID: 4956942758328581113, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
+  - {fileID: 5063466513527928634, guid: 40a8632ee625c4248b0f985ec2a0be94, type: 3}
 --- !u!1 &1181176516
 GameObject:
   m_ObjectHideFlags: 0

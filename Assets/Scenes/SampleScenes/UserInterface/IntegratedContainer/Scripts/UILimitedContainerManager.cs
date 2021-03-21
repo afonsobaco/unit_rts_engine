@@ -10,11 +10,11 @@ namespace RTSEngine.RTSUserInterface.Scene
     public class UILimitedContainerManager : UIContainerManager
     {
         [SerializeField] protected int _limit = 10;
-        public override UIContent AddToContainer(UIAddContentSignal signal)
+        public override UIContent AddToContainer(UIContentInfo info)
         {
             if (GetUIContentChildren().Count < _limit)
             {
-                return base.AddToContainer(signal);
+                return base.AddToContainer(info);
             }
             return null;
         }
