@@ -1,24 +1,24 @@
-﻿using UnityEngine.UI;
+﻿using UnityEngine;
 using RTSEngine.Signal;
 using RTSEngine.RTSUserInterface;
 
 namespace RTSEngine.Integration.Scene
 {
-    public class IntegrationScenePortraitButton : DefaultPortraitButton
+    public class IntegrationScenePortraitButton : MonoBehaviour// DefaultPortraitButton
     {
-        public override void UpdateApperance()
-        {
-            if (ObjectReference is IntegrationSceneObject)
-            {
-                var obj = ObjectReference as IntegrationSceneObject;
-                this.GetComponentInChildren<Image>().sprite = obj.Picture;
-            }
-        }
+        // public override void UpdateApperance()
+        // {
+        //     if (ObjectReference is IntegrationSceneObject)
+        //     {
+        //         var obj = ObjectReference as IntegrationSceneObject;
+        //         this.GetComponentInChildren<Image>().sprite = obj.Picture;
+        //     }
+        // }
 
-        public override void DoPress()
-        {
-            if (ObjectReference is IntegrationSceneObject)
-                SignalBus.Fire(new PortraitClickedSignal() { Selected = ObjectReference as IntegrationSceneObject });
-        }
+        // public override void DoPress()
+        // {
+        //     if (ObjectReference is IntegrationSceneObject)
+        //         SignalBus.Fire(new PortraitClickedSignal() { Selected = ObjectReference as IntegrationSceneObject });
+        // }
     }
 }

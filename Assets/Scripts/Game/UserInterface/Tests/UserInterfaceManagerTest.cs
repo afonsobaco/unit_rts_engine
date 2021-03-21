@@ -4,7 +4,7 @@ using RTSEngine.Core;
 using RTSEngine.Signal;
 using NSubstitute;
 using Tests.Utils;
-using RTSEngine.Utils;
+using Zenject;
 using RTSEngine.RTSUserInterface;
 
 namespace Tests
@@ -14,12 +14,12 @@ namespace Tests
     {
         private UserInterfaceManager _userInterfaceManager;
         private UserInterface _userInterface;
-        private GameSignalBus _signalBus;
+        private SignalBus _signalBus;
 
         [SetUp]
         public void SetUp()
         {
-            _signalBus = Substitute.ForPartsOf<GameSignalBus>(new object[] { default });
+            _signalBus = Substitute.ForPartsOf<SignalBus>(new object[] { default });
             _userInterface = Substitute.ForPartsOf<UserInterface>(new object[] { default });
             _userInterfaceManager = Substitute.ForPartsOf<UserInterfaceManager>(new object[] { _signalBus, _userInterface });
             _signalBus.WhenForAnyArgs(x => x.Fire(default)).DoNotCallBase();

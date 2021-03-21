@@ -16,9 +16,9 @@ namespace RTSEngine.RTSSelection
         private IRuntimeSet<ISelectable> _mainList;
         private bool _blockAreaSelection;
         public bool BlockAreaSelection { get => _blockAreaSelection; set => _blockAreaSelection = value; }
-        private GameSignalBus _signalBus;
+        private SignalBus _signalBus;
 
-        public SelectionSignalManager(Selection selection, SelectionManager selectionManager, IRuntimeSet<ISelectable> mainList, GameSignalBus signalBus)
+        public SelectionSignalManager(Selection selection, SelectionManager selectionManager, IRuntimeSet<ISelectable> mainList, SignalBus signalBus)
         {
             this._selection = selection;
             _selectionManager = selectionManager;
