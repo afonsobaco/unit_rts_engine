@@ -9,7 +9,6 @@ namespace RTSEngine.Installers
         public override void InstallBindings()
         {
             SignalBusInstaller.Install(Container);
-            Container.Bind<GameSignalBus>().AsSingle().MoveIntoAllSubContainers().NonLazy();
         }
     }
 }

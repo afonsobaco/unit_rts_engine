@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40049a38d64624d4daacda310de43f2b, type: 3}
+  m_Name: PortraitUIContainerInstaller
+  m_EditorClassIdentifier: 
+  _containerPrefab: {fileID: -248096541045104236, guid: 7106cdb2e35e8194ea15034329234931,
+    type: 3}
+  _contentPrefab: {fileID: -5685060870395751694, guid: c18c8cd16f4c1b54ea615abefa8c82aa,
+    type: 3}
+  _manager: {fileID: 5821977251846979786, guid: beeab3299bf1ef84dac15fb80c588ded,
+    type: 3}

@@ -4,7 +4,7 @@ using NSubstitute;
 using NUnit.Framework;
 using RTSEngine.Core;
 using RTSEngine.Signal;
-using RTSEngine.Utils;
+using Zenject;
 using Tests.Utils;
 using RTSEngine.RTSSelection;
 
@@ -18,7 +18,7 @@ namespace Tests
         private IRuntimeSet<ISelectable> _mainList;
         private SelectionSignalManager _selectionSignalManager;
 
-        private GameSignalBus _signalBus;
+        private SignalBus _signalBus;
 
         [SetUp]
         public void SetUp()
@@ -26,7 +26,7 @@ namespace Tests
             _selectionManager = Substitute.ForPartsOf<SelectionManager>(new object[] { default, default });
             _mainList = Substitute.For<IRuntimeSet<ISelectable>>();
             _selection = Substitute.ForPartsOf<Selection>(new object[] { default, _mainList });
-            _signalBus = Substitute.ForPartsOf<GameSignalBus>(new object[] { default });
+            _signalBus = Substitute.ForPartsOf<SignalBus>(new object[] { default });
             _signalBus.WhenForAnyArgs(x => x.Fire(default)).DoNotCallBase();
             _selectionSignalManager = Substitute.ForPartsOf<SelectionSignalManager>(new object[] { _selection, _selectionManager, _mainList, _signalBus });
 

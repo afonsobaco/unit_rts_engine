@@ -1129,7 +1129,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6675879450840093854}
-  - component: {fileID: 1702019709316939331}
   - component: {fileID: 7589844747163296608}
   m_Layer: 5
   m_Name: Panel
@@ -1163,18 +1162,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1702019709316939331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6257451417360395461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1d831735e9bdbf47b800ce09d6fcf6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7589844747163296608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2854,6 +2841,11 @@ PrefabInstance:
     - target: {fileID: 4687425807983434942, guid: 929a270228b1c2249a6238435a594b32,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621006467745767496, guid: 929a270228b1c2249a6238435a594b32,
+        type: 3}
+      propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -9492,15 +9484,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 9052004166516085652}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2164386069315840074 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7176024751705684958, guid: 647e898ef9848cd40843c41f97fea8fa,
-    type: 3}
-  m_PrefabInstance: {fileID: 9052004166516085652}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8644891942556898093 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 749847960332894393, guid: 647e898ef9848cd40843c41f97fea8fa,
+    type: 3}
+  m_PrefabInstance: {fileID: 9052004166516085652}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2164386069315840074 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7176024751705684958, guid: 647e898ef9848cd40843c41f97fea8fa,
     type: 3}
   m_PrefabInstance: {fileID: 9052004166516085652}
   m_PrefabAsset: {fileID: 0}

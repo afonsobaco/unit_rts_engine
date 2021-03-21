@@ -17,7 +17,8 @@ namespace RTSEngine.Integration.Scene
 
         public override void GetAreaSelectionInput()
         {
-            PreventSelection = WasGUIClicked();
+            //TODO 
+            // PreventSelection = WasGUIClicked();
             base.GetAreaSelectionInput();
 
             if (IsSelecting)
@@ -31,16 +32,16 @@ namespace RTSEngine.Integration.Scene
             }
         }
 
-        public bool WasGUIClicked()
-        {
-            if (userInterfaceBase?.UserInterfaceBaseComponent?.Raycaster)
-            {
-                List<RaycastResult> results = new List<RaycastResult>();
-                userInterfaceBase?.UserInterfaceBaseComponent?.Raycaster.Raycast(new PointerEventData(null) { position = Input.mousePosition }, results);
-                return results.Count > 0;
-            }
-            return false;
-        }
+        // public bool WasGUIClicked()
+        // {
+        //     if (userInterfaceBase?.UserInterfaceBaseComponent?.Raycaster)
+        //     {
+        //         List<RaycastResult> results = new List<RaycastResult>();
+        //         userInterfaceBase?.UserInterfaceBaseComponent?.Raycaster.Raycast(new PointerEventData(null) { position = Input.mousePosition }, results);
+        //         return results.Count > 0;
+        //     }
+        //     return false;
+        // }
 
         private void DrawSelectionBox()
         {

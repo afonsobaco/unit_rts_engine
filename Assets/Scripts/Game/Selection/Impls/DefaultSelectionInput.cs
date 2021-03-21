@@ -12,15 +12,15 @@ namespace RTSEngine.RTSSelection
         private bool preventSelection;
         private bool isSelecting;
         private Vector3 _startScreenPoint;
-        private GameSignalBus _signalBus;
+        private SignalBus _signalBus;
 
         public bool IsSelecting { get => isSelecting; set => isSelecting = value; }
         public bool PreventSelection { get => preventSelection; set => preventSelection = value; }
         public Vector3 StartScreenPoint { get => _startScreenPoint; set => _startScreenPoint = value; }
-        public GameSignalBus SignalBus { get => _signalBus; set => _signalBus = value; }
+        public SignalBus SignalBus { get => _signalBus; set => _signalBus = value; }
 
         [Inject]
-        public void Construct(GameSignalBus signalBus)
+        public void Construct(SignalBus signalBus)
         {
             this.SignalBus = signalBus;
         }
