@@ -8,6 +8,7 @@ using Zenject;
 namespace RTSEngine.Utils
 {
 
+    [Obsolete]
     public class GameSignalBus
     {
         private SignalBus _signalBus;

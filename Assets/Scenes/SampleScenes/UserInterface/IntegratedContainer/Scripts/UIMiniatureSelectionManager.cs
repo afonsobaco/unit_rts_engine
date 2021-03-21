@@ -9,11 +9,11 @@ namespace RTSEngine.RTSUserInterface.Scene
     public class UIMiniatureSelectionManager : MonoBehaviour
     {
         [SerializeField] private Sprite[] _miniatures;
-        private List<UIMiniatureSelectable> _mainList;
-     
+        private List<UISceneIntegratedSelectable> _mainList;
+
         private void Start()
         {
-            _mainList = new List<UIMiniatureSelectable>();
+            _mainList = new List<UISceneIntegratedSelectable>();
             for (var i = 0; i < 20; i++)
             {
                 for (var j = 0; j < _miniatures.Length; j++)
@@ -23,13 +23,13 @@ namespace RTSEngine.RTSUserInterface.Scene
             }
         }
 
-        internal List<UIMiniatureContentInfo> GetRandomSelection()
+        internal List<UISceneIntegratedContentInfo> GetRandomSelection()
         {
-            List<UIMiniatureContentInfo> result = new List<UIMiniatureContentInfo>();
+            List<UISceneIntegratedContentInfo> result = new List<UISceneIntegratedContentInfo>();
             var size = Random.Range(1, 20);
             for (var i = 0; i < size; i++)
             {
-                UIMiniatureContentInfo miniatureInfo = GetRandomMiniatureInfo();
+                UISceneIntegratedContentInfo miniatureInfo = GetRandomMiniatureInfo();
                 result.Add(miniatureInfo);
             }
             return result;
@@ -37,26 +37,28 @@ namespace RTSEngine.RTSUserInterface.Scene
 
         private void CreateSelectable(int type)
         {
-            var selectable = new UIMiniatureSelectable();
+            var selectable = new UISceneIntegratedSelectable();
             selectable.Type = type;
             _mainList.Add(selectable);
         }
 
-        public UIMiniatureContentInfo GetRandomMiniatureInfo()
+        public UISceneIntegratedContentInfo GetRandomMiniatureInfo()
         {
-            var miniatureInfo = new UIMiniatureContentInfo();
             int rndInt = Random.Range(0, _mainList.Count);
             var selectable = _mainList[rndInt];
 
-            miniatureInfo.MaxHealth = 100;
-            miniatureInfo.Health = Random.Range(1, 100);
+            selectable.MaxHealth = 100;
+            selectable.Health = Random.Range(10, 100);
             if (selectable.Type > 0)
             {
-                miniatureInfo.MaxMana = 50;
-                miniatureInfo.Mana = Random.Range(1, 50);
+                selectable.MaxMana = 50;
+                selectable.Mana = Random.Range(10, 50);
             }
-            miniatureInfo.Picture = _miniatures[selectable.Type];
+            selectable.Picture = _miniatures[selectable.Type];
+
+            var miniatureInfo = new UISceneIntegratedContentInfo();
             miniatureInfo.Selectable = selectable;
+
             return miniatureInfo;
         }
     }

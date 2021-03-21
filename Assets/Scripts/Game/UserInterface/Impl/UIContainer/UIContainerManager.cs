@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Zenject;
 using UnityEngine;
-using System;
+using RTSEngine.Utils;
 
 namespace RTSEngine.RTSUserInterface
 {
@@ -11,6 +11,7 @@ namespace RTSEngine.RTSUserInterface
     {
         [Inject] protected UIContainer container;
         [Inject] protected PlaceholderFactory<UIContent> factory;
+        [Inject] protected SignalBus signalBus;
 
         // Signals
         public void AddAllContentSignal(UIAddAllContentSignal signal)
@@ -37,6 +38,9 @@ namespace RTSEngine.RTSUserInterface
         {
             if (IsContainer(signal)) StartCoroutine(UpdateContainerAnimation(signal.ContainerInfo));
         }
+        
+        public virtual void GlobalContainerSignal(UIGlobalContainerSignal signal) { }
+
 
         // Main code
         public virtual List<UIContent> AddAllToContainer(List<UIContentInfo> infoList)

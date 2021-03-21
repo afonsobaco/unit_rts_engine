@@ -22,6 +22,7 @@ namespace RTSEngine.RTSUserInterface
             Container.DeclareSignal<UIRemoveAllContentSignal>();
             Container.DeclareSignal<UIClearContainerSignal>();
             Container.DeclareSignal<UIUpdateContainerSignal>();
+            Container.DeclareSignal<UIGlobalContainerSignal>();
         }
 
         void InstallUIContainer(DiContainer subContainer)
@@ -36,6 +37,7 @@ namespace RTSEngine.RTSUserInterface
             subContainer.BindSignal<UIRemoveAllContentSignal>().ToMethod<UIContainerManager>(x => x.RemoveAllContentSignal).FromResolve();
             subContainer.BindSignal<UIClearContainerSignal>().ToMethod<UIContainerManager>(x => x.ClearContainerSignal).FromResolve();
             subContainer.BindSignal<UIUpdateContainerSignal>().ToMethod<UIContainerManager>(x => x.UpdateContainerSignal).FromResolve();
+            subContainer.BindSignal<UIGlobalContainerSignal>().ToMethod<UIContainerManager>(x => x.GlobalContainerSignal).FromResolve();
         }
 
         private Transform GetContainerParent(InjectContext context)

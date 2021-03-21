@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RTSEngine.RTSUserInterface.Scene
 {
-    public class UIMiniatureRootComponent : MonoBehaviour
+    public class UIContentRootComponent : MonoBehaviour
     {
     }
 }

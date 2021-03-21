@@ -620,7 +620,7 @@ GameObject:
   - component: {fileID: 3606660483665302038}
   - component: {fileID: 5317794184149716201}
   - component: {fileID: 8052723150527161670}
-  - component: {fileID: 8082585831899479835}
+  - component: {fileID: 3772708745294264703}
   m_Layer: 5
   m_Name: Health
   m_TagString: Untagged
@@ -707,7 +707,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &8082585831899479835
+--- !u!114 &3772708745294264703
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -716,9 +716,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4443782508557508638}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 708da7140ce256c46af1538d6a24bc90, type: 3}
+  m_Script: {fileID: 11500000, guid: 14069c56bfc99714a85639ae37494883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _statusBar: {fileID: 7408678119921631609}
 --- !u!1 &4497473073084780389
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,7 +732,7 @@ GameObject:
   - component: {fileID: 5142360830108654340}
   - component: {fileID: 1351175099165757430}
   - component: {fileID: 7783682371099057205}
-  - component: {fileID: 8600006916904511394}
+  - component: {fileID: 6228330190389834536}
   m_Layer: 5
   m_Name: Portrait
   m_TagString: Untagged
@@ -818,7 +819,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &8600006916904511394
+--- !u!114 &6228330190389834536
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -827,9 +828,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4497473073084780389}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 708da7140ce256c46af1538d6a24bc90, type: 3}
+  m_Script: {fileID: 11500000, guid: 14069c56bfc99714a85639ae37494883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _statusBar: {fileID: 0}
 --- !u!1 &5023659117907667342
 GameObject:
   m_ObjectHideFlags: 0
@@ -842,7 +844,7 @@ GameObject:
   - component: {fileID: 5447249393524261138}
   - component: {fileID: 5335891135778250811}
   - component: {fileID: 1406104944180973260}
-  - component: {fileID: 3356594924843629265}
+  - component: {fileID: 5858781492699243531}
   m_Layer: 5
   m_Name: Mana
   m_TagString: Untagged
@@ -929,7 +931,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &3356594924843629265
+--- !u!114 &5858781492699243531
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -938,9 +940,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5023659117907667342}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 708da7140ce256c46af1538d6a24bc90, type: 3}
+  m_Script: {fileID: 11500000, guid: 14069c56bfc99714a85639ae37494883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _statusBar: {fileID: 6561212468348414354}
 --- !u!1 &5029913862188616212
 GameObject:
   m_ObjectHideFlags: 0
@@ -1265,8 +1268,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _picture: {fileID: 3916196129704254335}
-  _healthBar: {fileID: 7408678119921631609}
-  _manaBar: {fileID: 6561212468348414354}
+  _healthBar: {fileID: 3772708745294264703}
+  _manaBar: {fileID: 5858781492699243531}
   _highlights:
   - {fileID: 5029913862188616212}
   - {fileID: 2698343360779676308}

@@ -10,10 +10,36 @@ namespace RTSEngine.RTSUserInterface.Scene
 {
     public class UIMiniatureContainerManager : UILimitedContainerManager
     {
-        private UIMiniatureSelectable _highlighted;
-        private List<UIMiniatureSelectable> selection = new List<UIMiniatureSelectable>();
-        public UIMiniatureSelectable Highlighted { get => _highlighted; set => _highlighted = value; }
+        private UISceneIntegratedSelectable _highlighted;
+        private List<UISceneIntegratedSelectable> selection = new List<UISceneIntegratedSelectable>();
+        public UISceneIntegratedSelectable Highlighted { get => _highlighted; set => _highlighted = value; }
 
+        public override IEnumerator BeforeAddAllToContainerAnimation(List<UIContentInfo> infoList)
+        {
+            yield return new WaitForFixedUpdate();
+            yield return StartCoroutine(base.ClearContainerAnimation());
+            yield return StartCoroutine(base.BeforeAddAllToContainerAnimation(infoList));
+        }
+
+        public override IEnumerator BeforeUpdateContainerAnimation(UIContainerInfo containerInfo)
+        {
+            yield return StartCoroutine(base.BeforeUpdateContainerAnimation(containerInfo));
+            var info = containerInfo as UIMiniatureContainerInfo;
+            var contentList = GetUIContentChildren();
+            if (contentList.Count > 0)
+            {
+                if (!info.OldSelection || _highlighted == null)
+                    _highlighted = (contentList[0].Info as UISceneIntegratedContentInfo).Selectable as UISceneIntegratedSelectable;
+                else if (info.NextHighlight)
+                    _highlighted = GetNextHighlight();
+                else
+                    _highlighted = GetPreviousHighlight();
+            }
+            else
+            {
+                _highlighted = null;
+            }
+        }
 
         public override UIContent AddToContainer(UIContentInfo info)
         {
@@ -27,10 +53,10 @@ namespace RTSEngine.RTSUserInterface.Scene
             return null;
         }
 
-        public override IEnumerator BeforeAddAllToContainerAnimation(List<UIContentInfo> infoList)
+        public override void UpdateContainer(UIContainerInfo containerInfo)
         {
-            yield return new WaitForFixedUpdate();
-            yield return StartCoroutine(base.ClearContainerAnimation());
+            UpdateMiniaturesHighlight(containerInfo as UIMiniatureContainerInfo);
+            base.UpdateContainer(containerInfo);
         }
 
         public override IEnumerator AfterAddAllToContainerAnimation(List<UIContentInfo> infoList)
@@ -59,34 +85,16 @@ namespace RTSEngine.RTSUserInterface.Scene
         {
             yield return StartCoroutine(base.AfterClearContainerAnimation(contentList));
             contentList.ForEach(x => selection.Remove(GetSelectable(x.Info)));
+            yield return StartCoroutine(base.UpdateContainerAnimation(new UIMiniatureContainerInfo() { ContainerId = container.ContainerId }));
         }
 
-        public override IEnumerator BeforeUpdateContainerAnimation(UIContainerInfo containerInfo)
+        public override IEnumerator AfterUpdateContainerAnimation(UIContainerInfo containerInfo)
         {
-            yield return StartCoroutine(base.BeforeUpdateContainerAnimation(containerInfo));
-            var info = containerInfo as UIMiniatureContainerInfo;
-            var contentList = GetUIContentChildren();
-            if (contentList.Count > 0)
-            {
-                if (!info.OldSelection || _highlighted == null)
-                    _highlighted = (contentList[0].Info as UIMiniatureContentInfo).Selectable;
-                else if (info.NextHighlight)
-                    _highlighted = GetNextHighlight();
-                else
-                    _highlighted = GetPreviousHighlight();
-            }
-            else
-            {
-                _highlighted = null;
-            }
-        }
-        public override void UpdateContainer(UIContainerInfo containerInfo)
-        {
-            UpdateMiniaturesHighlight(containerInfo as UIMiniatureContainerInfo);
-            base.UpdateContainer(containerInfo);
+            yield return StartCoroutine(base.AfterUpdateContainerAnimation(containerInfo));
+            signalBus.Fire(new UIGlobalContainerSignal() { Content = new UIUpdateHighlightSignalContent() { Highlighted = _highlighted } });
         }
 
-        private UIMiniatureSelectable GetPreviousHighlight()
+        private UISceneIntegratedSelectable GetPreviousHighlight()
         {
             var result = selection.Last();
             int index = selection.IndexOf(_highlighted);
@@ -97,7 +105,7 @@ namespace RTSEngine.RTSUserInterface.Scene
             return selection.Find(x => AreSameType(result, x));
         }
 
-        private UIMiniatureSelectable GetNextHighlight()
+        private UISceneIntegratedSelectable GetNextHighlight()
         {
             var result = selection[0];
             int index = selection.IndexOf(_highlighted);
@@ -116,19 +124,21 @@ namespace RTSEngine.RTSUserInterface.Scene
         {
             foreach (var item in GetUIContentChildren())
             {
-                UIMiniatureContentInfo uIMiniatureContentInfo = (item.Info as UIMiniatureContentInfo);
-                uIMiniatureContentInfo.Highlighted = AreSameType(_highlighted, uIMiniatureContentInfo.Selectable);
+                UISceneIntegratedSelectable selectable = GetSelectable(item.Info);
+                selectable.IsHighlighted = AreSameType(_highlighted, selectable);
             }
         }
 
-        private bool AreSameType(UIMiniatureSelectable first, UIMiniatureSelectable second)
+
+
+        private bool AreSameType(UISceneIntegratedSelectable first, UISceneIntegratedSelectable second)
         {
             return first.Type == second.Type;
         }
 
-        private UIMiniatureSelectable GetSelectable(UIContentInfo info)
+        private UISceneIntegratedSelectable GetSelectable(UIContentInfo info)
         {
-            return (info as UIMiniatureContentInfo).Selectable;
+            return (info as UISceneIntegratedContentInfo).Selectable as UISceneIntegratedSelectable;
         }
 
         //TODO move to selection manager
@@ -137,7 +147,7 @@ namespace RTSEngine.RTSUserInterface.Scene
             List<UIContent> contents = GetUIContentChildren();
             contents.Sort(new UIMiniatureComparer());
 
-            List<UIMiniatureSelectable> sortedSelection = new List<UIMiniatureSelectable>();
+            List<UISceneIntegratedSelectable> sortedSelection = new List<UISceneIntegratedSelectable>();
             for (var i = 0; i < contents.Count; i++)
             {
                 contents[i].transform.SetSiblingIndex(i);
@@ -158,8 +168,8 @@ namespace RTSEngine.RTSUserInterface.Scene
     {
         public int Compare(UIContent x, UIContent y)
         {
-            var xKey = (x.Info as UIMiniatureContentInfo).Selectable.Type;
-            var yKey = (y.Info as UIMiniatureContentInfo).Selectable.Type;
+            var xKey = ((x.Info as UISceneIntegratedContentInfo).Selectable as UISceneIntegratedSelectable).Type;
+            var yKey = ((y.Info as UISceneIntegratedContentInfo).Selectable as UISceneIntegratedSelectable).Type;
             return xKey - yKey;
         }
     }

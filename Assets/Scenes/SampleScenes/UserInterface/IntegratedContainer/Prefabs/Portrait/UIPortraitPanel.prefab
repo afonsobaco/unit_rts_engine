@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 629443829684479069}
   - component: {fileID: -248096541045104236}
   m_Layer: 5
-  m_Name: PortraitPanel
+  m_Name: UIPortraitPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
