@@ -10,10 +10,10 @@ namespace RTSEngine.RTSCamera
         [SerializeField] private KeyCode mousePanButton = KeyCode.Mouse2;
         [SerializeField] [Range(0, 0.2f)] private float viewportOffset = 0.01f;
 
-        private GameSignalBus _signalBus;
+        private SignalBus _signalBus;
 
         [Inject]
-        public void Construct(GameSignalBus signalBus)
+        public void Construct(SignalBus signalBus)
         {
             this._signalBus = signalBus;
         }

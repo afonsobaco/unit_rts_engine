@@ -10,7 +10,7 @@ namespace RTSEngine.RTSUserInterface.Scene
     public class UserInterfaceSceneIntegratedContainerInput : MonoBehaviour
     {
 
-        [Inject] private GameSignalBus _signalBus;
+        [Inject] private SignalBus _signalBus;
         [SerializeField] private UIMiniatureSelectionManager uIMiniatureSelectionManager;
 
         private void Update()
@@ -33,11 +33,6 @@ namespace RTSEngine.RTSUserInterface.Scene
 
             if (Input.GetKeyDown(KeyCode.A))
             {
-                _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "ProfileContainer" }, Info = new UIContentInfo() { } });
-            }
-
-            if (Input.GetKeyDown(KeyCode.S))
-            {
                 GetRandomSelectionMiniature();
             }
 
@@ -46,12 +41,12 @@ namespace RTSEngine.RTSUserInterface.Scene
                 _signalBus.Fire(new UIClearContainerSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "MiniatureContainer" } });
             }
 
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.S))
             {
                 _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "ItemContainer" }, Info = new UIContentInfo() { } });
             }
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.D))
             {
                 _signalBus.Fire(new UIAddContentSignal() { ContainerInfo = new UIContainerInfo() { ContainerId = "ActionContainer" }, Info = new UIContentInfo() { } });
             }

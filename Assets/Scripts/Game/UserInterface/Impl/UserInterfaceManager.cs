@@ -11,10 +11,10 @@ namespace RTSEngine.RTSUserInterface
 {
     public class UserInterfaceManager
     {
-        private GameSignalBus _signalBus;
+        private SignalBus _signalBus;
         private UserInterface _userInterface;
 
-        public UserInterfaceManager(GameSignalBus signalBus, UserInterface userInterface)
+        public UserInterfaceManager(SignalBus signalBus, UserInterface userInterface)
         {
             _signalBus = signalBus;
             _userInterface = userInterface;

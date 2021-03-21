@@ -8,7 +8,7 @@ namespace RTSEngine.RTSUserInterface.Scene
     public class UIClickToDismiss : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private UIContent content;
-        [Inject] private GameSignalBus _signalBus;
+        [Inject] private SignalBus _signalBus;
 
         public void OnPointerClick(PointerEventData eventData)
         {

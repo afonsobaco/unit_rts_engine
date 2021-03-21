@@ -8,7 +8,7 @@ namespace RTSEngine.RTSUserInterface.Scene
     public class UserInterfaceSceneContainerInput : MonoBehaviour
     {
 
-        [Inject] private GameSignalBus _signalBus;
+        [Inject] private SignalBus _signalBus;
 
         private void Update()
         {

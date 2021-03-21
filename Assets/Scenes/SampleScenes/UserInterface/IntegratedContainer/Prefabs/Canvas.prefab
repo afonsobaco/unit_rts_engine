@@ -250,14 +250,16 @@ MonoBehaviour:
     <b><color=yellow>E</color></b> : Add <b>Info</b>
 
     <b><color=yellow>A</color></b>
-    : Add <b>Portrait</b>
+    : Add Random <b>Minature</b> selection
 
-    <b><color=yellow>S</color></b> : Add <b>Minature</b>
+    <b><color=yellow>S</color></b> :
+    Add <b>Item</b>
 
-    <b><color=yellow>D</color></b>
-    : Add <b>Item</b>
+    <b><color=yellow>D</color></b> : Add <b>Action</b>
 
-    <b><color=yellow>F</color></b> : Add <b>Action</b>
+
+    <b><color=red>C</color></b>
+    : Remove <b>Miniature</b> selection
 
 
     <b><color=lightblue>Click</color></b>

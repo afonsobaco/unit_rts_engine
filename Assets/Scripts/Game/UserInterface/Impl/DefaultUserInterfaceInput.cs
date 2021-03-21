@@ -10,11 +10,11 @@ public class DefaultUserInterfaceInput : MonoBehaviour
     [SerializeField] private KeyCode _changeSubGroupKeyCode = KeyCode.Tab;
     [SerializeField] private KeyCode _centerCameraKeyCode = KeyCode.Space;
     [SerializeField] private KeyCode _partyKeyCode = KeyCode.Z;
-    private GameSignalBus _signalBus;
+    private SignalBus _signalBus;
     private UserInterface _userInterface;
 
     [Inject]
-    public void Construct(GameSignalBus signalBus, UserInterface userInterface)
+    public void Construct(SignalBus signalBus, UserInterface userInterface)
     {
         this._signalBus = signalBus;
         this._userInterface = userInterface;

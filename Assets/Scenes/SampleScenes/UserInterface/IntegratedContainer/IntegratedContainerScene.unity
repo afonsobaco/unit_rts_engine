@@ -539,6 +539,34 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3985665080862206562, guid: 364e68938d602124f85986ad47c24fb5,
+        type: 3}
+      propertyPath: m_Text
+      value: '<b><color=yellow>Q</color></b> : Add <b>Log</b>
+
+        <b><color=yellow>W</color></b>
+        : Add <b>Banner(random)</b>
+
+        <b><color=yellow>E</color></b> : Add
+        <b>Info</b>
+
+        <b><color=yellow>A</color></b> : Add Random <b>Minature</b>
+        selection
+
+        <b><color=yellow>S</color></b> : Add <b>Item</b>
+
+        <b><color=yellow>D</color></b>
+        : Add <b>Action</b>
+
+
+        <b><color=red>C</color></b> : Remove <b>Miniature</b>
+        selection
+
+
+        <b><color=lightblue>Click</color></b> : Remove <b>component</b>
+
+'
+      objectReference: {fileID: 0}
     - target: {fileID: 3985665081417650689, guid: 364e68938d602124f85986ad47c24fb5,
         type: 3}
       propertyPath: m_Name

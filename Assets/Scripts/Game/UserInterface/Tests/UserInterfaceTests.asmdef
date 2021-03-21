@@ -5,7 +5,8 @@
         "UnityEditor.TestRunner",
         "Core",
         "UserInterface",
-        "Commons"
+        "Commons",
+        "Zenject"
     ],
     "includePlatforms": [
         "Editor"

@@ -11,12 +11,12 @@ namespace RTSEngine.RTSSelection.Scene
         [SerializeField] private SelectionMark selectionMark;
         [SerializeField] private Renderer mainRenderer;
 
-        private GameSignalBus _signalBus;
+        private SignalBus _signalBus;
 
         public Renderer MainRenderer { get => mainRenderer; set => mainRenderer = value; }
 
         [Inject]
-        public void Construct(GameSignalBus signalBus)
+        public void Construct(SignalBus signalBus)
         {
             _signalBus = signalBus;
         }

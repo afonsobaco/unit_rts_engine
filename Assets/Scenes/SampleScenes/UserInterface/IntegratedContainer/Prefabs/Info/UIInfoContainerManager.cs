@@ -11,7 +11,7 @@ namespace RTSEngine.RTSUserInterface.Scene
     public class UIInfoContainerManager : UILimitedContainerManager
     {
 
-        [Inject] private GameSignalBus _signalBus;
+        [Inject] private SignalBus _signalBus;
 
         private Queue<UIInfoContentInfo> _infoQueue = new Queue<UIInfoContentInfo>();
 

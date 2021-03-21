@@ -8,7 +8,7 @@ namespace RTSEngine.RTSUserInterface.Scene
 {
     public class UserInterfaceSceneContent : UIContent, IPointerClickHandler
     {
-        [Inject] private GameSignalBus _signalBus;
+        [Inject] private SignalBus _signalBus;
 
         public void OnPointerClick(PointerEventData eventData)
         {
