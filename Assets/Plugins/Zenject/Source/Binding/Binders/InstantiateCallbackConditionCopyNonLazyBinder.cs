@@ -26,22 +26,22 @@ namespace Zenject
 
             BindInfo.InstantiatedCallback = (ctx, obj) =>
             {
-                if (ctx.Container.IsValidating)
+                if (obj is ValidationMarker)
                 {
-                    Log.Info(obj.ToString());
-                    Log.Info(obj.GetType().Name);
-                    Type markedType = ((ValidationMarker)obj).MarkedType;
-                    Assert.That(markedType.Equals(typeof(T)),
-                        "Invalid generic argument to OnInstantiated! {0} must be type {1}", markedType, typeof(T));
-                    callback(ctx, default(T));
+                    Assert.That(ctx.Container.IsValidating);
+
+                    ValidationMarker marker = obj as ValidationMarker;
+
+                    Assert.That(marker.MarkedType.DerivesFromOrEqual<T>(),
+                        "Invalid generic argument to OnInstantiated! {0} must be type {1}", marker.MarkedType, typeof(T));
                 }
                 else
                 {
                     Assert.That(obj == null || obj is T,
                         "Invalid generic argument to OnInstantiated! {0} must be type {1}", obj.GetType(), typeof(T));
+
                     callback(ctx, (T)obj);
                 }
-
             };
             return this;
         }

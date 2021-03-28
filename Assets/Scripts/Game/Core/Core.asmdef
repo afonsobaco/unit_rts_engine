@@ -1,7 +1,6 @@
 {
     "name": "Core",
     "references": [
-        "GUID:d25f4c6b518de7d429ba902b326c1404",
         "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
         "GUID:d0acddb179989574c8355991596bd3e6"
     ],

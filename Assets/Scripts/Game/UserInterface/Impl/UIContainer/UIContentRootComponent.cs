@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RTSEngine.RTSUserInterface.Scene
+namespace RTSEngine.RTSUserInterface
 {
     public class UIContentRootComponent : MonoBehaviour
     {

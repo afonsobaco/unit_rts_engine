@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40049a38d64624d4daacda310de43f2b, type: 3}
+  m_Name: ActionUIContainerInstaller
+  m_EditorClassIdentifier: 
+  _containerPrefab: {fileID: 6342738819500586642, guid: aad70cb61c53ef2488f2d6e30a206bec,
+    type: 3}
+  _contentPrefab: {fileID: 6774522944485028561, guid: 8b6937223be14964fa9f6a5f49c5cfd9,
+    type: 3}
+  _manager: {fileID: 7259848782345637566, guid: 854a4ed85a381ee4ca9c3b6977adce88,
+    type: 3}

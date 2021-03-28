@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using RTSEngine.RTSUserInterface;
+﻿using UnityEngine;
 using RTSEngine.RTSSelection;
-using Zenject;
+using RTSEngine.RTSUserInterface;
 
 namespace RTSEngine.Integration.Scene
 {
@@ -12,13 +9,22 @@ namespace RTSEngine.Integration.Scene
     {
 
         [SerializeField] private RectTransform _selectionBox;
+        [SerializeField] private Canvas _uiCanvas;
+        private UIMouseOver _uiMouseOver;
 
-        [Inject] private UserInterfaceBase userInterfaceBase;
+        private void Start()
+        {
+            _uiMouseOver = _uiCanvas.GetComponent<UIMouseOver>();
+            if (!_uiMouseOver)
+            {
+                Debug.LogError("You need to add a UIMouseOver to be able to avoid UI clicks");
+            }
+        }
 
         public override void GetAreaSelectionInput()
         {
-            //TODO 
-            // PreventSelection = WasGUIClicked();
+            PreventSelection = _uiMouseOver.MouseOver;
+
             base.GetAreaSelectionInput();
 
             if (IsSelecting)
@@ -32,21 +38,11 @@ namespace RTSEngine.Integration.Scene
             }
         }
 
-        // public bool WasGUIClicked()
-        // {
-        //     if (userInterfaceBase?.UserInterfaceBaseComponent?.Raycaster)
-        //     {
-        //         List<RaycastResult> results = new List<RaycastResult>();
-        //         userInterfaceBase?.UserInterfaceBaseComponent?.Raycaster.Raycast(new PointerEventData(null) { position = Input.mousePosition }, results);
-        //         return results.Count > 0;
-        //     }
-        //     return false;
-        // }
-
         private void DrawSelectionBox()
         {
+            var canvasScale = _uiCanvas.scaleFactor;
             this._selectionBox.position = GetAreaCenter(StartScreenPoint, Input.mousePosition);
-            this._selectionBox.sizeDelta = GetAreaSize(StartScreenPoint, Input.mousePosition);
+            this._selectionBox.sizeDelta = GetAreaSize(StartScreenPoint, Input.mousePosition) / canvasScale;
         }
 
         public static Vector2 GetAreaSize(Vector2 initialScreenPosition, Vector2 finalScreenPosition)

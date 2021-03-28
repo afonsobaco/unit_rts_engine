@@ -13,7 +13,7 @@ The structure was think to be **reusable**, with greate possibility to expansion
 - [x] **UI Component separation** - Make the UI components separated 
 - [x] **UI Component samples** - Create Sample Scene for each UI Component 
 - [x] **Log Manager** - Make the game log system reusable 
-- [ ] **Notification** - Rename info to notification 
+- [x] **Notification** - Rename info to notification 
 - [ ] **UI hint Manager** - Create manager to hint panel 
 - [ ] **Pre-Selection** - Show which units are going to be selected on mouse drag
 - [ ] **Status** - Show model status on UI

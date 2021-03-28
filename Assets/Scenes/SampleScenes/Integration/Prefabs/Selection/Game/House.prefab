@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: -2736229457905500478}
   - component: {fileID: 3639409890586258665}
   - component: {fileID: 3843120591880650113}
+  - component: {fileID: 654731757874204460}
   m_Layer: 0
   m_Name: House
   m_TagString: Untagged
@@ -125,6 +126,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   subGroup: Farm
   priority: 50
+--- !u!114 &654731757874204460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158547551831246352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be607797e1e670e4da8399ce84d1b745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxValue: 100
+  _value: 87
 --- !u!1 &1537604903727505049
 GameObject:
   m_ObjectHideFlags: 0

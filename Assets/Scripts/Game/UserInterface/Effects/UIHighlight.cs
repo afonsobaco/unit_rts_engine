@@ -1,25 +1,23 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using RTSEngine.Commons;
-using RTSEngine.RTSUserInterface.Utils;
 
 namespace RTSEngine.RTSUserInterface
 {
-    public class UIHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class UIHighlight : UIMouseOver
     {
         [SerializeField] private GameObject _highlight;
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public override IEnumerator DoBlurAnimation()
         {
-            _highlight.SetActive(true);
+            _highlight.SetActive(MouseOver);
+            yield return null;
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public override IEnumerator DoFocusAnimation()
         {
-            _highlight.SetActive(false);
+            _highlight.SetActive(MouseOver);
+            yield return null;
         }
-
     }
 }
 
