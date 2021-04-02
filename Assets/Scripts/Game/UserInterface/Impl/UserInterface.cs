@@ -69,7 +69,7 @@ namespace RTSEngine.RTSUserInterface
             if (_highlighted != null)
             {
                 List<ISelectable> selectables = GetSubGroupOf(_highlighted);
-                _actualSelection.ToList().ForEach(x => x.IsHighlighted = selectables.Contains(x));
+                // _actualSelection.ToList().ForEach(x => x.IsHighlighted = selectables.Contains(x));
             }
         }
 

@@ -40,7 +40,7 @@ namespace RTSEngine.RTSSelection
                 {
                     _actualSelection[i].IsSelected = false;
                 }
-                _actualSelection[i].IsHighlighted = false;
+                // _actualSelection[i].IsHighlighted = false;
             }
             for (var i = 0; i < selection.Length; i++)
             {

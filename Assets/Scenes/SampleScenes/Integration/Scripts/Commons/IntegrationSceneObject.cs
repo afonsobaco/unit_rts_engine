@@ -14,6 +14,7 @@ namespace RTSEngine.Integration.Scene
         [SerializeField] private string objectName;
         [SerializeField] private SelectionMark selectionMark;
 
+        public virtual bool IsHighlighted { get; set; }
         private SignalBus _signalBus;
 
         public override bool IsSelected
@@ -35,10 +36,7 @@ namespace RTSEngine.Integration.Scene
         {
             _signalBus = signalBus;
         }
-        private void Update()
-        {
-        }
-
+        
         private void OnEnable()
         {
             _signalBus.Fire(new SelectableObjectCreatedSignal { Selectable = this });

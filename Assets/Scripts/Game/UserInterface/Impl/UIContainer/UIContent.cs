@@ -6,14 +6,14 @@ namespace RTSEngine.RTSUserInterface
 {
     public class UIContent : MonoBehaviour, IPoolable<IMemoryPool>, IDisposable
     {
-
         [Inject] private UIContainer _container;
+        [Inject] private SignalBus _signalBus;
         private UIContentInfo _info;
         private IMemoryPool _pool;
 
-        public UIContentInfo Info { get => _info; set => _info = value; }
         public UIContainer Container { get => _container; set => _container = value; }
-
+        public SignalBus SignalBus { get => _signalBus; set => _signalBus = value; }
+        public UIContentInfo Info { get => _info; set => _info = value; }
 
         public virtual void Dispose()
         {

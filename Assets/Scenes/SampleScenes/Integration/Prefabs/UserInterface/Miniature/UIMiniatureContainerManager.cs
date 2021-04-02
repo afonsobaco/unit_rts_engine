@@ -12,66 +12,75 @@ namespace RTSEngine.Integration.Scene
 {
     public class UIMiniatureContainerManager : UILimitedContainerManager
     {
-        [Inject] private IEqualityComparer<ISelectable> _equalityComparer;
-
-        private IntegrationSceneObject _highlighted;
         private List<IntegrationSceneObject> selection = new List<IntegrationSceneObject>();
-        public IntegrationSceneObject Highlighted { get => _highlighted; set => _highlighted = value; }
+        private UIMiniatureHighlightManager miniatureHighlightManager;
+
+        [Inject]
+        private IEqualityComparer<ISelectable> _equalityComparer;
+
+        private bool isUISelection;
 
         private void Start()
         {
+            miniatureHighlightManager = new UIMiniatureHighlightManager(_equalityComparer);
             signalBus.Subscribe<SelectionUpdateSignal>(SelectionUpdated);
         }
 
         private void SelectionUpdated(SelectionUpdateSignal signal)
         {
-            List<UIContentInfo> infoList = GetSelection(signal.Selection);
-            UIContainerInfo miniatureContainerInfo = new UIMiniatureContainerInfo() { ContainerId = "MiniatureContainer" };
-            signalBus.Fire(new UIAddAllContentSignal() { ContainerInfo = miniatureContainerInfo, InfoList = infoList });
-        }
-
-        private List<UIContentInfo> GetSelection(ISelectable[] selection)
-        {
-            List<UIContentInfo> result = new List<UIContentInfo>();
-            for (var i = 0; i < selection.Length; i++)
+            if (signal.Selection.Length > 0)
             {
-                var info = new UISceneIntegratedContentInfo();
-                info.Selectable = selection[i];
-                result.Add(info);
-            }
-            return result;
-        }
-
-        public override IEnumerator BeforeAddAllToContainerAnimation(List<UIContentInfo> infoList)
-        {
-            yield return new WaitForFixedUpdate();
-            yield return StartCoroutine(base.ClearContainerAnimation());
-            yield return StartCoroutine(base.BeforeAddAllToContainerAnimation(infoList));
-        }
-
-        public override IEnumerator BeforeUpdateContainerAnimation(UIContainerInfo containerInfo)
-        {
-            yield return StartCoroutine(base.BeforeUpdateContainerAnimation(containerInfo));
-            var info = containerInfo as UIMiniatureContainerInfo;
-            var contentList = GetUIContentChildren();
-            if (contentList.Count > 0)
-            {
-                if (!info.OldSelection || _highlighted == null)
-                    _highlighted = (contentList[0].Info as UISceneIntegratedContentInfo).Selectable as IntegrationSceneObject;
-                else if (info.NextHighlight)
-                    _highlighted = GetNextHighlight();
-                else
-                    _highlighted = GetPreviousHighlight();
+                isUISelection = signal.IsUISelection;
+                StartCoroutine(AdjustContainerForNewSelection(UIUtils.CreateContentInfoBySelection(signal.Selection)));
             }
             else
-            {
-                _highlighted = null;
-            }
+                StartCoroutine(ClearContainerRoutine());
+        }
+
+        private IEnumerator AdjustContainerForNewSelection(List<UIContentInfo> infoList)
+        {
+            List<UIContent> children = GetUIContentChildren();
+            List<UIContent> ToBeRemoved = GetToBeRemoved(infoList, children);
+            List<UIContentInfo> ToBeAdded = GetToBeAdded(infoList, children);
+            if (ToBeRemoved.Count > 0) yield return StartCoroutine(RemoveAllFromContainerRoutine(ToBeRemoved));
+            if (ToBeAdded.Count > 0) yield return StartCoroutine(AddAllToContainerRoutine(ToBeAdded));
+            SortFinalInfoList(infoList);
+            UpdateMiniatureHighlight(infoList);
+            yield return StartCoroutine(AfterAny());
+        }
+
+        private List<UIContent> GetToBeRemoved(List<UIContentInfo> infoList, List<UIContent> children)
+        {
+            var selectables = UIUtils.GetSelectableFromContentInfo(infoList);
+            return children.Where(x => !selectables.Contains(UIUtils.GetSelectable(x.Info))).ToList();
+        }
+
+        private List<UIContentInfo> GetToBeAdded(List<UIContentInfo> infoList, List<UIContent> children)
+        {
+            List<IntegrationSceneObject> childrenSelectables = UIUtils.GetSelectableFromContent(children);
+            return infoList.Where(x => !childrenSelectables.Contains(UIUtils.GetSelectable(x))).ToList();
+        }
+
+        private void SortFinalInfoList(List<UIContentInfo> infoList)
+        {
+            infoList.Where(x => x.Content).ToList().ForEach(x => x.Content.transform.SetSiblingIndex(infoList.IndexOf(x)));
+        }
+
+        private void UpdateMiniatureHighlight(List<UIContentInfo> infoList)
+        {
+            miniatureHighlightManager.UpdateMiniaturesHighlight(UIUtils.GetSelectableFromContentInfo(infoList), isUISelection);
+        }
+
+        public override void UpdateContainer(UIContainerInfo containerInfo)
+        {
+            List<UIContent> contentList = GetUIContentChildren();
+            miniatureHighlightManager.UpdateHighlighted(containerInfo, contentList);
+            miniatureHighlightManager.UpdateMiniaturesHighlight(UIUtils.GetSelectableFromContent(contentList), true);
         }
 
         public override UIContent AddToContainer(UIContentInfo info)
         {
-            var selectable = GetSelectable(info);
+            var selectable = UIUtils.GetSelectable(info);
             if (!selection.Contains(selectable))
             {
                 selection.Add(selectable);
@@ -81,84 +90,28 @@ namespace RTSEngine.Integration.Scene
             return null;
         }
 
-        public override void UpdateContainer(UIContainerInfo containerInfo)
-        {
-            UpdateMiniaturesHighlight(containerInfo as UIMiniatureContainerInfo);
-            base.UpdateContainer(containerInfo);
-        }
-
-        public override IEnumerator AfterAddAllToContainerAnimation(List<UIContentInfo> infoList)
-        {
-            yield return StartCoroutine(base.AfterAddAllToContainerAnimation(infoList));
-            yield return StartCoroutine(base.UpdateContainerAnimation(new UIMiniatureContainerInfo() { ContainerId = container.ContainerId }));
-            yield return new WaitForFixedUpdate();
-        }
-
         public override IEnumerator AfterRemoveAllFromContainerAnimation(List<UIContent> contentList)
         {
             yield return StartCoroutine(base.AfterRemoveAllFromContainerAnimation(contentList));
-            contentList.ForEach(x => selection.Remove(GetSelectable(x.Info)));
-            yield return StartCoroutine(base.UpdateContainerAnimation(new UIMiniatureContainerInfo() { ContainerId = container.ContainerId }));
+            contentList.ForEach(x => selection.Remove(UIUtils.GetSelectable(x.Info)));
         }
 
         public override IEnumerator AfterRemoveFromContainerAnimation(UIContent content)
         {
             yield return StartCoroutine(base.AfterRemoveFromContainerAnimation(content));
-            selection.Remove(GetSelectable(content.Info));
-            yield return StartCoroutine(base.UpdateContainerAnimation(new UIMiniatureContainerInfo() { ContainerId = container.ContainerId }));
+            selection.Remove(UIUtils.GetSelectable(content.Info));
         }
 
         public override IEnumerator AfterClearContainerAnimation(List<UIContent> contentList)
         {
             yield return StartCoroutine(base.AfterClearContainerAnimation(contentList));
-            contentList.ForEach(x => selection.Remove(GetSelectable(x.Info)));
-            yield return StartCoroutine(base.UpdateContainerAnimation(new UIMiniatureContainerInfo() { ContainerId = container.ContainerId }));
+            contentList.ForEach(x => selection.Remove(UIUtils.GetSelectable(x.Info)));
         }
 
         public override IEnumerator AfterUpdateContainerAnimation(UIContainerInfo containerInfo)
         {
             yield return StartCoroutine(base.AfterUpdateContainerAnimation(containerInfo));
-            signalBus.Fire(new UIGlobalContainerSignal() { Content = new UIUpdateHighlightSignalContent() { Highlighted = _highlighted } });
-        }
-
-        private IntegrationSceneObject GetPreviousHighlight()
-        {
-            var result = selection.Last();
-            int index = selection.IndexOf(_highlighted);
-            if (index > 0)
-            {
-                result = selection[index - 1];
-            }
-            return selection.Find(x => AreSameType(result, x));
-        }
-
-        private IntegrationSceneObject GetNextHighlight()
-        {
-            var result = selection[0];
-            int index = selection.IndexOf(_highlighted);
-            if (index < selection.Count - 1)
-            {
-                var next = selection.GetRange(index, selection.Count - index).Find(x => !AreSameType(_highlighted, x));
-                if (next != null)
-                {
-                    result = next;
-                }
-            }
-            return result;
-        }
-
-        private void UpdateMiniaturesHighlight(UIMiniatureContainerInfo info)
-        {
-            foreach (var item in GetUIContentChildren())
-            {
-                IntegrationSceneObject selectable = GetSelectable(item.Info);
-                selectable.IsHighlighted = AreSameType(_highlighted, selectable);
-            }
-        }
-
-        private IntegrationSceneObject GetSelectable(UIContentInfo info)
-        {
-            return (info as UISceneIntegratedContentInfo).Selectable as IntegrationSceneObject;
+            signalBus.Fire(new UIGlobalContainerSignal() { Content = new UIUpdateHighlightSignalContent() { Highlighted = miniatureHighlightManager.Highlighted } });
         }
 
         public override List<UIContent> GetUIContentChildren()
@@ -166,11 +119,6 @@ namespace RTSEngine.Integration.Scene
             var contentList = base.GetUIContentChildren();
             contentList.RemoveAll(x => x.Info.IsBeeingRemoved);
             return contentList;
-        }
-
-        private bool AreSameType(IntegrationSceneObject result, IntegrationSceneObject x)
-        {
-            return _equalityComparer.Equals(result, x);
         }
     }
 }

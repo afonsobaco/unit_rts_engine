@@ -18,11 +18,11 @@ namespace RTSEngine.Integration.Scene
                 if (highlightedSignal.Highlighted != null)
                 {
                     UISceneIntegratedContentInfo contentInfo = new UISceneIntegratedContentInfo() { Selectable = highlightedSignal.Highlighted };
-                    StartCoroutine(base.AddToContainerAnimation(contentInfo));
+                    StartCoroutine(base.AddToContainerRoutine(contentInfo));
                 }
                 else
                 {
-                    StartCoroutine(base.ClearContainerAnimation());
+                    StartCoroutine(base.ClearContainerRoutine());
                 }
             }
         }

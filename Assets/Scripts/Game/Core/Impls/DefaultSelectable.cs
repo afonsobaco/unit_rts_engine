@@ -15,8 +15,7 @@ namespace RTSEngine.Core
             {
                 this.transform.position = value;
             }
-        }
-        public virtual bool IsHighlighted { get; set; }
+        }        
 
     }
 

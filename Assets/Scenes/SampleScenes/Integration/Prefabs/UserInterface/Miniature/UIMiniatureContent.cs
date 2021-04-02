@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using RTSEngine.RTSUserInterface;
+using RTSEngine.Core;
+using RTSEngine.Signal;
 using System;
 
 namespace RTSEngine.Integration.Scene
 {
-    public class UIMiniatureContent : UIContent
+    public class UIMiniatureContent : UIContent, IPointerClickHandler
     {
         [SerializeField] private Image _picture;
         [SerializeField] private UIMiniatureStatusBar _healthBar;
@@ -40,6 +43,12 @@ namespace RTSEngine.Integration.Scene
             {
                 component.gameObject.SetActive(false);
             }
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            var info = this.Info as UISceneIntegratedContentInfo;
+            SignalBus.Fire(new ChangeSelectionSignal() { Selection = new ISelectable[] { info.Selectable } });
         }
     }
 }
