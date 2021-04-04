@@ -1,9 +1,4 @@
-﻿using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Zenject;
-using RTSEngine.Utils;
+﻿using System.Collections.Generic;
 using RTSEngine.RTSUserInterface;
 
 namespace RTSEngine.Integration.Scene
@@ -14,30 +9,34 @@ namespace RTSEngine.Integration.Scene
         {
             if (signal.Content is UIUpdateHighlightSignalContent)
             {
-                UIUpdateHighlightSignalContent highlightedSignal = (signal.Content as UIUpdateHighlightSignalContent);
-                if (highlightedSignal.Highlighted != null)
-                {
-                    UISceneIntegratedContentInfo contentInfo = new UISceneIntegratedContentInfo() { Selectable = highlightedSignal.Highlighted };
-                    StartCoroutine(base.AddToContainerRoutine(contentInfo));
-                }
+                var content = signal.Content as UIUpdateHighlightSignalContent;
+                if (content.Highlighted != null)
+                    UpdateOrAddNew(content);
                 else
-                {
                     StartCoroutine(base.ClearContainerRoutine());
-                }
             }
         }
 
-        public override IEnumerator BeforeAddToContainerAnimation(UIContentInfo contentInfo)
+        private void UpdateOrAddNew(UIUpdateHighlightSignalContent content)
         {
-            yield return new WaitForFixedUpdate();
-            yield return StartCoroutine(base.BeforeAddToContainerAnimation(contentInfo));
+            List<UIContent> contentList = GetUIContentChildren();
+            if (contentList.Count > 0)
+            {
+                (contentList[0].Info as UISceneIntegratedContentInfo).Selectable = content.Highlighted;
+                StartCoroutine(base.AfterAny());
+            }
+            else
+            {
+                UISceneIntegratedContentInfo info = new UISceneIntegratedContentInfo() { Selectable = content.Highlighted };
+                StartCoroutine(base.AddToContainerRoutine(info, true, true));
+            }
         }
 
-        public override IEnumerator AfterAddToContainerAnimation(UIContentInfo info)
+        public override UIContent AddToContainer(UIContentInfo info)
         {
-            yield return StartCoroutine(base.AfterAddToContainerAnimation(info));
-            yield return new WaitForFixedUpdate();
+            return base.AddToContainer(info);
         }
+
     }
 
 }

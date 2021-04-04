@@ -1,12 +1,12 @@
-using UnityEngine;
-using RTSEngine.RTSUserInterface;
+// using UnityEngine;
+// using RTSEngine.RTSUserInterface;
 
-namespace RTSEngine.Integration.Scene
-{
-    public class UserInterfaceSceneIntegratedContent : UIContent
-    {
+// namespace RTSEngine.Integration.Scene
+// {
+//     public class UserInterfaceSceneIntegratedContent : UIContent
+//     {
 
 
-    }
-}
+//     }
+// }
 

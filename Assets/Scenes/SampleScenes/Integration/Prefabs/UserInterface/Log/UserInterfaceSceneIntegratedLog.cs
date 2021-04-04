@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
+using RTSEngine.RTSUserInterface;
 
 namespace RTSEngine.Integration.Scene
 {
-    public class UserInterfaceSceneIntegratedLog : UserInterfaceSceneIntegratedContent
+    public class UserInterfaceSceneIntegratedLog : UIContent
     {
         
         [SerializeField] private float _lifetime = 3f;

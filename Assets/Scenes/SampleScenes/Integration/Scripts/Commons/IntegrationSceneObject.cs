@@ -13,6 +13,7 @@ namespace RTSEngine.Integration.Scene
         [SerializeField] private Sprite picture;
         [SerializeField] private string objectName;
         [SerializeField] private SelectionMark selectionMark;
+        [SerializeField] private float speed = 15f;
 
         public virtual bool IsHighlighted { get; set; }
         private SignalBus _signalBus;
@@ -36,7 +37,7 @@ namespace RTSEngine.Integration.Scene
         {
             _signalBus = signalBus;
         }
-        
+
         private void OnEnable()
         {
             _signalBus.Fire(new SelectableObjectCreatedSignal { Selectable = this });
@@ -52,6 +53,15 @@ namespace RTSEngine.Integration.Scene
             _signalBus.Fire(new IndividualSelectionSignal() { Clicked = this });
         }
 
+        private void Update()
+        {
+            transform.Translate(GetRandomMovement() * speed * Time.deltaTime);
+        }
+
+        private static Vector3 GetRandomMovement()
+        {
+            return new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+        }
     }
 
 }

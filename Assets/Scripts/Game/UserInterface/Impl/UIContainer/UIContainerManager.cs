@@ -1,50 +1,43 @@
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using Zenject;
 using UnityEngine;
-using RTSEngine.Utils;
-using System;
 
 namespace RTSEngine.RTSUserInterface
 {
-    public class UIContainerManager : MonoBehaviour, IInitializable
+    public class UIContainerManager : UIContainerBaseManager
     {
-        [Inject] protected UIContainer container;
-        [Inject] protected PlaceholderFactory<UIContent> factory;
         [Inject] protected SignalBus signalBus;
 
         // Signals
         public void AddAllContentSignal(UIAddAllContentSignal signal)
         {
-            if (IsContainer(signal)) StartCoroutine(AddAllToContainerRoutine(signal.InfoList));
+            if (IsContainer(signal)) StartCoroutine(AddAllToContainerRoutine(signal.InfoList, true, true));
         }
         public void AddContentSignal(UIAddContentSignal signal)
         {
-            if (IsContainer(signal)) StartCoroutine(AddToContainerRoutine(signal.Info));
+            if (IsContainer(signal)) StartCoroutine(AddToContainerRoutine(signal.Info, true, true));
         }
         public void ClearContainerSignal(UIClearContainerSignal signal)
         {
-            if (IsContainer(signal)) StartCoroutine(ClearContainerRoutine());
+            if (IsContainer(signal)) StartCoroutine(ClearContainerRoutine(true, true));
         }
         public void RemoveAllContentSignal(UIRemoveAllContentSignal signal)
         {
-            if (IsContainer(signal)) StartCoroutine(RemoveAllFromContainerRoutine(signal.ContentList));
+            if (IsContainer(signal)) StartCoroutine(RemoveAllFromContainerRoutine(signal.ContentList, true, true));
         }
         public void RemoveContentSignal(UIRemoveContentSignal signal)
         {
-            if (IsContainer(signal)) StartCoroutine(RemoveFromContainerRoutine(signal.Content));
+            if (IsContainer(signal)) StartCoroutine(RemoveFromContainerRoutine(signal.Content, true, true));
         }
         public void UpdateContainerSignal(UIUpdateContainerSignal signal)
         {
-            if (IsContainer(signal)) StartCoroutine(UpdateContainerRoutine(signal.ContainerInfo));
+            if (IsContainer(signal)) StartCoroutine(UpdateContainerRoutine(signal.ContainerInfo, true, true));
         }
 
         public virtual void GlobalContainerSignal(UIGlobalContainerSignal signal) { }
 
-
-        // Main code
-        public virtual List<UIContent> AddAllToContainer(List<UIContentInfo> infoList)
+        public override List<UIContent> AddAllToContainer(List<UIContentInfo> infoList)
         {
             List<UIContent> result = new List<UIContent>();
             foreach (var info in infoList)
@@ -58,7 +51,7 @@ namespace RTSEngine.RTSUserInterface
             return result;
         }
 
-        public virtual UIContent AddToContainer(UIContentInfo info)
+        public override UIContent AddToContainer(UIContentInfo info)
         {
             var newContent = factory.Create();
             newContent.Info = info;
@@ -66,191 +59,51 @@ namespace RTSEngine.RTSUserInterface
             return newContent;
         }
 
-        public virtual void ClearContainer(List<UIContent> contentList) { }
-        public virtual void RemoveAllFromContainer(List<UIContent> contentList) { }
-        public virtual void RemoveFromContainer(UIContent content) { }
-        public virtual void UpdateContainer(UIContainerInfo containerInfo) { }
+        public virtual IEnumerator BeforeAny() { yield return null; }
 
-        //Coroutines        
-        public IEnumerator AddAllToContainerRoutine(List<UIContentInfo> infoList)
-        {
-            yield return StartCoroutine(BeforeAny());
-            MarkIsBeingAdded(infoList, true);
-            yield return StartCoroutine(BeforeAddAllToContainerAnimation(infoList));
-            AddAllToContainer(infoList);
-            yield return StartCoroutine(AfterAddAllToContainerAnimation(infoList));
-            MarkIsBeingAdded(infoList, false);
-            yield return StartCoroutine(AfterAny());
-        }
-
-        public IEnumerator AddToContainerRoutine(UIContentInfo contentInfo)
-        {
-            yield return StartCoroutine(BeforeAny());
-            MarkIsBeingAdded(contentInfo, true);
-            yield return StartCoroutine(BeforeAddToContainerAnimation(contentInfo));
-            AddToContainer(contentInfo);
-            yield return StartCoroutine(AfterAddToContainerAnimation(contentInfo));
-            MarkIsBeingAdded(contentInfo, false);
-            yield return StartCoroutine(AfterAny());
-        }
-
-        public IEnumerator ClearContainerRoutine()
-        {
-            yield return StartCoroutine(BeforeAny());
-            List<UIContent> contentList = GetUIContentChildren();
-            MarkToBeRemoved(contentList);
-            yield return StartCoroutine(BeforeClearContainerAnimation(contentList));
-            ClearContainer(contentList);
-            yield return StartCoroutine(AfterClearContainerAnimation(contentList));
-            RemoveAllMarked(contentList);
-            yield return StartCoroutine(AfterAny());
-        }
-
-        public IEnumerator RemoveAllFromContainerRoutine(List<UIContent> contentList)
-        {
-            yield return StartCoroutine(BeforeAny());
-            MarkToBeRemoved(contentList);
-            yield return StartCoroutine(BeforeRemoveAllFromContainerAnimation(contentList));
-            RemoveAllFromContainer(contentList);
-            yield return StartCoroutine(AfterRemoveAllFromContainerAnimation(contentList));
-            RemoveAllMarked(contentList);
-            yield return StartCoroutine(AfterAny());
-        }
-
-        public IEnumerator RemoveFromContainerRoutine(UIContent content)
-        {
-            yield return StartCoroutine(BeforeAny());
-            MarkToBeRemoved(content);
-            yield return StartCoroutine(BeforeRemoveFromContainerAnimation(content));
-            RemoveFromContainer(content);
-            yield return StartCoroutine(AfterRemoveFromContainerAnimation(content));
-            RemoveAllMarked(content);
-            yield return StartCoroutine(AfterAny());
-        }
-
-        public IEnumerator UpdateContainerRoutine(UIContainerInfo containerInfo)
-        {
-            yield return StartCoroutine(BeforeAny());
-            yield return StartCoroutine(BeforeUpdateContainerAnimation(containerInfo));
-            UpdateContainer(containerInfo);
-            yield return StartCoroutine(AfterUpdateContainerAnimation(containerInfo));
-            yield return StartCoroutine(AfterAny());
-        }
-
-        // Before
-        public virtual IEnumerator BeforeAny()
-        {
-            yield return null;
-        }
-
-        public virtual IEnumerator BeforeAddAllToContainerAnimation(List<UIContentInfo> infoList)
-        {
-            yield return null;
-        }
-        public virtual IEnumerator BeforeAddToContainerAnimation(UIContentInfo contentInfo)
-        {
-            yield return null;
-        }
-        public virtual IEnumerator BeforeClearContainerAnimation(List<UIContent> contentList)
-        {
-            yield return null;
-        }
-        public virtual IEnumerator BeforeRemoveAllFromContainerAnimation(List<UIContent> contentList)
-        {
-            yield return null;
-        }
-        public virtual IEnumerator BeforeRemoveFromContainerAnimation(UIContent content)
-        {
-            yield return null;
-        }
-        public virtual IEnumerator BeforeUpdateContainerAnimation(UIContainerInfo containerInfo)
-        {
-            yield return null;
-        }
-
-        //After
         public virtual IEnumerator AfterAny()
         {
             GetUIContentChildren().ForEach(x => x.UpdateAppearance());
             yield return null;
         }
 
-        public virtual IEnumerator AfterAddAllToContainerAnimation(List<UIContentInfo> infoList)
+        public IEnumerator AddAllToContainerRoutine(List<UIContentInfo> infoList, bool executeBeforeAny, bool executeAfterAny)
         {
-            yield return null;
-        }
-        public virtual IEnumerator AfterAddToContainerAnimation(UIContentInfo contentInfo)
-        {
-            yield return null;
-        }
-        public virtual IEnumerator AfterClearContainerAnimation(List<UIContent> contentList)
-        {
-            yield return null;
-        }
-        public virtual IEnumerator AfterRemoveAllFromContainerAnimation(List<UIContent> contentList)
-        {
-            yield return null;
-        }
-        public virtual IEnumerator AfterRemoveFromContainerAnimation(UIContent content)
-        {
-            yield return null;
-        }
-        public virtual IEnumerator AfterUpdateContainerAnimation(UIContainerInfo containerInfo)
-        {
-            yield return null;
+            if (executeBeforeAny) yield return StartCoroutine(BeforeAny());
+            yield return StartCoroutine(AddAllToContainerRoutine(infoList));
+            if (executeAfterAny) yield return StartCoroutine(AfterAny());
         }
 
-        //Others        
-        private bool IsContainer(UIContainerBaseSignal signal)
+        public IEnumerator AddToContainerRoutine(UIContentInfo contentInfo, bool executeBeforeAny, bool executeAfterAny)
         {
-            if (signal == null || signal.ContainerInfo == null)
-            {
-                return false;
-            }
-            return signal.ContainerInfo.ContainerId.Equals(container.ContainerId);
+            if (executeBeforeAny) yield return StartCoroutine(BeforeAny());
+            yield return StartCoroutine(AddToContainerRoutine(contentInfo));
+            if (executeAfterAny) yield return StartCoroutine(AfterAny());
+        }
+        public IEnumerator ClearContainerRoutine(bool executeBeforeAny, bool executeAfterAny)
+        {
+            if (executeBeforeAny) yield return StartCoroutine(BeforeAny());
+            yield return StartCoroutine(ClearContainerRoutine());
+            if (executeAfterAny) yield return StartCoroutine(AfterAny());
         }
 
-        private void MarkToBeRemoved(UIContent content)
+        public IEnumerator RemoveAllFromContainerRoutine(List<UIContent> contentList, bool executeBeforeAny, bool executeAfterAny)
         {
-            MarkToBeRemoved(new List<UIContent>() { content });
+            if (executeBeforeAny) yield return StartCoroutine(BeforeAny());
+            yield return StartCoroutine(RemoveAllFromContainerRoutine(contentList));
+            if (executeAfterAny) yield return StartCoroutine(AfterAny());
         }
-
-        private void RemoveAllMarked(UIContent content)
+        public IEnumerator RemoveFromContainerRoutine(UIContent content, bool executeBeforeAny, bool executeAfterAny)
         {
-            RemoveAllMarked(new List<UIContent>() { content });
+            if (executeBeforeAny) yield return StartCoroutine(BeforeAny());
+            yield return StartCoroutine(RemoveFromContainerRoutine(content));
+            if (executeAfterAny) yield return StartCoroutine(AfterAny());
         }
-
-        private void MarkToBeRemoved(List<UIContent> contentList)
+        public IEnumerator UpdateContainerRoutine(UIContainerInfo containerInfo, bool executeBeforeAny, bool executeAfterAny)
         {
-            contentList.ForEach(x => x.Info.IsBeeingRemoved = true);
-        }
-
-        private void RemoveAllMarked(List<UIContent> contentList)
-        {
-            contentList.ForEach(x => x.Dispose());
-        }
-
-        private void MarkIsBeingAdded(UIContentInfo contentInfo, bool value)
-        {
-            MarkIsBeingAdded(new List<UIContentInfo>() { contentInfo }, value);
-        }
-
-        private void MarkIsBeingAdded(List<UIContentInfo> infoList, bool value)
-        {
-            infoList.ForEach(x => x.IsBeeingAdded = value);
-        }
-        public virtual void Initialize()
-        {
-            if (!this.container)
-                Debug.LogError("Missing container. Update the installer.");
-            if (this.factory == null)
-                Debug.LogError("Missing prefab factory. Update the installer.");
-            this.transform.SetParent(container.transform, false);
-        }
-
-        public virtual List<UIContent> GetUIContentChildren()
-        {
-            return container.ContentPlaceholder.GetComponentsInChildren<UIContent>().ToList();
+            if (executeBeforeAny) yield return StartCoroutine(BeforeAny());
+            yield return StartCoroutine(UpdateContainerRoutine(containerInfo));
+            if (executeAfterAny) yield return StartCoroutine(AfterAny());
         }
 
     }

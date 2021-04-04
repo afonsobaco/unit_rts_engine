@@ -17,26 +17,29 @@ namespace RTSEngine.Integration.Scene
         private IntegrationSceneObject _highlighted;
         public IntegrationSceneObject Highlighted { get => _highlighted; set => _highlighted = value; }
 
-        public void UpdateMiniaturesHighlight(List<IntegrationSceneObject> selectables, bool isUISelection)
+        public void UpdateMiniaturesHighlight(List<IntegrationSceneObject> selectables)
         {
-            SetHighlighted(selectables, isUISelection);
+            SetHighlighted(selectables);
             if (_highlighted != null)
             {
                 selectables.ForEach(x => x.IsHighlighted = _equalityComparer.Equals(_highlighted, x));
             }
         }
 
-        private void SetHighlighted(List<IntegrationSceneObject> selectables, bool isUISelection)
+        private void SetHighlighted(List<IntegrationSceneObject> selectables)
         {
             if (selectables.Count > 0)
-            {
-                if (!isUISelection || _highlighted == null || !selectables.Any(x => _equalityComparer.Equals(_highlighted, x)))
-                    _highlighted = selectables[0];
-            }
+                GetHighlightedFromSelectables(selectables);
             else
-            {
                 _highlighted = null;
-            }
+        }
+
+        private void GetHighlightedFromSelectables(List<IntegrationSceneObject> selectables)
+        {
+            if (_highlighted == null || !selectables.Any(x => _equalityComparer.Equals(_highlighted, x)))
+                _highlighted = selectables[0];
+            else
+                _highlighted = selectables.Find(x => _equalityComparer.Equals(_highlighted, x));
         }
 
         public void UpdateHighlighted(UIContainerInfo containerInfo, List<UIContent> contentList)
@@ -48,7 +51,7 @@ namespace RTSEngine.Integration.Scene
                     _highlighted = UIUtils.GetSelectable(contentList[0].Info);
                 else
                 {
-                    List<IntegrationSceneObject> selection = UIUtils.GetSelectableFromContent(contentList);
+                    List<IntegrationSceneObject> selection = UIUtils.GetSelectableListFromContentList(contentList);
                     if (info.NextHighlight)
                         _highlighted = GetNextHighlight(selection);
                     else
@@ -74,6 +77,8 @@ namespace RTSEngine.Integration.Scene
 
         public IntegrationSceneObject GetNextHighlight(List<IntegrationSceneObject> selection)
         {
+            Debug.Log(selection.Count);
+            Debug.Log(_highlighted);
             var result = selection[0];
             int index = selection.IndexOf(_highlighted);
             if (index < selection.Count - 1)

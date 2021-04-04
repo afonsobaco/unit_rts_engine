@@ -12,22 +12,22 @@ namespace RTSEngine.Integration.Scene
             return (info as UISceneIntegratedContentInfo).Selectable as IntegrationSceneObject;
         }
 
-        public static List<UIContentInfo> GetInfoFromContent(List<UIContent> contentList)
+        public static List<UIContentInfo> GetInfoListFromContentList(List<UIContent> contentList)
         {
             return contentList.Select(x => x.Info).ToList();
         }
 
-        public static List<IntegrationSceneObject> GetSelectableFromContent(List<UIContent> contentList)
+        public static List<IntegrationSceneObject> GetSelectableListFromContentList(List<UIContent> contentList)
         {
             return contentList.Select(x => GetSelectable(x.Info)).ToList();
         }
 
-        public static List<IntegrationSceneObject> GetSelectableFromContentInfo(List<UIContentInfo> contentInfoList)
+        public static List<IntegrationSceneObject> GetSelectableListFromContentInfoList(List<UIContentInfo> contentInfoList)
         {
             return contentInfoList.Select(x => GetSelectable(x)).ToList();
         }
 
-        public static List<UIContentInfo> CreateContentInfoBySelection(ISelectable[] selection)
+        public static List<UIContentInfo> CreateContentInfoListBySelectionList(ISelectable[] selection)
         {
             List<UIContentInfo> result = new List<UIContentInfo>();
             for (var i = 0; i < selection.Length; i++)
