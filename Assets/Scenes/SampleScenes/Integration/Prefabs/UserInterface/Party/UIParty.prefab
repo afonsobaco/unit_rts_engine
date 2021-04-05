@@ -165,9 +165,8 @@ GameObject:
   - component: {fileID: 4102934117811113682}
   - component: {fileID: 4742169747665393559}
   - component: {fileID: 4410416368935630590}
-  - component: {fileID: 5435279491381279462}
   m_Layer: 5
-  m_Name: UIBanner
+  m_Name: UIParty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -287,16 +286,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: {fileID: 8685432764716352452}
---- !u!114 &5435279491381279462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5539141776051198978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 578e08a0449d15b4cbc782a52a357d3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: {fileID: 4410416368935630590}

@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using RTSEngine.RTSUserInterface;
 using RTSEngine.Signal;
-using System;
 using Zenject;
 using RTSEngine.Core;
 
@@ -22,13 +20,19 @@ namespace RTSEngine.Integration.Scene
         {
             miniatureHighlightManager = new UIMiniatureHighlightManager(_equalityComparer);
             signalBus.Subscribe<SelectionUpdateSignal>(SelectionUpdated);
+            signalBus.Subscribe<PartyUpdateSignal>(UpdatePartySignal);
         }
 
         private void SelectionUpdated(SelectionUpdateSignal signal)
         {
-            if (!signal.IsUISelection)
+            if (!signal.TransformSelection)
                 miniatureHighlightManager.Highlighted = null;
             StartCoroutine(AdjustContainerForNewSelection(UIUtils.CreateContentInfoListBySelectionList(signal.Selection)));
+        }
+
+        private void UpdatePartySignal(PartyUpdateSignal signal)
+        {
+            signalBus.Fire(new UIUpdatePartySignal() { PartyId = (int)signal.PartyId, Selection = selection.ToArray() });
         }
 
         private IEnumerator AdjustContainerForNewSelection(List<UIContentInfo> infoList)

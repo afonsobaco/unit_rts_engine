@@ -40,7 +40,7 @@ namespace RTSEngine.RTSSelection
         public void OnChangeSelectionSignal(ChangeSelectionSignal signal)
         {
             var result = _selection.DoSelection(signal.Selection, SelectionType.UI_SELECTION);
-            _signalBus.Fire(new SelectionUpdateSignal() { Selection = result, IsUISelection = true });
+            _signalBus.Fire(new SelectionUpdateSignal() { Selection = result, TransformSelection = true });
         }
 
         public void OnIndividualSelectionSignal(IndividualSelectionSignal signal)
@@ -56,7 +56,7 @@ namespace RTSEngine.RTSSelection
                 this.BlockAreaSelection = true;
                 result = _selection.DoSelection(selection, SelectionType.INDIVIDUAL);
             }
-            _signalBus.Fire(new SelectionUpdateSignal() { Selection = result, IsUISelection = signal.IsUISelection });
+            _signalBus.Fire(new SelectionUpdateSignal() { Selection = result, TransformSelection = signal.IsUISelection });
         }
 
         public void OnSelectableObjectCreatedSignal(SelectableObjectCreatedSignal signal)

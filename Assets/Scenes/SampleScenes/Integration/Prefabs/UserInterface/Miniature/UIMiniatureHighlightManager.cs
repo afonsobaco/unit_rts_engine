@@ -21,9 +21,7 @@ namespace RTSEngine.Integration.Scene
         {
             SetHighlighted(selectables);
             if (_highlighted != null)
-            {
                 selectables.ForEach(x => x.IsHighlighted = _equalityComparer.Equals(_highlighted, x));
-            }
         }
 
         private void SetHighlighted(List<IntegrationSceneObject> selectables)
@@ -50,13 +48,7 @@ namespace RTSEngine.Integration.Scene
                 if (!info.OldSelection || _highlighted == null)
                     _highlighted = UIUtils.GetSelectable(contentList[0].Info);
                 else
-                {
-                    List<IntegrationSceneObject> selection = UIUtils.GetSelectableListFromContentList(contentList);
-                    if (info.NextHighlight)
-                        _highlighted = GetNextHighlight(selection);
-                    else
-                        _highlighted = GetPreviousHighlight(selection);
-                }
+                    ChangeHighlighted(contentList, info);
             }
             else
             {
@@ -64,30 +56,33 @@ namespace RTSEngine.Integration.Scene
             }
         }
 
+        private void ChangeHighlighted(List<UIContent> contentList, UIMiniatureContainerInfo info)
+        {
+            List<IntegrationSceneObject> selection = UIUtils.GetSelectableListFromContentList(contentList);
+            if (info.NextHighlight)
+                _highlighted = GetNextHighlight(selection);
+            else
+                _highlighted = GetPreviousHighlight(selection);
+        }
+
         public IntegrationSceneObject GetPreviousHighlight(List<IntegrationSceneObject> selection)
         {
             var result = selection.Last();
             int index = selection.IndexOf(_highlighted);
             if (index > 0)
-            {
                 result = selection[index - 1];
-            }
             return selection.Find(x => _equalityComparer.Equals(result, x));
         }
 
         public IntegrationSceneObject GetNextHighlight(List<IntegrationSceneObject> selection)
         {
-            Debug.Log(selection.Count);
-            Debug.Log(_highlighted);
             var result = selection[0];
             int index = selection.IndexOf(_highlighted);
             if (index < selection.Count - 1)
             {
                 var next = selection.GetRange(index, selection.Count - index).Find(x => !_equalityComparer.Equals(_highlighted, x));
                 if (next != null)
-                {
                     result = next;
-                }
             }
             return result;
         }

@@ -109,6 +109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _containerSource: 2
   selectionMark: {fileID: 3327381945354807079}
+  mainRenderer: {fileID: 6712110147514622949}
 --- !u!1 &6994696376291443657
 GameObject:
   m_ObjectHideFlags: 0

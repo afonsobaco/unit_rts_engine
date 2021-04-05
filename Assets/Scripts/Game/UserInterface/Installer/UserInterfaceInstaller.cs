@@ -9,6 +9,7 @@ using RTSEngine.Commons;
 using UnityEngine.UI;
 using System;
 
+//TODO delete
 namespace RTSEngine.RTSUserInterface
 {
     [CreateAssetMenu(fileName = "UserInterfaceInstaller", menuName = "Installers/UserInterfaceInstaller")]
